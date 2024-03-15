@@ -535,7 +535,6 @@ h4 {
   height: 35px;
   display: inline-block;
   animation: spinner 1.2s infinite ease-in-out;
-  background: url(../imgs/favicon.svg);
   box-shadow: 0 0 10px #fff;
 }
 @keyframes spinner {
@@ -738,7 +737,6 @@ h5.widget-title {
 }
 
 .title.style-3 {
-  background-image: url(../imgs/theme/wave.png);
   background-position: center bottom;
   background-repeat: no-repeat;
   padding-bottom: 25px;
@@ -988,13 +986,10 @@ button.submit:hover, button[type=submit]:hover {
   margin: 3px 0 0 5px;
 }
 .btn.btn-brush.btn-brush-1, .button.btn-brush.btn-brush-1 {
-  background-image: url(../imgs/theme/btn-brush-bg-1.png);
 }
 .btn.btn-brush.btn-brush-2, .button.btn-brush.btn-brush-2 {
-  background-image: url(../imgs/theme/btn-brush-bg-2.png);
 }
 .btn.btn-brush.btn-brush-3, .button.btn-brush.btn-brush-3 {
-  background-image: url(../imgs/theme/btn-brush-bg-3.png);
 }
 
 .comments-area .btn-reply {
@@ -1845,7 +1840,6 @@ input.qty-val {
   transition: 0.4s;
 }
 .home-slider.style-2 {
-  background: url(../imgs/banner/banner-12.png) no-repeat center bottom;
   background-size: cover;
   width: 100%;
   padding: 50px 0;
@@ -2931,7 +2925,6 @@ table .product-thumbnail img {
   border-radius: 15px;
   overflow: hidden;
   height: 538px;
-  background: url(../imgs/banner/banner-11.png) no-repeat center bottom;
   background-size: cover;
   width: 100%;
 }
@@ -3077,7 +3070,6 @@ table .product-thumbnail img {
   align-items: center;
   flex-basis: content;
   flex-direction: column;
-  background: url(../imgs/page/home-6-bg.jpg) no-repeat center center;
   background-size: cover;
   height: 330px;
 }
@@ -3091,7 +3083,6 @@ table .product-thumbnail img {
   border: 0;
   border-radius: 50px 0 0 50px;
   padding-left: 58px;
-  background: url(../imgs/theme/icons/icon-search.png) no-repeat 25px center;
 }
 .hero-3 form button {
   border: 0;
@@ -3180,7 +3171,6 @@ table .product-thumbnail img {
   z-index: 100;
   position: relative;
   color: #fff;
-  background: url(../imgs/page/about-9.png) no-repeat center center;
   border-radius: 15px;
   padding: 100px 0;
   overflow: hidden;
@@ -4093,7 +4083,6 @@ table .product-thumbnail img {
 }
 
 .product-rate {
-  background-image: url("../imgs/theme/rating-stars.png");
   background-position: 0 -12px;
   background-repeat: repeat-x;
   height: 12px;
@@ -4105,7 +4094,6 @@ table .product-thumbnail img {
 .product-rating {
   height: 12px;
   background-repeat: repeat-x;
-  background-image: url("../imgs/theme/rating-stars.png");
   background-position: 0 0;
 }
 
@@ -4678,7 +4666,6 @@ table.no-border td, table.no-border th, table.no-border thead {
 .apply-coupon input {
   height: 51px;
   border-radius: 10px 0 0 10px;
-  background-image: url("../imgs/theme/icons/coupon.png");
   background-position: 20px center;
   background-repeat: no-repeat;
   padding-left: 50px;
@@ -4716,7 +4703,6 @@ table.no-border td, table.no-border th, table.no-border thead {
 
 /*BLOG*/
 .archive-header {
-  background: url(../imgs/blog/header-bg.png) no-repeat center center;
   border-radius: 20px;
   padding: 70px 80px;
   background-size: cover;
@@ -5473,7 +5459,6 @@ h6.post-title {
 }
 
 .invoice-1 .invoice-header {
-  background: rgba(0, 0, 0, 0.04) url(../imgs/invoice/header-bg-1.png) top left repeat;
 }
 
 .invoice-2 .invoice-info {
@@ -5484,7 +5469,6 @@ h6.post-title {
 }
 
 .invoice-3 .invoice-header {
-  background: url(../imgs/invoice/header-bg-2.jpg) top left no-repeat;
   background-size: cover;
   padding: 50px 150px;
   color: #fff;
@@ -6237,7 +6221,6 @@ h6.post-title {
   width: 100%;
   max-width: 683px;
   font-size: 14px;
-  background-image: url(../imgs/theme/icons/search.png);
   background-repeat: no-repeat;
   background-position: center right;
   padding-left: 0;
@@ -7534,7 +7517,6 @@ span.fi-rs-apps {
 }
 
 .price_range {
-  background: url(../imgs/banner/fillter-widget-bg.png) no-repeat right bottom;
   background-size: 150px;
 }
 
@@ -7856,7 +7838,6 @@ footer .hotline img {
   border: 0;
   border-radius: 50px 0 0 50px;
   padding-left: 58px;
-  background: url(../imgs/theme/icons/icon-plane.png) no-repeat 25px center;
 }
 .newsletter .newsletter-inner .newsletter-content form button {
   border: 0;
