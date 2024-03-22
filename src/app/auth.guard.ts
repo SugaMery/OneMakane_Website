@@ -10,14 +10,23 @@ export class AuthGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(): boolean {
-    if (localStorage.getItem('loggedInUserToken')) {
-      // User is logged in, allow access to the route
-      return true;
-    } else {
-      // User is not logged in, redirect to the login page
-      this.router.navigate(['/login']); // Replace 'login' with your actual login route
-      return false;
-    }
+    if (typeof localStorage !== 'undefined') {
+      if (localStorage.getItem('loggedInUserToken')) {
+        // User is logged in, allow access to the route
+        return true;
+      } else {
+        // User is not logged in, redirect to the login page
+        this.router.navigate(['/login']); // Replace 'login' with your actual login route
+        return false;
+      }
+    
+    return true; // Ou false selon votre logique d'authentification
+  } else {
+    // Gérez le cas où localStorage n'est pas disponible
+    console.error('localStorage is not available');
+    return false;
+  }
+
   }
 
   logout(): void {

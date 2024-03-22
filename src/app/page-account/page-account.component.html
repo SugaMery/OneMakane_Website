@@ -22,8 +22,10 @@
                                     <li class="nav-item">
                                         <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
                                     </li>
+                                    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.2.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+
                                     <li class="nav-item">
-                                        <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi-rs-shopping-cart-check mr-10"></i>Track Your Order</a>
+                                        <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi fi-rr-square-plus mr-10"></i> Ajouter une annonce</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="fi-rs-marker mr-10"></i>My Address</a>
@@ -105,8 +107,8 @@
                                         <div class="card-body contact-from-area">
                                             <p>Pour ajouter votre annonce, veuillez remplir le formulaire ci-dessous et cliquer sur le bouton "Ajouter".</p>
                                             <div class="row">
-                                                <div class="col-lg-8">
-                                                    <form class="contact-form-style mt-30 mb-50" action="#" method="post">
+
+                                                    <form class="" action="#" method="post">
                                                         <div class="input-style mb-20">
                                                             <label>Titre</label>
                                                             <input name="titre" placeholder="Titre de votre annonce" type="text" />
@@ -115,74 +117,55 @@
                                                             <label>Description</label>
                                                             <textarea name="description" placeholder="Description de votre annonce"></textarea>
                                                         </div>
-                                                        <div class="input-style mb-20">
-                                                            <label>Prix</label>
-                                                            <input name="prix" placeholder="Prix de votre annonce" type="text" />
+                                                        <div class="row">
+                                                            <div class="form-group col-md-6">
+                                                                <label>Prix</label>
+                                                                <input name="prix" placeholder="Prix de votre annonce" type="text" />
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label>Category </label>
+                                                                <input name="prix" placeholder="Prix de votre annonce" type="text" />
+                                                            </div>
                                                         </div>
-                                                        <div class="input-style mb-20">
-                                                            <label>Date de publication</label>
-                                                            <input name="publication_date" type="date" />
-                                                        </div>
-                                                        <div class="input-style mb-20">
-                                                            <label>ID Catégorie</label>
-                                                            <input name="category_id" placeholder="ID de la catégorie" type="text" />
-                                                        </div>
-                                                        <div class="select-menu">
-                                                            <div
-                                                              class="select-btn"
-                                                              style="
-                                                                margin-bottom: 1rem;
-                                                                background: #fff;
-                                                                border: 1px solid #ececec;
-                                                                height: 64px;
-                                                                box-shadow: none;
-                                                                padding-left: 20px;
-                                                                font-size: 16px;
-                                                                width: 100%;
-                                                              "
-                                                              (click)="toggleOptions()"
-                                                            >
-                                                              <span class="sBtn-text"></span>
+                                                          <div class="row">
+                                                            <div class="form-group col-md-6">
+                                                                <label>Ville</label>
+                                                                <input name="ville" placeholder="Ville de l'annonce" type="text" />
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label>Code postal</label>
+                                                                <input name="code_postal" placeholder="Code postal de l'annonce" type="text" />
+                                                            </div>
+                                                          </div>
+                                                          <div class="select-menu">
+                                                            <div class="select-btn" style="
+                                                              margin-bottom: 1rem;
+                                                              background: #fff;
+                                                              border: 1px solid #ececec;
+                                                              height: 64px;
+                                                              box-shadow: none;
+                                                              padding-left: 20px;
+                                                              font-size: 16px;
+                                                              width: 100%;
+                                                              " (click)="toggleOptions()">
+                                                              <span class="sBtn-text">{{ selectedOption || "Category" }}</span>
                                                               <i class="bx bx-chevron-down"></i>
                                                             </div>
-                                                            <ul>
-                                                            <li class="option">
-                                                                <i class="bx bxl-github" style="color: #171515;"></i>
-                                                                <span class="option-text">Github</span>
-                                                            </li>
-                                                            <li class="option">
-                                                                <i class="bx bxl-instagram-alt" style="color: #E1306C;"></i>
-                                                                <span class="option-text">Instagram</span>
-                                                            </li>
-                                                            <li class="option">
-                                                                <i class="bx bxl-linkedin-square" style="color: #0E76A8;"></i>
-                                                                <span class="option-text">Linkedin</span>
-                                                            </li>
-                                                            <li class="option">
-                                                                <i class="bx bxl-facebook-circle" style="color: #4267B2;"></i>
-                                                                <span class="option-text">Facebook</span>
-                                                            </li>
-                                                            <li class="option">
-                                                                <i class="bx bxl-twitter" style="color: #1DA1F2;"></i>
-                                                                <span class="option-text">Twitter</span>
-                                                            </li>
-                                                        </ul>
+                                                            <ul class="options" [ngClass]="{ active: optionsVisible }">
+                                                              <li class="option" *ngFor="let category of categories" (click)="selectOption(category.name)">
+                                                                {{ category.name }}
+                                                              </li>
+                                                            </ul>
                                                           </div>
-                                                        <div class="input-style mb-20">
-                                                            <label>Ville</label>
-                                                            <input name="ville" placeholder="Ville de l'annonce" type="text" />
-                                                        </div>
-                                                        <div class="input-style mb-20">
-                                                            <label>Code postal</label>
-                                                            <input name="code_postal" placeholder="Code postal de l'annonce" type="text" />
-                                                        </div>
+                                                          
                                                         <div class="input-style mb-20">
                                                             <label>Photos</label>
                                                             <input name="photos" type="file" multiple />
                                                         </div>
                                                         <button class="submit submit-auto-width" type="submit">Ajouter</button>
+    
                                                     </form>
-                                                </div>
+          
                                             </div>
                                         </div>
                                     </div>

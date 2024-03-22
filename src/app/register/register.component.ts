@@ -26,6 +26,8 @@ export class RegisterComponent {
     enteredSecurityCode: '',
     termsAccepted: false
   };
+
+
   optionsVisible: boolean = false;
   selectedOption: string | null = null;
 

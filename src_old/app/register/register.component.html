@@ -1,0 +1,296 @@
+<app-header></app-header>
+<main class="main pages">
+  <div class="page-header breadcrumb-wrap">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Accueil</a>
+        <span></span> Pages <span></span> Mon compte
+      </div>
+    </div>
+  </div>
+  <div class="page-content pt-150 pb-150">
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-8 col-lg-10 col-md-12 m-auto">
+          <div class="row">
+            <form method="post" (ngSubmit)="onSubmit()" #registerForm="ngForm">
+              <div class="row">
+                <div class="heading_s1">
+                  <h1 class="mb-5">Créer un compte</h1>
+                  <p class="mb-30">
+                    Vous avez déjà un compte?
+                    <a  routerLink="/login">Connexion</a>
+                  </p>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                  <div class="login_wrap widget-taber-content background-white">
+                    <div class="padding_eight_all bg-white">
+                      <div class="form-group mb-3">
+                        <input
+                          type="text"
+                          required
+                          name="first_name"
+                          placeholder="Prénom"
+                          [(ngModel)]="userData.first_name"
+                          class="form-control custom-spacing"
+                        />
+                      </div>
+                      <div class="form-group mb-3">
+                        <input
+                          type="text"
+                          required
+                          name="last_name"
+                          placeholder="Nom de famille"
+                          [(ngModel)]="userData.last_name"
+                          class="form-control custom-spacing"
+                        />
+                      </div>
+                      <div class="form-group mb-3">
+                        <input
+                          type="tel"
+                          required
+                          name="telephone"
+                          placeholder="Téléphone"
+                          [(ngModel)]="userData.telephone"
+                          class="form-control custom-spacing"
+                        />
+                      </div>
+                      <div class="form-group mb-3">
+                        <input
+                          type="email"
+                          required
+                          name="email"
+                          placeholder="E-mail"
+                          [(ngModel)]="userData.email"
+                          class="form-control custom-spacing"
+                        />
+                      </div>
+                      <div class="form-group mb-3">
+                        <input
+                          type="password"
+                          required
+                          name="password"
+                          placeholder="Mot de passe"
+                          [(ngModel)]="userData.password"
+                          class="form-control custom-spacing"
+                        />
+                      </div>
+                      <div class="login_footer form-group">
+                        <input
+                          style="width: 50%"
+                          type="text"
+                          required
+                          name="security_code"
+                          placeholder="Code de sécurité"
+                          [value]="userData.enteredSecurityCode"
+                          (input)="updateSecurityCode($event)"
+                          class="form-control custom-spacing"
+                        />
+                        <button
+                          type="button"
+                          class="btn btn-success"
+                          style="background-color: #3BB77E"
+                          (click)="resetForm()"
+                        >
+                          <span class="pi pi-refresh"></span>
+                          <!-- PrimeNG refresh icon -->
+                        </button>
+
+                        <span class="security-code">
+                          <b class="text-new">{{
+                            userData.generatedSecurityCode[0]
+                          }}</b>
+                          <b class="text-hot">{{
+                            userData.generatedSecurityCode[1]
+                          }}</b>
+                          <b class="text-sale">{{
+                            userData.generatedSecurityCode[2]
+                          }}</b>
+                          <b class="text-best">{{
+                            userData.generatedSecurityCode[3]
+                          }}</b>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6">
+                  <div class="login_wrap widget-taber-content background-white">
+                    <div class="padding_eight_all bg-white">
+                      <div class="form-group mb-3">
+                        <input
+                          type="text"
+                          required
+                          name="address"
+                          placeholder="Adresse"
+                          [(ngModel)]="userData.address"
+                          class="form-control custom-spacing"
+                        />
+                      </div>
+                      <div class="form-group mb-3">
+                        <input
+                          type="text"
+                          required
+                          name="city"
+                          placeholder="Ville"
+                          [(ngModel)]="userData.city"
+                          class="form-control custom-spacing"
+                        />
+                      </div>
+                      <div class="form-group mb-3">
+                        <input
+                          type="text"
+                          required
+                          name="postal_code"
+                          placeholder="Code Postal"
+                          [(ngModel)]="userData.postal_code"
+                        />
+                      </div>
+                      <div class="select-menu">
+                        <div
+                          class="select-btn"
+                          style="
+                            margin-bottom: 1rem;
+                            background: #fff;
+                            border: 1px solid #ececec;
+                            height: 64px;
+                            box-shadow: none;
+                            padding-left: 20px;
+                            font-size: 16px;
+                            width: 100%;
+                          "
+                          (click)="toggleOptions()"
+                        >
+                          <span class="sBtn-text">{{
+                            selectedOption || "Civilité"
+                          }}</span>
+                          <i class="bx bx-chevron-down"></i>
+                        </div>
+                        <ul
+                          class="options"
+                          [ngClass]="{ active: optionsVisible }"
+                        >
+                          <li class="option" (click)="selectOption('Monsieur')">
+                            Monsieur
+                          </li>
+                          <li class="option" (click)="selectOption('Madame')">
+                            Madame
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div class="form-group mb-3">
+                        <input
+                          type="password"
+                          required
+                          name="confirm_password"
+                          placeholder="Confirmer le mot de passe"
+                          [(ngModel)]="userData.confirmPassword"
+                          class="form-control custom-spacing"
+                        />
+                      </div>
+                      <!-- Add more inputs here as needed -->
+                      <div
+                        class="payment_option mb-50"
+                        style="margin-top: 2rem;margin-bottom:0 !important;"
+                      >
+                        <div
+                          class="custome-radio d-inline-flex align-items-center"
+                        >
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            name="role_id"
+                            id="clientRole"
+                            value="2"
+                            [(ngModel)]="userData.role_id"
+                          />
+                          <label
+                            class="form-check-label mb-0 ms-2"
+                            for="clientRole"
+                            data-bs-toggle="collapse"
+                            data-target="#bankTranfer"
+                            aria-controls="bankTranfer"
+                            >Je suis un client</label
+                          >
+                        </div>
+                        <div
+                          class="custome-radio d-inline-flex align-items-center ms-4"
+                        >
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            name="role_id"
+                            id="vendorRole"
+                            value="3"
+                            [(ngModel)]="userData.role_id"
+                          />
+                          <label
+                            class="form-check-label mb-0 ms-2"
+                            for="vendorRole"
+                            data-bs-toggle="collapse"
+                            data-target="#checkPayment"
+                            aria-controls="checkPayment"
+                            >Je suis un vendeur</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="payment_option mb-3">
+                <!-- Payment options -->
+              </div>
+
+              <div class="login_footer form-group mb-3">
+                <div class="chek-form">
+                  <div class="custome-checkbox">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      name="terms"
+                      id="termsCheckbox"
+                      [(ngModel)]="userData.termsAccepted"
+                    />
+                    <label class="form-check-label" for="termsCheckbox"
+                      ><span>J'accepte les termes et conditions.</span></label
+                    >
+                  </div>
+                </div>
+                <a href="/page-privacy-policy"
+                  ><i class="fi-rs-book-alt mr-5 text-muted"></i>En savoir
+                  plus</a
+                >
+              </div>
+
+              <div class="form-group mb-30 text-end">
+                <!-- Add 'text-end' class here -->
+                <button
+                  type="submit"
+                  class="btn btn-fill-out btn-block hover-up font-weight-bold"
+                  name="register"
+                  [disabled]="!registerForm.valid"
+                >
+                  Soumettre & S'inscrire
+                </button>
+              </div>
+
+              <p class="font-xs text-muted">
+                <strong>Remarque:</strong> Vos données personnelles seront
+                utilisées pour prendre en charge votre expérience sur notre
+                site, pour gérer l'accès à votre compte et à d'autres fins
+                décrites dans notre politique de confidentialité
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<app-footer></app-footer>
+<app-preloader></app-preloader>

@@ -6,6 +6,7 @@ import { CategoryService } from '../category.service';
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
 
+
 })
 export class HomePageComponent implements OnInit  {
   categories: any[] = [];
@@ -25,5 +26,10 @@ export class HomePageComponent implements OnInit  {
         this.Souscategories =categories.filter(category => category.status === 'ACTIVE' && category.parent_id !== null)
       });
   }
-  
+  calculateBgColor(index: number): string {
+    const colors = ['9', '10', '11', '12', '13', '14', '15']; // Define your colors here
+    return colors[index % colors.length]; // Modulo operation to cycle through colors
+}
+
+
 }

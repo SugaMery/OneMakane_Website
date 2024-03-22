@@ -15,37 +15,59 @@
                           </li>
                         </ul>
                       </div>
+                      <div class="more_slide_open" style="display: none">
+                        <div class="d-flex categori-dropdown-inner">
+                            <ul>
+                                <li>
+                                    <a href='/shop-grid-right'> <img src="assets/imgs/theme/icons/icon-1.svg" alt="" />Milks and Dairies</a>
+                                </li>
+                                <li>
+                                    <a href='/shop-grid-right'> <img src="assets/imgs/theme/icons/icon-2.svg" alt="" />Clothing & beauty</a>
+                                </li>
+                                <li>
+                                    <a href='/shop-grid-right'> <img src="assets/imgs/theme/icons/icon-3.svg" alt="" />Wines & Drinks</a>
+                                </li>
+                                <li>
+                                    <a href='/shop-grid-right'> <img src="assets/imgs/theme/icons/icon-4.svg" alt="" />Fresh Seafood</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="more_categories"><span class="icon"></span> <span class="heading-sm-1">Show more...</span></div>
                     </div>
                   </div>
                                   
                   <div class="col-lg-7">
                     <div class="home-slide-cover mt-30">
                         <div class="hero-slider-1 style-5 dot-style-1 dot-style-1-position-2">
-                            <div class="single-hero-slider single-animation-wrap" style="background-image: url('../../assets/imgs/slider/slider-7.png')">
+                            <div class="single-hero-slider single-animation-wrap" style="background-image: url(assets/imgs/slider/slider-1.png)">
                                 <div class="slider-content">
                                     <h1 class="display-2 mb-40">
-                                        Don’t miss amazing<br />
-                                        grocery deals
+                                        Ne manquez pas <br />
+                                        cette occasion !
+                                        
                                     </h1>
-                                    <p class="mb-65">Sign up for the daily newsletter</p>
-                                    <form class="form-subcriber d-flex">
-                                        <input type="email" placeholder="Your email address" />
-                                        <button class="btn" type="submit">Subscribe</button>
-                                    </form>
+                                    <p class="mb-65">Déposer votre annonce maintenant</p>
+                                    <button style="
+                                    max-width: 450px;
+                                    border-radius: 50px;" class="btn" type="submit">Déposer votre annonce</button>
                                 </div>
+                                
+                                
                             </div>
-                            <div class="single-hero-slider single-animation-wrap" style="background-image: url('../../assets/imgs/slider/slider-8.png')">
+                            <div class="single-hero-slider single-animation-wrap" style="background-image: url(assets/imgs/slider/slider-2.png)">
                                 <div class="slider-content">
                                     <h1 class="display-2 mb-40">
-                                        Fresh Vegetables<br />
-                                        Big discount
+                                        Ne manquez pas <br />
+                                        cette occasion !
+                                        
                                     </h1>
-                                    <p class="mb-65">Save up to 50% off on your first order</p>
-                                    <form class="form-subcriber d-flex">
-                                        <input type="email" placeholder="Your email address" />
-                                        <button class="btn" type="submit">Subscribe</button>
-                                    </form>
+                                    <p class="mb-65">Déposer votre annonce maintenant</p>
+                                    <button style="
+                                    max-width: 450px;
+                                    border-radius: 50px;" class="btn" type="submit">Déposer votre annonce</button>
                                 </div>
+                                
                             </div>
                         </div>
                         <div class="slider-arrow hero-slider-1-arrow"></div>
@@ -56,25 +78,25 @@
                     <div class="row">
                         <div class="col-md-6 col-lg-12">
                             <div class="banner-img style-4 mt-30">
-                                <img src="../../assets/imgs/banner/banner-14.png" alt="" />
+                                <img src="../../assets/imgs/banner/bannar-1.png" alt="" />
                                 <div class="banner-text">
                                     <h4 class="mb-30">
-                                        Everyday Fresh &amp; <br />Clean with Our<br />
-                                        Products
+                                        Le meilleur chez nous pour des annonces de qualité
                                     </h4>
-                                    <a class='btn btn-xs mb-50' href='/shop-grid-right'>Shop Now <i class="fi-rs-arrow-small-right"></i></a>
+                                    <a class='btn btn-xs mb-50' href='/shop-grid-right'>Déposer votre annonce <i class="fi-rs-arrow-small-right"></i></a>
                                 </div>
                             </div>
-                        </div>
+                        </div>                        
                         <div class="col-md-6 col-lg-12">
                             <div class="banner-img style-5 mt-5 mt-md-30">
-                                <img src="../../assets/imgs/banner/banner-15.png" alt="" />
+                                <img src="../../assets/imgs/banner/bannar-2.png" alt="" />
                                 <div class="banner-text">
                                     <h5 class="mb-20">
-                                        The best Organic <br />
-                                        Products Online
+                                        Trouvez ce que <br /> vous cherchez<br /> avec nos annonces <br /> de qualité
+                      
+                                  
                                     </h5>
-                                    <a class='btn btn-xs' href='/shop-grid-right'>Shop Now <i class="fi-rs-arrow-small-right"></i></a>
+                                    <a class='btn btn-xs' href='/shop-grid-right'>Déposer votre annonce <i class="fi-rs-arrow-small-right"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -91,7 +113,7 @@
                     <h3>Catégories en Vedette</h3>
                     <ul class="list-inline nav nav-tabs links">
                         <li class="list-inline-item nav-item" *ngFor="let category of categories.slice(0, 4)">
-                            <a class='nav-link' href='/shop-grid-right'>{{ category.name }}</a>
+                            <a class='nav-link ' href='/shop-grid-right'>{{ category.name }}</a>
                         </li>
                     </ul>
                 </div>                               
@@ -99,58 +121,20 @@
             </div>
             <div class="carausel-10-columns-cover position-relative">
                 <div class="carausel-10-columns" id="carausel-10-columns">
-                    <div class="card-2 bg-9 wow animate__animated animate__fadeInUp" data-wow-delay=".1s" *ngFor="let category of Souscategories">
+                    <div class="card-2 wow animate__animated animate__fadeInUp" style="height: 193px;" *ngFor="let category of Souscategories; let i = index" [ngClass]="'bg-' + calculateBgColor(i)" data-wow-delay=".1s">
                         <figure class="img-hover-scale overflow-hidden">
                             <a href='/shop-grid-right'><img src="{{ category.icon_path }}" alt="" /></a>
                         </figure>
                         <h6><a href='/shop-grid-right'>{{ category.name }}</a></h6>
                         <span>{{ category.item_count }} items</span>
                     </div>
+                    
                 </div>
             </div>
             
         </div>
     </section>
     <!--End category slider-->
-    <section class="banners mb-25">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 col-md-6">
-                    <div class="banner-img wow animate__animated animate__fadeInUp" data-wow-delay="0">
-                        <img src="../../assets/imgs/banner/banner-1.png" alt="" />
-                        <div class="banner-text">
-                            <h4>
-                                Everyday Fresh & <br />Clean with Our<br />
-                                Products
-                            </h4>
-                            <a class='btn btn-xs' href='/shop-grid-right'>Shop Now <i class="fi-rs-arrow-small-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="banner-img wow animate__animated animate__fadeInUp" data-wow-delay=".2s">
-                        <img src="../../assets/imgs/banner/banner-2.png" alt="" />
-                        <div class="banner-text">
-                            <h4>
-                                Make your Breakfast<br />
-                                Healthy and Easy
-                            </h4>
-                            <a class='btn btn-xs' href='/shop-grid-right'>Shop Now <i class="fi-rs-arrow-small-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 d-md-none d-lg-flex">
-                    <div class="banner-img mb-sm-0 wow animate__animated animate__fadeInUp" data-wow-delay=".4s">
-                        <img src="../../assets/imgs/banner/banner-3.png" alt="" />
-                        <div class="banner-text">
-                            <h4>The best Organic <br />Products Online</h4>
-                            <a class='btn btn-xs' href='/shop-grid-right'>Shop Now <i class="fi-rs-arrow-small-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
     <!--End banners-->
     <section class="product-tabs section-padding position-relative">
         <div class="container">
