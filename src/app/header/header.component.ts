@@ -1,5 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CategoryService } from '../category.service';
+import { UserService } from '../user.service';
+import { AuthGuard } from '../auth.guard';
 
 @Component({
   selector: 'app-header',
@@ -11,23 +13,37 @@ export class HeaderComponent implements OnInit {
   categories: any[] = [];
   Souscategories: any[] = [];
   showMore: boolean = false;
-  constructor(private categoryService: CategoryService) { }
+  constructor(private categoryService: CategoryService,
+    private userService: UserService,private authGuard: AuthGuard) { }
 
   ngOnInit(): void {
-    console.log("ttttt");
-    if (typeof localStorage !== 'undefined') {
-      // Retrieve the logged-in user's name from localStorage
-      console.log("ttttt",localStorage);
-      const userDataString = localStorage.getItem('loggedInUser');
-      if (userDataString) {
-        const userData = JSON.parse(userDataString);
-        this.loggedInUserName = `${userData.first_name} ${userData.last_name}`;
+      if (typeof localStorage !== 'undefined') {
+        // Retrieve the logged-in user's ID and token from localStorage
+        const userId = localStorage.getItem('loggedInUserId');
+        const accessToken = localStorage.getItem('loggedInUserToken');
+        if (userId && accessToken) {
+          // Assuming you're inside some method of the User Service class
+          // Setting status based on response
+          this.userService.getUserInfoById(Number(userId), accessToken).subscribe(userInfo => {
+            // Assuming userInfo contains data indicating whether the request was successful or not
+            if (userInfo.data) {
+                this.status = true;
+                this.loggedInUserName = `${userInfo.data.first_name} ${userInfo.data.last_name}`;
+            } else {
+                this.status = false;
+            }
+          });
+
+        }
       }
-    }
     this.getCategories();
   }
   i!: number ;
-
+  status: boolean = false;
+  logout(): void {
+    this.status= false;
+    this.authGuard.logout();
+  }
   getCategories(): void {
     this.categoryService.getCategories()
       .subscribe(categories => {

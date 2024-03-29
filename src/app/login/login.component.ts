@@ -22,18 +22,25 @@ export class LoginComponent {
     private jwtHelper: JwtHelperService
   ) {}
 
+  userData = {
+    email: '',
+    password: ''
+  };
 
+
+  
   onSubmit(): void {
-    this.userService.login(this.email, this.password).subscribe(
+    this.userData.email = this.email;
+    this.userData.password = this.password;
+    this.userService.login(this.userData).subscribe(
       response => {
-        // Handle successful login response
-        localStorage.setItem('loggedInUserToken', response.token);
-        const decodedToken = this.jwtHelper.decodeToken(response.token);
-        localStorage.setItem('loggedInUser', JSON.stringify(decodedToken.userId));
-        console.log('User information:', decodedToken.userId);
-        
+
+      // Store user ID and token in local storage
+      localStorage.setItem('loggedInUserId', response.data.id);
+      localStorage.setItem('loggedInUserToken', response.data.token);
+
         // Redirect to the dashboard
-        this.router.navigate(['/']); // Update 'dashboard' with your actual route
+        window.location.href = '/';
       },
       error => {
         // Handle login error

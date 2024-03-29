@@ -15,12 +15,13 @@ export class PageAccountComponent {
   ngOnInit(): void {
     if (typeof localStorage !== 'undefined') {
       // Retrieve the logged-in user's name from localStorage
-      console.log("ttttt",localStorage);
-      const userDataString = localStorage.getItem('loggedInUser');
-      if (userDataString) {
-        const userData = JSON.parse(userDataString);
-        this.loggedInUserName = `${userData.first_name} ${userData.last_name}`;
-        this.userData = JSON.parse(userDataString);
+      const userId = localStorage.getItem('loggedInUserId');
+      const accessToken = localStorage.getItem('loggedInUserToken');
+      if (userId && accessToken) {
+        // Now fetch user information using access token
+        this.userService.getUserInfoById(Number(userId), accessToken).subscribe(userInfo => {
+          this.loggedInUserName = `${userInfo.data.first_name} ${userInfo.data.last_name}`;
+        });
       }
     };
     this.categoryService.getCategories().subscribe(
@@ -31,6 +32,29 @@ export class PageAccountComponent {
         console.error('Error fetching categories: ', error);
       }
     );
+  }
+
+  uploadedImages: string[] = [];
+  isPhone(): boolean {
+    // Vous pouvez définir ici votre logique de détection du téléphone
+    // Par exemple, détecter la largeur de l'écran
+    const screenWidth = window.innerWidth;
+    if (screenWidth <= 768) { // Par exemple, pour les écrans de largeur inférieure ou égale à 768 pixels
+      return true; // Il s'agit d'un téléphone
+    } else {
+      return false; // Il ne s'agit pas d'un téléphone
+    }
+  }
+
+  onFileSelected(event: any) {
+      const file: File = event.target.files[0];
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+          this.uploadedImages.push(e.target.result);
+      };
+
+      reader.readAsDataURL(file);
   }
   categories: { name: string }[] = [];
   constructor(private authService: AuthGuard,

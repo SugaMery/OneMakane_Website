@@ -1,0 +1,7 @@
+::ng-deep .cart-dropdown-wrap.account-dropdown {
+    width: 210px;
+}
+
+::ng-deep .product-cart-wrap .product-img-action-wrap {
+    padding: 20px 20px 0 25px !important;
+}

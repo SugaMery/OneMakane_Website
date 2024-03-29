@@ -115,3 +115,30 @@
     display: block;
   }
   
+
+::ng-deep .btn:hover {
+    border-color: #FDC040 !important; 
+}
+
+
+
+::ng-deep input :-internal-autofill-selected {
+  appearance: menulist-button;
+  background-image: none !important;
+  background-color: light-dark(rgb(232, 240, 254), rgba(70, 90, 126, 0.4)) !important;
+  color: fieldtext !important;
+}
+
+::ng-deep textarea :-internal-autofill-selected {
+  appearance: menulist-button;
+  background-image: none !important;
+  background-color: light-dark(rgb(232, 240, 254), rgba(70, 90, 126, 0.4)) !important;
+  color: fieldtext !important;
+}
+
+::ng-deep .select-menu :-internal-autofill-selected {
+  appearance: menulist-button;
+  background-image: none !important;
+  background-color: light-dark(rgb(232, 240, 254), rgba(70, 90, 126, 0.4)) !important;
+  color: fieldtext !important;
+}

@@ -18,13 +18,22 @@ export class HomePageComponent implements OnInit  {
     
   }
 
+  displayedCategories: any[] = [];
+  hiddenCategories: any[] = [];
+  showMore: boolean = false;
   getCategories(): void {
     this.categoryService.getCategories()
       .subscribe(categories => {
         // Filter categories based on status = ACTIVE and parent_id = null
         this.categories = categories.filter(category => category.status === 'ACTIVE' && category.parent_id === null);
         this.Souscategories =categories.filter(category => category.status === 'ACTIVE' && category.parent_id !== null)
+        this.displayedCategories = this.categories.slice(0, 11); // Afficher les 11 premières catégories
+        this.hiddenCategories = this.categories.slice(11); // Mettre le reste dans les catégories cachées
       });
+  }
+
+  toggleShowMore(): void {
+    this.showMore = !this.showMore;
   }
   calculateBgColor(index: number): string {
     const colors = ['9', '10', '11', '12', '13', '14', '15']; // Define your colors here

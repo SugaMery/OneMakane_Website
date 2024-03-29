@@ -178,13 +178,24 @@
                                     <img class="svgInject" alt="Nest" src="../../assets/imgs/theme/icons/icon-user.svg" />
                                 </a>
                                 <a href='/page-account'><span class="lable ml-0">{{ loggedInUserName }}</span></a>
-                                <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
+                                <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown" *ngIf="!status">
+                                    <ul>
+                                        <li>
+                                            <a href='/login'><i class="fi fi-rs-user mr-10"></i>Connexion</a>
+                                        </li>
+                                        <li>
+                                            <a href='/register'><i class="fi fi-rs-user mr-10"></i>Créer un compte</a>
+                                        </li>                                         
+                                    </ul>
+                                </div>
+
+                                <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown" *ngIf="status" >
                                     <ul>
                                         <li>
                                             <a href='/page-account'><i class="fi fi-rs-user mr-10"></i>Mon compte</a>
                                         </li>
                                         <li>
-                                            <a href='/page-account'><i class="fi fi-rs-location-alt mr-10"></i>Suivi des commandes</a>
+                                            <a href='/page-account'><i class="fi fi-rr-square-plus mr-10"></i>Déposer votre annonce</a>
                                         </li>
                                         <li>
                                             <a href='/page-account'><i class="fi fi-rs-label mr-10"></i>Mes bons</a>
@@ -196,8 +207,11 @@
                                             <a href='/page-account'><i class="fi fi-rs-settings-sliders mr-10"></i>Paramètres</a>
                                         </li>
                                         <li>
-                                            <a href='/page-login'><i class="fi fi-rs-sign-out mr-10"></i>Déconnexion</a>
-                                        </li>
+                                            <a (click)="logout()" href="javascript:void(0)">
+                                              <i class="fi fi-rs-sign-out mr-10"></i>Déconnexion
+                                            </a>
+                                          </li>
+                                          
                                     </ul>
                                 </div>
                             </div>

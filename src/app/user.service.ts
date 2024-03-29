@@ -6,16 +6,24 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
-  private baseUrl = 'http://localhost:3000';
+  private baseUrl = 'https://devapi.onemakan.com/v1';
 
   constructor(private http: HttpClient) { }
 
   registerUser(userDetails: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/register`, userDetails);
+    return this.http.post(`${this.baseUrl}/users`, userDetails);
   }
 
-  login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, { email, password });
+  login(userDetails : any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/login`, userDetails);
+  }
+
+  getUserInfoById(userId: number, accessToken: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${accessToken}`
+    });
+
+    return this.http.get(`${this.baseUrl}/users/${userId}`, { headers });
   }
 
 

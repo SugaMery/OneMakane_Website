@@ -13,21 +13,42 @@ export class RegisterComponent {
   userData = {
     first_name: '',
     last_name: '',
-    telephone: '',
     email: '',
-    role_id: '',
-    password: '',
-    confirmPassword: '',
-    civility: '',
     address: '',
-    city: '',
     postal_code: '',
+    telephone: '',
+    city: '',
+    civility: '',
+    password: '',
+    role_id:2,
+    repeat_password: '',
+    professional:{},
     generatedSecurityCode: this.generateSecurityCode(),
     enteredSecurityCode: '',
     termsAccepted: false
   };
 
+  userDataPro = {
+    company_name: '',
+    company_address: '',
+    company_postal_code: '',
+    activity_sector: '',
+    contact_first_name: '',
+    ice: '',
+    company_address_rest: '',
+    company_city: '',
+    contact_email: '',
+    contact_last_name: ''
+  }
 
+  showProfessionalAccount: boolean = false;
+  toggleProfessionalAccount() {
+    this.showProfessionalAccount = !this.showProfessionalAccount;
+  }
+  toggleParticulierAccount() {
+    this.showProfessionalAccount = false;
+  }
+  
   optionsVisible: boolean = false;
   selectedOption: string | null = null;
 
@@ -37,6 +58,7 @@ export class RegisterComponent {
 
   selectOption(option: string): void {
     this.selectedOption = option;
+    console.log
     this.optionsVisible = false;
   }
 
@@ -58,7 +80,7 @@ export class RegisterComponent {
 
   onSubmit(): void {
     // Logic to handle form submission
-    if (this.userData.password !== this.userData.confirmPassword) {
+    if (this.userData.password !== this.userData.repeat_password) {
       console.log("Passwords don't match");
       return;
     }
@@ -67,21 +89,44 @@ export class RegisterComponent {
       return;
     }
 
+    if(
+      this.selectedOption == "Monsieur"
+    ){
+      this.userData.civility = "Mr";
+    }else{
+      this.userData.civility =     "Mme";
+    }
     // Remove unwanted fields from userData before sending it to the service
-    const { generatedSecurityCode, enteredSecurityCode, termsAccepted, confirmPassword, ...userDataToSend } = this.userData;
+    const { generatedSecurityCode, enteredSecurityCode, termsAccepted, ...userDataToSend } = this.userData;
+    console.log('Registration successful',userDataToSend);
 
+     if(this.showProfessionalAccount){
+        this.userData.professional = this.userDataPro;
+        this.userService.registerUser(userDataToSend).subscribe(
+          () => {
+            // Handle successful registration
+            window.location.href = '/login'; // Redirect to login page
+          },
+          (error) => {
+            // Handle registration error
+            console.error('Failed to register user', error);
+          }
+        );
+     }else{
+      const { professional, ...userDataToSend } = this.userData;
+      this.userService.registerUser(userDataToSend).subscribe(
+        () => {
+          // Handle successful registration
+          window.location.href = '/login'; // Redirect to login page
+        },
+        (error) => {
+          // Handle registration error
+          console.error('Failed to register user', error);
+        }
+      );
+     }
     // Call your service to register the user with userDataToSend
-    this.userService.registerUser(userDataToSend).subscribe(
-      () => {
-        // Handle successful registration
-        console.log('Registration successful');
-        this.router.navigate(['/login']); // Redirect to login page
-      },
-      (error) => {
-        // Handle registration error
-        console.error('Failed to register user', error);
-      }
-    );
+
   }
   
   

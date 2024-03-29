@@ -23,7 +23,6 @@ export class AuthGuard implements CanActivate {
     return true; // Ou false selon votre logique d'authentification
   } else {
     // Gérez le cas où localStorage n'est pas disponible
-    console.error('localStorage is not available');
     return false;
   }
 
@@ -34,7 +33,7 @@ export class AuthGuard implements CanActivate {
     localStorage.removeItem('loggedInUserToken');
     localStorage.removeItem('loggedInUser');
     
-    // Redirect to login page
-    this.router.navigate(['/login']); // Replace 'page-login' with your actual login route
+    window.location.href = '/login';
+ 
   }
 }

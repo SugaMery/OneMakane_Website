@@ -40,7 +40,7 @@
                             </div>
                         </div>
                         <div class="col-md-9">
-                            <div class="tab-content account dashboard-content pl-50">
+                            <div class="tab-content account dashboard-content" [ngClass]="{'pl-50': !isPhone()}">
                                 <div class="tab-pane fade active show" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
                                     <div class="card">
                                         <div class="card-header">
@@ -124,8 +124,26 @@
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label>Category </label>
-                                                                <input name="prix" placeholder="Prix de votre annonce" type="text" />
-                                                            </div>
+                                                                <div class="select-menu">
+                                                                    <div class="select-btn" style="
+                                                                        margin-bottom: 1rem;
+                                                                        background: #fff;
+                                                                        border: 1px solid #ececec;
+                                                                        height: 64px;
+                                                                        box-shadow: none;
+                                                                        padding-left: 20px;
+                                                                        font-size: 16px;
+                                                                        width: 100%;
+                                                                        " (click)="toggleOptions()">
+                                                                        <span class="sBtn-text">{{ selectedOption || "Catégorie" }}</span>
+                                                                        <i class="bx bx-chevron-down"></i>
+                                                                    </div>
+                                                                    <ul class="options" [ngClass]="{ active: optionsVisible }">
+                                                                        <li class="option" *ngFor="let category of categories" (click)="selectOption(category.name)">
+                                                                            {{ category.name }}
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>                                                            </div>
                                                         </div>
                                                           <div class="row">
                                                             <div class="form-group col-md-6">
@@ -137,35 +155,90 @@
                                                                 <input name="code_postal" placeholder="Code postal de l'annonce" type="text" />
                                                             </div>
                                                           </div>
-                                                          <div class="select-menu">
-                                                            <div class="select-btn" style="
-                                                              margin-bottom: 1rem;
-                                                              background: #fff;
-                                                              border: 1px solid #ececec;
-                                                              height: 64px;
-                                                              box-shadow: none;
-                                                              padding-left: 20px;
-                                                              font-size: 16px;
-                                                              width: 100%;
-                                                              " (click)="toggleOptions()">
-                                                              <span class="sBtn-text">{{ selectedOption || "Category" }}</span>
-                                                              <i class="bx bx-chevron-down"></i>
+
+                                                        
+                                                        <div class="bg-white p-5 rounded shadow-sm border">
+                                                            <div class="dropzone d-block">
+                                                                <label for="files" class="dropzone-container">
+                                                                    <div class="file-icon"><i class="fa-solid fa-file-circle-plus text-primary"></i></div>
+                                                                    <div class="text-center pt-3 px-5">
+                                                                        <p class="w-80 h5 text-dark fw-bold">Glissez vos photos ici pour commencer le téléchargement.</p>
+                                                                        <div class="hr-sect">ou</div>
+                                                                        <button class="btn btn-primary mb-2" (click)="fileInput.click()">Parcourir les fichiers</button>
+                                                                        <input #fileInput id="files" name="files[]" type="file" class="file-input" (change)="onFileSelected($event)" style="display: none;" accept="image/*"/>
+                                                                    </div>
+                                                                </label>
                                                             </div>
-                                                            <ul class="options" [ngClass]="{ active: optionsVisible }">
-                                                              <li class="option" *ngFor="let category of categories" (click)="selectOption(category.name)">
-                                                                {{ category.name }}
-                                                              </li>
-                                                            </ul>
-                                                          </div>
-                                                          
-                                                        <div class="input-style mb-20">
-                                                            <label>Photos</label>
-                                                            <input name="photos" type="file" multiple />
+                                                            <div *ngIf="uploadedImages.length > 0" class="mt-3">
+                                                                <p class="fw-bold">Images téléchargées :</p>
+                                                                <div class="row">
+                                                                    <div class="col-md-4 mb-3" *ngFor="let image of uploadedImages">
+                                                                        <img [src]="image" alt="Image téléchargée" class="img-fluid"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <button class="submit submit-auto-width" type="submit">Ajouter</button>
+                                                        
+                                                        
+
+
+                                                        <div style="text-align: right; margin-top: 2rem;">
+                                                            <button class="submit submit-auto-width" type="submit">Ajouter</button>
+                                                        </div>
+                                                        
     
                                                     </form>
-          
+                                                    <style>
+                                                        .dropzone {
+                                                            border: dashed 4px #ddd !important ;
+                                                            background-color: #f2f6fc;
+                                                            border-radius: 15px;
+                                                        }
+                                                    
+                                                        .dropzone .dropzone-container {
+                                                            padding: 2rem 0;
+                                                            width: 100%;
+                                                            height: 100%;
+                                                            position: relative;
+                                                            display: flex;
+                                                            flex-direction: column;
+                                                            justify-content: center;
+                                                            align-items: center;
+                                                            color: #8c96a8;
+                                                            z-index: 20;
+                                                        }
+                                                    
+                                                        .dropzone .file-input {
+                                                            position: absolute;
+                                                            width: 100%;
+                                                            height: 100%;
+                                                            top: 0;
+                                                            left: 0;
+                                                            opacity: 0;
+                                                            visibility: hidden;
+                                                            cursor: pointer;
+                                                        }
+                                                
+                                                        .file-icon{
+                                                            font-size: 60px;
+                                                        }
+                                                        .hr-sect {
+                                                            display: flex;
+                                                            flex-basis: 100%;
+                                                            align-items: center;
+                                                            margin: 8px 0px;
+                                                        }
+                                                        .hr-sect:before,
+                                                        .hr-sect:after {
+                                                            content: "";
+                                                            flex-grow: 1;
+                                                            background: #ddd;
+                                                            height: 1px;
+                                                            font-size: 0px;
+                                                            line-height: 0px;
+                                                            margin: 0px 8px;
+                                                        }
+                                                    </style>
                                             </div>
                                         </div>
                                     </div>
