@@ -229,7 +229,7 @@ table .form-check {
 }
 
 .text-brand {
-  color: #3BB77E !important;
+  color: #3BB77E;
 }
 
 .bg-primary {
@@ -241,7 +241,7 @@ table .form-check {
 }
 
 .text-primary {
-  color: #3BB77E !important;
+  color: #3BB77E;
 }
 
 .bg-primary-light {
@@ -249,7 +249,7 @@ table .form-check {
 }
 
 .dropdown-item.active, .dropdown-item:active {
-  background-color: #3BB77E;
+  background : linear-gradient(45deg, #5EF292, #3BB77E);
 }
 
 .screen-overlay {
@@ -513,7 +513,7 @@ b {
   background-color: rgba(59, 183, 126, 0.2);
 }
 .menu-aside .menu-item.active .submenu a.active {
-  color: #3BB77E !important;
+  color: #3BB77E;
 }
 .menu-aside .menu-link {
   padding: 10px;
@@ -600,7 +600,7 @@ b {
 }
 .pagination-area .page-item.active .page-link, .pagination-area .page-item:hover .page-link {
   color: #fff;
-  background: #3BB77E;
+  background: #5EF292;
 }
 .pagination-area .page-item .page-link {
   border: 0;
@@ -647,7 +647,7 @@ b {
   padding: 10px 40px;
   color: #ffffff;
   border: none;
-  background-color: #3BB77E;
+  background : linear-gradient(45deg, #5EF292, #3BB77E);
   border-radius: 4px;
 }
 .btn.btn-primary i {
@@ -673,14 +673,14 @@ b {
 .btn.btn-md {
   padding: 0.5rem 0.95rem;
   font-weight: 500;
-  background-color: #3BB77E;
+  background : linear-gradient(45deg, #5EF292, #3BB77E);
   color: #ffffff;
 }
 .btn.btn-md:hover {
   background-color: #29A56C;
 }
 .btn.btn-xs {
-  background-color: #3BB77E;
+  background : linear-gradient(45deg, #5EF292, #3BB77E);
   color: #ffffff;
   border: none;
   font-size: 11px;
@@ -752,7 +752,7 @@ b {
   padding: 0.5rem 0.95rem;
 }
 .btn-light:hover {
-  background-color: #3BB77E;
+  background : linear-gradient(45deg, #5EF292, #3BB77E);
   color: #fff !important;
 }
 .btn-light:hover i {
@@ -785,7 +785,7 @@ b {
 }
 
 .btn-brand {
-  background-color: #3BB77E;
+  background : linear-gradient(45deg, #5EF292, #3BB77E);
   border: 0;
   color: #fff;
 }
@@ -858,7 +858,7 @@ textarea.form-control {
   height: 42px;
 }
 .searchform button:hover {
-  background-color: #3BB77E;
+  background : linear-gradient(45deg, #5EF292, #3BB77E);
 }
 .searchform button:hover i {
   color: #fff;
@@ -869,7 +869,7 @@ textarea.form-control {
 }
 
 .form-check-input:checked {
-  background-color: #3BB77E;
+  background : linear-gradient(45deg, #5EF292, #3BB77E);
   border-color: #3BB77E;
 }
 
@@ -1204,7 +1204,7 @@ textarea.form-control {
 }
 
 .progress-bar {
-  background-color: #3BB77E;
+  background : linear-gradient(45deg, #5EF292, #3BB77E);
 }
 
 .new-member-list {
@@ -1268,7 +1268,7 @@ textarea.form-control {
 
 .badge.bg-primary[href]:focus,
 .badge.bg-primary[href]:hover {
-  background-color: #3BB77E !important;
+  background : linear-gradient(45deg, #5EF292, #3BB77E);
 }
 
 .badge.bg-light {
@@ -1766,7 +1766,7 @@ ul.row, ul.row-sm {
   width: 7px;
   border-radius: 100%;
   height: 7px;
-  background: #3BB77E;
+  background: #5EF292;
 }
 
 .list-check {
@@ -3449,7 +3449,7 @@ body.offcanvas-active {
   line-height: 17px;
   display: block;
   padding: 0;
-  background-color: #3BB77E;
+  background : linear-gradient(45deg, #5EF292, #3BB77E);
 }
 .main-header .nav-item.dropdown {
   margin-right: 5px;

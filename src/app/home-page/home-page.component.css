@@ -1,7 +1,4 @@
-::ng-deep .slick-slide1 {
 
-    height: 193px;
-}
 
 /* Style pour l'image du vendeur */
 .seller-image img {
@@ -35,7 +32,7 @@
 }
 
   .product-cart-wrap .product-img-action-wrap .product-img-zoom a img {
-    height: 300px;
+    /* height: 300px; */
     object-fit: cover;
   }
   

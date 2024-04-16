@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -22,4 +22,16 @@ export class CategoryService {
     console.error('An error occurred:', error);
     return throwError('Something went wrong');
   }
+  private apiUrls = 'https://devapi.onemakan.com/v1/categories'; // Update with your API URL
+
+
+  getCategoriesFrom(accessToken: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${accessToken}`
+    });
+
+    return this.http.get(this.apiUrls, { headers })
+      
+  }
+
 }

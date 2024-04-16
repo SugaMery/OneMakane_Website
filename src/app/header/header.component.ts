@@ -15,7 +15,30 @@ export class HeaderComponent implements OnInit {
   showMore: boolean = false;
   constructor(private categoryService: CategoryService,
     private userService: UserService,private authGuard: AuthGuard) { }
-
+    selectAddressTab() {
+      const accountLink = document.querySelector('[href="/page-account"]') as HTMLAnchorElement;
+      if (accountLink) {
+        // Trigger a click event on the account link
+        accountLink.click();
+    
+        // Wait for a brief moment for the page to load and then select the address tab
+        setTimeout(() => {
+          const addressTabLink = document.querySelector('#address-tab') as HTMLAnchorElement;
+          if (addressTabLink) {
+            console.log('Address tab link found:', addressTabLink);
+            // Trigger a click event on the address tab link
+            addressTabLink.click();
+          } else {
+            console.log('Address tab link not found.');
+          }
+        }, 1000); // Adjust the timeout as needed
+      } else {
+        console.log('Account link not found.');
+      }
+    }
+    
+    
+    
   ngOnInit(): void {
       if (typeof localStorage !== 'undefined') {
         // Retrieve the logged-in user's ID and token from localStorage

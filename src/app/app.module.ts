@@ -17,6 +17,11 @@ import { ToastModule } from 'primeng/toast';
 import { RegisterComponent } from './register/register.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { PageAccountComponent } from './page-account/page-account.component';
+import { StepperModule } from 'primeng/stepper';
+import { TableModule } from 'primeng/table';
+import { ProgressBarModule } from 'primeng/progressbar'; // Import ProgressBarModule
+import { TagModule } from 'primeng/tag'; // Import TagModule
+import { DialogModule } from 'primeng/dialog';
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,6 +43,11 @@ import { PageAccountComponent } from './page-account/page-account.component';
     BrowserAnimationsModule,
     ConfirmDialogModule,
     ToastModule,
+    StepperModule,
+    TableModule,
+    ProgressBarModule,
+    TagModule,
+    DialogModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: () => {

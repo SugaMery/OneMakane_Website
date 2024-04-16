@@ -8,21 +8,22 @@
             </div>
         </div>        
     </div>
-    <div class="page-content pt-150 pb-150">
+    <div class="page-content pt-50 pb-150">
         <div class="container">
             <div class="row">
                 <div class="col-lg-10 m-auto">
                     <div class="row">
                         <div class="col-md-3">
                             <div class="dashboard-menu">
+                              <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.2.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+
                                 <ul class="nav flex-column" role="tablist">
                                     <li class="nav-item">
                                         <a class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="false"><i class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
+                                        <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="fi fi-rs-list  mr-10"></i>Mes annonces</a>
                                     </li>
-                                    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.2.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
 
                                     <li class="nav-item">
                                         <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi fi-rr-square-plus mr-10"></i> Ajouter une annonce</a>
@@ -57,44 +58,80 @@
                                 <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h3 class="mb-0">Your Orders</h3>
+                                          <h3 class="mb-0">Ma liste d'annonces</h3>
                                         </div>
                                         <div class="card-body">
                                             <div class="table-responsive">
-                                                <table class="table">
+                                              <div class="table-responsive shopping-summery">
+                                                <table class="table table-wishlist">
                                                     <thead>
-                                                        <tr>
-                                                            <th>Order</th>
-                                                            <th>Date</th>
-                                                            <th>Status</th>
-                                                            <th>Total</th>
-                                                            <th>Actions</th>
+                                                        <tr class="main-heading">
+                                                            <th class="custome-checkbox start pl-30">
+                                                                <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox11" value="">
+                                                                <label class="form-check-label" for="exampleCheckbox11"></label>
+                                                            </th>
+                                                            <th scope="col" colspan="2">Annonce</th>
+                                                            <th scope="col">Prix</th>
+                                                            <th scope="col">Status</th>
+                                                            <th scope="col">Action</th>
+                                                            <th scope="col" class="end">Supprimé</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr>
-                                                            <td>#1357</td>
-                                                            <td>March 45, 2020</td>
-                                                            <td>Processing</td>
-                                                            <td>$125.00 for 2 item</td>
-                                                            <td><a href="#" class="btn-small d-block">View</a></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>#2468</td>
-                                                            <td>June 29, 2020</td>
-                                                            <td>Completed</td>
-                                                            <td>$364.00 for 5 item</td>
-                                                            <td><a href="#" class="btn-small d-block">View</a></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>#2366</td>
-                                                            <td>August 02, 2020</td>
-                                                            <td>Completed</td>
-                                                            <td>$280.00 for 3 item</td>
-                                                            <td><a href="#" class="btn-small d-block">View</a></td>
+                                                        <tr class="pt-30" *ngFor="let ad of ads">
+                                                            <td class="custome-checkbox pl-30">
+                                                                <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="">
+                                                                <label class="form-check-label" for="exampleCheckbox1"></label>
+                                                            </td>
+                                                            <td class="image product-thumbnail pt-40"><img src="{{ad.medias[0].url}}" alt="#"></td>
+                                                            <td class="product-des product-name">
+                                                                <h6><a class="product-name mb-10" >{{ad.title}}</a></h6>
+                                                                <span class="font-small text-muted">{{ad.created_at}}</span>
+
+                                                            </td>
+                                                            <td class="price" data-title="Price">
+                                                                <h3 class="text-brand">{{ad.price}}</h3>
+                                                            </td>
+                                                            <td class="text-center detail-info" data-title="Stock" >
+                                                                <span class="stock-status in-stock mb-0" [ngClass]="getStatusClass(ad.validation_status)"> {{ad.validation_status}} </span>
+                                                            </td>
+                                                            <td class="text-right" data-title="Cart">
+                                                                <button class="btn btn-sm"  (click)="showDialog(ad)">Plus infos</button>
+                                                            </td>
+                                                            <td class="action text-center" data-title="Remove">
+                                                                <a href="#" class="text-body"><i class="fi-rs-trash"></i></a>
+                                                            </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
+
+
+                                                <p-dialog [(visible)]="adDialog" [style]="{ width: '450px' }" header="Ad Details" [modal]="true" styleClass="p-fluid">
+                                                    <ng-template pTemplate="content">
+                                                        <img [src]="selectedAd.medias[0].url" class="block m-auto pb-3" *ngIf="" />
+                                                        <div class="field">
+                                                            <label for="name">Name</label>
+                                                            <input type="text" pInputText id="name" [(ngModel)]="selectedAd.title" required autofocus />
+                                                        </div>
+                                                        <div class="field">
+                                                            <label for="description">Description</label>
+                                                            <textarea id="description" pInputTextarea [(ngModel)]="selectedAd.description" required rows="3" cols="20"></textarea>
+                                                        </div>
+                                                
+                                                        <div class="field">
+                                                            <label for="name">Prix</label>
+                                                            <input type="text" pInputText id="name" [(ngModel)]="selectedAd.price" required autofocus />
+                                                        </div>
+                                                    </ng-template>
+                                                
+                                                    <ng-template pTemplate="footer">
+                                                        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                                                        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" ></button>
+                                                    </ng-template>
+                                                </p-dialog>
+                                                
+                                                
+                                            </div>
                                             </div>
                                         </div>
                                     </div>
@@ -108,86 +145,219 @@
                                             <p>Pour ajouter votre annonce, veuillez remplir le formulaire ci-dessous et cliquer sur le bouton "Ajouter".</p>
                                             <div class="row">
 
-                                                    <form class="" action="#" method="post">
-                                                        <div class="input-style mb-20">
-                                                            <label>Titre</label>
-                                                            <input name="titre" placeholder="Titre de votre annonce" type="text" />
-                                                        </div>
-                                                        <div class="input-style mb-20">
-                                                            <label>Description</label>
-                                                            <textarea name="description" placeholder="Description de votre annonce"></textarea>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="form-group col-md-6">
-                                                                <label>Prix</label>
-                                                                <input name="prix" placeholder="Prix de votre annonce" type="text" />
-                                                            </div>
-                                                            <div class="form-group col-md-6">
-                                                                <label>Category </label>
-                                                                <div class="select-menu">
-                                                                    <div class="select-btn" style="
-                                                                        margin-bottom: 1rem;
-                                                                        background: #fff;
-                                                                        border: 1px solid #ececec;
-                                                                        height: 64px;
-                                                                        box-shadow: none;
-                                                                        padding-left: 20px;
-                                                                        font-size: 16px;
-                                                                        width: 100%;
-                                                                        " (click)="toggleOptions()">
-                                                                        <span class="sBtn-text">{{ selectedOption || "Catégorie" }}</span>
-                                                                        <i class="bx bx-chevron-down"></i>
-                                                                    </div>
-                                                                    <ul class="options" [ngClass]="{ active: optionsVisible }">
-                                                                        <li class="option" *ngFor="let category of categories" (click)="selectOption(category.name)">
-                                                                            {{ category.name }}
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>                                                            </div>
-                                                        </div>
-                                                          <div class="row">
-                                                            <div class="form-group col-md-6">
-                                                                <label>Ville</label>
-                                                                <input name="ville" placeholder="Ville de l'annonce" type="text" />
-                                                            </div>
-                                                            <div class="form-group col-md-6">
-                                                                <label>Code postal</label>
-                                                                <input name="code_postal" placeholder="Code postal de l'annonce" type="text" />
-                                                            </div>
-                                                          </div>
+                                                <form class="" action="#" method="post">
+                                                    <p-stepper  [linear]="isLinear()" [orientation]="isPhone() ? 'vertical' : 'horizontal'">
+                                                        <p-stepperPanel header="Informations sur l'Annonce">
+                                                            <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
+                                                                <div class="flex flex-column">
+                                                                    <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
+                                                                      <div class="container" style="padding: 2rem;">
+                                                                        <div class="input-style mb-20">
+                                                                            <label>Titre</label>
+                                                                            <input id="titre" name="titre" [(ngModel)]="formData.titre" (ngModelChange)="clearError('titre')"  placeholder="Titre de votre annonce" type="text" required maxlength="50">
+                                                                            <div *ngIf="fieldErrors.titre" class="text-danger requisDiv" >
+                                                                                <div>Titre est requis.</div>
+                                                                            </div>
+                                                                            <div class="text-infos requisDiv" *ngIf="formData.titre && formData.titre.length >= 45">
+                                                                                <div>Le titre est proche de la longueur maximale.</div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="input-style mb-20">
+                                                                            <label>Description</label>
+                                                                            <textarea id="description" name="description" (ngModelChange)="clearError('description')"  [(ngModel)]="formData.description" placeholder="Description de votre annonce" required minlength="10"></textarea>
+                                                                            <div *ngIf="fieldErrors.description" class="text-danger requisDiv">
+                                                                                <div>Description est requise.</div>
+                                                                            </div>
+                                                                            <div class="text-infos requisDiv" *ngIf="formData.description && formData.description.length <= 20">
+                                                                                <div>La description est assez courte.</div>
+                                                                            </div>
+                                                                        </div>
+                                                                        
+                                                                        <div class="row">
+                                                                          <div class="form-group col-md-6">
+                                                                            <label>Prix</label>
+                                                                            <input id="prix" name="prix" [(ngModel)]="formData.prix" (ngModelChange)="clearError('prix')" placeholder="Prix de votre annonce" type="number" required>
+                                                                            <div *ngIf="fieldErrors.prix" class="text-danger requisDiv" > 
+                                                                              <div>Prix est requis.</div>
+                                                                            </div>
+                                                                          </div>
+                                                                          <div class="form-group col-md-6" [class.has-error]="fieldErrors.category">
+                                                                            <label>Catégorie</label>
+                                                                            <div class="select-menu">
+                                                                              <div class="select-btn" style="margin-bottom: 1rem; background: #fff; border: 1px solid #ececec; height: 64px; box-shadow: none; padding-left: 20px; font-size: 16px; width: 100%;" (click)="toggleOptions()">
+                                                                                <span class="sBtn-text">{{ selectedOption.name || "Catégorie" }}</span>
+                                                                                <i class="bx bx-chevron-down"></i>
+                                                                              </div>
+                                                                              <ul class="options" [ngClass]="{ active: optionsVisible }">
+                                                                                <li class="option" *ngFor="let category of categories" (click)="selectOption(category)">
+                                                                                  {{ category.name }}
+                                                                                </li>
+                                                                              </ul>
+                                                                            </div>
+                                                                            <div *ngIf="fieldErrors.category" class="text-danger requisDiv">
+                                                                              <div>Catégorie est requise.</div>
+                                                                            </div>
+                                                                          </div>
+                                                                          
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="form-group col-md-6" [class.has-error]="fieldErrors.state">
+                                                                                <label>État</label>
+                                                                                <div class="select-menu">
+                                                                                    <div class="select-btn" style="margin-bottom: 1rem; background: #fff; border: 1px solid #ececec; height: 64px; box-shadow: none; padding-left: 20px; font-size: 16px; width: 100%;" (click)="toggleStateOptions()">
+                                                                                        <span class="sBtn-text">{{ selectedState?.name || "État" }}</span>
+                                                                                        <i class="bx bx-chevron-down"></i>
+                                                                                    </div>
+                                                                                    <ul class="options" [ngClass]="{ active: stateOptionsVisible }">
+                                                                                        <li class="option" *ngFor="let state of states" (click)="selectState(state)">
+                                                                                            {{ state.name }}
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                </div>
+                                                                                <div *ngIf="fieldErrors.state" class="text-danger requisDiv">
+                                                                                    <div>État est requis.</div>
+                                                                                </div>
+                                                                                <div *ngIf="selectedCategoryState" class="text-info">
+                                                                                    Veuillez sélectionner une catégorie pour afficher les données d'état.
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group col-md-6" [class.has-error]="fieldErrors.genre">
+                                                                                <label>Genre</label>
+                                                                                <div class="select-menu">
+                                                                                    <div class="select-btn" style="margin-bottom: 1rem; background: #fff; border: 1px solid #ececec; height: 64px; box-shadow: none; padding-left: 20px; font-size: 16px; width: 100%;" (click)="toggleGenreOptions()">
+                                                                                        <span class="sBtn-text">{{ selectedGenre?.name || "Genre" }}</span>
+                                                                                        <i class="bx bx-chevron-down"></i>
+                                                                                    </div>
+                                                                                    <ul class="options" [ngClass]="{ active: genreOptionsVisible }">
+                                                                                        <li class="option" *ngFor="let genre of genres" (click)="selectGenre(genre)">
+                                                                                            {{ genre.name }}
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                </div>
+                                                                                <div *ngIf="fieldErrors.genre" class="text-danger requisDiv">
+                                                                                    <div>Genre est requis.</div>
+                                                                                </div>
+                                                                                <div *ngIf="selectedCategoryGenre" class="text-info">
+                                                                                    Veuillez sélectionner une catégorie pour afficher les données d'état.
+                                                                                </div>
+                                                                            </div>
+                                                                            
 
-                                                        
-                                                        <div class="bg-white p-5 rounded shadow-sm border">
-                                                            <div class="dropzone d-block">
-                                                                <label for="files" class="dropzone-container">
-                                                                    <div class="file-icon"><i class="fa-solid fa-file-circle-plus text-primary"></i></div>
-                                                                    <div class="text-center pt-3 px-5">
-                                                                        <p class="w-80 h5 text-dark fw-bold">Glissez vos photos ici pour commencer le téléchargement.</p>
-                                                                        <div class="hr-sect">ou</div>
-                                                                        <button class="btn btn-primary mb-2" (click)="fileInput.click()">Parcourir les fichiers</button>
-                                                                        <input #fileInput id="files" name="files[]" type="file" class="file-input" (change)="onFileSelected($event)" style="display: none;" accept="image/*"/>
+                                                                        </div>
+                                                                        <div class="row justify-content-end">
+                                                                            <div class="form-group col-md-6 payment_option mb-50" style="margin-top: 3rem; margin-bottom: 0 !important;">
+                                                                                <div class="custome-checkbox d-inline-flex align-items-center justify-content-end">
+                                                                                    <input class="form-check-input" type="checkbox" id="urgent" [(ngModel)]="formData.urgent" name="urgent">
+                                                                                    <label class="form-check-label" for="urgent">Urgent</label>
+                                                                                </div>
+                                                                                <div class="custome-checkbox d-inline-flex align-items-center justify-content-end ms-4">
+                                                                                    <input class="form-check-input" type="checkbox" id="highlighted" [(ngModel)]="formData.highlighted" name="highlighted">
+                                                                                    <label class="form-check-label" for="highlighted">Mis en évidence</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        
+                                                                      </div>
                                                                     </div>
-                                                                </label>
-                                                            </div>
-                                                            <div *ngIf="uploadedImages.length > 0" class="mt-3">
-                                                                <p class="fw-bold">Images téléchargées :</p>
-                                                                <div class="row">
-                                                                    <div class="col-md-4 mb-3" *ngFor="let image of uploadedImages">
-                                                                        <img [src]="image" alt="Image téléchargée" class="img-fluid"/>
+                                                                  </div>
+                                                                  
+                                                                <div class="flex pt-4 justify-content-end">
+                                                                    <p-button label="Suivant" icon="pi pi-arrow-right" iconPos="right" 
+                                                                    (onClick)="emitNextCallback() ? nextCallback.emit() : null"></p-button>
+                                                                                                                          </div>
+                                                            </ng-template>
+                                                            
+                                                        </p-stepperPanel>
+                                                        <p-stepperPanel header="Ajouter des Images">
+                                                            <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">
+                                                                <div class="flex flex-column">
+                                                                    <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
+                                                                        <div class="container" style="padding: 1rem;">
+                                                                            <div class="bg-white p-5 rounded shadow-sm border">
+                                                                                <div class="dropzone d-block">
+                                                                                    <label for="files" class="dropzone-container">
+                                                                                        <div class="file-icon"><i class="pi pi-plus-circle text-succes" style="
+                                                                                            color: #3bb77e;
+                                                                                        "></i></div>
+                                                                                        <div class="text-center pt-3 px-5">
+                                                                                            <p class="w-80 h5 text-dark fw-bold">Glissez vos photos ici pour commencer le téléchargement.</p>
+                                                                                            <div class="hr-sect">ou</div>
+                                                                                            <button class="btn btn-primary mb-2" (click)="fileInput.click()">Parcourir les fichiers</button>
+                                                                                            <input #fileInput id="files" name="files[]" type="file" class="file-input" (change)="onFileSelected($event)" style="display: none;" accept="image/*"/>
+                                                                                        </div>
+                                                                                    </label>
+                                                                                </div>
+                                                                                <div *ngIf="uploadedImages.length > 0" class="mt-3">
+                                                                                    <div class="inline-container" style="margin-bottom: 1rem;">
+                                                                                        <p class="fw-bold">Images téléchargées : </p>
+                                                                                        <p *ngIf="maxImages" class="fw-bold" style="color: #ff3737;">Vous ne pouvez télécharger que jusqu'à 3 images.</p>
+                                                                                    </div>
+                                                                                                                                        
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-4 mb-3" *ngFor="let image of uploadedImages; let i = index">
+                                                                                            <div class="position-relative">
+                                                                                                <img [src]="image" alt="Image téléchargée" class="img-fluid" style="border-top-left-radius: 10px; border-top-right-radius: 10px;"/>
+                                                                                                <div class="image-overlay">
+                                                                                                    <button class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2" (click)="deleteImage(i)">
+                                                                                                        <i class="pi pi-trash"></i>
+                                                                                                    </button>
+                                                                                                    <button class="btn btn-primary btn-modifier btn-sm position-absolute top-0 start-0 m-2" (click)="replaceImage(i)">
+                                                                                                        <i class="pi pi-pencil"></i>
+                                                                                                    </button>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            
+                                                                        </div>
+
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                        </div>
-                                                        
-                                                        
+                                                                <div class="flex pt-4 justify-content-between">
+                                                                    <p-button label="Retour"icon="pi pi-arrow-left" (onClick)="prevCallback.emit()" />
+                                                                   <p-button label="Suivant" icon="pi pi-arrow-right" iconPos="right" (click)="nextCallback.emit()" [disabled]="uploadedImages.length < 1 || uploadedImages.length > 3"></p-button>
+</div
+                                                            ></ng-template>
+                                                        </p-stepperPanel>
+                                                        <p-stepperPanel header="Détails de Localisation">
+                                                            <ng-template pTemplate="content" let-prevCallback="prevCallback" let-index="index">
+                                                                <div class="flex flex-column">
+                                                                    <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
+                                                                        <div class="container" style="padding: 2rem;">
+                                                                            <div class="row">
+                                                                                <div class="form-group col-md-6">
+                                                                                    <label>Ville</label>
+                                                                                    <input name="ville" [(ngModel)]="formData.ville" (ngModelChange)="clearError('ville')" placeholder="Ville de l'annonce" type="text" />
+                                                                                    <div *ngIf="fieldErrors.ville" class="text-danger requisDiv">
+                                                                                        <div>Ville est requise.</div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group col-md-6">
+                                                                                    <label>Code postal</label>
+                                                                                    <input name="code_postal" [(ngModel)]="formData.code_postal" (ngModelChange)="clearError('code_postal')" placeholder="Code postal de l'annonce" type="text" />
+                                                                                    <div *ngIf="fieldErrors.code_postal" class="text-danger requisDiv">
+                                                                                        <div>Code postal est requis.</div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                                <div class="flex pt-4 justify-content-between">
+                                                                    <p-button label="Retour"icon="pi pi-arrow-left" (onClick)="prevCallback.emit()" />
+                                                                    
+                                                                    <p-button label="Confirmer" icon="pi pi-check" iconPos="right" (click)="onSubmit()"></p-button>
+                                                                    </div
+                                                            >
+                                                            
+                                                        </ng-template>
+                                                        </p-stepperPanel>
+                                                    </p-stepper>
+                                                </form>
 
-
-                                                        <div style="text-align: right; margin-top: 2rem;">
-                                                            <button class="submit submit-auto-width" type="submit">Ajouter</button>
-                                                        </div>
-                                                        
-    
-                                                    </form>
                                                     <style>
                                                         .dropzone {
                                                             border: dashed 4px #ddd !important ;
@@ -290,19 +460,19 @@
                                                 <div class="row">
                                                     <div class="form-group col-md-6">
                                                         <label>Prénom <span class="required">*</span></label>
-                                                        <input required="" class="form-control" name="name" type="text" value="{{ userData.first_name }}" />
+                                                        <input required="" class="form-control" name="name" type="text" value="" />
                                                     </div>
                                                     <div class="form-group col-md-6">
                                                         <label>Nom de famille <span class="required">*</span></label>
-                                                        <input required="" class="form-control" name="phone" value="{{ userData.last_name }}" />
+                                                        <input required="" class="form-control" name="phone" value="" />
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <label>Nom d'affichage <span class="required">*</span></label>
-                                                        <input required="" class="form-control" name="dname" type="text" value="{{ userData.civility }}" />
+                                                        <input required="" class="form-control" name="dname" type="text" value="" />
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <label>Adresse e-mail <span class="required">*</span></label>
-                                                        <input required="" class="form-control" name="email" type="email" value="{{ userData.email }}" />
+                                                        <input required="" class="form-control" name="email" type="email" value="" />
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <label>Mot de passe actuel <span class="required">*</span></label>
@@ -333,5 +503,9 @@
         </div>
     </div>
 </main>
+
+
+
+
+
 <app-footer></app-footer>
-<app-preloader></app-preloader>  
