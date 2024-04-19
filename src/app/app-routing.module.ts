@@ -5,11 +5,13 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { PageAccountComponent } from './page-account/page-account.component';
 import { AuthGuard } from './auth.guard';
+import { AddAdsComponent } from './add-ads/add-ads.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent }, 
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'deposer_une_annonce', component: AddAdsComponent  , canActivate: [AuthGuard]},
   { path: 'page-account', component: PageAccountComponent , canActivate: [AuthGuard]},
 ];
 

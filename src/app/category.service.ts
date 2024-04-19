@@ -33,5 +33,13 @@ export class CategoryService {
     return this.http.get(this.apiUrls, { headers })
       
   }
+  private baseUrl = 'https://devapi.onemakan.com/v1';
 
+  getCategoryById(categoryId: string, accessToken: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${accessToken}`
+    });
+  
+    return this.http.get(`${this.baseUrl}/categories/${categoryId}`, { headers });
+  }
 }

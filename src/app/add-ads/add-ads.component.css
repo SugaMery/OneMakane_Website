@@ -31124,3 +31124,73 @@ height: 350px !important;
 ::ng-deep .p-stepper .p-stepper-separator {
   margin-inline-start: 1rem !important;
 }
+
+.avant-checkbox {
+  position: relative;
+  cursor: pointer;
+}
+
+.checkbox-input {
+  position: absolute;
+  opacity: 0;
+}
+
+.checkbox-custom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border: 2px solid #000;
+}
+
+.checkbox-custom::after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.checkbox-input:checked + .checkbox-custom::after {
+  display: block;
+}
+
+.checkbox-input:checked + .checkbox-custom::after {
+  left: 7px;
+  top: 3px;
+  width: 6px;
+  height: 12px;
+  border: solid #000;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+::ng-deep .single-content ul  {
+  list-style: circle;
+  padding-left: 0rem; 
+  font-size: 1rem;
+  border-radius: 8px;
+}
+
+::ng-deep .single-content ul .suggestedbackground{
+
+  background-color: #43c5832e;
+
+}
+
+::ng-deep .single-content p {
+  color: #253D4E;
+  font-size: 0.9rem;
+}
+
+::ng-deep .iconUrl img {
+  max-width: 3%;
+}
+
+@media only screen and (max-width: 1024px) {
+  .section-title.style-1 {
+      padding-bottom: 15px;
+      font-size: 1rem !important;
+  }
+}
+

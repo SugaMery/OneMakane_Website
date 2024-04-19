@@ -22,6 +22,7 @@ import { TableModule } from 'primeng/table';
 import { ProgressBarModule } from 'primeng/progressbar'; // Import ProgressBarModule
 import { TagModule } from 'primeng/tag'; // Import TagModule
 import { DialogModule } from 'primeng/dialog';
+import { AddAdsComponent } from './add-ads/add-ads.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,6 +33,7 @@ import { DialogModule } from 'primeng/dialog';
     LoginComponent,
     RegisterComponent,
     PageAccountComponent,
+    AddAdsComponent,
   ],
   imports: [
     BrowserModule,
