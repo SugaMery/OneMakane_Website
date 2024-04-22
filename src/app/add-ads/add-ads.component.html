@@ -104,7 +104,7 @@
                                                                         <div class="select-btn" style="margin-bottom: 1rem; background: #fff; border: 1px solid #ececec; height: 64px; box-shadow: none; padding-left: 20px; font-size: 16px; width: 100%;" (click)="toggleOptions()">
                                                                           <span class="sBtn-text" >     
                                                                             <div style="display: flex; align-items: center;">
-                                                                                <img src="http://localhost:3000/uploads/animaux-domestiques.png" *ngIf="selectedOption.name" alt="" class="iconUrl" style="max-width: 8%; margin-right: 1rem;">
+                                                                                <img src="https://devmedias.onemakan.com/tmp/1713720468-f1f9e4d9-87a8-49d7-8ed9-d4129d8b6d64.png" *ngIf="selectedOption.name" alt="" class="iconUrl" style="max-width: 8%; margin-right: 1rem;">
                                                                                 <p style="margin: 0;">
                                                                                     {{ selectedOption.parentCategoy?.name || "Choisissez" }}  
                                                                                     <i class="fi-rs-angle-right" *ngIf="selectedOption.name" style="padding-left: 1rem; padding-right: 0.5rem; font-size: 15px;"></i>                                                                          
@@ -123,7 +123,7 @@
                                                                     ">
                                                                           <li class="option"  *ngFor="let category of categories" (click)="selectOption(category)">
                                                                             <span class="d-inline-flex align-items-center">
-                                                                                <img src="http://localhost:3000/uploads/animaux-domestiques.png" alt="" class="iconUrl" style="
+                                                                                <img src="https://devmedias.onemakan.com/tmp/1713720468-f1f9e4d9-87a8-49d7-8ed9-d4129d8b6d64.png" alt="" class="iconUrl" style="
                                                                                 max-width: 3%;
                                                                                 margin-right: 1rem;
                                                                             "> {{ category.parentCategoy?.name }}  
@@ -166,13 +166,14 @@
 
                                                                 <div  class="theiaStickySidebar" style="padding-top: 0px; padding-bottom: 1px; position: static; transform: none;">
                                                                     <div class="row">
-                                                                        <div class="form-group col-md-12">
-                                                                          <label>Ou choisissez une autre Catégorie</label>
-                                                                          <div class="select-menu" *ngFor="let setting of settings">
+                                                                        <div class="form-group col-md-12" *ngFor="let setting of settings">
+                                                                          <div class="select-menu" >
+                                                                            <label>{{setting.label}}</label>
+
                                                                             <div class="select-btn" style="margin-bottom: 1rem; background: #fff; border: 1px solid #ececec; height: 64px; box-shadow: none; padding-left: 20px; font-size: 16px; width: 100%;" (click)="toggledOptions(setting)">
                                                                               <span class="sBtn-text">
                                                                                 <div style="display: flex; align-items: center;">
-                                                                                    {{ setting.selectedOption ? setting.selectedOption.label : 'Sélectionnez une option' }}                                                                                </div>
+                                                                                    {{ setting.selectedOption ? setting.selectedOption.label : 'Choisissez' }}                                                                                </div>
                                                                               </span>
                                                                               <i class="bx bx-chevron-down"></i>
                                                                             </div>
@@ -183,20 +184,17 @@
                                                                                 </span>
                                                                               </li>
                                                                             </ul>
-                                                                          </div>
-                                                                          <div *ngIf="fieldErrors.category" class="text-danger requisDiv">
-                                                                            <div>Catégorie est requise.</div>
-                                                                          </div>
+  
                                                                         </div>
+                                                                        <div *ngIf="fieldsErrors[setting.label!]" class="text-danger requisDiv">
+                                                                            <div>{{setting.label ? setting.label + ' est requise.' : ''}}</div>
+
+                                                                          </div>
+                                                                      </div>
+
                                                                       </div>
                                                                       
-                                                                      
-                                                                      
-                                                                      
-
-                
-                                                                  
-                                                                  
+   
                                                             </div>
                                                       
 
@@ -206,7 +204,7 @@
                                                       
                                                           <div class="flex pt-4 justify-content-between">
                                                             <p-button label="Retour"icon="pi pi-arrow-left" (onClick)="prevCallback.emit()" />
-                                                            <p-button label="Suivant" icon="pi pi-arrow-right" iconPos="right" (click)="nextCallback.emit()"></p-button>
+                                                            <p-button label="Suivant" icon="pi pi-arrow-right" iconPos="right" (onClick)="emitNextCallbackSetting() ? nextCallback.emit() : null"></p-button>
                                                        </div>
                                                         </ng-template>
                                                       </p-stepperPanel>

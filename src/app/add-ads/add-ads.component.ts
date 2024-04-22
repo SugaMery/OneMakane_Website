@@ -16,6 +16,8 @@ interface Category {
   parent_id: number | null;
   slug: string | null;
   url: string | null;
+  model_fields?: ModelFields;
+
   parentCategoy ?: Category;
   icon_path :string;
   content?: string;
@@ -24,6 +26,15 @@ interface Category {
 interface DropdownOption {
   id: number;
   name: string;
+}
+interface ModelField {
+  label: string;
+  type: string;
+  help: string;
+}
+
+interface ModelFields {
+  [key: string]: ModelField;
 }
 interface StringIndexed {
   [key: string]: string;
@@ -34,10 +45,9 @@ interface Setting {
   model: string;
   content: string;
   created_at: string;
-  selectedOption?:SelectedOption;
-
-    optionsVisible?: boolean ; // Ajoutez cette ligne
-
+  selectedOption?: Category; // Adjusted to be of type Category
+  label?: string;
+  optionsVisible?: boolean;
   
 }
 interface SelectedOption{
@@ -96,7 +106,8 @@ export class AddAdsComponent {
     slug: null,
     route:null,
     url: null,
-    icon_path : ""
+    icon_path : "",
+    
   };
   uploadedImageIds: number[] = [];
 
@@ -124,7 +135,7 @@ representatives: any;
     { 
       name: "Immobilier", 
       keywords: ["appartement", "maison", "terrain"], 
-      icon_path: "http://localhost:3000/uploads/voitures.png",
+      icon_path: "https://devmedias.onemakan.com/tmp/1713720468-f1f9e4d9-87a8-49d7-8ed9-d4129d8b6d64.png",
       subcategories: [
         { name: "Appartements de luxe", keywords: ["luxe", "penthouse"] },
         { name: "Maisons avec piscine", keywords: ["piscine", "jardin"] }
@@ -133,7 +144,7 @@ representatives: any;
     { 
       name: "Véhicules", 
       keywords: ["voiture", "moto", "camion"], 
-      icon_path: "http://localhost:3000/uploads/voitures.png",
+      icon_path: "https://devmedias.onemakan.com/tmp/1713720468-f1f9e4d9-87a8-49d7-8ed9-d4129d8b6d64.png",
       subcategories: [
         { 
           name: "Voitures", 
@@ -181,6 +192,10 @@ representatives: any;
       ]
     },  // Ajoutez d'autres catégories avec leurs mots-clés associés ici
   ];
+
+
+  fieldsErrors: { [settingLabel: string]: boolean } = {}; // Assuming fieldErrors is an object where keys are setting names and values are booleans indicating whether there are errors
+
 // Méthode pour gérer la sélection exclusive
 selectSubCategory(subcategory: SubCategory) {
   console.log("subcategory detail", subcategory);
@@ -202,10 +217,13 @@ selectSubCategory(subcategory: SubCategory) {
         slug: null,
         url: null,
         route:null,
-        icon_path: ""
+        icon_path: "",
       };
         this.fieldErrors['category'] = false;
         this.formData.category_id = this.selectedSubCategory.id!;
+        this.settings=[];
+        // Update formData with selected category ID
+        this.fetchSettings();
       // Décochez toutes les autres sous-catégories
       this.suggestedCategory!.subcategories!.forEach((sub: SubCategory) => {
           if (sub !== subcategory) {
@@ -288,16 +306,21 @@ toggledOptions(setting: Setting): void {
   this.settings.forEach(s => {
     if (s !== setting) {
       s.optionsVisible = false;
+      
     }
-  });
+    //this.fieldsErrors[setting.name] = false;
 
+  });
+  
   // Inverser la visibilité de la boîte d'options actuelle
   setting.optionsVisible = !setting.optionsVisible;
 }
 
 selectdOptiond(option: any, setting: Setting): void {
   setting.selectedOption = option; // Mettre à jour la sélection pour le setting actuel
-  console.log("selectedOption",setting.selectedOption)
+  console.log("selectedOption",setting.name);
+  this.fieldsErrors[setting.label!] = false;
+
   setting.optionsVisible = false; // Fermer la boîte d'options
 }
 
@@ -444,9 +467,9 @@ suggestCategory(title: string): CustomCategory | null {
             console.error('Parent ID is null');
             continue;
           }
-          this.categoryService.getCategoryById(parentId, accessToken).subscribe(parent  => this.categories[i].parentCategoy=parent.data);
+          this.categoryService.getCategoryById(parentId, accessToken).subscribe(parent  => this.categories[i].parentCategoy=parent.data );
          
-      this.categoryService.getCategoryById(Id, accessToken).subscribe(parent  => this.categories[i].icon_path=parent.data.icon_path);
+      this.categoryService.getCategoryById(Id, accessToken).subscribe(parent  => this.categories[i].model_fields = parent.data!.model_fields) ;
           
  
         }
@@ -560,11 +583,40 @@ suggestCategory(title: string): CustomCategory | null {
   isLinear(): boolean {
     return !this.isPhone();
   }
+  emitNextCallbackSetting(): boolean {
+    // Reset fieldErrors
+    this.fieldsErrors = {};
+
+    // Check each setting for selected options
+    this.settings.forEach(setting => {
+        if (!setting.selectedOption) {
+            // If option is not selected, add error message to fieldErrors
+            this.fieldsErrors[setting.label!] = true;
+        }
+    });
+
+    // Check if any field has errors
+    const hasErrors = Object.keys(this.fieldsErrors).length > 0;
+    if (hasErrors) {
+        // If there are errors, return false and do not emit nextCallback
+        console.log("Please select all options before proceeding.");
+
+        return false;
+    }
+    
+    return true;
+}
+
 
   emitNextCallbackTitre() : boolean {
 
     let isValid = true;
+    if (this.settings.length === 0) {
+      console.log('tttrrrrrr', this.settings);
+      this.fetchSettings();
+    }
     
+
     // Vérifier si les champs requis sont vides
     if (!this.formData.titre) {
         this.fieldErrors.titre = true;
@@ -587,7 +639,6 @@ suggestCategory(title: string): CustomCategory | null {
     if (!isValid) {
         return false;
     }
-  this.fetchSettings();
     // Si tous les champs sont remplis, permettre le passage à l'étape suivante
     return true;
 
@@ -596,8 +647,10 @@ suggestCategory(title: string): CustomCategory | null {
   selectOption(category: Category): void {
     this.selectedOption = category;
     if(this.selectedOption){
-      this.formData.category_id = category.id; // Update formData with selected category ID
-
+      this.formData.category_id = category.id; 
+      this.settings=[];
+      // Update formData with selected category ID
+      this.fetchSettings();
     }
     else{
         if(this.selectedSubCategory!.id){
@@ -609,10 +662,8 @@ suggestCategory(title: string): CustomCategory | null {
     this.fieldErrors.category = false; // Clear category error when category is selected
     this.optionsVisible = false;    
     this.selectedState = null;
-    this.fetchStates();
     this.selectedSubCategory = null;
     this.genreOptionsVisible=false;
-    this.fetchGenres();
   
   }
 
@@ -629,52 +680,43 @@ suggestCategory(title: string): CustomCategory | null {
     this.settingsService.getSettings(accessToken!, queryParams).subscribe(
       (response: any) => {
         console.log("reponse",response.data);
-        this.settings = response.data.map((setting: any) => {
-          return { content: setting.content, optionsVisible: false }; // Initialiser la propriété optionsVisible pour chaque setting
-        });
+// Assuming this.selectedOption.model_fields is the object you want to get keys from
+// Assuming this.selectedOption.model_fields is the object you want to get keys from
+// Assuming this.selectedOption.model_fields is the object you want to get keys from
+// Assuming this.selectedOption.model_fields is the object you want to get keys from
+const modelFields: {
+    [key: string]: {
+        label: string;
+    };
+} = this.selectedOption.model_fields!;
+const keys = Object.keys(modelFields); // Get keys of the object
+
+console.log("Keys of model_fields:", keys);
+
+this.settings = response.data.map((setting: Setting) => {
+    const name: string = setting.name; // Assuming 'name' is the property you want to compare with keys and it's of type string
+    const keyExists = keys.includes(name); // Check if 'name' exists in keys obtained from modelFields
+    let label = ""; // Initialize label variable
+    if (keyExists) {
+        // If the key exists in modelFields, set label to the corresponding value
+        label = modelFields[name].label;
+    }
+    return { content: setting.content, optionsVisible: false, label: label };
+});
+
+
+
+
+
+
+                console.log("reponse2",this.settings);
+
       }
     );
   }
 
 
-  fetchStates(): void {
-    if (this.selectedOption) {
-      const userId = localStorage.getItem('loggedInUserId');
-      const accessToken = localStorage.getItem('loggedInUserToken');        
-      const queryParams = { name: 'state', model: this.selectedOption.model };
-      this.settingsService.getSettings(accessToken!, queryParams).subscribe(
-        (response) => {
-          if (response.status === "Success" && response.data) {
-            const data = JSON.parse(response.data);
-            this.states = Object.keys(data).map(key => ({ name: data[key], value: key }));
-          }
-        },
-        (error) => {
-          console.error('Error fetching states:', error);
-        }
-      );
-    }
-  }
 
-  selectState(state: any): void {   
-    this.selectedState = state;
-    this.stateOptionsVisible=false;
-    this.fieldErrors.state = false;
-  this.formData.state=state.value;
-
-  }
-  selectedCategoryState : boolean = false;
-  toggleStateOptions(): void {
-    if(this.selectedOption.model != null){
-      this.stateOptionsVisible = !this.stateOptionsVisible;
-      this.optionsVisible =false;
-      this.selectedCategoryState = false ;
-      this.genreOptionsVisible = false ;
-
-    }else{
-      this.selectedCategoryState = true
-    }
-  }
 
 
   onSubmits(){
@@ -774,7 +816,7 @@ suggestCategory(title: string): CustomCategory | null {
                 slug: null,
                 url: null,
                 route:null,
-                icon_path: ""
+                icon_path: "",
               };
               console.log('Annonce créée avec succès !', response);
 
@@ -816,43 +858,7 @@ suggestCategory(title: string): CustomCategory | null {
     genres: any[] = []; // Array to hold genres
     genreOptionsVisible = false; // Flag to show/hide genre options
     // other properties and constructor
-    fetchGenres(): void {
-      const userId = localStorage.getItem('loggedInUserId');
-      const accessToken = localStorage.getItem('loggedInUserToken');        
-      const queryParams = { name: 'genre', model: this.selectedOption.model };
-      this.settingsService.getSettings(accessToken!, queryParams).subscribe(
-        (response) => {
-          if (response.status === "Success" && response.data) {
-            const data = JSON.parse(response.data);
-            this.genres = Object.keys(data).map(key => ({ name: data[key], value: key }));
-          }
-        },
-        (error) => {
-          console.error('Error fetching genres:', error);
-        }
-      );
-    }
-  
-    selectGenre(genre: any): void {
-      this.selectedGenre = genre;
-      this.toggleGenreOptions(); // Close dropdown after selection
-      this.fieldErrors.genre = false;
-      this.formData.genre = genre.value; // Update formData with selected category ID
-   console.log('genre',this.formData.genre)
-    }
-  
-    toggleGenreOptions(): void {
 
-      if(this.selectedOption.model != null){
-        this.genreOptionsVisible = !this.genreOptionsVisible;
-        this.optionsVisible =false;
-        this.stateOptionsVisible=false ;
-        this.selectedCategoryGenre = false ;  
-      }else{
-        this.selectedCategoryGenre = true
-      }
-
-    }
   
   toggleOptions(): void {
     this.optionsVisible = !this.optionsVisible;
