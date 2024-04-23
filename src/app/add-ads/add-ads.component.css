@@ -31194,3 +31194,37 @@ height: 350px !important;
   }
 }
 
+
+@media (min-width: 768px) {
+  .ColProduct {
+      flex: 0 0 auto;
+      /* width: 50%; */
+      width: 90% !important;
+  }
+}
+
+.ui-carousel-dots-container{
+  display: none !important;
+  }
+
+
+  ::ng-deep .p-carousel .p-carousel-content .p-carousel-prev, .p-carousel .p-carousel-content .p-carousel-next {
+    color: white;
+    background-color: #8c979b;
+    border-radius: 100%;
+    margin-right: 1.5rem;
+  }
+
+
+  ::ng-deep  .p-carousel .p-carousel-content .p-carousel-next {
+    color: white;
+    background-color: #8c979b;
+    border-radius: 100%;
+  }
+
+
+  ::ng-deep .product-cart-wrap .product-img-action-wrap {
+
+    height: 110px;
+
+  }

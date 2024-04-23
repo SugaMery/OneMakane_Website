@@ -23,6 +23,7 @@ import { ProgressBarModule } from 'primeng/progressbar'; // Import ProgressBarMo
 import { TagModule } from 'primeng/tag'; // Import TagModule
 import { DialogModule } from 'primeng/dialog';
 import { AddAdsComponent } from './add-ads/add-ads.component';
+import { CarouselModule } from 'primeng/carousel';
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,6 +51,7 @@ import { AddAdsComponent } from './add-ads/add-ads.component';
     ProgressBarModule,
     TagModule,
     DialogModule,
+    CarouselModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: () => {
