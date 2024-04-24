@@ -9,10 +9,9 @@ import { JwtHelperService } from '@auth0/angular-jwt';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
-  providers: [MessageService]
+  providers: [MessageService],
 })
 export class LoginComponent {
-  
   email: string = '';
   password: string = '';
 
@@ -24,33 +23,25 @@ export class LoginComponent {
 
   userData = {
     email: '',
-    password: ''
+    password: '',
   };
 
-
-  
   onSubmit(): void {
     this.userData.email = this.email;
     this.userData.password = this.password;
     this.userService.login(this.userData).subscribe(
-      response => {
-
-      // Store user ID and token in local storage
-      localStorage.setItem('loggedInUserId', response.data.id);
-      localStorage.setItem('loggedInUserToken', response.data.token);
+      (response) => {
+        // Store user ID and token in local storage
+        localStorage.setItem('loggedInUserId', response.data.id);
+        localStorage.setItem('loggedInUserToken', response.data.token);
 
         // Redirect to the dashboard
         window.location.href = '/';
       },
-      error => {
+      (error) => {
         // Handle login error
         console.error(error);
       }
     );
   }
-  
-  
-  
-
-
 }

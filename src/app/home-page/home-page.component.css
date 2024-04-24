@@ -1,55 +1,82 @@
-
-
 /* Style pour l'image du vendeur */
 .seller-image img {
-    width: 50px; /* Ajustez la largeur selon vos besoins */
+    width: 50px;
+    /* Ajustez la largeur selon vos besoins */
     height: auto;
-    border-radius: 50%; /* Pour une forme de cercle */
+    border-radius: 50%;
+    /* Pour une forme de cercle */
 }
 
 /* Style pour la couverture de notation du produit */
 .product-rate-cover {
-    justify-content: flex-end; /* Alignement à droite */
-    flex-grow: 1; /* Pour occuper tout l'espace disponible */
+    justify-content: flex-end;
+    /* Alignement à droite */
+    flex-grow: 1;
+    /* Pour occuper tout l'espace disponible */
 }
 
 /* Style pour la notation du produit */
 .product-rate {
-    margin-right: 5px; /* Espace entre la notation et le texte */
+    margin-right: 5px;
+    /* Espace entre la notation et le texte */
 }
 
 /* Style pour le texte de notation */
 .font-small {
-    font-size: 12px; /* Taille du texte de notation */
+    font-size: 12px;
+    /* Taille du texte de notation */
 }
+
 .seller-name {
-    font-size: 14px; /* Taille de la police du nom du vendeur */
-    font-weight: bold; /* Style de police en gras, si nécessaire */
+    font-size: 14px;
+    /* Taille de la police du nom du vendeur */
+    font-weight: bold;
+    /* Style de police en gras, si nécessaire */
 }
 
 .font-small {
     font-size: 14px;
 }
 
-  .product-cart-wrap .product-img-action-wrap .product-img-zoom a img {
+.product-cart-wrap .product-img-action-wrap .product-img-zoom a img {
     /* height: 300px; */
     object-fit: cover;
-  }
-  
-  
-
-  .product-rate {
-	background-image: url("../../assets/imgs/theme/rating-stars.png");
-	background-position: 0 -12px;
-	background-repeat: repeat-x;
-	height: 12px;
-	width: 60px;
-	transition: all 0.5s ease-out 0s;
-	-webkit-transition: all 0.5s ease-out 0s;
 }
+
+
+
+.product-rate {
+    background-image: url("../../assets/imgs/theme/rating-stars.png");
+    background-position: 0 -12px;
+    background-repeat: repeat-x;
+    height: 12px;
+    width: 60px;
+    transition: all 0.5s ease-out 0s;
+    -webkit-transition: all 0.5s ease-out 0s;
+}
+
 .product-rating {
-	height: 12px;
-	background-repeat: repeat-x;
-	background-image: url("../../assets/imgs/theme/rating-stars.png");
-	background-position: 0 0;
+    height: 12px;
+    background-repeat: repeat-x;
+    background-image: url("../../assets/imgs/theme/rating-stars.png");
+    background-position: 0 0;
+}
+
+::ng-deep .p-carousel-item {
+    width: 150px;
+}
+
+::ng-deep .p-carousel .p-carousel-content .p-carousel-prev,
+.p-carousel .p-carousel-content .p-carousel-next {
+    color: white;
+    background-color: #8c979b;
+    border-radius: 100%;
+    margin-right: 0.8rem;
+}
+
+
+::ng-deep .p-carousel .p-carousel-content .p-carousel-next {
+    color: white;
+    background-color: #8c979b;
+    border-radius: 100%;
 }

@@ -152,27 +152,36 @@
           id="carausel-10-columns-arrows"
         ></div>
       </div>
-      <div class="carausel-10-columns-cover position-relative">
-        <div class="carausel-10-columns" id="carausel-10-columns">
-          <div
-            class="card-2 wow animate__animated animate__fadeInUp"
-            style="height: 193px"
-            *ngFor="let category of Souscategories; let i = index"
-            [ngClass]="'bg-' + calculateBgColor(i)"
-            data-wow-delay=".1s"
-          >
-            <figure class="img-hover-scale overflow-hidden">
-              <a href="/shop-grid-right"
-                ><img src="{{ category.icon_path }}" alt=""
-              /></a>
-            </figure>
-            <h6>
-              <a href="/shop-grid-right">{{ category.name }}</a>
-            </h6>
-            <span>{{ category.item_count }} items</span>
+      <p-carousel
+        [value]="Souscategories"
+        [numVisible]="7"
+        [numScroll]="1"
+        [circular]="true"
+        [responsiveOptions]="responsiveOptions"
+        [showIndicators]="false"
+        class="custom-carousel"
+      >
+        <ng-template let-category pTemplate="item">
+          <div class="carausel-10-columns-cover position-relative">
+            <div
+              class="card-2 wow animate__animated animate__fadeInUp"
+              style="height: 193px; margin-right: 1rem"
+              [ngClass]="calculateBgColor(category, Souscategories)"
+              data-wow-delay=".1s"
+            >
+              <figure class="img-hover-scale overflow-hidden">
+                <a href="/shop-grid-right"
+                  ><img [src]="category?.media?.url" alt=""
+                /></a>
+              </figure>
+              <h6>
+                <a href="/shop-grid-right">{{ category.name }}</a>
+              </h6>
+              <span>{{ category.item_count }} items</span>
+            </div>
           </div>
-        </div>
-      </div>
+        </ng-template>
+      </p-carousel>
     </div>
   </section>
   <!--End category slider-->
