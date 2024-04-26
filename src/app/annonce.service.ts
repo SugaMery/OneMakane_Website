@@ -65,11 +65,15 @@ export class AnnonceService {
   }
 
   uploadFile(file: File, accessToken: string): Promise<any> {
-    const url = `${this.apiUrl}/medias`;
     const formData = new FormData();
     formData.append('media_file', file);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`,
+    });
+
     return this.http
-      .post<any>(url, formData, { headers: this.getHeaders(accessToken) })
+      .post<any>('https://devapi.onemakan.com/v1/medias', formData, { headers })
       .toPromise();
   }
 
