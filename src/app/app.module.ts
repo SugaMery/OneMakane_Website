@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
+import {
+  BrowserModule,
+  provideClientHydration,
+} from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -24,6 +27,10 @@ import { TagModule } from 'primeng/tag'; // Import TagModule
 import { DialogModule } from 'primeng/dialog';
 import { AddAdsComponent } from './add-ads/add-ads.component';
 import { CarouselModule } from 'primeng/carousel';
+import { AdsDetailComponent } from './ads-detail/ads-detail.component';
+import { AvatarModule } from 'primeng/avatar';
+import { AvatarGroupModule } from 'primeng/avatargroup';
+import { GoogleMapComponent } from './google-map/google-map.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,6 +42,8 @@ import { CarouselModule } from 'primeng/carousel';
     RegisterComponent,
     PageAccountComponent,
     AddAdsComponent,
+    AdsDetailComponent,
+    GoogleMapComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,17 +61,17 @@ import { CarouselModule } from 'primeng/carousel';
     TagModule,
     DialogModule,
     CarouselModule,
+    AvatarModule,
+    AvatarGroupModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: () => {
           return localStorage.getItem('loggedInUserToken');
-        }
-      }
-    })
+        },
+      },
+    }),
   ],
-  providers: [
-    provideClientHydration()
-  ],
-  bootstrap: [AppComponent]
+  providers: [provideClientHydration()],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { CategoryService } from '../category.service';
 import { DOCUMENT } from '@angular/common';
+import { AnnonceService } from '../annonce.service';
 
 @Component({
   selector: 'app-home-page',
@@ -13,12 +14,14 @@ export class HomePageComponent implements OnInit {
   displayedCategories: any[] = [];
   hiddenCategories: any[] = [];
   showMore: boolean = false;
+  ads: any[] = [];
   currentIndex: number | undefined; // Initialize as undefined
   responsiveOptions:
     | { breakpoint: string; numVisible: number; numScroll: number }[]
     | undefined;
   constructor(
     private categoryService: CategoryService,
+    private annonceService: AnnonceService,
     @Inject(DOCUMENT) private document: Document
   ) {}
 
@@ -41,6 +44,53 @@ export class HomePageComponent implements OnInit {
         numScroll: 2,
       },
     ];
+
+    if (this.document.defaultView && this.document.defaultView.localStorage) {
+      const accessToken =
+        this.document.defaultView.localStorage.getItem('loggedInUserToken');
+      if (accessToken) {
+        this.annonceService.getAds(accessToken!).subscribe((data) => {
+          data.data.forEach((element: any) => {
+            this.annonceService
+              .getAdById(element.id, accessToken!)
+              .subscribe((data) => {
+                element.image = data.data.image;
+                this.ads.push(data.data);
+                console.log('rrrrrrrrrrrrrrrrr', this.ads);
+              });
+          });
+        });
+      }
+    }
+  }
+  getRelativeTime(createdAt: string): string {
+    const currentDate = new Date();
+    const adDate = new Date(createdAt);
+    const timeDiff = currentDate.getTime() - adDate.getTime();
+    const seconds = Math.floor(timeDiff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 1) {
+      return days + ' jours passés';
+    } else if (days === 1) {
+      return (
+        'hier à ' +
+        adDate.toLocaleTimeString('fr-FR', {
+          hour: '2-digit',
+          minute: '2-digit',
+        })
+      );
+    } else {
+      return (
+        "aujourd'hui à " +
+        adDate.toLocaleTimeString('fr-FR', {
+          hour: '2-digit',
+          minute: '2-digit',
+        })
+      );
+    }
   }
 
   getCategories(): void {
