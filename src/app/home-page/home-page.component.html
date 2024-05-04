@@ -9,7 +9,7 @@
               <ul>
                 <li *ngFor="let category of displayedCategories">
                   <a href="/page-account">
-                    <img [src]="category.icon_path" alt="{{ category.name }}" />
+                    <img [src]="category.media?.url" alt="{{ category.name }}" />
                     {{ category.name }}
                   </a>
                 </li>
@@ -130,12 +130,14 @@
       </div>
     </div>
   </section>
+
   <!--End hero slider-->
   <section class="popular-categories section-padding">
     <div class="container wow animate__animated animate__fadeIn">
       <div class="section-title">
         <div class="title">
           <h3>Catégories en Vedette</h3>
+          
           <ul class="list-inline nav nav-tabs links">
             <li
               class="list-inline-item nav-item"
@@ -189,7 +191,7 @@
   <section class="product-tabs section-padding position-relative">
     <div class="container">
       <div class="section-title style-2 wow animate__animated animate__fadeIn">
-        <h3>Popular Products</h3>
+        <h3>En ce moment sur OneMakene</h3>
         <ul class="nav nav-tabs links" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
             <button
@@ -205,88 +207,18 @@
               All
             </button>
           </li>
-          <li class="nav-item" role="presentation">
+          <li class="nav-item" role="presentation" *ngFor="let category of categories.slice(0, 8)">
             <button
-              class="nav-link"
-              id="nav-tab-two"
-              data-bs-toggle="tab"
-              data-bs-target="#tab-two"
-              type="button"
-              role="tab"
-              aria-controls="tab-two"
-              aria-selected="false"
-            >
-              Milks & Dairies
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button
-              class="nav-link"
-              id="nav-tab-three"
-              data-bs-toggle="tab"
-              data-bs-target="#tab-three"
-              type="button"
-              role="tab"
-              aria-controls="tab-three"
-              aria-selected="false"
-            >
-              Coffes & Teas
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button
-              class="nav-link"
-              id="nav-tab-four"
-              data-bs-toggle="tab"
-              data-bs-target="#tab-four"
-              type="button"
-              role="tab"
-              aria-controls="tab-four"
-              aria-selected="false"
-            >
-              Pet Foods
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button
-              class="nav-link"
-              id="nav-tab-five"
-              data-bs-toggle="tab"
-              data-bs-target="#tab-five"
-              type="button"
-              role="tab"
-              aria-controls="tab-five"
-              aria-selected="false"
-            >
-              Meats
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button
-              class="nav-link"
-              id="nav-tab-six"
-              data-bs-toggle="tab"
-              data-bs-target="#tab-six"
-              type="button"
-              role="tab"
-              aria-controls="tab-six"
-              aria-selected="false"
-            >
-              Vegetables
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button
-              class="nav-link"
-              id="nav-tab-seven"
-              data-bs-toggle="tab"
-              data-bs-target="#tab-seven"
-              type="button"
-              role="tab"
-              aria-controls="tab-seven"
-              aria-selected="false"
-            >
-              Fruits
+            class="nav-link"
+            [id]="'nav-tab-' + category.id"
+            [attr.data-bs-toggle]="'tab'"
+            [attr.data-bs-target]="'#tab-' + category.id"
+            type="button"
+            role="tab"
+            [attr.aria-controls]="'tab-' + category.id"
+            [attr.aria-selected]="category === categories[0]"
+          >
+            {{ category.name }}
             </button>
           </li>
         </ul>
@@ -312,7 +244,7 @@
                 <div class="product-img-action-wrap">
                   <div
                     class="product-img product-img-zoom"
-                    style="height: 257px"
+                    style="height: 240px"
                   >
                     <a [href]="'/ads/' + ad.id" style="height: 100%">
                       <!-- Assuming ad has an image URL property -->
@@ -392,7 +324,7 @@
           >
             <img src="../../assets/imgs/banner/banner-16.png" alt="" />
             <div class="banner-text">
-              <h6 class="mb-10 mt-30">Everyday Fresh with<br />Our Products</h6>
+              <h6 class="mb-10 mt-30">Trouvez votre <br />prochaine voiture ici !</h6>
               <p>Go to supplier</p>
             </div>
           </div>
@@ -404,7 +336,7 @@
           >
             <img src="../../assets/imgs/banner/banner-17.png" alt="" />
             <div class="banner-text">
-              <h6 class="mb-10 mt-30">100% guaranteed all<br />Fresh items</h6>
+              <h6 class="mb-10 mt-30">Rénovez avec des <br />magnifiques meubles ! </h6>
               <p>Go to supplier</p>
             </div>
           </div>
@@ -417,7 +349,7 @@
             <img src="../../assets/imgs/banner/banner-18.png" alt="" />
             <div class="banner-text">
               <h6 class="mb-10 mt-30">
-                Special grocery sale<br />off this month
+                Des vacances de rêve <br />vous attendent !
               </h6>
               <p>Go to supplier</p>
             </div>
@@ -431,8 +363,8 @@
             <img src="../../assets/imgs/banner/banner-19.png" alt="" />
             <div class="banner-text">
               <h6 class="mb-10 mt-30">
-                Enjoy 15% OFF for all<br />
-                vegetable and fruit
+                Découvrez les dernières <br />
+                tendances de la mode !
               </h6>
               <p>Go to supplier</p>
             </div>

@@ -439,7 +439,7 @@
       i.preventDefault())
   }
   ,
-  e.prototype.destroy = function(e) {
+/*   e.prototype.destroy = function(e) {
       var t = this;
       t.autoPlayClear(),
       t.touchObject = {},
@@ -464,7 +464,7 @@
       t.unslicked = !0,
       e || t.$slider.trigger("destroy", [t])
   }
-  ,
+  , */
   e.prototype.disableTransition = function(i) {
       var e = this
         , t = {};

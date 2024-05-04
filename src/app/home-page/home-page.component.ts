@@ -152,4 +152,6 @@ export class HomePageComponent implements OnInit {
     const index = categories.indexOf(category);
     return this.colors[index % this.colors.length];
   }
+
+  
 }

@@ -133,9 +133,11 @@
     /*Carausel 10 columns*/
     $(".carausel-10-columns").each(function (key, item) {
         var id = $(this).attr("id");
+        console.log('dddddd',id);
         var sliderID = "#" + id;
+        console.log('dddddd2',sliderID);
         var appendArrowsClassName = "#" + id + "-arrows";
-
+        console.log('dddddd3',appendArrowsClassName);
         $(sliderID).slick({
             dots: false,
             infinite: true,
