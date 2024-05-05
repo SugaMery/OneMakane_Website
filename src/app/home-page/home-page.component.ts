@@ -40,8 +40,8 @@ export class HomePageComponent implements OnInit {
       },
       {
         breakpoint: '560px',
-        numVisible: 2,
-        numScroll: 2,
+        numVisible: 3,
+        numScroll: 3,
       },
     ];
 
