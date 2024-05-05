@@ -80,3 +80,21 @@
     background-color: #8c979b;
     border-radius: 100%;
 }
+
+::ng-deep .custom-carousel .p-carousel-header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: unset;
+    margin: 10px;
+  }
+  
+
+  ::ng-deep .p-carousel-next {
+    display: contents !important;
+
+  }
+::ng-deep  .p-carousel-prev {
+    display: contents !important;
+
+  }
