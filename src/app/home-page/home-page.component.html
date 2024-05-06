@@ -9,7 +9,10 @@
               <ul>
                 <li *ngFor="let category of displayedCategories">
                   <a href="/page-account">
-                    <img [src]="category.icon_path" alt="{{ category.name }}" />
+                    <img
+                      [src]="category.media?.url"
+                      alt="{{ category.name }}"
+                    />
                     {{ category.name }}
                   </a>
                 </li>
@@ -130,6 +133,7 @@
       </div>
     </div>
   </section>
+
   <!--End hero slider-->
   <section class="popular-categories section-padding">
     <div class="container wow animate__animated animate__fadeIn">
@@ -153,10 +157,11 @@
         ></div>
       </div>
       <p-carousel
+        #carousel
         [value]="Souscategories"
         [numVisible]="7"
         [numScroll]="1"
-        [circular]="true"
+        [circular]="false"
         [responsiveOptions]="responsiveOptions"
         [showIndicators]="false"
         class="custom-carousel"
@@ -184,12 +189,13 @@
       </p-carousel>
     </div>
   </section>
+
   <!--End category slider-->
   <!--End banners-->
   <section class="product-tabs section-padding position-relative">
     <div class="container">
       <div class="section-title style-2 wow animate__animated animate__fadeIn">
-        <h3>Popular Products</h3>
+        <h3>En ce moment sur OneMakene</h3>
         <ul class="nav nav-tabs links" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
             <button
@@ -205,105 +211,83 @@
               All
             </button>
           </li>
-          <li class="nav-item" role="presentation">
+          <li
+            class="nav-item"
+            role="presentation"
+            *ngFor="let category of categories.slice(0, 8)"
+          >
             <button
               class="nav-link"
-              id="nav-tab-two"
-              data-bs-toggle="tab"
-              data-bs-target="#tab-two"
+              [id]="'nav-tab-' + category.id"
+              [attr.data-bs-toggle]="'tab'"
+              [attr.data-bs-target]="'#tab-' + category.id"
               type="button"
               role="tab"
-              aria-controls="tab-two"
-              aria-selected="false"
+              [attr.aria-controls]="'tab-' + category.id"
+              [attr.aria-selected]="category === categories[0]"
             >
-              Milks & Dairies
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button
-              class="nav-link"
-              id="nav-tab-three"
-              data-bs-toggle="tab"
-              data-bs-target="#tab-three"
-              type="button"
-              role="tab"
-              aria-controls="tab-three"
-              aria-selected="false"
-            >
-              Coffes & Teas
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button
-              class="nav-link"
-              id="nav-tab-four"
-              data-bs-toggle="tab"
-              data-bs-target="#tab-four"
-              type="button"
-              role="tab"
-              aria-controls="tab-four"
-              aria-selected="false"
-            >
-              Pet Foods
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button
-              class="nav-link"
-              id="nav-tab-five"
-              data-bs-toggle="tab"
-              data-bs-target="#tab-five"
-              type="button"
-              role="tab"
-              aria-controls="tab-five"
-              aria-selected="false"
-            >
-              Meats
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button
-              class="nav-link"
-              id="nav-tab-six"
-              data-bs-toggle="tab"
-              data-bs-target="#tab-six"
-              type="button"
-              role="tab"
-              aria-controls="tab-six"
-              aria-selected="false"
-            >
-              Vegetables
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button
-              class="nav-link"
-              id="nav-tab-seven"
-              data-bs-toggle="tab"
-              data-bs-target="#tab-seven"
-              type="button"
-              role="tab"
-              aria-controls="tab-seven"
-              aria-selected="false"
-            >
-              Fruits
+              {{ category.name }}
             </button>
           </li>
         </ul>
       </div>
+
       <!--End nav-tabs-->
       <div class="tab-content" id="myTabContent">
+        <!-- Loop through each category -->
         <div
           class="tab-pane fade show active"
           id="tab-one"
           role="tabpanel"
           aria-labelledby="tab-one"
+          *ngFor="let category of categorizedAds | keyvalue"
         >
+          <h4 class="mb-20">{{ category.key }}</h4>
+          <!-- Display category name as title -->
+          <!-- <p-carousel [value]="category.value" [numVisible]="5" [numScroll]="1" [circular]="true">
+            <div class="row product-grid-5" >
+              <ng-template let-ad pTemplate="item">
+                <div class="col-lg-2 col-md-4 col-12 col-sm-6" >
+                  <div class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn" data-wow-delay=".1s">
+                    <div class="product-img-action-wrap">
+                      <div class="product-img product-img-zoom" style="height: 240px">
+                        <a [href]="'/ads/' + ad.id" style="height: 100%">
+                          <img class="default-img" [src]="ad.medias[0]?.url" alt="" />
+                          <img class="hover-img" [src]="ad.medias[1]?.url" alt="" style="height: 100%" />
+                        </a>
+                      </div>
+                      <div class="product-action-1">
+                        <a aria-label="Add To Wishlist" class="action-btn" href="">
+                          <i class="fi-rs-heart"></i>
+                        </a>
+                        <a aria-label="Quick view" class="action-btn" data-bs-toggle="modal" data-bs-target="#quickViewModal">
+                          <i class="fi-rs-eye"></i>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="product-content-wrap">
+                      <div class="product-category" style="margin-top: 1rem">
+                        <a href="">{{ ad.category.name }}</a>
+                      </div>
+                      <h2><a href="">{{ ad.title }}</a></h2>
+                      <div class="product-rate-cover">
+                        <div class="" style="width: 80%; font-weight: 800; font-size: medium; color: black;">{{ ad.price }} DH</div>
+                      </div>
+                      <div>
+                        <span class="font-small text-muted">{{ getRelativeTime(ad.created_at) }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+
+            </div> 
+          </p-carousel> -->
           <div class="row product-grid-5">
-            <!-- Loop through each ad in the ads array -->
+            <!-- Loop through each ad in the category -->
             <div
               class="col-lg-2 col-md-4 col-12 col-sm-6"
-              *ngFor="let ad of ads"
+              *ngFor="let ad of category.value"
             >
               <div
                 class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
@@ -312,7 +296,7 @@
                 <div class="product-img-action-wrap">
                   <div
                     class="product-img product-img-zoom"
-                    style="height: 257px"
+                    style="height: 240px"
                   >
                     <a [href]="'/ads/' + ad.id" style="height: 100%">
                       <!-- Assuming ad has an image URL property -->
@@ -350,7 +334,6 @@
                   <h2>
                     <a href="">{{ ad.title }}</a>
                   </h2>
-
                   <div class="product-rate-cover">
                     <div
                       class=""
@@ -365,9 +348,9 @@
                     </div>
                   </div>
                   <div>
-                    <span class="font-small text-muted"
-                      >{{ getRelativeTime(ad.created_at) }}
-                    </span>
+                    <span class="font-small text-muted">{{
+                      getRelativeTime(ad.created_at)
+                    }}</span>
                   </div>
                 </div>
               </div>
@@ -376,6 +359,7 @@
           </div>
           <!-- End of product-grid-4 -->
         </div>
+        <!-- End of category loop -->
       </div>
 
       <!--End tab-content-->
@@ -392,7 +376,9 @@
           >
             <img src="../../assets/imgs/banner/banner-16.png" alt="" />
             <div class="banner-text">
-              <h6 class="mb-10 mt-30">Everyday Fresh with<br />Our Products</h6>
+              <h6 class="mb-10 mt-30">
+                Trouvez votre <br />prochaine voiture ici !
+              </h6>
               <p>Go to supplier</p>
             </div>
           </div>
@@ -404,7 +390,9 @@
           >
             <img src="../../assets/imgs/banner/banner-17.png" alt="" />
             <div class="banner-text">
-              <h6 class="mb-10 mt-30">100% guaranteed all<br />Fresh items</h6>
+              <h6 class="mb-10 mt-30">
+                Rénovez avec des <br />magnifiques meubles !
+              </h6>
               <p>Go to supplier</p>
             </div>
           </div>
@@ -417,7 +405,7 @@
             <img src="../../assets/imgs/banner/banner-18.png" alt="" />
             <div class="banner-text">
               <h6 class="mb-10 mt-30">
-                Special grocery sale<br />off this month
+                Des vacances de rêve <br />vous attendent !
               </h6>
               <p>Go to supplier</p>
             </div>
@@ -431,8 +419,8 @@
             <img src="../../assets/imgs/banner/banner-19.png" alt="" />
             <div class="banner-text">
               <h6 class="mb-10 mt-30">
-                Enjoy 15% OFF for all<br />
-                vegetable and fruit
+                Découvrez les dernières <br />
+                tendances de la mode !
               </h6>
               <p>Go to supplier</p>
             </div>
@@ -497,9 +485,12 @@
         >
           <div class="banner-img style-2">
             <div class="banner-text">
-              <h2 class="mb-100">Bring nature into your home</h2>
-              <a class="btn btn-xs" href="/shop-grid-right"
-                >Shop Now <i class="fi-rs-arrow-small-right"></i
+              <h2 class="mb-10">Qu'attendez-vous ?</h2>
+              <h4 style="color: white">
+                Déposez votre annonce dès maintenant !
+              </h4>
+              <a class="btn btn-xs" href="/deposer_une_annonce"
+                >Déposer maintenant <i class="fi-rs-arrow-small-right"></i
               ></a>
             </div>
           </div>
@@ -1969,7 +1960,7 @@
     </div>
   </section>
   <!--End Deals-->
-  <section class="section-padding mb-30">
+  <!--   <section class="section-padding mb-30">
     <div class="container">
       <div class="row">
         <div
@@ -2302,7 +2293,7 @@
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
   <!--End 4 columns-->
 </main>
 <app-footer></app-footer>

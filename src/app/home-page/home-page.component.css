@@ -80,3 +80,60 @@
     background-color: #8c979b;
     border-radius: 100%;
 }
+
+::ng-deep .custom-carousel .p-carousel-header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: unset;
+    margin: 10px;
+}
+
+
+::ng-deep .p-carousel-next {}
+
+::ng-deep .p-carousel-prev {
+    /*     display: contents !important;
+ */
+}
+
+
+::ng-deep .p-carousel .p-carousel-content .p-carousel-next {
+    /*     width: 0rem; 
+    height: 2rem;
+    color: #000000 !important;
+    border: 0 none;
+    background: transparent !important; 
+    border-radius: 50%;
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+    margin: 0.5rem; */
+}
+
+::ng-deep .p-carousel .p-carousel-content .p-carousel-prev {
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(26, 26, 26, 0.12) 0px 4px 8px;
+    color: #3bb77e;
+    z-index: 2;
+    left: 0.5rem;
+    margin-right: -3rem;
+    bottom: 1rem;
+    width: 3rem;
+    height: 3rem;
+}
+
+::ng-deep .p-carousel .p-carousel-content .p-carousel-next {
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(26, 26, 26, 0.12) 0px 4px 8px;
+    color: #3bb77e;
+    z-index: 2;
+    right: 0.5rem;
+    margin-left: -4rem;
+    bottom: 1rem;
+    width: 3rem;
+    height: 3rem;
+}
+
+::ng-deep .p-disabled,
+.p-component:disabled {
+    display: none;
+}
