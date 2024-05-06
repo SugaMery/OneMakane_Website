@@ -798,7 +798,7 @@ export class AddAdsComponent {
     if (!accessToken) {
       return;
     }
-    this.categoryService.getCategoriesFrom(accessToken).subscribe(
+    this.categoryService.getCategoriesFrom().subscribe(
       (categories) => {
         this.categories = categories.data.filter(
           (category: Category) =>
@@ -811,12 +811,12 @@ export class AddAdsComponent {
             continue;
           }
           this.categoryService
-            .getCategoryById(parentId, accessToken)
+            .getCategoryById(parentId)
             .subscribe(
               (parent) => (this.categories[i].parentCategoy = parent.data)
             );
           this.categoryService
-            .getCategoryById(Id, accessToken)
+            .getCategoryById(Id)
             .subscribe(
               (parent) =>
                 (this.categories[i].model_fields = parent.data!.model_fields)

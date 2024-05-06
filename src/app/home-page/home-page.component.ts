@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { CategoryService } from '../category.service';
 import { DOCUMENT } from '@angular/common';
 import { AnnonceService } from '../annonce.service';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-home-page',
@@ -15,7 +16,7 @@ export class HomePageComponent implements OnInit {
   hiddenCategories: any[] = [];
   showMore: boolean = false;
   ads: any[] = [];
-
+  adsfirsts: any[] = [];
   firstad: any = {};
   adsArray: any[] = [];
   categorizedAds: { [key: string]: any[] } = {}; // Define categorizedAds property
@@ -33,6 +34,7 @@ export class HomePageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.getAdsForCarousel();
     this.getCategories();
     this.responsiveOptions = [
       {
@@ -75,13 +77,15 @@ export class HomePageComponent implements OnInit {
       if (accessToken) {
         this.annonceService.getAds(accessToken!).subscribe((data) => {
           this.ads = data.data;
-          this.annonceService
-            .getAdById(data.data[0].id, accessToken!)
-            .subscribe((data) => {
-              this.firstad = data.data;
-              console.log('tttttttttt', data.data);
-            });
-
+          data.data.forEach((datas: { category: { name: string } }) => {
+            if (datas.category.name === 'Véhicules') {
+              //this.adsfirsts.push(datas);
+            }
+            this.adsfirsts = data.data.filter(
+              (first: { category: { name: string } }) =>
+                first.category.name === 'Véhicules'
+            );
+          });
           const categorizedAds: { [key: string]: any[] } = {}; // Object to hold ads grouped by category
           data.data.forEach((element: any) => {
             this.annonceService
@@ -104,6 +108,20 @@ export class HomePageComponent implements OnInit {
       }
     }
     this.convertAdsToArray();
+  }
+
+  getAdsForCarousel(): any[] {
+    let adsArray: any[] = [];
+    console.log('ggggggrettttttt', adsArray);
+    // Iterate over categorizedAds and push ads into the adsArray
+    for (const category in this.categorizedAds) {
+      if (Object.prototype.hasOwnProperty.call(this.categorizedAds, category)) {
+        adsArray = adsArray.concat(this.categorizedAds[category]);
+      }
+    }
+    console.log('ggggggrettttttt2', adsArray);
+
+    return adsArray;
   }
 
   convertAdsToArray() {
@@ -145,44 +163,42 @@ export class HomePageComponent implements OnInit {
       const accessToken =
         this.document.defaultView.localStorage.getItem('loggedInUserToken');
       if (accessToken) {
-        this.categoryService
-          .getCategoriesFrom(accessToken!)
-          .subscribe((categories) => {
-            this.categories = categories.data.filter(
-              (category: { active: boolean; parent_id: null }) =>
-                category.active === true && category.parent_id === null
-            );
-            this.Souscategories = categories.data.filter(
-              (category: { active: boolean; parent_id: null }) =>
-                category.active === true && category.parent_id !== null
-            );
+        this.categoryService.getCategoriesFrom().subscribe((categories) => {
+          this.categories = categories.data.filter(
+            (category: { active: boolean; parent_id: null }) =>
+              category.active === true && category.parent_id === null
+          );
+          this.Souscategories = categories.data.filter(
+            (category: { active: boolean; parent_id: null }) =>
+              category.active === true && category.parent_id !== null
+          );
 
-            // Check if the first element of Souscategories has the media property
-            if (
-              this.Souscategories &&
-              this.Souscategories.length > 0 &&
-              this.Souscategories[0].media
-            ) {
-              // Add console log to check if the media property exists
+          // Check if the first element of Souscategories has the media property
+          if (
+            this.Souscategories &&
+            this.Souscategories.length > 0 &&
+            this.Souscategories[0].media
+          ) {
+            // Add console log to check if the media property exists
 
-              // Check if the media object has the url property
-              if (this.Souscategories[0].media.url) {
-                // Log the URL to the console
-                console.log(
-                  'Souscategories 2 URL:',
-                  this.Souscategories[0].media.url
-                );
-              } else {
-                console.log('URL property does not exist in media object');
-              }
-            } else {
+            // Check if the media object has the url property
+            if (this.Souscategories[0].media.url) {
+              // Log the URL to the console
               console.log(
-                'Media property or Souscategories array does not exist or is empty'
+                'Souscategories 2 URL:',
+                this.Souscategories[0].media.url
               );
+            } else {
+              console.log('URL property does not exist in media object');
             }
-            this.displayedCategories = this.categories.slice(0, 11);
-            this.hiddenCategories = this.categories.slice(11);
-          });
+          } else {
+            console.log(
+              'Media property or Souscategories array does not exist or is empty'
+            );
+          }
+          this.displayedCategories = this.categories.slice(0, 11);
+          this.hiddenCategories = this.categories.slice(11);
+        });
       }
     }
   }

@@ -169,7 +169,7 @@ export class PageAccountComponent {
 
   fetchCategories(): void {
     const accessToken = localStorage.getItem('loggedInUserToken');
-    this.categoryService.getCategoriesFrom(accessToken!).subscribe(
+    this.categoryService.getCategoriesFrom().subscribe(
       (categories) => {
         this.categories = categories.data.filter(
           (category: Category) => category.active === true

@@ -47,7 +47,7 @@ export class AdsDetailComponent {
               .subscribe((data) => {
                 this.adDetail = data.data;
                 this.categoryService
-                  .getCategoryById(data.data.category_id, accessToken!)
+                  .getCategoryById(data.data.category_id)
                   .subscribe((category) => {
                     const modelFields = category.data.model_fields;
                     const queryParams = { model: category.data.model };

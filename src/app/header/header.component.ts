@@ -81,21 +81,19 @@ export class HeaderComponent implements OnInit {
       const accessToken =
         this.document.defaultView.localStorage.getItem('loggedInUserToken');
       if (accessToken) {
-        this.categoryService
-          .getCategoriesFrom(accessToken!)
-          .subscribe((categories) => {
-            console.log(
-              'categories',
-              categories.data.filter(
-                (category: Category) => category.active === true
-              )
-            );
-            this.categories = categories.data.filter(
+        this.categoryService.getCategoriesFrom().subscribe((categories) => {
+          console.log(
+            'categories',
+            categories.data.filter(
               (category: Category) => category.active === true
-            );
+            )
+          );
+          this.categories = categories.data.filter(
+            (category: Category) => category.active === true
+          );
 
-            console.log('categories 2', this.categories);
-          });
+          console.log('categories 2', this.categories);
+        });
       }
     }
   }

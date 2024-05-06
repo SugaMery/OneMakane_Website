@@ -231,7 +231,87 @@
           </li>
         </ul>
       </div>
-
+      <p-carousel
+        #carousel
+        [value]="adsfirsts"
+        [numVisible]="6"
+        [numScroll]="1"
+        [circular]="false"
+        [responsiveOptions]="responsiveOptions"
+        [showIndicators]="false"
+        class="custom-carousels"
+      >
+        <ng-template let-adsfirst pTemplate="item">
+          <div class="row product-grid-4" style="margin: 0.5rem">
+            <div class="rowi">
+              <div
+                class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
+                data-wow-delay=".1s"
+              >
+                <div class="product-img-action-wrap">
+                  <div
+                    class="product-img product-img-zoom"
+                    style="height: 240px"
+                  >
+                    <a [href]="'/ads/' + adsfirst.id" style="height: 100%">
+                      <img
+                        class="default-img"
+                        [src]="adsfirst.medias[0]?.url"
+                        alt=""
+                      />
+                      <img
+                        class="hover-img"
+                        [src]="adsfirst.medias[1]?.url"
+                        alt=""
+                        style="height: 100%"
+                      />
+                    </a>
+                  </div>
+                  <div class="product-action-1">
+                    <a aria-label="Add To Wishlist" class="action-btn" href="">
+                      <i class="fi-rs-heart"></i>
+                    </a>
+                    <a
+                      aria-label="Quick view"
+                      class="action-btn"
+                      data-bs-toggle="modal"
+                      data-bs-target="#quickViewModal"
+                    >
+                      <i class="fi-rs-eye"></i>
+                    </a>
+                  </div>
+                </div>
+                <div class="product-content-wrap">
+                  <div class="product-category" style="margin-top: 1rem">
+                    <a href="">{{ adsfirst.category.name }}</a>
+                  </div>
+                  <h2>
+                    <a href="">{{ adsfirst.title }}</a>
+                  </h2>
+                  <div class="product-rate-cover">
+                    <div
+                      class=""
+                      style="
+                        width: 80%;
+                        font-weight: 800;
+                        font-size: medium;
+                        color: black;
+                      "
+                    >
+                      {{ adsfirst.price }} DH
+                    </div>
+                  </div>
+                  <div>
+                    <span class="font-small text-muted">{{
+                      getRelativeTime(adsfirst.created_at)
+                    }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </p-carousel>
       <!--End nav-tabs-->
       <div class="tab-content" id="myTabContent">
         <!-- Loop through each category -->
@@ -244,45 +324,7 @@
         >
           <h4 class="mb-20">{{ category.key }}</h4>
           <!-- Display category name as title -->
-          <!-- <p-carousel [value]="category.value" [numVisible]="5" [numScroll]="1" [circular]="true">
-            <div class="row product-grid-5" >
-              <ng-template let-ad pTemplate="item">
-                <div class="col-lg-2 col-md-4 col-12 col-sm-6" >
-                  <div class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn" data-wow-delay=".1s">
-                    <div class="product-img-action-wrap">
-                      <div class="product-img product-img-zoom" style="height: 240px">
-                        <a [href]="'/ads/' + ad.id" style="height: 100%">
-                          <img class="default-img" [src]="ad.medias[0]?.url" alt="" />
-                          <img class="hover-img" [src]="ad.medias[1]?.url" alt="" style="height: 100%" />
-                        </a>
-                      </div>
-                      <div class="product-action-1">
-                        <a aria-label="Add To Wishlist" class="action-btn" href="">
-                          <i class="fi-rs-heart"></i>
-                        </a>
-                        <a aria-label="Quick view" class="action-btn" data-bs-toggle="modal" data-bs-target="#quickViewModal">
-                          <i class="fi-rs-eye"></i>
-                        </a>
-                      </div>
-                    </div>
-                    <div class="product-content-wrap">
-                      <div class="product-category" style="margin-top: 1rem">
-                        <a href="">{{ ad.category.name }}</a>
-                      </div>
-                      <h2><a href="">{{ ad.title }}</a></h2>
-                      <div class="product-rate-cover">
-                        <div class="" style="width: 80%; font-weight: 800; font-size: medium; color: black;">{{ ad.price }} DH</div>
-                      </div>
-                      <div>
-                        <span class="font-small text-muted">{{ getRelativeTime(ad.created_at) }}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </ng-template>
 
-            </div> 
-          </p-carousel> -->
           <div class="row product-grid-5">
             <!-- Loop through each ad in the category -->
             <div
@@ -365,6 +407,7 @@
       <!--End tab-content-->
     </div>
   </section>
+
   <!--Products Tabs-->
   <section class="section-padding">
     <div class="container">

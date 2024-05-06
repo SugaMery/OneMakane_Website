@@ -137,3 +137,13 @@
 .p-component:disabled {
     display: none;
 }
+
+::ng-deep .rowi>* {
+    width: 105% !important;
+
+}
+
+
+::ng-deep .custom-carousels .p-carousel .p-carousel-content .p-carousel-prev {
+    left: 2rem;
+}
