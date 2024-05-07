@@ -143,7 +143,17 @@
 
 }
 
+/* ::ng-deep .row>* {
+    padding-right: 0rem;
+    padding-left: 0rem;
 
+}
+ */
 ::ng-deep .custom-carousels .p-carousel .p-carousel-content .p-carousel-prev {
     left: 2rem;
+}
+
+::ng-deep .product-cart-wrap .product-img-action-wrap {
+    padding-left: 1rem;
+    padding-right: 1rem;
 }

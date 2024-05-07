@@ -16,7 +16,8 @@ export class HomePageComponent implements OnInit {
   hiddenCategories: any[] = [];
   showMore: boolean = false;
   ads: any[] = [];
-  adsfirsts: any[] = [];
+  adsLivres: any[] = [];
+  adsVehicules: any[] = [];
   firstad: any = {};
   adsArray: any[] = [];
   categorizedAds: { [key: string]: any[] } = {}; // Define categorizedAds property
@@ -77,37 +78,60 @@ export class HomePageComponent implements OnInit {
       if (accessToken) {
         this.annonceService.getAds(accessToken!).subscribe((data) => {
           this.ads = data.data;
-          data.data.forEach((datas: { category: { name: string } }) => {
-            if (datas.category.name === 'Véhicules') {
-              //this.adsfirsts.push(datas);
-            }
-            this.adsfirsts = data.data.filter(
-              (first: { category: { name: string } }) =>
-                first.category.name === 'Véhicules'
-            );
-          });
-          const categorizedAds: { [key: string]: any[] } = {}; // Object to hold ads grouped by category
+
+          // Clear previous categorized ads
+          this.categorizedAds = {};
+
           data.data.forEach((element: any) => {
             this.annonceService
               .getAdById(element.id, accessToken!)
-              .subscribe((data) => {
-                element.image = data.data.image;
+              .subscribe((adData) => {
+                element.image = adData.data.image;
 
-                if (!categorizedAds[element.category.name]) {
-                  categorizedAds[element.category.name] = []; // Initialize array if category doesn't exist
+                if (!this.categorizedAds[element.category.name]) {
+                  this.categorizedAds[element.category.name] = []; // Initialize array if category doesn't exist
                 }
-                categorizedAds[element.category.name].push(data.data); // Push ad to respective category
-                console.log('Categorized Ads:', categorizedAds);
+                this.categorizedAds[element.category.name].push(adData.data); // Push ad to respective category
+                console.log('categorizedAds', this.categorizedAds);
               });
           });
-
-          // Now categorizedAds object holds ads grouped by category
-          console.log('Categorized Ads:', categorizedAds);
-          this.categorizedAds = categorizedAds; // Assign categorizedAds to a component property for use in HTML
         });
       }
     }
     this.convertAdsToArray();
+  }
+  isPhone(): boolean {
+    const screenWidth = window.innerWidth;
+    if (screenWidth <= 768) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  sortByCreatedAtDescending(category: any): any[] {
+    return category.value.sort((a: any, b: any) => {
+      return (
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+    });
+  }
+  convertAdsToArray() {
+    for (let category in this.categorizedAds) {
+      if (this.categorizedAds.hasOwnProperty(category)) {
+        this.categorizedAds[category] = this.categorizedAds[category].map(
+          (ad) => {
+            return {
+              id: ad.id,
+              title: ad.title,
+              image: ad.image,
+              price: ad.price,
+              category: ad.category.name,
+              created_at: ad.created_at,
+            };
+          }
+        );
+      }
+    }
   }
 
   getAdsForCarousel(): any[] {
@@ -122,10 +146,6 @@ export class HomePageComponent implements OnInit {
     console.log('ggggggrettttttt2', adsArray);
 
     return adsArray;
-  }
-
-  convertAdsToArray() {
-    this.adsArray = Object.values(this.categorizedAds);
   }
 
   getRelativeTime(createdAt: string): string {
