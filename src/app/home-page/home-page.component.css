@@ -158,24 +158,26 @@
     padding-right: 1rem;
 }
 
- ::ng-deep #carouseled .slick-slider .slick-track{
-width: 0% !important;
+::ng-deep #carouseled .slick-slider .slick-track {
+    width: 0% !important;
 }
 
-::ng-deep  p-carousel.p-element.custom-carouselys.slick-slide.slick-current.slick-active {
-display: block;
-width: 100% !important;
+::ng-deep p-carousel.p-element.custom-carouselys.slick-slide.slick-current.slick-active {
+    display: block;
+    width: 100% !important;
 }
+
 /* ::ng-deep .slick-slider .slick-track, .slick-slider .slick-list {
 width: 100% !important;
 }  */
 
-::ng-deep .ads .slick-list .slick-track , .ads .slick-slider .slick-list{
+::ng-deep .ads .slick-list .slick-track,
+.ads .slick-slider .slick-list {
     /* background-color: blue; */
     width: 100% !important;
 }
 
-::ng-deep .p-carousel-items-content{
+::ng-deep .p-carousel-items-content {
     margin-left: -1rem !important;
 }
 
@@ -184,12 +186,12 @@ width: 100% !important;
 }
 
 ::ng-deep .product-cart-wrap .product-img-action-wrap .product-img {
-  height: 280px !important;
-} 
+    height: 280px !important;
+}
 
 ::ng-deep .btn.see {
     padding: 0 !important;
-    padding-top:0.5rem !important;
+    padding-top: 0.5rem !important;
     padding-bottom: 0.5rem !important;
     margin-top: 1rem;
 }
@@ -200,4 +202,8 @@ width: 100% !important;
     object-fit: cover;
     border: 1px solid #ececec;
 
+}
+
+::ng-deep .carouseled .p-carousel-container {
+    margin-left: 1rem;
 }

@@ -21,6 +21,7 @@ interface Category {
   icon_path: string;
   content?: string;
   label?: string;
+  media?: { url: string };
 }
 
 interface ModelField {
@@ -729,6 +730,7 @@ export class AddAdsComponent {
   ngOnInit(): void {
     this.getUserInfo();
     this.fetchCategories();
+
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
     this.annonceService.getAds(accessToken!).subscribe((data) => {
@@ -822,11 +824,13 @@ export class AddAdsComponent {
                 (this.categories[i].model_fields = parent.data!.model_fields)
             );
         }
+        console.log('categories categories 555', this.categories);
       },
       (error) => {
         console.error('Error fetching categories: ', error);
       }
     );
+    console.log('categories categories', this.categories);
   }
 
   uploadFiles() {
@@ -999,6 +1003,7 @@ export class AddAdsComponent {
             name: setting.name,
           };
         });
+        console.log('settings', this.settings);
       });
   }
 
@@ -1081,10 +1086,11 @@ export class AddAdsComponent {
               settingADS[setting.name] = setting.selectedOption.value;
             }
           }
+          console.log('settingADS', settingADS);
           this.annonceService
             .insertSetting(
               response.data.id,
-              this.selectedOption.route,
+              'ad-models',
               settingADS,
               accessToken
             )

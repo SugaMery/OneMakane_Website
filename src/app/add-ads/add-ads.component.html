@@ -215,7 +215,11 @@
                                                   "
                                                 >
                                                   <img
-                                                    src="https://devmedias.onemakan.com/tmp/1713720468-f1f9e4d9-87a8-49d7-8ed9-d4129d8b6d64.png"
+                                                    src="{{
+                                                      selectedOption
+                                                        .parentCategoy?.media
+                                                        ?.url
+                                                    }}"
                                                     *ngIf="selectedOption.name"
                                                     alt=""
                                                     class="iconUrl"
@@ -265,7 +269,10 @@
                                                   class="d-inline-flex align-items-center"
                                                 >
                                                   <img
-                                                    src="https://devmedias.onemakan.com/tmp/1713720468-f1f9e4d9-87a8-49d7-8ed9-d4129d8b6d64.png"
+                                                    src="{{
+                                                      category.parentCategoy
+                                                        ?.media?.url
+                                                    }}"
                                                     alt=""
                                                     class="iconUrl"
                                                     style="

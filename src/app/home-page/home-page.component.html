@@ -252,7 +252,7 @@
               [circular]="false"
               [responsiveOptions]="responsiveOptions"
               [showIndicators]="false"
-              class="custom-carousels"
+              class="custom-carousels carouseled"
             >
               <ng-template let-adsfirst pTemplate="item">
                 <div class="row product-grid-4" style="margin: 0.5rem">
@@ -281,32 +281,30 @@
                       </div>
                       <div class="product-action-1">
                         <a
-                        aria-label="Ajouter à la liste de souhaits"
-                        class="action-btn"
-                        href="#"
-                      >
-                        <i class="fi-rs-heart"></i>
-                      </a>
-                      <a
-                        aria-label="Aperçu rapide"
-                        class="action-btn"
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                      >
-                        <i class="fi-rs-eye"></i>
-                      </a>
-                      
+                          aria-label="Ajouter à la liste de souhaits"
+                          class="action-btn"
+                          href="#"
+                        >
+                          <i class="fi-rs-heart"></i>
+                        </a>
+                        <a
+                          aria-label="Aperçu rapide"
+                          class="action-btn"
+                          data-bs-toggle="modal"
+                          data-bs-target="#quickViewModal"
+                        >
+                          <i class="fi-rs-eye"></i>
+                        </a>
                       </div>
                     </div>
                     <div class="product-content-wrap">
                       <div class="product-category" style="margin-top: 1rem">
                         <a href="">{{ adsfirst.category.name }}</a>
                       </div>
-                      <h2 [style.height]="isPhone() ? '2.5rem' : 'auto'">
-                        <a href="" *ngIf="!isPhone()">{{ adsfirst.title }}</a>
-                        <a href="" *ngIf="isPhone()"
-                          >{{ adsfirst.title | slice : 0 : 30
-                          }}{{ adsfirst.title.length > 30 ? "..." : "" }}</a
+                      <h2>
+                        <a href=""
+                          >{{ adsfirst.title | slice : 0 : 17
+                          }}{{ adsfirst.title.length > 17 ? "..." : "" }}</a
                         >
                       </h2>
                       <div class="product-rate-cover">
@@ -411,7 +409,7 @@
     <div class="container">
       <div class="section-title wow animate__animated animate__fadeIn">
         <h3 class="">Annonces Populaires</h3>
-<!--         <ul class="nav nav-tabs links" id="myTab-2" role="tablist">
+        <!--         <ul class="nav nav-tabs links" id="myTab-2" role="tablist">
           <li class="nav-item" role="presentation">
             <button
               class="nav-link active"
@@ -460,7 +458,7 @@
         <div
           class="col-lg-3 d-none d-lg-flex wow animate__animated animate__fadeIn"
         >
-          <div class="banner-img style-2" style="height: 490px;">
+          <div class="banner-img style-2" style="height: 490px">
             <div class="banner-text">
               <h2 class="mb-10">Qu'attendez-vous ?</h2>
               <h4 style="color: white">
@@ -494,7 +492,7 @@
                   class="carausel-4-columns carausel-arrow-center ads"
                   id="carausel-4-columns"
                 >
-<!-- <div *ngFor="let product of products" class="product-cart-wrap">
+                  <!-- <div *ngFor="let product of products" class="product-cart-wrap">
   <div class="product-img-action-wrap">
     <div class="product-img product-img-zoom">
       <a href="/shop-product-right">
@@ -537,103 +535,109 @@
     >
   </div>
 </div> -->
-<p-carousel
-#carouseled
-[value]="ads"
-[numVisible]="5"
-[numScroll]="1"
-[circular]="false"
-[responsiveOptions]="responsiveOptions"
-[showIndicators]="false"
-class="custom-carouselys"
-[autoplayInterval]="3000"
->
-<ng-template let-adsfirst pTemplate="item">
-  <div class="row product-grid-4" style="margin: 0.5rem">
-    <div
-      class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
-      data-wow-delay=".1s"
-    >
-      <div class="product-img-action-wrap">
-        <div
-          class="product-img product-img-zoom"
-          style="height: 240px"
-        >
-          <a [href]="'/ads/' + adsfirst.id" style="height: 100%">
-            <img
-              class="default-img"
-              [src]="adsfirst.medias[0]?.url"
-              alt=""
-            />
-            <img
-              class="hover-img"
-              [src]="adsfirst.medias[1]?.url"
-              alt=""
-              style="height: 100%"
-            />
-          </a>
-        </div>
-        <div class="product-action-1">
-          <a
-          aria-label="Ajouter à la liste de souhaits"
-          class="action-btn"
-          href="#"
-        >
-          <i class="fi-rs-heart"></i>
-        </a>
-        <a
-          aria-label="Aperçu rapide"
-          class="action-btn"
-          data-bs-toggle="modal"
-          data-bs-target="#quickViewModal"
-        >
-          <i class="fi-rs-eye"></i>
-        </a>
-        
-        </div>
-      </div>
-      <div class="product-content-wrap">
-        <div class="product-category" style="margin-top: 1rem">
-          <a href="">{{ adsfirst.category.name }}</a>
-        </div>
-        <h2 >
-          <a href="" 
-            >{{ adsfirst.title | slice : 0 : 17
-            }}{{ adsfirst.title.length > 17 ? "..." : "" }}</a
-          >
-        </h2>
-        <div class="product-rate-cover">
-          <div
-            class=""
-            style="
-              width: 100%;
-              font-weight: 800;
-              font-size: medium;
-              color: black;
-            "
-          >
-            {{ adsfirst.price }} DH
-          </div>
-        </div>
-<!--         <div>
+                  <p-carousel
+                    #carouseled
+                    [value]="ads"
+                    [numVisible]="5"
+                    [numScroll]="1"
+                    [circular]="false"
+                    [responsiveOptions]="responsiveOptions"
+                    [showIndicators]="false"
+                    class="custom-carouselys"
+                    [autoplayInterval]="3000"
+                  >
+                    <ng-template let-adsfirst pTemplate="item">
+                      <div class="row product-grid-4" style="margin: 0.5rem">
+                        <div
+                          class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
+                          data-wow-delay=".1s"
+                        >
+                          <div class="product-img-action-wrap">
+                            <div
+                              class="product-img product-img-zoom"
+                              style="height: 240px"
+                            >
+                              <a
+                                [href]="'/ads/' + adsfirst.id"
+                                style="height: 100%"
+                              >
+                                <img
+                                  class="default-img"
+                                  [src]="adsfirst.medias[0]?.url"
+                                  alt=""
+                                />
+                                <img
+                                  class="hover-img"
+                                  [src]="adsfirst.medias[1]?.url"
+                                  alt=""
+                                  style="height: 100%"
+                                />
+                              </a>
+                            </div>
+                            <div class="product-action-1">
+                              <a
+                                aria-label="Ajouter à la liste de souhaits"
+                                class="action-btn"
+                                href="#"
+                              >
+                                <i class="fi-rs-heart"></i>
+                              </a>
+                              <a
+                                aria-label="Aperçu rapide"
+                                class="action-btn"
+                                data-bs-toggle="modal"
+                                data-bs-target="#quickViewModal"
+                              >
+                                <i class="fi-rs-eye"></i>
+                              </a>
+                            </div>
+                          </div>
+                          <div class="product-content-wrap">
+                            <div
+                              class="product-category"
+                              style="margin-top: 1rem"
+                            >
+                              <a href="">{{ adsfirst.category.name }}</a>
+                            </div>
+                            <h2>
+                              <a href=""
+                                >{{ adsfirst.title | slice : 0 : 15
+                                }}{{
+                                  adsfirst.title.length > 17 ? "..." : ""
+                                }}</a
+                              >
+                            </h2>
+                            <div class="product-rate-cover">
+                              <div
+                                class=""
+                                style="
+                                  width: 100%;
+                                  font-weight: 800;
+                                  font-size: medium;
+                                  color: black;
+                                "
+                              >
+                                {{ adsfirst.price }} DH
+                              </div>
+                            </div>
+                            <!--         <div>
           <span class="font-small text-muted">{{
             getRelativeTime(adsfirst.created_at)
           }}</span>
         </div> -->
-        <a class="btn see w-100 hover-up" [href]="'/ads/' + adsfirst.id" 
-        ><i class="fi-rr-info mr-5"></i>Voir plus </a
-      >
-      </div>
-
-    </div>
-  </div>
-</ng-template>
-</p-carousel>
-
+                            <a
+                              class="btn see w-100 hover-up"
+                              [href]="'/ads/' + adsfirst.id"
+                              ><i class="fi-rr-info mr-5"></i>Voir plus
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-carousel>
                 </div>
               </div>
             </div>
-
           </div>
           <!--End tab-content-->
         </div>
@@ -648,15 +652,21 @@ class="custom-carouselys"
         class="section-title wow animate__animated animate__fadeIn"
         data-wow-delay="0"
       >
-        <h3 class="">Offres d'emploi </h3>
+        <h3 class="">Offres d'emploi</h3>
         <a class="show-all" href="">
           Voir plus
           <i class="fi-rs-angle-right"></i>
         </a>
       </div>
       <div class="row">
-        <div class="col-xl-3 col-lg-4 col-md-6" *ngFor="let ad of ads.slice(0, 4)">
-          <div class="product-cart-wrap style-2 wow animate__animated animate__fadeInUp" data-wow-delay="0">
+        <div
+          class="col-xl-3 col-lg-4 col-md-6"
+          *ngFor="let ad of ads_jobs.slice(0, 4)"
+        >
+          <div
+            class="product-cart-wrap style-2 wow animate__animated animate__fadeInUp"
+            data-wow-delay="0"
+          >
             <div class="product-img-action-wrap">
               <div class="product-img adsemploi">
                 <a [href]="'/ads/' + ad.id">
@@ -673,27 +683,38 @@ class="custom-carouselys"
               </div>
               <div class="deals-content">
                 <h2>
-                  <a href="/shop-product-right"
-                    >{{ad.title}}</a
-                  >
+                  <a [href]="'/ads/' + ad.id">{{ ad.title }}</a>
                 </h2>
-                <div class="product-rate-cover">
-                  {{ad.category?.name}}
+                <div class="product-card-bottom">
+                  <div class="product-rate-cover">
+                    {{ ad.category?.name }}
+                  </div>
+                  <div class="add-cart">
+                    <a class="add" [href]="'/ads/' + ad.id">
+                      <i class="fi-rr-briefcase mr-5"></i> Voir l'offre
+                    </a>
+                  </div>
+                </div>
+
+                <div>
+                  <span class="font-small text-muted"
+                    >Type de contrat
+                    <a [href]="'/ads/' + ad.id">
+                      {{ ad.job.setting || "" }}
+                    </a></span
+                  >
                 </div>
                 <div>
                   <span class="font-small text-muted"
-                    >By <a href="/vendor-details-1">NestFood</a></span
+                    >Région
+                    <a [href]="'/ads/' + ad.id">
+                      {{ ad.region.setting || "" }}
+                    </a></span
                   >
                 </div>
                 <div class="product-card-bottom">
                   <div class="product-price">
-                    <span>$32.85</span>
-                    <span class="old-price">$33.8</span>
-                  </div>
-                  <div class="add-cart">
-                    <a class="add" href="/shop-cart"
-                      ><i class="fi-rs-shopping-cart mr-5"></i>Add
-                    </a>
+                    <span>{{ ad.study_level.setting }} </span>
                   </div>
                 </div>
               </div>

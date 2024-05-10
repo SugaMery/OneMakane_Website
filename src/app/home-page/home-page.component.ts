@@ -32,6 +32,7 @@ export class HomePageComponent implements OnInit {
   hiddenCategories: any[] = [];
   showMore: boolean = false;
   ads: any[] = [];
+  ads_jobs: any[] = [];
   adsLivres: any[] = [];
   adsVehicules: any[] = [];
   firstad: any = {};
@@ -47,13 +48,13 @@ export class HomePageComponent implements OnInit {
   constructor(
     private categoryService: CategoryService,
     private annonceService: AnnonceService,
-    private settingService : SettingService,
+    private settingService: SettingService,
     @Inject(DOCUMENT) private document: Document
   ) {}
   transformedField:
     | { value: string; label: any; setting: string }[]
     | undefined;
-  adsProduct =[]
+  adsProduct = [];
   products = [
     {
       name: 'Seeds of Change Organic Quinoa, Brown',
@@ -64,7 +65,7 @@ export class HomePageComponent implements OnInit {
       total: 120,
       imageUrl1: '../../assets/imgs/shop/product-1-1.jpg',
       imageUrl2: '../../assets/imgs/shop/product-1-2.jpg',
-      rating: 80
+      rating: 80,
     },
     {
       name: 'Seeds of Change Organic Quinoa, Brown',
@@ -75,7 +76,7 @@ export class HomePageComponent implements OnInit {
       total: 120,
       imageUrl1: '../../assets/imgs/shop/product-1-1.jpg',
       imageUrl2: '../../assets/imgs/shop/product-1-2.jpg',
-      rating: 80
+      rating: 80,
     },
     {
       name: 'Seeds of Change Organic Quinoa, Brown',
@@ -86,11 +87,11 @@ export class HomePageComponent implements OnInit {
       total: 120,
       imageUrl1: '../../assets/imgs/shop/product-1-1.jpg',
       imageUrl2: '../../assets/imgs/shop/product-1-2.jpg',
-      rating: 80
+      rating: 80,
     },
     // Add more products here if needed
-  ];    
-  
+  ];
+
   ngOnInit(): void {
     this.getAdsForCarousel();
     this.getCategories();
@@ -135,82 +136,130 @@ export class HomePageComponent implements OnInit {
       if (accessToken) {
         this.annonceService.getAds(accessToken!).subscribe((data) => {
           this.ads = data.data;
-         //this.products=data.data;
-         console.log("products",this.products);
+          //this.products=data.data;
+          console.log('products', this.products);
           // Clear previous categorized ads
           this.categorizedAds = {};
 
           data.data.forEach((element: any) => {
-            this.annonceService.getAdById(element.id, accessToken!).subscribe((adData) => {
+            this.annonceService
+              .getAdById(element.id, accessToken!)
+              .subscribe((adData) => {
                 if (!adData || !adData.data) {
-                    console.error('Invalid ad data:', adData);
-                    return;
+                  console.error('Invalid ad data:', adData);
+                  return;
                 }
                 element.image = adData.data.image;
                 if (!this.categorizedAds[element.category.name]) {
-                    this.categorizedAds[element.category.name] = [];
+                  this.categorizedAds[element.category.name] = [];
                 }
                 this.categorizedAds[element.category.name].push(adData.data);
-        
-                this.categoryService.getCategoryById(adData.data.category_id).subscribe((category) => {
-                    if (!category || !category.data || !category.data.model_fields) {
-                        console.error('Invalid category data:', category);
-                        return;
+
+                this.categoryService
+                  .getCategoryById(adData.data.category_id)
+                  .subscribe((category) => {
+                    if (
+                      !category ||
+                      !category.data ||
+                      !category.data.model_fields
+                    ) {
+                      console.error('Invalid category data:', category);
+                      return;
                     }
                     const modelFields = category.data.model_fields;
                     const queryParams = { model: category.data.model };
-                    this.settingService.getSettings(accessToken!, queryParams).subscribe(
+                    this.settingService
+                      .getSettings(accessToken!, queryParams)
+                      .subscribe(
                         (setting) => {
-                            if (!setting || !setting.data) {
-                                console.error('No data found in settings.');
-                                return;
-                            }
-                            const transformedFields = Object.keys(modelFields).map((key) => ({
-                                value: key,
-                                label: modelFields[key].label,
-                                setting: key,
-                            }));
-        
-                            transformedFields.forEach((field: { value: string; label: any; setting: string; }) => {
-                                const matchedSetting = setting.data.find((settingItem: { name: string }) =>
-                                    settingItem.name === field.value
-                                );
-                                if (matchedSetting) {
-                                    if (adData.data.additional && adData.data.additional[field.value]) {
-                                        field.setting = matchedSetting.content[adData.data.additional[field.value]];
-                                        //console.log('jj', field.setting);
-                                        //console.log('Transformed f', matchedSetting);
-                                    } else {
+                          if (!setting || !setting.data) {
+                            console.error('No data found in settings.');
+                            return;
+                          }
+                          const transformedFields = Object.keys(
+                            modelFields
+                          ).map((key) => ({
+                            value: key,
+                            label: modelFields[key].label,
+                            setting: key,
+                          }));
+
+                          transformedFields.forEach(
+                            (field: {
+                              value: string;
+                              label: any;
+                              setting: string;
+                            }) => {
+                              const matchedSetting = setting.data.find(
+                                (settingItem: { name: string }) =>
+                                  settingItem.name === field.value
+                              );
+                              if (matchedSetting) {
+                                if (
+                                  adData.data.additional &&
+                                  adData.data.additional[field.value]
+                                ) {
+                                  field.setting =
+                                    matchedSetting.content[
+                                      adData.data.additional[field.value]
+                                    ];
+                                  //console.log('jj', field.setting);
+                                  //console.log('Transformed f', matchedSetting);
+                                } /*  else {
                                         console.error(`No setting found for key '${field.value}' in data.data.additional`);
-                                    }
-                                }
-                            });
-        
-                            this.transformedField = transformedFields;
-                            //console.log('Transformed fields with updated labels:', transformedFields);
-                            adData.additional = this.transformedField;
-                            if (adData.data.category.name === "Offres d/'emploi"){
-                              console.log("emploi",adData.data);
+                                    } */
+                              }
                             }
+                          );
+
+                          this.transformedField = transformedFields;
+                          console.log(
+                            'Transformed fields with updated labels:',
+                            transformedFields
+                          );
+                          adData.data.additional = transformedFields;
+                          const jobs = 'ad_jobs';
+                          if (adData.data.category.model == jobs) {
+                            this.ads_jobs.push(adData.data);
+                            this.ads_jobs.forEach((element) => {
+                              console.log('element', element.additional);
+                              element.additional.forEach(
+                                (data: { value: string }) => {
+                                  if (data.value == 'type') {
+                                    element.job = data;
+                                    //data.setting = this.settings.
+                                  }
+                                  if (data.value == 'region') {
+                                    element.region = data;
+
+                                    //data.setting = this.settings.
+                                  }
+                                  if (data.value == 'study_level') {
+                                    element.study_level = data;
+
+                                    //data.setting = this.settings.
+                                  }
+                                }
+                              );
+                            });
+                            console.log('ads_jobs', this.ads_jobs);
+                          }
                         },
                         (error) => {
-                            console.error('Error fetching settings:', error);
+                          console.error('Error fetching settings:', error);
                         }
-                    );
-                });
-            });
-        });
-        
+                      );
+                  });
+              });
+          });
         });
       }
     }
     this.convertAdsToArray();
-
-  
   }
 
-  ngOnChanges(){
-  console.log("productsyy",this.ads);
+  ngOnChanges() {
+    console.log('productsyy', this.ads);
   }
   isPhone(): boolean {
     const screenWidth = window.innerWidth;
@@ -220,7 +269,6 @@ export class HomePageComponent implements OnInit {
       return false;
     }
   }
-
 
   sortByCreatedAtDescending(category: any): any[] {
     return category.value.sort((a: any, b: any) => {
@@ -346,5 +394,4 @@ export class HomePageComponent implements OnInit {
     const index = categories.indexOf(category);
     return this.colors[index % this.colors.length];
   }
-  
 }
