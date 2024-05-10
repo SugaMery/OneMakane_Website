@@ -3,7 +3,23 @@ import { CategoryService } from '../category.service';
 import { DOCUMENT } from '@angular/common';
 import { AnnonceService } from '../annonce.service';
 import { Console } from 'console';
-
+import { SettingService } from '../setting.service';
+interface Product {
+  id: number;
+  category: { id: number; name: string; route: string | null };
+  city: string;
+  deleted_at: string | null;
+  deleted_reason: string | null;
+  deleted_reason_id: string | null;
+  image: string | undefined;
+  medias: { url: string }[]; // Assuming medias is an array of objects with a 'url' property
+  postal_code: string;
+  price: string;
+  published_at: string | null;
+  title: string;
+  urgent: boolean;
+  validation_status: string;
+}
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
@@ -31,9 +47,50 @@ export class HomePageComponent implements OnInit {
   constructor(
     private categoryService: CategoryService,
     private annonceService: AnnonceService,
+    private settingService : SettingService,
     @Inject(DOCUMENT) private document: Document
   ) {}
-
+  transformedField:
+    | { value: string; label: any; setting: string }[]
+    | undefined;
+  adsProduct =[]
+  products = [
+    {
+      name: 'Seeds of Change Organic Quinoa, Brown',
+      category: 'Hodo Foods',
+      price: 238.85,
+      oldPrice: 245.8,
+      sold: 90,
+      total: 120,
+      imageUrl1: '../../assets/imgs/shop/product-1-1.jpg',
+      imageUrl2: '../../assets/imgs/shop/product-1-2.jpg',
+      rating: 80
+    },
+    {
+      name: 'Seeds of Change Organic Quinoa, Brown',
+      category: 'Hodo Foods',
+      price: 238.85,
+      oldPrice: 245.8,
+      sold: 90,
+      total: 120,
+      imageUrl1: '../../assets/imgs/shop/product-1-1.jpg',
+      imageUrl2: '../../assets/imgs/shop/product-1-2.jpg',
+      rating: 80
+    },
+    {
+      name: 'Seeds of Change Organic Quinoa, Brown',
+      category: 'Hodo Foods',
+      price: 238.85,
+      oldPrice: 245.8,
+      sold: 90,
+      total: 120,
+      imageUrl1: '../../assets/imgs/shop/product-1-1.jpg',
+      imageUrl2: '../../assets/imgs/shop/product-1-2.jpg',
+      rating: 80
+    },
+    // Add more products here if needed
+  ];    
+  
   ngOnInit(): void {
     this.getAdsForCarousel();
     this.getCategories();
@@ -78,27 +135,82 @@ export class HomePageComponent implements OnInit {
       if (accessToken) {
         this.annonceService.getAds(accessToken!).subscribe((data) => {
           this.ads = data.data;
-
+         //this.products=data.data;
+         console.log("products",this.products);
           // Clear previous categorized ads
           this.categorizedAds = {};
 
           data.data.forEach((element: any) => {
-            this.annonceService
-              .getAdById(element.id, accessToken!)
-              .subscribe((adData) => {
-                element.image = adData.data.image;
-
-                if (!this.categorizedAds[element.category.name]) {
-                  this.categorizedAds[element.category.name] = []; // Initialize array if category doesn't exist
+            this.annonceService.getAdById(element.id, accessToken!).subscribe((adData) => {
+                if (!adData || !adData.data) {
+                    console.error('Invalid ad data:', adData);
+                    return;
                 }
-                this.categorizedAds[element.category.name].push(adData.data); // Push ad to respective category
-                console.log('categorizedAds', this.categorizedAds);
-              });
-          });
+                element.image = adData.data.image;
+                if (!this.categorizedAds[element.category.name]) {
+                    this.categorizedAds[element.category.name] = [];
+                }
+                this.categorizedAds[element.category.name].push(adData.data);
+        
+                this.categoryService.getCategoryById(adData.data.category_id).subscribe((category) => {
+                    if (!category || !category.data || !category.data.model_fields) {
+                        console.error('Invalid category data:', category);
+                        return;
+                    }
+                    const modelFields = category.data.model_fields;
+                    const queryParams = { model: category.data.model };
+                    this.settingService.getSettings(accessToken!, queryParams).subscribe(
+                        (setting) => {
+                            if (!setting || !setting.data) {
+                                console.error('No data found in settings.');
+                                return;
+                            }
+                            const transformedFields = Object.keys(modelFields).map((key) => ({
+                                value: key,
+                                label: modelFields[key].label,
+                                setting: key,
+                            }));
+        
+                            transformedFields.forEach((field: { value: string; label: any; setting: string; }) => {
+                                const matchedSetting = setting.data.find((settingItem: { name: string }) =>
+                                    settingItem.name === field.value
+                                );
+                                if (matchedSetting) {
+                                    if (adData.data.additional && adData.data.additional[field.value]) {
+                                        field.setting = matchedSetting.content[adData.data.additional[field.value]];
+                                        //console.log('jj', field.setting);
+                                        //console.log('Transformed f', matchedSetting);
+                                    } else {
+                                        console.error(`No setting found for key '${field.value}' in data.data.additional`);
+                                    }
+                                }
+                            });
+        
+                            this.transformedField = transformedFields;
+                            //console.log('Transformed fields with updated labels:', transformedFields);
+                            adData.additional = this.transformedField;
+                            if (adData.data.category.name === "Offres d/'emploi"){
+                              console.log("emploi",adData.data);
+                            }
+                        },
+                        (error) => {
+                            console.error('Error fetching settings:', error);
+                        }
+                    );
+                });
+            });
+        });
+        
         });
       }
     }
     this.convertAdsToArray();
+
+  
+  }
+
+  ngOnChanges(){
+  console.log("productsyy",this.ads);
   }
   isPhone(): boolean {
     const screenWidth = window.innerWidth;
@@ -108,6 +220,8 @@ export class HomePageComponent implements OnInit {
       return false;
     }
   }
+
+
   sortByCreatedAtDescending(category: any): any[] {
     return category.value.sort((a: any, b: any) => {
       return (
@@ -232,4 +346,5 @@ export class HomePageComponent implements OnInit {
     const index = categories.indexOf(category);
     return this.colors[index % this.colors.length];
   }
+  
 }

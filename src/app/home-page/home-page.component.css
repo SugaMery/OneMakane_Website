@@ -157,3 +157,47 @@
     padding-left: 1rem;
     padding-right: 1rem;
 }
+
+ ::ng-deep #carouseled .slick-slider .slick-track{
+width: 0% !important;
+}
+
+::ng-deep  p-carousel.p-element.custom-carouselys.slick-slide.slick-current.slick-active {
+display: block;
+width: 100% !important;
+}
+/* ::ng-deep .slick-slider .slick-track, .slick-slider .slick-list {
+width: 100% !important;
+}  */
+
+::ng-deep .ads .slick-list .slick-track , .ads .slick-slider .slick-list{
+    /* background-color: blue; */
+    width: 100% !important;
+}
+
+::ng-deep .p-carousel-items-content{
+    margin-left: -1rem !important;
+}
+
+::ng-deep .carausel-4-columns-cover .carausel-4-columns .product-cart-wrap {
+    margin-left: 8px;
+}
+
+::ng-deep .product-cart-wrap .product-img-action-wrap .product-img {
+  height: 280px !important;
+} 
+
+::ng-deep .btn.see {
+    padding: 0 !important;
+    padding-top:0.5rem !important;
+    padding-bottom: 0.5rem !important;
+    margin-top: 1rem;
+}
+
+::ng-deep .product-cart-wrap .product-img-action-wrap .adsemploi a img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border: 1px solid #ececec;
+
+}
