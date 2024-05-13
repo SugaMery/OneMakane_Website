@@ -31,6 +31,12 @@ import { AdsDetailComponent } from './ads-detail/ads-detail.component';
 import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
 import { GoogleMapComponent } from './google-map/google-map.component';
+import { ActivityAccountComponent } from './activity-account/activity-account.component';
+import { ForgetPasswordComponent } from './forget-password/forget-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { ForgetPasswordMessageComponent } from './forget-password-message/forget-password-message.component';
+import { AccountActivationComponent } from './account-activation/account-activation.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,6 +50,11 @@ import { GoogleMapComponent } from './google-map/google-map.component';
     AddAdsComponent,
     AdsDetailComponent,
     GoogleMapComponent,
+    ActivityAccountComponent,
+    ForgetPasswordComponent,
+    ResetPasswordComponent,
+    ForgetPasswordMessageComponent,
+    AccountActivationComponent,
   ],
   imports: [
     BrowserModule,

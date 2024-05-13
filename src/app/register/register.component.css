@@ -95,3 +95,25 @@
     background-color: #b7d1f3; /* Set the background color for selected option */
   }
 
+
+  ::ng-deep .form-group {
+    position: relative;
+  }
+  
+  ::ng-deep .password-input {
+    padding-right: 30px; /* Adjust the padding to accommodate the icon */
+  }
+  
+  ::ng-deep .eyeicon {
+    position: absolute;
+    top: 50%;
+    right: 2rem; /* Adjust the position as needed */
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+  
+  ::ng-deep .eyeicon i {
+    font-size: 18px; /* Adjust the font size of the icon */
+    color: #777; /* Adjust the color of the icon */
+  }
+  

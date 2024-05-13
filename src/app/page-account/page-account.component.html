@@ -26,14 +26,15 @@
                                     </li>
 
                                     <li class="nav-item">
-                                        <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi fi-rr-square-plus mr-10"></i> Ajouter une annonce</a>
+                                        <a class="nav-link" id="track-orders-tab"  href="/deposer_une_annonce" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi-rr-square-plus mr-10"></i> Ajouter une annonce</a>
                                     </li>
+
                                     <li class="nav-item">
-                                        <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="fi-rs-marker mr-10"></i>My Address</a>
-                                    </li>
+                                        <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab" href="#account-detail" role="tab" aria-controls="account-detail" aria-selected="true"><i class="fi-rs-user mr-10"></i>Détails du compte</a>
+                                    </li> 
                                     <li class="nav-item">
-                                        <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab" href="#account-detail" role="tab" aria-controls="account-detail" aria-selected="true"><i class="fi-rs-user mr-10"></i>Account details</a>
-                                    </li>
+                                      <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="fi-rr-lock mr-10"></i>Mot de passe</a>
+                                  </li>                                   
                                     <li class="nav-item">
                                         <a class='nav-link' (click)="logout()"><i class="fi-rs-sign-out mr-10"></i>Logout</a>
                                       </li>                                      
@@ -55,7 +56,7 @@
                                         </div>
                                     </div>
                                 </div>                                
-                                <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                                 <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
                                     <div class="card">
                                         <div class="card-header">
                                           <h3 class="mb-0">Ma liste d'annonces</h3>
@@ -135,8 +136,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">
+                                </div> 
+                                <!-- <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">
                                     <div class="card">
                                         <div class="card-header">
                                             <h3 class="mb-0">Ajouter une annonce</h3>
@@ -449,48 +450,547 @@
                                         </div>
                                     </div>
                                 </div>
+ -->
+
+ <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
+  <div class="row">
+      <div class="">
+          <div class="card mb-3 mb-lg-0">
+              <div class="mb-30">
+                  <h2 style="margin-bottom: 1rem;">Modifier le mot de passe</h2>
+                  <p style="margin-bottom: 1rem;">Pour changer votre mot de passe, veuillez saisir le nouveau mot de passe ci-dessous :</p>
+              </div>
+              <form method="post" (ngSubmit)="onPassword()" #registerForm="ngForm">
+
+              <div class="row " >
+              <div class="col-lg-6 col-md-6">
+                <div class="form-group mb-3">
+                  <div class="form-group">
+                    <label for="nouveau_mot_de_passe">Nouveau mot de passe :</label>
+                    <input 
+                      [type]="showPassword ? 'text' : 'password'"
+                      placeholder=" Mot de passe"
+                      [(ngModel)]="userData.password"
+                      name="password"
+                      class="password-input"
+                      (ngModelChange)="clearError('password')"
+                    >
+                    <span class="eyeicon icon" (click)="togglePasswordVisibility()">
+                      <i [ngClass]="showPassword ? 'fi-rs-eye' : 'fi-rr-eye-crossed'"></i>
+                    </span>
+                  </div>
+                  
+                  <div
+                    *ngIf="fieldErrors.password"
+                    class="text-danger requisDiv"
+                    style="margin-top: 1rem"
+                  >
+                    <div> 
+                       Mot de passe est requis.</div>
+                  </div>
+                  <div
+                  *ngIf="error && error.error && error.error.data && error.error.data.password && error.error.data.password.regex"
+                    class="text-danger requisDiv"
+                    style="margin-top: 1rem"
+                  >
+                    <div>Le mot de passe doit inclure au moins une minuscule, une majuscule et un caractère spécial.</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-6">
+                <div class="form-group mb-3">
+                  <div class="form-group">
+                    <label for="confirmer_mot_de_passe">Confirmer le nouveau mot de passe :</label>
+                    <input 
+                      [type]="showRepeatPassword ? 'text' : 'password'"
+                      placeholder="Confirmer le mot de passe"
+                      [(ngModel)]="userData.repeat_password"
+                      name="repeat_password"
+                      class="password-input"
+                      (ngModelChange)="clearError('repeat_password')"
+                    >
+                    <span class="eyeicon icon" (click)="toggleRepeatPasswordVisibility()">
+                      <i [ngClass]="showRepeatPassword ? 'fi-rs-eye' : 'fi-rr-eye-crossed'"></i>
+                    </span>
+                  </div>
+                  
+                  <div
+                    *ngIf="fieldErrors.repeat_password"
+                    class="text-danger requisDiv"
+                    style="margin-top: 1rem"
+                  >
+                    <div>Confirmer le mot de passe est requis.</div>
+                  </div>
+                  <div
+                    *ngIf="fieldErrors.passwordMismatch"
+                    class="text-danger requisDiv"
+                    style="margin-top: 1rem"
+                  >
+                    <div>Les mots de passe ne correspondent pas.</div>
+                  </div>
+                </div>
+                </div>
+                <div class="form-group mb-30 text-end">
+                  <!-- Add 'text-end' class here -->
+                  <button
+                    type="submit"
+                    class="btn btn-fill-out btn-block hover-up font-weight-bold"
+                    name="register"
+                    (onClick)="onPassword()"
+                  >
+                    Modifier
+                  </button>
+                </div>
+              </div>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+                                
                                 <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
                                     <div class="card">
-                                        <div class="card-header">
-                                            <h5>Détails du compte</h5>
+                                        <div class="">
+                                            <h2>Détails du compte</h2>
                                         </div>
                                         <div class="card-body">
-                                            <p style="margin-bottom: 1rem;">Voici vos informations personnelles :</p>
-                                            <form method="post" name="enq">
+                                            <p style="margin-bottom: 2rem;">Voici vos informations personnelles :</p>
+                                            <form method="post" (ngSubmit)="onSubmit()" #registerForm="ngForm">
                                                 <div class="row">
-                                                    <div class="form-group col-md-6">
-                                                        <label>Prénom <span class="required">*</span></label>
-                                                        <input required="" class="form-control" name="name" type="text" value="" />
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label>Nom de famille <span class="required">*</span></label>
-                                                        <input required="" class="form-control" name="phone" value="" />
-                                                    </div>
-                                                    <div class="form-group col-md-12">
-                                                        <label>Nom d'affichage <span class="required">*</span></label>
-                                                        <input required="" class="form-control" name="dname" type="text" value="" />
-                                                    </div>
-                                                    <div class="form-group col-md-12">
-                                                        <label>Adresse e-mail <span class="required">*</span></label>
-                                                        <input required="" class="form-control" name="email" type="email" value="" />
-                                                    </div>
-                                                    <div class="form-group col-md-12">
-                                                        <label>Mot de passe actuel <span class="required">*</span></label>
-                                                        <input required="" class="form-control" name="password" type="password" />
-                                                    </div>
-                                                    <div class="form-group col-md-12">
-                                                        <label>Nouveau mot de passe <span class="required">*</span></label>
-                                                        <input required="" class="form-control" name="npassword" type="password" />
-                                                    </div>
-                                                    <div class="form-group col-md-12">
-                                                        <label>Confirmez le mot de passe <span class="required">*</span></label>
-                                                        <input required="" class="form-control" name="cpassword" type="password" />
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <button type="submit" class="btn btn-fill-out submit font-weight-bold float-right" name="submit" value="Submit">Enregistrer les modifications</button>
-                                                    </div>                                                    
+    
+                                  <!-- First column -->
+                                  <div class="col-lg-6 col-md-6">
+                                    <div class="login_wrap widget-taber-content background-white">
+                                        <div class="padding_eight_all bg-white">
+                                            <div class="form-group mb-3">
+                                                <label for="last_name">Nom de famille :</label>
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    id="last_name"
+                                                    name="last_name"
+                                                    placeholder="Nom de famille"
+                                                    [(ngModel)]="userData.last_name"
+                                                    class="form-control custom-spacing"
+                                                    (ngModelChange)="clearError('last_name')"
+                                                />
+                                                <div
+                                                    *ngIf="fieldErrors.last_name"
+                                                    class="text-danger requisDiv"
+                                                    style="margin-top: 1rem"
+                                                >
+                                                    <div>Nom de famille est requis.</div>
                                                 </div>
-                                            </form>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="email">E-mail :</label>
+                                                <input
+                                                    type="email"
+                                                    required
+                                                    id="email"
+                                                    name="email"
+                                                    placeholder="E-mail"
+                                                    [(ngModel)]="userData.email"
+                                                    class="form-control custom-spacing"
+                                                    (ngModelChange)="clearError('email')"
+                                                />
+                                                <div
+                                                    *ngIf="fieldErrors.email"
+                                                    class="text-danger requisDiv"
+                                                    style="margin-top: 1rem"
+                                                >
+                                                    <div>E-mail est requis.</div>
+                                                </div>
+                                                <div
+                                                    *ngIf="error && error.error && error.error.data && error.error.data.email && error.error.data.email.unique"
+                                                    class="text-danger requisDiv"
+                                                    style="margin-top: 1rem"
+                                                >
+                                                    <div>Cet e-mail existe déjà.</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="address">Adresse :</label>
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    id="address"
+                                                    name="address"
+                                                    placeholder="Adresse"
+                                                    [(ngModel)]="userData.address"
+                                                    class="form-control custom-spacing"
+                                                    (ngModelChange)="clearError('address')"
+                                                />
+                                                <div
+                                                    *ngIf="fieldErrors.address"
+                                                    class="text-danger requisDiv"
+                                                    style="margin-top: 1rem"
+                                                >
+                                                    <div>Adresse est requis.</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="postal_code">Code Postal :</label>
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    id="postal_code"
+                                                    name="postal_code"
+                                                    placeholder="Code Postal"
+                                                    [(ngModel)]="userData.postal_code"
+                                                    class="form-control custom-spacing"
+                                                    (ngModelChange)="clearError('postal_code')"
+                                                />
+                                                <div
+                                                    *ngIf="fieldErrors.postal_code"
+                                                    class="text-danger requisDiv"
+                                                    style="margin-top: 1rem"
+                                                >
+                                                    <div>Code Postal est requis.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                  
+                                  <!-- Second column -->
+                                  <div class="col-lg-6 col-md-6">
+                                    <div class="login_wrap widget-taber-content background-white">
+                                        <div class="padding_eight_all bg-white">
+                                            <div class="form-group mb-3">
+                                                <label for="first_name">Prénom :</label>
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    id="first_name"
+                                                    name="first_name"
+                                                    placeholder="Prénom"
+                                                    [(ngModel)]="userData.first_name"
+                                                    class="form-control custom-spacing"
+                                                    (ngModelChange)="clearError('first_name')"
+                                                />
+                                                <div
+                                                    *ngIf="fieldErrors.first_name"
+                                                    class="text-danger requisDiv"
+                                                    style="margin-top: 1rem"
+                                                >
+                                                    <div>Prénom est requis.</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="telephone">Téléphone :</label>
+                                                <input
+                                                    type="tel"
+                                                    required
+                                                    id="telephone"
+                                                    name="telephone"
+                                                    placeholder="Téléphone"
+                                                    [(ngModel)]="userData.telephone"
+                                                    class="form-control custom-spacing"
+                                                    (ngModelChange)="clearError('telephone')"
+                                                />
+                                                <div
+                                                    *ngIf="fieldErrors.telephone"
+                                                    class="text-danger requisDiv"
+                                                    style="margin-top: 1rem"
+                                                >
+                                                    <div>Téléphone est requis.</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="city">Ville :</label>
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    id="city"
+                                                    name="city"
+                                                    placeholder="Ville"
+                                                    [(ngModel)]="userData.city"
+                                                    class="form-control custom-spacing"
+                                                    (ngModelChange)="clearError('city')"
+                                                />
+                                                <div
+                                                    *ngIf="fieldErrors.city"
+                                                    class="text-danger requisDiv"
+                                                    style="margin-top: 1rem"
+                                                >
+                                                    <div>Ville est requis.</div>
+                                                </div>
+                                            </div>
+                                            <div class="select-menu" [class.has-error]="fieldErrors.civility">
+                                                <label for="civility">Civilité :</label>
+                                                <div class="select-btn" style="
+                                                    margin-bottom: 1rem;
+                                                    background: #fff;
+                                                    border: 1px solid #ececec;
+                                                    height: 64px;
+                                                    box-shadow: none;
+                                                    padding-left: 20px;
+                                                    font-size: 16px;
+                                                    width: 100%;
+                                                  " (click)="toggleOptions()">
+                                                    <span class="sBtn-text">{{
+                                                        selectedOption || "Civilité"
+                                                    }}</span>
+                                                    <i class="bx bx-chevron-down"></i>
+                                                </div>
+                                                <ul class="options" [ngClass]="{ active: optionsVisible }">
+                                                    <li class="option" (click)="selectOption('Monsieur')">
+                                                        Monsieur
+                                                    </li>
+                                                    <li class="option" (click)="selectOption('Madame')">
+                                                        Madame
+                                                    </li>
+                                                </ul>
+                                                <div
+                                                    *ngIf="fieldErrors.civility"
+                                                    class="text-danger requisDiv"
+                                                    style="margin-bottom: 1rem"
+                                                >
+                                                    <div>Civilité est requise.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                  
+                                <div class="col-lg-6 col-md-6" *ngIf="showProfessionalAccount">
+                                  <div class="login_wrap widget-taber-content background-white">
+                                      <div class="padding_eight_all bg-white">
+                                          <div class="form-group mb-3">
+                                              <label for="company_name">Nom de l'entreprise :</label>
+                                              <input
+                                                  type="text"
+                                                  required
+                                                  id="company_name"
+                                                  name="company_name"
+                                                  placeholder="Nom de l'entreprise"
+                                                  [(ngModel)]="userDataPro.company_name"
+                                                  class="form-control custom-spacing"
+                                                  (ngModelChange)="clearError('company_name')"
+                                              />
+                                              <div
+                                                  *ngIf="fieldErrors.company_name"
+                                                  class="text-danger requisDiv"
+                                                  style="margin-top: 1rem"
+                                              >
+                                                  <div>Nom de l'entreprise est requis.</div>
+                                              </div>
+                                          </div>
+                                          <div class="form-group mb-3">
+                                              <label for="company_address">Adresse de l'entreprise :</label>
+                                              <input
+                                                  type="text"
+                                                  required
+                                                  id="company_address"
+                                                  name="company_address"
+                                                  placeholder="Adresse de l'entreprise"
+                                                  [(ngModel)]="userDataPro.company_address"
+                                                  class="form-control custom-spacing"
+                                                  (ngModelChange)="clearError('company_address')"
+                                              />
+                                              <div
+                                                  *ngIf="fieldErrors.company_address"
+                                                  class="text-danger requisDiv"
+                                                  style="margin-top: 1rem"
+                                              >
+                                                  <div>Adresse de l'entreprise est requis.</div>
+                                              </div>
+                                          </div>
+                                          <div class="form-group mb-3">
+                                              <label for="company_postal_code">Code postal de l'entreprise :</label>
+                                              <input
+                                                  type="text"
+                                                  required
+                                                  id="company_postal_code"
+                                                  name="company_postal_code"
+                                                  placeholder="Code postal de l'entreprise"
+                                                  [(ngModel)]="userDataPro.company_postal_code"
+                                                  class="form-control custom-spacing"
+                                                  (ngModelChange)="clearError('company_postal_code')"
+                                              />
+                                              <div
+                                                  *ngIf="fieldErrors.company_postal_code"
+                                                  class="text-danger requisDiv"
+                                                  style="margin-top: 1rem"
+                                              >
+                                                  <div>Code postal de l'entreprise est requis.</div>
+                                              </div>
+                                          </div>
+                                          <div class="form-group mb-3">
+                                              <label for="activity_sector">Secteur d'activité :</label>
+                                              <input
+                                                  type="text"
+                                                  required
+                                                  id="activity_sector"
+                                                  name="activity_sector"
+                                                  placeholder="Secteur d'activité"
+                                                  [(ngModel)]="userDataPro.activity_sector"
+                                                  class="form-control custom-spacing"
+                                                  (ngModelChange)="clearError('activity_sector')"
+                                              />
+                                              <div
+                                                  *ngIf="fieldErrors.activity_sector"
+                                                  class="text-danger requisDiv"
+                                                  style="margin-top: 1rem"
+                                              >
+                                                  <div>Secteur d'activité est requis.</div>
+                                              </div>
+                                          </div>
+                                          <div class="form-group mb-3">
+                                              <label for="contact_first_name">Prénom du responsable :</label>
+                                              <input
+                                                  type="text"
+                                                  required
+                                                  id="contact_first_name"
+                                                  name="contact_first_name"
+                                                  placeholder="Prénom du responsable"
+                                                  [(ngModel)]="userDataPro.contact_first_name"
+                                                  class="form-control custom-spacing"
+                                                  (ngModelChange)="clearError('contact_first_name')"
+                                              />
+                                              <div
+                                                  *ngIf="fieldErrors.contact_first_name"
+                                                  class="text-danger requisDiv"
+                                                  style="margin-top: 1rem"
+                                              >
+                                                  <div>Prénom du responsable est requis.</div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              
+                              <div class="col-lg-6 col-md-6" *ngIf="showProfessionalAccount">
+                                <div class="login_wrap widget-taber-content background-white">
+                                    <div class="padding_eight_all bg-white">
+                                        <div class="form-group mb-3">
+                                            <label for="ice">Numéro ICE :</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                id="ice"
+                                                name="ice"
+                                                placeholder="Numéro ICE"
+                                                [(ngModel)]="userDataPro.ice"
+                                                class="form-control custom-spacing"
+                                                (ngModelChange)="clearError('ice')"
+                                            />
+                                            <div
+                                                *ngIf="fieldErrors.ice"
+                                                class="text-danger requisDiv"
+                                                style="margin-top: 1rem"
+                                            >
+                                                <div>Numéro ICE est requis.</div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="company_address_rest">Complément d'adresse :</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                id="company_address_rest"
+                                                name="company_address_rest"
+                                                placeholder="Complément d'adresse"
+                                                [(ngModel)]="userDataPro.company_address_rest"
+                                                class="form-control custom-spacing"
+                                                (ngModelChange)="clearError('company_address_rest')"
+                                            />
+                                            <!-- <div
+                                                *ngIf="fieldErrors.company_address_rest"
+                                                class="text-danger requisDiv"
+                                                style="margin-top: 1rem"
+                                            >
+                                                <div>Complément d'adresse est requis.</div>
+                                            </div> -->
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="company_city">Ville de l'entreprise :</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                id="company_city"
+                                                name="company_city"
+                                                placeholder="Ville de l'entreprise"
+                                                [(ngModel)]="userDataPro.company_city"
+                                                class="form-control custom-spacing"
+                                                (ngModelChange)="clearError('company_name')"
+                                            />
+                                            <div
+                                                *ngIf="fieldErrors.company_city"
+                                                class="text-danger requisDiv"
+                                                style="margin-top: 1rem"
+                                            >
+                                                <div>Ville de l'entreprise est requis.</div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="contact_email">Email du responsable :</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                id="contact_email"
+                                                name="contact_email"
+                                                placeholder="Email du responsable"
+                                                [(ngModel)]="userDataPro.contact_email"
+                                                class="form-control custom-spacing"
+                                                (ngModelChange)="clearError('contact_email')"
+                                            />
+                                            <div
+                                                *ngIf="fieldErrors.contact_email"
+                                                class="text-danger requisDiv"
+                                                style="margin-top: 1rem"
+                                            >
+                                                <div>Email du responsable est requis.</div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="contact_last_name">Nom du responsable :</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                id="contact_last_name"
+                                                name="contact_last_name"
+                                                placeholder="Nom du responsable"
+                                                [(ngModel)]="userDataPro.contact_last_name"
+                                                class="form-control custom-spacing"
+                                                (ngModelChange)="clearError('contact_last_name')"
+                                            />
+                                            <div
+                                                *ngIf="fieldErrors.contact_last_name"
+                                                class="text-danger requisDiv"
+                                                style="margin-top: 1rem"
+                                            >
+                                                <div>Nom du responsable est requis.</div>
+                                            </div>
+                                        </div>
+                                        <!-- Ajoutez d'autres champs ici si nécessaire -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                                                </div>
+                                  
+
+                                  
+                                                <div class="form-group mb-30 text-end">
+                                                  <!-- Add 'text-end' class here -->
+                                                  <button
+                                                    type="submit"
+                                                    class="btn btn-fill-out btn-block hover-up font-weight-bold"
+                                                    name="register"
+                                                    (onClick)="onSubmit()"
+                                                  >
+                                                    Modifier
+                                                  </button>
+                                                </div>
+                                
+                                              </form>
+                                            
                                         </div>
                                     </div>
                                 </div>

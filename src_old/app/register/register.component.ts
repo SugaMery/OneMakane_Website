@@ -40,7 +40,7 @@ export class RegisterComponent {
 
   civilityOptions = [
     { label: 'Monsieur', value: 'Mr' },
-    { label: 'Madame', value: 'Mme' }
+    { label: 'Madame', value: 'Mrs' }
   ];
 
   generateSecurityCode(): string {

@@ -5,18 +5,7 @@ import { UserService } from '../user.service';
 import { CategoryService } from '../category.service';
 import { AnnonceService } from '../annonce.service';
 import { SettingService } from '../setting.service';
-declare var $: any;
-interface Category {
-  active: boolean;
-  created_at: string;
-  id: number;
-  model: any; // Adjust this type according to the actual type of 'model'
-  route: any; // Adjust this type according to the actual type of 'model'
-  name: string;
-  parent_id: number | null;
-  slug: string | null;
-  url: string | null;
-}
+
 @Component({
   selector: 'app-page-account',
   templateUrl: './page-account.component.html',
@@ -25,57 +14,10 @@ interface Category {
 export class PageAccountComponent {
   userInfo: any;
   loggedInUserName: string | undefined;
+  userId!: string | null;
+  accessToken!: string | null;
+  idPro: any;
 
-  deletedImages: string[] = [];
-  uploadedImages: string[] = [];
-
-  categories: Category[] = [];
-  formData = {
-    titre: '',
-    description: '',
-    prix: '',
-    category_id: 0,
-    state: '',
-    genre: '',
-    urgent: false,
-    highlighted: false,
-    ville: '',
-    code_postal: '',
-    files: [], // Contiendra les fichiers sélectionnés
-  };
-  formAds = {
-    user_id: 29,
-    category_id: 54,
-    title: 'minus corrupti mollitia',
-    description:
-      'Ea impedit tenetur dolor ut tempore magnam distinctio ullam. Dolorem nesciunt hic sunt ullam deleniti quibusdam.',
-    state: 'good',
-    urgent: true,
-    highlighted: true,
-    price: 94506.53,
-    city: 'Pittsfield',
-    postal_code: '77807-3426',
-    medias: {},
-  };
-  selectedOption: Category = {
-    active: false,
-    created_at: '',
-    id: 0,
-    model: null,
-    name: '',
-    parent_id: null,
-    slug: null,
-    route: null,
-    url: null,
-  };
-  uploadedImageIds: number[] = [];
-
-  optionsVisible: boolean = false;
-  urgentChecked: boolean = false;
-  highlightedChecked: boolean = false;
-  uploadedImage: string[] = [];
-  selectedFiles: File[] = [];
-  representatives: any;
   constructor(
     private authService: AuthGuard,
     private router: Router,
@@ -85,30 +27,41 @@ export class PageAccountComponent {
     private settingsService: SettingService
   ) {}
   settings: any;
+  ads : any[]=[];
   ngOnInit(): void {
-    this.getUserInfo();
-    this.fetchCategories();
-    const userId = localStorage.getItem('loggedInUserId');
-    const accessToken = localStorage.getItem('loggedInUserToken');
-
-    console.log('tt', userId?.toString);
-    this.annonceService.getAds(accessToken!).subscribe((data) => {
+     this.userId = localStorage.getItem('loggedInUserId');
+     this.accessToken = localStorage.getItem('loggedInUserToken');
+     this.annonceService.getAds(this.accessToken!).subscribe((data) => {
       const adIds = data.data.map((ad: any) => ad.id);
+       console.log("data ads",data.data);
 
+       data.data.forEach((element:any)=>{
+        //console.log("data element",element);
+
+           this.annonceService.getAdById(element.id,this.accessToken!).subscribe((annonce)=>{
+            //console.log("data annonce",annonce.data);
+
+            if(annonce.data.user_id===this.userId){
+              console.log("data",element);
+            }
+           })
+       })
       const adPromises = adIds.map((adId: any) => {
-        return this.annonceService.getAdById(adId, accessToken!).toPromise();
+        return this.annonceService.getAdById(adId, this.accessToken!).toPromise();
       });
 
       Promise.all(adPromises)
         .then((adsData) => {
           this.ads = adsData
-            .filter((ad: any) => ad.data.user_id === Number(userId))
+            .filter((ad: any) => ad.data.user_id === Number(this.userId))
             .map((ad: any) => {
+              console.log("data ads111",ad);
+
               const createdAt =
                 ad.data.medias && ad.data.medias.length > 0
                   ? ad.data.medias[0].created_at
                   : ad.data.created_at;
-              ad.data.created_at = this.extractDate(createdAt);
+             // ad.data.created_at = this.extractDate(createdAt);
               console.log('Ad date : ', ad.data.created_at);
               return ad.data;
             });
@@ -117,158 +70,611 @@ export class PageAccountComponent {
           // Handle error
         });
     });
+    this.userService.getUserInfoById(Number(this.userId),this.accessToken!).subscribe((data)=>{
+         this.loggedInUserName=data.data.full_name;
+         this.userService.getAllUsers(this.accessToken!).subscribe((alldata)=>{
+          alldata.data.forEach((element: {
+            professional: any;
+            id: any; email: any; uuid: string; }) => {
+            if(element.id == data.data.id){
+              this.userData.uuid=  element.uuid;
+              this.idPro = element.professional.id; 
+            }
+          });
+         })
+          this.userData.first_name = data.data.first_name;
+          this.userData.last_name = data.data.last_name;
+          this.userData.address = data.data.address;
+          this.userData.city = data.data.city;
+          this.userData.email = data.data.email;
+          this.userData.postal_code= data.data.postal_code;
+          this.userData.telephone = data.data.telephone;
+        
+          if (data.data.civility == 'Mr') {
+            this.userData.civility =  this.selectedOption = 'Monsieur';
+    
+          } else {
+            this.userData.civility =  this.selectedOption = 'Madame';
+          }
+          if (data.data.professional !== null) {
+            this.showProfessionalAccount = true ;
+            this.userDataPro.company_name = data.data.professional.company_name;
+            this.userDataPro.company_address = data.data.professional.company_address;
+            this.userDataPro.company_postal_code = data.data.professional.company_postal_code;
+            this.userDataPro.activity_sector = data.data.professional.activity_sector;
+            this.userDataPro.contact_first_name = data.data.professional.contact_first_name;
+            this.userDataPro.ice = data.data.professional.ice;
+            this.userDataPro.company_address_rest = data.data.professional.company_address_rest;
+            this.userDataPro.company_city = data.data.professional.company_city;
+            this.userDataPro.contact_email = data.data.professional.contact_email;
+            this.userDataPro.contact_last_name = data.data.professional.contact_last_name;
+          }
+          
+    })
 
-    this.statuses = [
-      { label: 'INSTOCK', value: 'instock' },
-      { label: 'LOWSTOCK', value: 'lowstock' },
-      { label: 'OUTOFSTOCK', value: 'outofstock' },
-    ];
   }
+  logout(): void {
+    this.authService.logout();
+  }
+  adDialog: boolean = false;
+  selectedAd: any; // To store the selected ad object
+  productDialog: boolean = false;
 
-  extractDate(dateTimeString: string): string {
-    const date = new Date(dateTimeString);
-    if (isNaN(date.getTime())) {
-      console.error('Invalid date value:', dateTimeString);
-      return ''; // Retourner une chaîne vide ou une valeur par défaut si la date est invalide
-    } else {
-      return date.toISOString().split('T')[0];
+
+  product!: any;
+
+  selectedads!: any[] | null;
+
+  submitted: boolean = false;
+
+  statuses!: any[];
+  showDialog(ad: any) {
+    this.selectedAd = ad; // Set the selected ad object
+    this.adDialog = true;
+  }
+  hideDialog() {
+    this.productDialog = false;
+    this.submitted = false;
+  }
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'draft':
+        return 'p-tag p-tag-draft';
+      case 'pending':
+        return 'p-tag p-tag-warning';
+      case 'approved':
+        return 'p-tag p-tag-success';
+      case 'rejected':
+        return 'p-tag p-tag-danger';
+      default:
+        return '';
     }
   }
+  userData = {
+    uuid:'',
+    first_name: '',
+    last_name: '',
+    email: '',
+    address: '',
+    postal_code: '',
+    telephone: '',
+    city: '',
+    civility: '',
+    password: '',
+    role_id: 2,
+    repeat_password: '',
+    professional: {},
+    generatedSecurityCode: this.generateSecurityCode(),
+    enteredSecurityCode: '',
+    termsAccepted: false,
+  };
 
-  resetFormData(): void {
-    // Réinitialiser les données du formulaire
-    this.formData = {
-      titre: '',
-      description: '',
-      prix: '',
-      category_id: 0, // Remplacer 0 par la valeur par défaut appropriée
-      state: '',
-      genre: '',
-      urgent: false,
-      highlighted: false,
-      ville: '',
-      code_postal: '',
-      files: [], // Remplacer [] par la valeur par défaut appropriée
-    };
+  userDataPassword = {
+    uuid:'',
+    password: '',
+    repeat_password: ''
+  }
+  userDataPro = {
+    company_name: '',
+    company_address: '',
+    company_postal_code: '',
+    activity_sector: '',
+    contact_first_name: '',
+    ice: '',
+    company_address_rest: '',
+    company_city: '',
+    contact_email: '',
+    contact_last_name: '',
+  };
+
+  fieldErrors: {
+    [key: string]: boolean;
+    uuid:boolean;
+    first_name: boolean;
+    last_name: boolean;
+    email: boolean;
+    address: boolean;
+    postal_code: boolean;
+    telephone: boolean; // Add category field,
+    city: boolean;
+    civility: boolean;
+    password: boolean;
+    repeat_password: boolean;
+    termsAccepted: boolean;
+    enteredSecurityCode: boolean;
+    repeat_passwords: boolean;
+    passwordMismatch : boolean;
+    emailExists : boolean;
+
+    company_name: boolean;
+    company_address: boolean;
+    company_postal_code: boolean;
+    activity_sector: boolean;
+    contact_first_name: boolean;
+    ice: boolean;
+    company_address_rest: boolean;
+    company_city: boolean;
+    contact_email: boolean;
+    contact_last_name: boolean;
+    security_code_incorect : boolean;
+  } = {
+    uuid:false,
+    first_name: false,
+    last_name: false,
+    email: false,
+    address: false,
+    postal_code: false,
+    telephone: false,
+    ville: false,
+    code_postal: false,
+    city: false,
+    civility: false,
+    password: false,
+    repeat_password: false,
+    termsAccepted: false,
+    enteredSecurityCode: false,
+    repeat_passwords: false,
+    emailExists : false,
+    passwordMismatch : false,
+    
+
+    company_name: false,
+    company_address: false,
+    company_postal_code: false,
+    activity_sector: false,
+    contact_first_name: false,
+    ice: false,
+    company_address_rest: false,
+    company_city: false,
+    contact_email: false,
+    contact_last_name: false,
+    security_code_incorect : false
+  };
+
+  showProfessionalAccount: boolean = false;
+
+  optionsVisible: boolean = false;
+  selectedOption: string | null = null;
+
+  toggleOptions(): void {
+    this.optionsVisible = !this.optionsVisible;
   }
 
-  getUserInfo(): void {
-    if (typeof localStorage !== 'undefined') {
+  selectOption(option: string): void {
+    this.selectedOption = option;
+    this.optionsVisible = false;
+    this.fieldErrors.civility = false; // Clear category error when category is selected
+  }
+
+  civilityOptions = [
+    { label: 'Monsieur', value: 'Mr' },
+    { label: 'Madame', value: 'Mrs' },
+  ];
+
+  generateSecurityCode(): string {
+    // Logic to generate a security code
+    return Math.floor(1000 + Math.random() * 9000).toString();
+  }
+
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const targetElement = event.target as HTMLElement;
+    const isCategoryOpen = !!targetElement.closest('.select-btn');
+    const isStateOpen = !!targetElement.closest('.select-menu .select-btn');
+
+    if (!isCategoryOpen && !isStateOpen) {
+      this.optionsVisible = false;
+    }
+  }
+  validateForm(): boolean {
+    this.error="";
+    let isValid = true;
+  
+    // Check if required fields are empty
+    if (!this.userData.first_name) {
+      this.fieldErrors.first_name = true;
+      isValid = false;
+    } else {
+      this.fieldErrors.first_name = false;
+    }
+
+    // Add similar checks for other fields...
+  
+    if (!this.userData.last_name) {
+      this.fieldErrors.last_name = true;
+      isValid = false;
+    } else {
+      this.fieldErrors.last_name = false;
+    }
+
+    if (!this.userData.email) {
+      this.fieldErrors.email = true;
+      isValid = false;
+    } else {
+      this.fieldErrors.email = false;
+    }
+
+    if (!this.userData.address) {
+      this.fieldErrors.address = true;
+      isValid = false;
+    } else {
+      this.fieldErrors.address = false;
+    }
+
+    if (!this.userData.postal_code) {
+      this.fieldErrors.postal_code = true;
+      isValid = false;
+    } else {
+      this.fieldErrors.postal_code = false;
+    }
+
+    if (!this.userData.telephone) {
+      this.fieldErrors.telephone = true;
+      isValid = false;
+    } else {
+      this.fieldErrors.telephone = false;
+    }
+
+    if (!this.userData.city) {
+      this.fieldErrors.city = true;
+      isValid = false;
+    } else {
+      this.fieldErrors.city = false;
+    }
+
+/*     if (!this.userData.password) {
+      this.fieldErrors.password = true;
+      isValid = false;
+    } else {
+      this.fieldErrors.password = false;
+    }
+
+    if (!this.userData.repeat_password) {
+      this.fieldErrors.repeat_password = true;
+      isValid = false;
+    } else {
+      this.fieldErrors.repeat_password = false;
+    } */
+
+
+
+
+
+
+    if(this.selectedOption){
+      if (this.selectedOption == 'Monsieur') {
+        this.userData.civility = 'Mr';
+
+      } else {
+        this.userData.civility = 'Mrs';
+      }
+
+      if (!this.userData.civility) {
+        this.fieldErrors.civility = true;
+        isValid = false;
+      } else {
+        this.fieldErrors.civility = false;
+      }
+    }
+
+
+    // Check if passwords match
+/*     if (!this.fieldErrors.password && !this.fieldErrors.repeat_password) {
+      if (this.userData.password !== this.userData.repeat_password) {
+        this.fieldErrors.passwordMismatch = true;
+        isValid = false;
+      } else {
+        this.fieldErrors.passwordMismatch = false;
+      }
+    } else {
+      this.fieldErrors.passwordMismatch = false;
+    } */
+
+
+    if(this.showProfessionalAccount){
+      if (!this.userDataPro.activity_sector) {
+        this.fieldErrors.activity_sector = true;
+        isValid = false;
+      } else {
+        this.fieldErrors.activity_sector = false;
+      } 
+
+      if (!this.userDataPro.company_address) {
+        this.fieldErrors.company_address = true;
+        isValid = false;
+      } else {
+        this.fieldErrors.company_address = false;
+      } 
+
+/*       if (!this.userDataPro.company_address_rest) {
+        this.fieldErrors.company_address_rest = true;
+        isValid = false;
+      } else {
+        this.fieldErrors.company_address_rest = false;
+      }  */
+
+
+      if (!this.userDataPro.company_city) {
+        this.fieldErrors.city = true;
+        isValid = false;
+      } else {
+        this.fieldErrors.city = false;
+      } 
+
+      if (!this.userDataPro.company_name) {
+        this.fieldErrors.company_name = true;
+        isValid = false;
+      } else {
+        this.fieldErrors.company_name = false;
+      } 
+
+      if (!this.userDataPro.company_postal_code) {
+        this.fieldErrors.company_postal_code = true;
+        isValid = false;
+      } else {
+        this.fieldErrors.company_postal_code = false;
+      } 
+    
+      if (!this.userDataPro.contact_email) {
+        this.fieldErrors.contact_email = true;
+        isValid = false;
+      } else {
+        this.fieldErrors.contact_email = false;
+      } 
+
+      if (!this.userDataPro.contact_first_name) {
+        this.fieldErrors.contact_first_name = true;
+        isValid = false;
+      } else {
+        this.fieldErrors.contact_first_name = false;
+      } 
+
+      if (!this.userDataPro.contact_last_name) {
+        this.fieldErrors.contact_last_name = true;
+        isValid = false;
+      } else {
+        this.fieldErrors.contact_last_name = false;
+      } 
+
+      if (!this.userDataPro.ice) {
+        this.fieldErrors.ice = true;
+        isValid = false;
+      } else {
+        this.fieldErrors.ice = false;
+      } 
+    }
+    // Additional checks for other fields...
+  
+
+
+    // If all fields are filled, allow to proceed to the next step
+    return isValid;
+  }
+  
+  showPassword: boolean = false;
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+  
+  showRepeatPassword: boolean = false;
+
+  toggleRepeatPasswordVisibility(): void {
+    this.showRepeatPassword = !this.showRepeatPassword;
+  }
+  
+  
+
+  visible:boolean = true;
+  changetype:boolean =true;
+  error: any; 
+  viewpass(){
+    this.visible = !this.visible;
+    this.changetype = !this.changetype;
+  }
+  
+  clearError(fieldName: string): void {
+    this.fieldErrors[fieldName] = false;
+  }
+   userDatas : any;
+
+   validateFormPassword():boolean{
+
+    let isValid =true;
+    if(this.userData.password === "" ){
+      this.fieldErrors.password=true;
+      isValid=false;
+    }else{
+      this.fieldErrors.password=false;
+    }
+
+    if(this.userData.repeat_password === "" ){
+      this.fieldErrors.repeat_password=true;
+      isValid=false;
+    }else{
+      this.fieldErrors.repeat_password=false;
+    }
+    if (!this.fieldErrors.password && !this.fieldErrors.repeat_password) {
+      if (this.userData.password !== this.userData.repeat_password) {
+        this.fieldErrors.passwordMismatch = true;
+        isValid = false;
+      } else {
+        this.fieldErrors.passwordMismatch = false;
+      }
+    } else {
+      this.fieldErrors.passwordMismatch = false;
+    }
+
+    return isValid;
+   }
+   
+   onPassword(): void {
+   if(this.validateFormPassword()){
+    this.userDataPassword.password=this.userData.password;
+    this.userDataPassword.uuid=this.userData.uuid;
+    this.userDataPassword.repeat_password =this.userData.repeat_password;
+
+    this.userService.updateUser(this.userId!,this.accessToken!,this.userDataPassword).subscribe((data)=>{
+    window.location.href = '/page-account'; // Redirect to login page
+
+    },(error)=>{
+      console.error('Failed to password user', error);
+
+    })
+   }
+       
+   }
+
+  onSubmit(): void {
+    if (this.validateForm()) {
+     
+
+      if (this.selectedOption == 'Monsieur') {
+        this.userData.civility = 'Mr';
+      } else {
+        this.userData.civility = 'Mrs';
+      }
+     let isValid = true;
+     if (this.selectedOption == 'Monsieur') {
+      this.userData.civility = 'Mr';
+    } else {
+      this.userData.civility = 'Mrs';
+    }
+    const {
+      password,
+      repeat_password,
+      ...userData
+      
+    } = this.userData;
+    this.userDatas = userData;
+
+      if (this.userData.password === "" && this.userData.repeat_password === "") {
+        const {
+          password,
+          repeat_password,
+          ...userData
+        } = this.userData;
+        this.userDatas = userData;
+
+
+      }else{
+        this.userDatas =this.userData;
+        if(this.userData.password === "" ){
+          this.fieldErrors.password=true;
+          isValid=false;
+        }else{
+          this.fieldErrors.password=false;
+        }
+
+        if(this.userData.repeat_password === "" ){
+          this.fieldErrors.repeat_password=true;
+          isValid=false;
+        }else{
+          this.fieldErrors.repeat_password=false;
+        }
+        if (!this.fieldErrors.password && !this.fieldErrors.repeat_password) {
+          if (this.userData.password !== this.userData.repeat_password) {
+            this.fieldErrors.passwordMismatch = true;
+            isValid = false;
+          } else {
+            this.fieldErrors.passwordMismatch = false;
+          }
+        } else {
+          this.fieldErrors.passwordMismatch = false;
+        }
+      }
+
+      // Remove unwanted fields from userData before sending it to the service
+      const {
+        generatedSecurityCode,
+        enteredSecurityCode,
+        termsAccepted,
+        ...userDataToSend
+      } = this.userDatas;
+
+
       const userId = localStorage.getItem('loggedInUserId');
       const accessToken = localStorage.getItem('loggedInUserToken');
-      if (userId && accessToken) {
-        this.userService
-          .getUserInfoById(Number(userId), accessToken)
-          .subscribe((userInfo) => {
-            this.userInfo = userId;
-            this.loggedInUserName = `${userInfo.data.first_name} ${userInfo.data.last_name}`;
-          });
-      }
-    }
-  }
+ 
+     if (this.showProfessionalAccount) {
+        
 
-  fetchCategories(): void {
-    const accessToken = localStorage.getItem('loggedInUserToken');
-    this.categoryService.getCategoriesFrom().subscribe(
-      (categories) => {
-        this.categories = categories.data.filter(
-          (category: Category) => category.active === true
-        );
-        console.log('Filtered Categories:', this.categories);
-      },
-      (error) => {
-        console.error('Error fetching categories: ', error);
-      }
-    );
-  }
+        this.userService.updateUser(userId!,accessToken!,this.userDatas).subscribe(
+          (data) => {
+            this.userService.updateUserPro(this.idPro!,accessToken!,this.userDataPro).subscribe((data)=>{
+              //this.location.reload();
+            },(error) =>{
+              console.error('Failed to register user', error);
+            }
+            )
 
-  uploadFiles() {
-    const accessToken = localStorage.getItem('loggedInUserToken');
-    if (!accessToken) {
-      console.error('Access token not found in local storage.');
-      return;
-    }
-
-    this.selectedFiles.forEach((file) => {
-      this.annonceService
-        .uploadFile(file, accessToken)
-        .then((response) => {
-          // Assuming response contains the URL of the uploaded image
-          // You can handle the response as needed
-          console.log('File uploaded successfully:', response);
-        })
-        .catch((error) => {
-          console.error('Error uploading file:', error);
-        });
-    });
-
-    // Clear selected files array after uploading
-    this.selectedFiles = [];
-  }
-  maxImages = false;
-  onFileSelected(event: any) {
-    const maxImagesAllowed = 3;
-    const files: FileList = event.target.files;
-
-    if (files && files.length > 0) {
-      // Vérifiez si le nombre total d'images téléchargées ne dépasse pas le maximum autorisé
-      if (this.uploadedImages.length + files.length > maxImagesAllowed) {
-        this.maxImages = true;
-        console.log("Vous ne pouvez télécharger que jusqu'à 3 images.");
-        return; // Arrêtez le processus si le nombre dépasse la limite
-      }
-
-      for (let i = 0; i < files.length; i++) {
-        const file: File = files[i];
-        const reader: FileReader = new FileReader();
-        this.selectedFiles.push(file);
-
-        reader.onload = (e) => {
-          const imageDataURL: string = e.target!.result as string;
-          this.uploadedImages.push(imageDataURL);
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-  }
-
-  deleteImage(index: number) {
-    if (index > -1 && index < this.uploadedImages.length) {
-      const deletedImage = this.uploadedImages.splice(index, 1)[0];
-      if (!this.deletedImages.includes(deletedImage)) {
-        this.deletedImages.push(deletedImage);
-      }
-    }
-  }
-
-  replaceImage(index: number) {
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = 'image/*';
-    fileInput.addEventListener('change', (event: any) => {
-      const files: FileList = event.target.files;
-      if (files && files.length > 0) {
-        const file: File = files[0];
-        const reader: FileReader = new FileReader();
-        reader.onload = (e) => {
-          const imageDataURL: string = e.target!.result as string;
-          this.uploadedImages[index] = imageDataURL;
-          const deletedIndex = this.deletedImages.indexOf(imageDataURL);
-          if (deletedIndex !== -1) {
-            this.deletedImages.splice(deletedIndex, 1);
+            // Handle successful registration
+            window.location.href = '/page-account'; // Redirect to login page
+          },
+          (error) => {
+            this.error = error; 
+            // Handle registration error
+            console.error('Failed to register user', error);
           }
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-    fileInput.click();
+        );
+      } else {
+        const { professional, ...userDataToSend } = this.userDatas;
+
+        this.userService.updateUser(this.userId!,this.accessToken!,userDataToSend).subscribe(
+          (data) => {
+
+            // Handle successful registration
+            //this.location.reload();
+            window.location.href = '/page-account'; // Redirect to login page
+
+          },
+          (error) => {
+            // Handle registration error
+            this.error = error; 
+          }
+        );
+      } 
+
+
+
+    }
+
+    // Call your service to register the user with userDataToSend
   }
 
-  reUploadDeleted(index: number) {
-    if (index > -1 && index < this.deletedImages.length) {
-      const imageDataURL = this.deletedImages.splice(index, 1)[0];
-      this.uploadedImages.push(imageDataURL);
+  updateSecurityCode(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement) {
+      this.userData.enteredSecurityCode = inputElement.value;
     }
+  }
+
+  resetForm(): void {
+    // Generate a new security code and reset the form
+    this.userData.generatedSecurityCode = this.generateSecurityCode();
+    // Reset other form fields as needed
+    // this.userData = { ... }; // Reset other form fields if needed
   }
 
   isPhone(): boolean {
@@ -284,385 +690,4 @@ export class PageAccountComponent {
     return !this.isPhone();
   }
 
-  selectOption(category: Category): void {
-    this.selectedOption = category;
-    this.formData.category_id = category.id; // Update formData with selected category ID
-    this.fieldErrors.category = false; // Clear category error when category is selected
-    this.optionsVisible = false;
-    this.selectedState = null;
-    this.fetchStates();
-
-    this.genreOptionsVisible = false;
-    this.fetchGenres();
-  }
-
-  selectedCategory: any; // Selected category object
-  selectedState: any; // Selected state
-  states: any[] = []; // Array to hold states
-  stateOptionsVisible = false; // Flag to show/hide state options
-  // other properties and constructor
-
-  fetchStates(): void {
-    if (this.selectedOption) {
-      const userId = localStorage.getItem('loggedInUserId');
-      const accessToken = localStorage.getItem('loggedInUserToken');
-      const queryParams = { name: 'state', model: this.selectedOption.model };
-      this.settingsService.getSettings(accessToken!, queryParams).subscribe(
-        (response) => {
-          if (response.status === 'Success' && response.data) {
-            const data = JSON.parse(response.data);
-            this.states = Object.keys(data).map((key) => ({
-              name: data[key],
-              value: key,
-            }));
-          }
-        },
-        (error) => {
-          console.error('Error fetching states:', error);
-        }
-      );
-    }
-  }
-
-  selectState(state: any): void {
-    this.selectedState = state;
-    this.stateOptionsVisible = false;
-    this.fieldErrors.state = false;
-    this.formData.state = state.value;
-  }
-  selectedCategoryState: boolean = false;
-  toggleStateOptions(): void {
-    if (this.selectedOption.model != null) {
-      this.stateOptionsVisible = !this.stateOptionsVisible;
-      this.optionsVisible = false;
-      this.selectedCategoryState = false;
-      this.genreOptionsVisible = false;
-    } else {
-      this.selectedCategoryState = true;
-    }
-  }
-
-  onSubmit(): void {
-    // Vérifier si les champs "Ville" et "Code postal" sont remplis
-    let isValid = true;
-
-    if (!this.formData.ville) {
-      this.fieldErrors.ville = true;
-      isValid = false;
-    } else {
-      this.fieldErrors.ville = false;
-    }
-
-    if (!this.formData.code_postal) {
-      this.fieldErrors.code_postal = true;
-      isValid = false;
-    } else {
-      this.fieldErrors.code_postal = false;
-    }
-
-    // Si les champs ne sont pas remplis, arrêter l'exécution
-    if (!isValid) {
-      return;
-    }
-
-    // Si les champs sont remplis, continuer avec la soumission du formulaire
-    const accessToken = localStorage.getItem('loggedInUserToken');
-    const userId = localStorage.getItem('loggedInUserId');
-
-    if (!accessToken) {
-      console.error('Access token not found in local storage.');
-      return;
-    }
-
-    const mediaIds: string[] = [];
-
-    Promise.all(
-      this.selectedFiles.map((file) => {
-        return this.annonceService
-          .uploadFile(file, accessToken)
-          .then((response) => {
-            mediaIds.push(response.data.id);
-            console.log('File uploaded successfully:', response);
-          })
-          .catch((error) => {
-            console.error('Error uploading file:', error);
-            throw error;
-          });
-      })
-    ).then(() => {
-      const annonceData = {
-        user_id: userId,
-        category_id: this.selectedOption.id,
-        title: this.formData.titre,
-        description: this.formData.description,
-        state: this.formData.state,
-        urgent: this.formData.urgent,
-        highlighted: this.formData.highlighted,
-        price: parseFloat(this.formData.prix),
-        city: this.formData.ville,
-        postal_code: this.formData.code_postal,
-        medias: {
-          _ids: mediaIds,
-        },
-        validation_status: 'pending',
-      };
-
-      this.annonceService.createAnnonce(annonceData, accessToken!).subscribe(
-        (response) => {
-          const addressTabLink = document.querySelector(
-            '#orders-tab'
-          ) as HTMLAnchorElement;
-
-          if (addressTabLink) {
-            addressTabLink.click();
-          }
-          console.log(
-            'eeeee',
-            response.data.id,
-            this.selectedOption.model.Remplacer,
-            this.formData.state,
-            this.formData.genre
-          );
-
-          this.resetFormData();
-
-          this.selectedOption = {
-            active: false,
-            created_at: '',
-            id: 0,
-            model: null,
-            name: '',
-            parent_id: null,
-            slug: null,
-            url: null,
-            route: null,
-          };
-          console.log('Annonce créée avec succès !', response);
-        },
-        (error) => {
-          console.error("Erreur lors de la création de l'annonce :", error);
-        }
-      );
-
-      this.selectedFiles = [];
-    });
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    const targetElement = event.target as HTMLElement;
-    const isCategoryOpen = !!targetElement.closest('.select-btn');
-    const isStateOpen = !!targetElement.closest('.select-menu .select-btn');
-
-    if (!isCategoryOpen && !isStateOpen) {
-      this.optionsVisible = false;
-      this.stateOptionsVisible = false;
-      this.genreOptionsVisible = false;
-    }
-  }
-  adDialog: boolean = false;
-  selectedAd: any; // To store the selected ad object
-
-  showDialog(ad: any) {
-    this.selectedAd = ad; // Set the selected ad object
-    this.adDialog = true;
-  }
-
-  hideDialogs() {
-    this.adDialog = false;
-  }
-  selectedCategoryGenre = false;
-  selectedGenre: any; // Selected genre
-  genres: any[] = []; // Array to hold genres
-  genreOptionsVisible = false; // Flag to show/hide genre options
-  // other properties and constructor
-  fetchGenres(): void {
-    const userId = localStorage.getItem('loggedInUserId');
-    const accessToken = localStorage.getItem('loggedInUserToken');
-    const queryParams = { name: 'genre', model: this.selectedOption.model };
-    this.settingsService.getSettings(accessToken!, queryParams).subscribe(
-      (response) => {
-        if (response.status === 'Success' && response.data) {
-          const data = JSON.parse(response.data);
-          this.genres = Object.keys(data).map((key) => ({
-            name: data[key],
-            value: key,
-          }));
-        }
-      },
-      (error) => {
-        console.error('Error fetching genres:', error);
-      }
-    );
-  }
-
-  selectGenre(genre: any): void {
-    this.selectedGenre = genre;
-    this.toggleGenreOptions(); // Close dropdown after selection
-    this.fieldErrors.genre = false;
-    this.formData.genre = genre.value; // Update formData with selected category ID
-    console.log('genre', this.formData.genre);
-  }
-
-  toggleGenreOptions(): void {
-    if (this.selectedOption.model != null) {
-      this.genreOptionsVisible = !this.genreOptionsVisible;
-      this.optionsVisible = false;
-      this.stateOptionsVisible = false;
-      this.selectedCategoryGenre = false;
-    } else {
-      this.selectedCategoryGenre = true;
-    }
-  }
-
-  toggleOptions(): void {
-    this.optionsVisible = !this.optionsVisible;
-    this.stateOptionsVisible = false;
-    this.genreOptionsVisible = false;
-  }
-
-  toggleUrgent(checked: boolean) {
-    this.formData.urgent = checked;
-    console.log('urgent', checked, this.formData.urgent);
-  }
-
-  toggleHighlighted(checked: boolean) {
-    this.formData.highlighted = checked;
-    console.log('highlighted', checked, this.formData.highlighted);
-  }
-
-  logout(): void {
-    this.authService.logout();
-  }
-
-  fieldErrors: {
-    [key: string]: boolean;
-    titre: boolean;
-    description: boolean;
-    prix: boolean;
-    state: boolean;
-    genre: boolean;
-    category: boolean; // Add category field,
-    ville: boolean;
-    code_postal: boolean;
-  } = {
-    titre: false,
-    description: false,
-    prix: false,
-    state: false,
-    genre: false,
-    category: false,
-    ville: false,
-    code_postal: false, // Initialize category field error to false
-  };
-
-  clearError(fieldName: string): void {
-    this.fieldErrors[fieldName] = false;
-  }
-
-  emitNextCallback(): boolean {
-    // Assurez-vous que uploadedImages contient les chemins des images à télécharger
-    let isValid = true;
-
-    // Vérifier si les champs requis sont vides
-    if (!this.formData.titre) {
-      this.fieldErrors.titre = true;
-      isValid = false;
-    } else {
-      this.fieldErrors.titre = false;
-    }
-
-    if (!this.formData.description) {
-      this.fieldErrors.description = true;
-      isValid = false;
-    } else {
-      this.fieldErrors.description = false;
-    }
-
-    if (!this.formData.prix) {
-      this.fieldErrors.prix = true;
-      isValid = false;
-    } else {
-      this.fieldErrors.prix = false;
-    }
-    if (!this.formData.state) {
-      this.fieldErrors.state = true;
-      isValid = false;
-    } else {
-      this.fieldErrors.state = false;
-    }
-    if (!this.formData.genre) {
-      this.fieldErrors.genre = true;
-      isValid = false;
-    } else {
-      this.fieldErrors.genre = false;
-    }
-
-    if (!this.formData.category_id) {
-      this.fieldErrors.category = true;
-      return false; // Arrêter la soumission du formulaire si la catégorie n'est pas sélectionnée
-    }
-
-    // Si un champ requis est vide, arrêter le processus
-    if (!isValid) {
-      return false;
-    }
-
-    // Si tous les champs sont remplis, permettre le passage à l'étape suivante
-    return true;
-  }
-  @Output() nextCallback: EventEmitter<any> = new EventEmitter();
-
-  // Function to convert data URI to Blob
-  dataURItoBlob(dataURI: string): Blob {
-    const byteString = atob(dataURI.split(',')[1]);
-    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-    const ab = new ArrayBuffer(byteString.length);
-    const ia = new Uint8Array(ab);
-    for (let i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
-    }
-    return new Blob([ab], { type: mimeString });
-  }
-
-  onSaveImagesToDatabase(): void {
-    this.uploadFiles();
-  }
-  productDialog: boolean = false;
-
-  ads!: any[];
-
-  product!: any;
-
-  selectedads!: any[] | null;
-
-  submitted: boolean = false;
-
-  statuses!: any[];
-
-  openNew() {
-    this.product = {};
-    this.submitted = false;
-    this.productDialog = true;
-  }
-
-  hideDialog() {
-    this.productDialog = false;
-    this.submitted = false;
-  }
-
-  getStatusClass(status: string): string {
-    switch (status) {
-      case 'draft':
-        return 'p-tag p-tag-draft';
-      case 'pending':
-        return 'p-tag p-tag-warning';
-      case 'approved':
-        return 'p-tag p-tag-success';
-      case 'rejected':
-        return 'p-tag p-tag-danger';
-      default:
-        return '';
-    }
-  }
 }

@@ -4,14 +4,12 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
-
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
-  providers: [MessageService],
+  selector: 'app-forget-password',
+  templateUrl: './forget-password.component.html',
+  styleUrl: './forget-password.component.css'
 })
-export class LoginComponent {
+export class ForgetPasswordComponent {
   email: string = '';
   password: string = '';
   error: any;
@@ -24,22 +22,15 @@ export class LoginComponent {
 
   userData = {
     email: '',
-    password: '',
   };
   fieldErrors: {
     [key: string]: boolean;
     email: boolean;
-    password: boolean;
   } = {
-    password: false,
     email : false,
   };
 
-  showPassword: boolean = false;
-
-  togglePasswordVisibility(): void {
-    this.showPassword = !this.showPassword;
-  }
+ 
 
   clearError(fieldName: string): void {
     this.fieldErrors[fieldName] = false;
@@ -56,27 +47,16 @@ export class LoginComponent {
     } else {
       this.fieldErrors.email = false;
     }
-
-    if (!this.userData.password) {
-      this.fieldErrors.password = true;
-      isValid = false;
-    } else {
-      this.fieldErrors.password = false;
-    }
-
     return isValid;
   }
   
   onSubmit(): void {
     if(this.validateForm()){
-      this.userService.login(this.userData).subscribe(
+      this.userService.sendResetEmail(this.userData.email).subscribe(
         (response) => {
           // Store user ID and token in local storage
-          localStorage.setItem('loggedInUserId', response.data.id);
-          localStorage.setItem('loggedInUserToken', response.data.token);
-  
           // Redirect to the dashboard
-          window.location.href = '/';
+          window.location.href = '/reset-password/email';
         },
         (error) => {
           // Handle login error
