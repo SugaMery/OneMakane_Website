@@ -77,14 +77,14 @@ export class AnnonceService {
       .toPromise();
   }
 
-  getAds(accessToken: string): Observable<any> {
+  getAds(): Observable<any> {
     const url = `${this.apiUrl}/ads`;
-    return this.http.get<any>(url, { headers: this.getHeaders(accessToken) });
+    return this.http.get<any>(url);
   }
 
-  getAdById(adId: string, accessToken: string): Observable<any> {
+  getAdById(adId: string): Observable<any> {
     const url = `${this.apiUrl}/ads/${adId}`;
-    return this.http.get<any>(url, { headers: this.getHeaders(accessToken) });
+    return this.http.get<any>(url);
   }
 
   insertSetting(

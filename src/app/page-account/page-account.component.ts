@@ -27,27 +27,27 @@ export class PageAccountComponent {
     private settingsService: SettingService
   ) {}
   settings: any;
-  ads : any[]=[];
+  ads: any[] = [];
   ngOnInit(): void {
-     this.userId = localStorage.getItem('loggedInUserId');
-     this.accessToken = localStorage.getItem('loggedInUserToken');
-     this.annonceService.getAds(this.accessToken!).subscribe((data) => {
+    this.userId = localStorage.getItem('loggedInUserId');
+    this.accessToken = localStorage.getItem('loggedInUserToken');
+    this.annonceService.getAds().subscribe((data) => {
       const adIds = data.data.map((ad: any) => ad.id);
-       console.log("data ads",data.data);
+      //console.log("data ads",data.data);
 
-       data.data.forEach((element:any)=>{
+      data.data.forEach((element: any) => {
         //console.log("data element",element);
 
-           this.annonceService.getAdById(element.id,this.accessToken!).subscribe((annonce)=>{
-            //console.log("data annonce",annonce.data);
+        this.annonceService.getAdById(element.id).subscribe((annonce) => {
+          //console.log("data annonce",annonce.data);
 
-            if(annonce.data.user_id===this.userId){
-              console.log("data",element);
-            }
-           })
-       })
+          if (annonce.data.user_id === this.userId) {
+            // console.log("data",element);
+          }
+        });
+      });
       const adPromises = adIds.map((adId: any) => {
-        return this.annonceService.getAdById(adId, this.accessToken!).toPromise();
+        return this.annonceService.getAdById(adId).toPromise();
       });
 
       Promise.all(adPromises)
@@ -55,14 +55,14 @@ export class PageAccountComponent {
           this.ads = adsData
             .filter((ad: any) => ad.data.user_id === Number(this.userId))
             .map((ad: any) => {
-              console.log("data ads111",ad);
+              console.log('data ads111', ad);
 
               const createdAt =
                 ad.data.medias && ad.data.medias.length > 0
                   ? ad.data.medias[0].created_at
                   : ad.data.created_at;
-             // ad.data.created_at = this.extractDate(createdAt);
-              console.log('Ad date : ', ad.data.created_at);
+              // ad.data.created_at = this.extractDate(createdAt);
+              //  console.log('Ad date : ', ad.data.created_at);
               return ad.data;
             });
         })
@@ -70,48 +70,58 @@ export class PageAccountComponent {
           // Handle error
         });
     });
-    this.userService.getUserInfoById(Number(this.userId),this.accessToken!).subscribe((data)=>{
-         this.loggedInUserName=data.data.full_name;
-         this.userService.getAllUsers(this.accessToken!).subscribe((alldata)=>{
-          alldata.data.forEach((element: {
-            professional: any;
-            id: any; email: any; uuid: string; }) => {
-            if(element.id == data.data.id){
-              this.userData.uuid=  element.uuid;
-              this.idPro = element.professional.id; 
+    this.userService
+      .getUserInfoById(Number(this.userId), this.accessToken!)
+      .subscribe((data) => {
+        this.loggedInUserName = data.data.full_name;
+        this.userService.getAllUsers(this.accessToken!).subscribe((alldata) => {
+          alldata.data.forEach(
+            (element: {
+              professional: any;
+              id: any;
+              email: any;
+              uuid: string;
+            }) => {
+              if (element.id == data.data.id) {
+                this.userData.uuid = element.uuid;
+                this.idPro = element.professional.id;
+              }
             }
-          });
-         })
-          this.userData.first_name = data.data.first_name;
-          this.userData.last_name = data.data.last_name;
-          this.userData.address = data.data.address;
-          this.userData.city = data.data.city;
-          this.userData.email = data.data.email;
-          this.userData.postal_code= data.data.postal_code;
-          this.userData.telephone = data.data.telephone;
-        
-          if (data.data.civility == 'Mr') {
-            this.userData.civility =  this.selectedOption = 'Monsieur';
-    
-          } else {
-            this.userData.civility =  this.selectedOption = 'Madame';
-          }
-          if (data.data.professional !== null) {
-            this.showProfessionalAccount = true ;
-            this.userDataPro.company_name = data.data.professional.company_name;
-            this.userDataPro.company_address = data.data.professional.company_address;
-            this.userDataPro.company_postal_code = data.data.professional.company_postal_code;
-            this.userDataPro.activity_sector = data.data.professional.activity_sector;
-            this.userDataPro.contact_first_name = data.data.professional.contact_first_name;
-            this.userDataPro.ice = data.data.professional.ice;
-            this.userDataPro.company_address_rest = data.data.professional.company_address_rest;
-            this.userDataPro.company_city = data.data.professional.company_city;
-            this.userDataPro.contact_email = data.data.professional.contact_email;
-            this.userDataPro.contact_last_name = data.data.professional.contact_last_name;
-          }
-          
-    })
+          );
+        });
+        this.userData.first_name = data.data.first_name;
+        this.userData.last_name = data.data.last_name;
+        this.userData.address = data.data.address;
+        this.userData.city = data.data.city;
+        this.userData.email = data.data.email;
+        this.userData.postal_code = data.data.postal_code;
+        this.userData.telephone = data.data.telephone;
 
+        if (data.data.civility == 'Mr') {
+          this.userData.civility = this.selectedOption = 'Monsieur';
+        } else {
+          this.userData.civility = this.selectedOption = 'Madame';
+        }
+        if (data.data.professional !== null) {
+          this.showProfessionalAccount = true;
+          this.userDataPro.company_name = data.data.professional.company_name;
+          this.userDataPro.company_address =
+            data.data.professional.company_address;
+          this.userDataPro.company_postal_code =
+            data.data.professional.company_postal_code;
+          this.userDataPro.activity_sector =
+            data.data.professional.activity_sector;
+          this.userDataPro.contact_first_name =
+            data.data.professional.contact_first_name;
+          this.userDataPro.ice = data.data.professional.ice;
+          this.userDataPro.company_address_rest =
+            data.data.professional.company_address_rest;
+          this.userDataPro.company_city = data.data.professional.company_city;
+          this.userDataPro.contact_email = data.data.professional.contact_email;
+          this.userDataPro.contact_last_name =
+            data.data.professional.contact_last_name;
+        }
+      });
   }
   logout(): void {
     this.authService.logout();
@@ -119,7 +129,6 @@ export class PageAccountComponent {
   adDialog: boolean = false;
   selectedAd: any; // To store the selected ad object
   productDialog: boolean = false;
-
 
   product!: any;
 
@@ -151,7 +160,7 @@ export class PageAccountComponent {
     }
   }
   userData = {
-    uuid:'',
+    uuid: '',
     first_name: '',
     last_name: '',
     email: '',
@@ -170,10 +179,10 @@ export class PageAccountComponent {
   };
 
   userDataPassword = {
-    uuid:'',
+    uuid: '',
     password: '',
-    repeat_password: ''
-  }
+    repeat_password: '',
+  };
   userDataPro = {
     company_name: '',
     company_address: '',
@@ -189,7 +198,7 @@ export class PageAccountComponent {
 
   fieldErrors: {
     [key: string]: boolean;
-    uuid:boolean;
+    uuid: boolean;
     first_name: boolean;
     last_name: boolean;
     email: boolean;
@@ -203,8 +212,8 @@ export class PageAccountComponent {
     termsAccepted: boolean;
     enteredSecurityCode: boolean;
     repeat_passwords: boolean;
-    passwordMismatch : boolean;
-    emailExists : boolean;
+    passwordMismatch: boolean;
+    emailExists: boolean;
 
     company_name: boolean;
     company_address: boolean;
@@ -216,9 +225,9 @@ export class PageAccountComponent {
     company_city: boolean;
     contact_email: boolean;
     contact_last_name: boolean;
-    security_code_incorect : boolean;
+    security_code_incorect: boolean;
   } = {
-    uuid:false,
+    uuid: false,
     first_name: false,
     last_name: false,
     email: false,
@@ -234,9 +243,8 @@ export class PageAccountComponent {
     termsAccepted: false,
     enteredSecurityCode: false,
     repeat_passwords: false,
-    emailExists : false,
-    passwordMismatch : false,
-    
+    emailExists: false,
+    passwordMismatch: false,
 
     company_name: false,
     company_address: false,
@@ -248,7 +256,7 @@ export class PageAccountComponent {
     company_city: false,
     contact_email: false,
     contact_last_name: false,
-    security_code_incorect : false
+    security_code_incorect: false,
   };
 
   showProfessionalAccount: boolean = false;
@@ -276,7 +284,6 @@ export class PageAccountComponent {
     return Math.floor(1000 + Math.random() * 9000).toString();
   }
 
-
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const targetElement = event.target as HTMLElement;
@@ -288,9 +295,9 @@ export class PageAccountComponent {
     }
   }
   validateForm(): boolean {
-    this.error="";
+    this.error = '';
     let isValid = true;
-  
+
     // Check if required fields are empty
     if (!this.userData.first_name) {
       this.fieldErrors.first_name = true;
@@ -300,7 +307,7 @@ export class PageAccountComponent {
     }
 
     // Add similar checks for other fields...
-  
+
     if (!this.userData.last_name) {
       this.fieldErrors.last_name = true;
       isValid = false;
@@ -343,7 +350,7 @@ export class PageAccountComponent {
       this.fieldErrors.city = false;
     }
 
-/*     if (!this.userData.password) {
+    /*     if (!this.userData.password) {
       this.fieldErrors.password = true;
       isValid = false;
     } else {
@@ -357,15 +364,9 @@ export class PageAccountComponent {
       this.fieldErrors.repeat_password = false;
     } */
 
-
-
-
-
-
-    if(this.selectedOption){
+    if (this.selectedOption) {
       if (this.selectedOption == 'Monsieur') {
         this.userData.civility = 'Mr';
-
       } else {
         this.userData.civility = 'Mrs';
       }
@@ -378,9 +379,8 @@ export class PageAccountComponent {
       }
     }
 
-
     // Check if passwords match
-/*     if (!this.fieldErrors.password && !this.fieldErrors.repeat_password) {
+    /*     if (!this.fieldErrors.password && !this.fieldErrors.repeat_password) {
       if (this.userData.password !== this.userData.repeat_password) {
         this.fieldErrors.passwordMismatch = true;
         isValid = false;
@@ -391,129 +391,122 @@ export class PageAccountComponent {
       this.fieldErrors.passwordMismatch = false;
     } */
 
-
-    if(this.showProfessionalAccount){
+    if (this.showProfessionalAccount) {
       if (!this.userDataPro.activity_sector) {
         this.fieldErrors.activity_sector = true;
         isValid = false;
       } else {
         this.fieldErrors.activity_sector = false;
-      } 
+      }
 
       if (!this.userDataPro.company_address) {
         this.fieldErrors.company_address = true;
         isValid = false;
       } else {
         this.fieldErrors.company_address = false;
-      } 
+      }
 
-/*       if (!this.userDataPro.company_address_rest) {
+      /*       if (!this.userDataPro.company_address_rest) {
         this.fieldErrors.company_address_rest = true;
         isValid = false;
       } else {
         this.fieldErrors.company_address_rest = false;
       }  */
 
-
       if (!this.userDataPro.company_city) {
         this.fieldErrors.city = true;
         isValid = false;
       } else {
         this.fieldErrors.city = false;
-      } 
+      }
 
       if (!this.userDataPro.company_name) {
         this.fieldErrors.company_name = true;
         isValid = false;
       } else {
         this.fieldErrors.company_name = false;
-      } 
+      }
 
       if (!this.userDataPro.company_postal_code) {
         this.fieldErrors.company_postal_code = true;
         isValid = false;
       } else {
         this.fieldErrors.company_postal_code = false;
-      } 
-    
+      }
+
       if (!this.userDataPro.contact_email) {
         this.fieldErrors.contact_email = true;
         isValid = false;
       } else {
         this.fieldErrors.contact_email = false;
-      } 
+      }
 
       if (!this.userDataPro.contact_first_name) {
         this.fieldErrors.contact_first_name = true;
         isValid = false;
       } else {
         this.fieldErrors.contact_first_name = false;
-      } 
+      }
 
       if (!this.userDataPro.contact_last_name) {
         this.fieldErrors.contact_last_name = true;
         isValid = false;
       } else {
         this.fieldErrors.contact_last_name = false;
-      } 
+      }
 
       if (!this.userDataPro.ice) {
         this.fieldErrors.ice = true;
         isValid = false;
       } else {
         this.fieldErrors.ice = false;
-      } 
+      }
     }
     // Additional checks for other fields...
-  
-
 
     // If all fields are filled, allow to proceed to the next step
     return isValid;
   }
-  
+
   showPassword: boolean = false;
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
-  
+
   showRepeatPassword: boolean = false;
 
   toggleRepeatPasswordVisibility(): void {
     this.showRepeatPassword = !this.showRepeatPassword;
   }
-  
-  
 
-  visible:boolean = true;
-  changetype:boolean =true;
-  error: any; 
-  viewpass(){
+  visible: boolean = true;
+  changetype: boolean = true;
+  error: any;
+  viewpass() {
     this.visible = !this.visible;
     this.changetype = !this.changetype;
   }
-  
+
   clearError(fieldName: string): void {
     this.fieldErrors[fieldName] = false;
   }
-   userDatas : any;
+  userDatas: any;
 
-   validateFormPassword():boolean{
-
-    let isValid =true;
-    if(this.userData.password === "" ){
-      this.fieldErrors.password=true;
-      isValid=false;
-    }else{
-      this.fieldErrors.password=false;
+  validateFormPassword(): boolean {
+    let isValid = true;
+    if (this.userData.password === '') {
+      this.fieldErrors.password = true;
+      isValid = false;
+    } else {
+      this.fieldErrors.password = false;
     }
 
-    if(this.userData.repeat_password === "" ){
-      this.fieldErrors.repeat_password=true;
-      isValid=false;
-    }else{
-      this.fieldErrors.repeat_password=false;
+    if (this.userData.repeat_password === '') {
+      this.fieldErrors.repeat_password = true;
+      isValid = false;
+    } else {
+      this.fieldErrors.repeat_password = false;
     }
     if (!this.fieldErrors.password && !this.fieldErrors.repeat_password) {
       if (this.userData.password !== this.userData.repeat_password) {
@@ -527,71 +520,63 @@ export class PageAccountComponent {
     }
 
     return isValid;
-   }
-   
-   onPassword(): void {
-   if(this.validateFormPassword()){
-    this.userDataPassword.password=this.userData.password;
-    this.userDataPassword.uuid=this.userData.uuid;
-    this.userDataPassword.repeat_password =this.userData.repeat_password;
+  }
 
-    this.userService.updateUser(this.userId!,this.accessToken!,this.userDataPassword).subscribe((data)=>{
-    window.location.href = '/page-account'; // Redirect to login page
+  onPassword(): void {
+    if (this.validateFormPassword()) {
+      this.userDataPassword.password = this.userData.password;
+      this.userDataPassword.uuid = this.userData.uuid;
+      this.userDataPassword.repeat_password = this.userData.repeat_password;
 
-    },(error)=>{
-      console.error('Failed to password user', error);
-
-    })
-   }
-       
-   }
+      this.userService
+        .updateUser(this.userId!, this.accessToken!, this.userDataPassword)
+        .subscribe(
+          (data) => {
+            window.location.href = '/page-account'; // Redirect to login page
+          },
+          (error) => {
+            console.error('Failed to password user', error);
+          }
+        );
+    }
+  }
 
   onSubmit(): void {
     if (this.validateForm()) {
-     
-
       if (this.selectedOption == 'Monsieur') {
         this.userData.civility = 'Mr';
       } else {
         this.userData.civility = 'Mrs';
       }
-     let isValid = true;
-     if (this.selectedOption == 'Monsieur') {
-      this.userData.civility = 'Mr';
-    } else {
-      this.userData.civility = 'Mrs';
-    }
-    const {
-      password,
-      repeat_password,
-      ...userData
-      
-    } = this.userData;
-    this.userDatas = userData;
+      let isValid = true;
+      if (this.selectedOption == 'Monsieur') {
+        this.userData.civility = 'Mr';
+      } else {
+        this.userData.civility = 'Mrs';
+      }
+      const { password, repeat_password, ...userData } = this.userData;
+      this.userDatas = userData;
 
-      if (this.userData.password === "" && this.userData.repeat_password === "") {
-        const {
-          password,
-          repeat_password,
-          ...userData
-        } = this.userData;
+      if (
+        this.userData.password === '' &&
+        this.userData.repeat_password === ''
+      ) {
+        const { password, repeat_password, ...userData } = this.userData;
         this.userDatas = userData;
-
-
-      }else{
-        this.userDatas =this.userData;
-        if(this.userData.password === "" ){
-          this.fieldErrors.password=true;
-          isValid=false;
-        }else{
-          this.fieldErrors.password=false;
+      } else {
+        this.userDatas = this.userData;
+        if (this.userData.password === '') {
+          this.fieldErrors.password = true;
+          isValid = false;
+        } else {
+          this.fieldErrors.password = false;
         }
 
-        if(this.userData.repeat_password === "" ){
-          this.fieldErrors.repeat_password=true;
-          isValid=false;
-        }else{
-          this.fieldErrors.repeat_password=false;
+        if (this.userData.repeat_password === '') {
+          this.fieldErrors.repeat_password = true;
+          isValid = false;
+        } else {
+          this.fieldErrors.repeat_password = false;
         }
         if (!this.fieldErrors.password && !this.fieldErrors.repeat_password) {
           if (this.userData.password !== this.userData.repeat_password) {
@@ -613,51 +598,51 @@ export class PageAccountComponent {
         ...userDataToSend
       } = this.userDatas;
 
-
       const userId = localStorage.getItem('loggedInUserId');
       const accessToken = localStorage.getItem('loggedInUserToken');
- 
-     if (this.showProfessionalAccount) {
-        
 
-        this.userService.updateUser(userId!,accessToken!,this.userDatas).subscribe(
-          (data) => {
-            this.userService.updateUserPro(this.idPro!,accessToken!,this.userDataPro).subscribe((data)=>{
-              //this.location.reload();
-            },(error) =>{
+      if (this.showProfessionalAccount) {
+        this.userService
+          .updateUser(userId!, accessToken!, this.userDatas)
+          .subscribe(
+            (data) => {
+              this.userService
+                .updateUserPro(this.idPro!, accessToken!, this.userDataPro)
+                .subscribe(
+                  (data) => {
+                    //this.location.reload();
+                  },
+                  (error) => {
+                    console.error('Failed to register user', error);
+                  }
+                );
+
+              // Handle successful registration
+              window.location.href = '/page-account'; // Redirect to login page
+            },
+            (error) => {
+              this.error = error;
+              // Handle registration error
               console.error('Failed to register user', error);
             }
-            )
-
-            // Handle successful registration
-            window.location.href = '/page-account'; // Redirect to login page
-          },
-          (error) => {
-            this.error = error; 
-            // Handle registration error
-            console.error('Failed to register user', error);
-          }
-        );
+          );
       } else {
         const { professional, ...userDataToSend } = this.userDatas;
 
-        this.userService.updateUser(this.userId!,this.accessToken!,userDataToSend).subscribe(
-          (data) => {
-
-            // Handle successful registration
-            //this.location.reload();
-            window.location.href = '/page-account'; // Redirect to login page
-
-          },
-          (error) => {
-            // Handle registration error
-            this.error = error; 
-          }
-        );
-      } 
-
-
-
+        this.userService
+          .updateUser(this.userId!, this.accessToken!, userDataToSend)
+          .subscribe(
+            (data) => {
+              // Handle successful registration
+              //this.location.reload();
+              window.location.href = '/page-account'; // Redirect to login page
+            },
+            (error) => {
+              // Handle registration error
+              this.error = error;
+            }
+          );
+      }
     }
 
     // Call your service to register the user with userDataToSend
@@ -689,5 +674,4 @@ export class PageAccountComponent {
   isLinear(): boolean {
     return !this.isPhone();
   }
-
 }

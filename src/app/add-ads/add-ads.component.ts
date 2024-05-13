@@ -733,10 +733,10 @@ export class AddAdsComponent {
 
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
-    this.annonceService.getAds(accessToken!).subscribe((data) => {
+    this.annonceService.getAds().subscribe((data) => {
       const adIds = data.data.map((ad: any) => ad.id);
       const adPromises = adIds.map((adId: any) => {
-        return this.annonceService.getAdById(adId, accessToken!).toPromise();
+        return this.annonceService.getAdById(adId).toPromise();
       });
       Promise.all(adPromises)
         .then((adsData) => {

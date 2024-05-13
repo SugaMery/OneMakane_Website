@@ -133,123 +133,118 @@ export class HomePageComponent implements OnInit {
     if (this.document.defaultView && this.document.defaultView.localStorage) {
       const accessToken =
         this.document.defaultView.localStorage.getItem('loggedInUserToken');
-      if (accessToken) {
-        this.annonceService.getAds(accessToken!).subscribe((data) => {
-          this.ads = data.data;
-          //this.products=data.data;
-          // Clear previous categorized ads
-          this.categorizedAds = {};
+      this.annonceService.getAds().subscribe((data) => {
+        this.ads = data.data;
+        //this.products=data.data;
+        // Clear previous categorized ads
+        this.categorizedAds = {};
 
-          data.data.forEach((element: any) => {
-            this.annonceService
-              .getAdById(element.id, accessToken!)
-              .subscribe((adData) => {
-                if (!adData || !adData.data) {
+        data.data.forEach((element: any) => {
+          this.annonceService.getAdById(element.id).subscribe((adData) => {
+            if (!adData || !adData.data) {
+              return;
+            }
+            element.image = adData.data.image;
+            if (!this.categorizedAds[element.category.name]) {
+              this.categorizedAds[element.category.name] = [];
+            }
+            this.categorizedAds[element.category.name].push(adData.data);
+
+            this.categoryService
+              .getCategoryById(adData.data.category_id)
+              .subscribe((category) => {
+                if (
+                  !category ||
+                  !category.data ||
+                  !category.data.model_fields
+                ) {
                   return;
                 }
-                element.image = adData.data.image;
-                if (!this.categorizedAds[element.category.name]) {
-                  this.categorizedAds[element.category.name] = [];
-                }
-                this.categorizedAds[element.category.name].push(adData.data);
+                const modelFields = category.data.model_fields;
+                const queryParams = { model: category.data.model };
+                this.settingService
+                  .getSettings(accessToken!, queryParams)
+                  .subscribe(
+                    (setting) => {
+                      if (!setting || !setting.data) {
+                        return;
+                      }
+                      const transformedFields = Object.keys(modelFields).map(
+                        (key) => ({
+                          value: key,
+                          label: modelFields[key].label,
+                          setting: key,
+                        })
+                      );
 
-                this.categoryService
-                  .getCategoryById(adData.data.category_id)
-                  .subscribe((category) => {
-                    if (
-                      !category ||
-                      !category.data ||
-                      !category.data.model_fields
-                    ) {
-                      return;
-                    }
-                    const modelFields = category.data.model_fields;
-                    const queryParams = { model: category.data.model };
-                    this.settingService
-                      .getSettings(accessToken!, queryParams)
-                      .subscribe(
-                        (setting) => {
-                          if (!setting || !setting.data) {
-                            return;
-                          }
-                          const transformedFields = Object.keys(
-                            modelFields
-                          ).map((key) => ({
-                            value: key,
-                            label: modelFields[key].label,
-                            setting: key,
-                          }));
-
-                          transformedFields.forEach(
-                            (field: {
-                              value: string;
-                              label: any;
-                              setting: string;
-                            }) => {
-                              const matchedSetting = setting.data.find(
-                                (settingItem: { name: string }) =>
-                                  settingItem.name === field.value
-                              );
-                              if (matchedSetting) {
-                                if (
-                                  adData.data.additional &&
+                      transformedFields.forEach(
+                        (field: {
+                          value: string;
+                          label: any;
+                          setting: string;
+                        }) => {
+                          const matchedSetting = setting.data.find(
+                            (settingItem: { name: string }) =>
+                              settingItem.name === field.value
+                          );
+                          if (matchedSetting) {
+                            if (
+                              adData.data.additional &&
+                              adData.data.additional[field.value]
+                            ) {
+                              field.setting =
+                                matchedSetting.content[
                                   adData.data.additional[field.value]
-                                ) {
-                                  field.setting =
-                                    matchedSetting.content[
-                                      adData.data.additional[field.value]
-                                    ];
-                                  //console.log('jj', field.setting);
-                                  //console.log('Transformed f', matchedSetting);
-                                } /*  else {
+                                ];
+                              //console.log('jj', field.setting);
+                              //console.log('Transformed f', matchedSetting);
+                            } /*  else {
                                         console.error(`No setting found for key '${field.value}' in data.data.additional`);
                                     } */
+                          }
+                        }
+                      );
+
+                      this.transformedField = transformedFields;
+                      adData.data.additional = transformedFields;
+                      const jobs = 'ad_jobs';
+                      if (adData.data.category.model == jobs) {
+                        this.ads_jobs.push(adData.data);
+                        this.ads_jobs.forEach((element) => {
+                          element.additional.forEach(
+                            (data: { value: string }) => {
+                              if (data.value == 'type') {
+                                element.job = data;
+                                //data.setting = this.settings.
+                              }
+                              if (data.value == 'region') {
+                                element.region = data;
+
+                                //data.setting = this.settings.
+                              }
+                              if (data.value == 'study_level') {
+                                element.study_level = data;
+
+                                //data.setting = this.settings.
                               }
                             }
                           );
-
-                          this.transformedField = transformedFields;
-                          adData.data.additional = transformedFields;
-                          const jobs = 'ad_jobs';
-                          if (adData.data.category.model == jobs) {
-                            this.ads_jobs.push(adData.data);
-                            this.ads_jobs.forEach((element) => {
-                              element.additional.forEach(
-                                (data: { value: string }) => {
-                                  if (data.value == 'type') {
-                                    element.job = data;
-                                    //data.setting = this.settings.
-                                  }
-                                  if (data.value == 'region') {
-                                    element.region = data;
-
-                                    //data.setting = this.settings.
-                                  }
-                                  if (data.value == 'study_level') {
-                                    element.study_level = data;
-
-                                    //data.setting = this.settings.
-                                  }
-                                }
-                              );
-                            });
-                          }
-                        },
-                        (error) => {
-                          console.error('Error fetching settings:', error);
-                        }
-                      );
-                  });
+                        });
+                      }
+                    },
+                    (error) => {
+                      console.error('Error fetching settings:', error);
+                    }
+                  );
               });
           });
         });
-      }
+      });
     }
     this.convertAdsToArray();
   }
 
-  ngOnChanges() {
-  }
+  ngOnChanges() {}
   isPhone(): boolean {
     const screenWidth = window.innerWidth;
     if (screenWidth <= 768) {
@@ -331,41 +326,38 @@ export class HomePageComponent implements OnInit {
     if (this.document.defaultView && this.document.defaultView.localStorage) {
       const accessToken =
         this.document.defaultView.localStorage.getItem('loggedInUserToken');
-      if (accessToken) {
-        this.categoryService.getCategoriesFrom().subscribe((categories) => {
-          this.categories = categories.data.filter(
-            (category: { active: boolean; parent_id: null }) =>
-              category.active === true && category.parent_id === null
-          );
-          this.Souscategories = categories.data.filter(
-            (category: { active: boolean; parent_id: null }) =>
-              category.active === true && category.parent_id !== null
-          );
+      this.categoryService.getCategoriesFrom().subscribe((categories) => {
+        this.categories = categories.data.filter(
+          (category: { active: boolean; parent_id: null }) =>
+            category.active === true && category.parent_id === null
+        );
+        this.Souscategories = categories.data.filter(
+          (category: { active: boolean; parent_id: null }) =>
+            category.active === true && category.parent_id !== null
+        );
 
-          // Check if the first element of Souscategories has the media property
-          if (
-            this.Souscategories &&
-            this.Souscategories.length > 0 &&
-            this.Souscategories[0].media
-          ) {
-            // Add console log to check if the media property exists
+        // Check if the first element of Souscategories has the media property
+        if (
+          this.Souscategories &&
+          this.Souscategories.length > 0 &&
+          this.Souscategories[0].media
+        ) {
+          // Add console log to check if the media property exists
 
-            // Check if the media object has the url property
-            if (this.Souscategories[0].media.url) {
-              // Log the URL to the console
-
-            } else {
-              console.log('URL property does not exist in media object');
-            }
+          // Check if the media object has the url property
+          if (this.Souscategories[0].media.url) {
+            // Log the URL to the console
           } else {
-            console.log(
-              'Media property or Souscategories array does not exist or is empty'
-            );
+            console.log('URL property does not exist in media object');
           }
-          this.displayedCategories = this.categories.slice(0, 11);
-          this.hiddenCategories = this.categories.slice(11);
-        });
-      }
+        } else {
+          console.log(
+            'Media property or Souscategories array does not exist or is empty'
+          );
+        }
+        this.displayedCategories = this.categories.slice(0, 11);
+        this.hiddenCategories = this.categories.slice(11);
+      });
     }
   }
 
