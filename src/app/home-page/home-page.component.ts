@@ -137,7 +137,6 @@ export class HomePageComponent implements OnInit {
         this.annonceService.getAds(accessToken!).subscribe((data) => {
           this.ads = data.data;
           //this.products=data.data;
-          console.log('products', this.products);
           // Clear previous categorized ads
           this.categorizedAds = {};
 
@@ -146,7 +145,6 @@ export class HomePageComponent implements OnInit {
               .getAdById(element.id, accessToken!)
               .subscribe((adData) => {
                 if (!adData || !adData.data) {
-                  console.error('Invalid ad data:', adData);
                   return;
                 }
                 element.image = adData.data.image;
@@ -163,7 +161,6 @@ export class HomePageComponent implements OnInit {
                       !category.data ||
                       !category.data.model_fields
                     ) {
-                      console.error('Invalid category data:', category);
                       return;
                     }
                     const modelFields = category.data.model_fields;
@@ -173,7 +170,6 @@ export class HomePageComponent implements OnInit {
                       .subscribe(
                         (setting) => {
                           if (!setting || !setting.data) {
-                            console.error('No data found in settings.');
                             return;
                           }
                           const transformedFields = Object.keys(
@@ -213,16 +209,11 @@ export class HomePageComponent implements OnInit {
                           );
 
                           this.transformedField = transformedFields;
-                          console.log(
-                            'Transformed fields with updated labels:',
-                            transformedFields
-                          );
                           adData.data.additional = transformedFields;
                           const jobs = 'ad_jobs';
                           if (adData.data.category.model == jobs) {
                             this.ads_jobs.push(adData.data);
                             this.ads_jobs.forEach((element) => {
-                              console.log('element', element.additional);
                               element.additional.forEach(
                                 (data: { value: string }) => {
                                   if (data.value == 'type') {
@@ -242,7 +233,6 @@ export class HomePageComponent implements OnInit {
                                 }
                               );
                             });
-                            console.log('ads_jobs', this.ads_jobs);
                           }
                         },
                         (error) => {
@@ -259,7 +249,6 @@ export class HomePageComponent implements OnInit {
   }
 
   ngOnChanges() {
-    console.log('productsyy', this.ads);
   }
   isPhone(): boolean {
     const screenWidth = window.innerWidth;
@@ -298,14 +287,12 @@ export class HomePageComponent implements OnInit {
 
   getAdsForCarousel(): any[] {
     let adsArray: any[] = [];
-    console.log('ggggggrettttttt', adsArray);
     // Iterate over categorizedAds and push ads into the adsArray
     for (const category in this.categorizedAds) {
       if (Object.prototype.hasOwnProperty.call(this.categorizedAds, category)) {
         adsArray = adsArray.concat(this.categorizedAds[category]);
       }
     }
-    console.log('ggggggrettttttt2', adsArray);
 
     return adsArray;
   }
@@ -366,10 +353,7 @@ export class HomePageComponent implements OnInit {
             // Check if the media object has the url property
             if (this.Souscategories[0].media.url) {
               // Log the URL to the console
-              console.log(
-                'Souscategories 2 URL:',
-                this.Souscategories[0].media.url
-              );
+
             } else {
               console.log('URL property does not exist in media object');
             }
