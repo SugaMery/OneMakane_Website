@@ -386,7 +386,7 @@
                 <ul>
                   <li *ngFor="let category of categories.slice(0, 5)">
                     <a>
-                      <img [src]="category.icon_path" alt="" />{{
+                      <img [src]="category?.media?.url" alt="" />{{
                         category.name
                       }}
                     </a>
@@ -395,7 +395,7 @@
                 <ul class="end">
                   <li *ngFor="let category of categories.slice(5, 10)">
                     <a>
-                      <img [src]="category.icon_path" alt="" />{{
+                      <img [src]="category?.media?.url" alt="" />{{
                         category.name
                       }}
                     </a>
@@ -416,65 +416,49 @@
           >
             <nav>
               <ul>
-                <li class="hot-deals">
+                <!--                 <li class="hot-deals">
                   <img
                     src="../../assets/imgs/theme/icons/icon-hot-white.svg"
                     alt="offres spéciales"
                   /><a href="/shop-grid-right">Offres</a>
-                </li>
+                </li> -->
                 <li>
                   <a class="active" href="/">Accueil </a>
                 </li>
                 <li>
                   <a href="/page-about">À propos</a>
                 </li>
-                <li class="position-static">
-                  <a href="#">Immobilier <i class="fi-rs-angle-down"></i></a>
+                <li
+                  class="position-static"
+                  *ngFor="let category of categories.slice(2, 5)"
+                >
+                  <a href="#"
+                    >{{ category.name }} <i class="fi-rs-angle-down"></i
+                  ></a>
                   <ul class="mega-menu">
-                    <li class="sub-mega-menu sub-mega-menu-width-22">
-                      <a class="menu-title" href="#">Ventes immobilières</a>
-                      <ul>
-                        <li><a href="/shop-product-right">Appartement</a></li>
-                        <li><a href="/shop-product-right">Maison</a></li>
-                        <li><a href="/shop-product-right">Terrain</a></li>
-                        <li><a href="/shop-product-right">Voir tout</a></li>
-                      </ul>
-                    </li>
-                    <li class="sub-mega-menu sub-mega-menu-width-22"></li>
-                    <li class="sub-mega-menu sub-mega-menu-width-22">
-                      <a class="menu-title" href="#">Locations</a>
-                      <ul>
-                        <li><a href="/shop-product-right">Appartement</a></li>
-                        <li><a href="/shop-product-right">Maison</a></li>
-                        <li><a href="/shop-product-right">Parking</a></li>
-                        <li><a href="/shop-product-right">Voir tout</a></li>
-                      </ul>
-                      <a class="menu-title" style="margin-top: 1rem" href="#"
-                        >Immobilier Neuf</a
+                    <ul style="width: 100%">
+                      <li
+                        class="sub-mega-menu sub-mega-menu-width-30 left-menu"
+                        *ngFor="let subcategory of category.subcategories"
                       >
-                      <ul>
-                        <li>
-                          <a href="/shop-product-right"
-                            >Programmes logements neufs</a
+                        <a class="menu-title" href="#">{{
+                          subcategory.name
+                        }}</a>
+                        <ul>
+                          <li
+                            *ngFor="
+                              let subsubcat of subcategory.subsubcategories
+                            "
                           >
-                        </li>
-                        <li>
-                          <a href="/shop-product-right"
-                            >Promoteurs immobiliers</a
-                          >
-                        </li>
-                      </ul>
-                    </li>
-                    <li class="sub-mega-menu sub-mega-menu-width-22">
-                      <a class="menu-title" href="#">Colocations</a>
-                      <a class="menu-title" style="margin-top: 1rem" href="#"
-                        >Bureaux & Commerces</a
-                      >
-                      <a class="menu-title" style="margin-top: 1rem" href="#"
-                        >Services de déménagement</a
-                      >
-                    </li>
-                    <li class="sub-mega-menu sub-mega-menu-width-34">
+                            <a href="/shop-product-right">{{
+                              subsubcat.name
+                            }}</a>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+
+                    <li class="sub-mega-menu sub-mega-menu-width-40 right-menu">
                       <div class="menu-banner-wrap">
                         <a href="/shop-product-right"
                           ><img
@@ -543,15 +527,7 @@
                         </li>
                       </ul>
                     </li>
-                    <li class="sub-mega-menu sub-mega-menu-width-22">
-                      <a class="menu-title" href="#">Colocations</a>
-                      <a class="menu-title" style="margin-top: 1rem" href="#"
-                        >Bureaux & Commerces</a
-                      >
-                      <a class="menu-title" style="margin-top: 1rem" href="#"
-                        >Services de déménagement</a
-                      >
-                    </li>
+
                     <li class="sub-mega-menu sub-mega-menu-width-34">
                       <div class="menu-banner-wrap">
                         <a href="/shop-product-right"

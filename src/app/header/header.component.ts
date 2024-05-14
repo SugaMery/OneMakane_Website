@@ -82,9 +82,30 @@ export class HeaderComponent implements OnInit {
         this.document.defaultView.localStorage.getItem('loggedInUserToken');
       if (accessToken) {
         this.categoryService.getCategoriesFrom().subscribe((categories) => {
+          // Filter root categories
           this.categories = categories.data.filter(
-            (category: Category) => category.active === true
+            (category: { active: boolean; parent_id: null }) =>
+              category.active === true && category.parent_id === null
           );
+
+          // Loop through root categories
+          this.categories.forEach((category: any) => {
+            // Find subcategories for each root category
+            category.subcategories = categories.data.filter(
+              (subcat: any) =>
+                subcat.active === true && subcat.parent_id === category.id
+            );
+
+            // Loop through subcategories
+            category.subcategories.forEach((subcategory: any) => {
+              // Find sub-subcategories for each subcategory
+              subcategory.subsubcategories = categories.data.filter(
+                (subsubcat: any) =>
+                  subsubcat.active === true &&
+                  subsubcat.parent_id === subcategory.id
+              );
+            });
+          });
         });
       }
     }
