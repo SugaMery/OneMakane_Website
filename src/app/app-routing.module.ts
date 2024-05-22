@@ -12,16 +12,25 @@ import { ForgetPasswordComponent } from './forget-password/forget-password.compo
 import { ForgetPasswordMessageComponent } from './forget-password-message/forget-password-message.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { AccountActivationComponent } from './account-activation/account-activation.component';
+import { ChatComponent } from './chat/chat.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'chat', component: ChatComponent },
+
   { path: 'account-activation', component: ActivityAccountComponent },
   { path: 'reset-password', component: ForgetPasswordComponent },
   { path: 'reset-password/email', component: ForgetPasswordMessageComponent },
-  { path: 'reset-password/:user_id/:password_token', component: ResetPasswordComponent },
-  { path: 'account-activation/:userId/:activationToken', component: AccountActivationComponent },
+  {
+    path: 'reset-password/:user_id/:password_token',
+    component: ResetPasswordComponent,
+  },
+  {
+    path: 'account-activation/:userId/:activationToken',
+    component: AccountActivationComponent,
+  },
   {
     path: 'deposer_une_annonce',
     component: AddAdsComponent,

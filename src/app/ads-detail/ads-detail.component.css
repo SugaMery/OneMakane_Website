@@ -164,3 +164,8 @@
 ::ng-deep .banner-img.style-2 {
     height: 520px !important;
 }
+
+::ng-deep .product-cart-wrap .product-img-action-wrap .product-img-zoom a img {
+    /* height: 300px; */
+    object-fit: cover;
+}

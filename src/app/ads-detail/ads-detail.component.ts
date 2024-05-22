@@ -18,6 +18,7 @@ export class AdsDetailComponent {
   transformedField:
     | { value: string; label: any; setting: string }[]
     | undefined;
+  relatedAds: any[] = [];
   constructor(
     private route: ActivatedRoute,
     private annonceService: AnnonceService,
@@ -33,6 +34,7 @@ export class AdsDetailComponent {
       const id = params.get('id');
       if (id !== null) {
         this.adId = id;
+
         console.log('trrtrtrt', this.adId);
         if (
           this.document.defaultView &&
@@ -116,16 +118,51 @@ export class AdsDetailComponent {
               const innerObservables: Observable<any>[] = [];
 
               this.annonceService.getAds().subscribe((adsData) => {
+                let relatedAdsTemp: any[] = [];
                 // Iterate over each ad
                 adsData.data.forEach((ad: { id: any }) => {
                   // Push each inner observable to the array
                   innerObservables.push(this.annonceService.getAdById(ad.id));
                 });
+                console.log('ads detail', adsData);
+                adsData.data.forEach((adDetail: { id: string }) => {
+                  this.annonceService
+                    .getAdById(adDetail.id)
+                    .subscribe((adDetails) => {
+                      if (adDetails.data.user_id == this.adDetail.user_id) {
+                        count++;
+                      }
 
+                      if (
+                        adDetails.data.category.id == this.adDetail.category.id
+                      ) {
+                        this.relatedAds.push(adDetails.data);
+                      }
+
+                      console.log(
+                        'Count of ads associated with the user:',
+                        count
+                      );
+                      this.countsAds = count;
+                      console.log(
+                        'adDetails',
+                        adDetails.data.user_id,
+                        this.adDetail.user_id
+                      );
+                    });
+                });
+                if (relatedAdsTemp.length > 0) {
+                  this.relatedAds = this.shuffleArray(relatedAdsTemp).slice(
+                    0,
+                    4
+                  );
+                }
+                console.log('annooo related ', this.relatedAds);
                 // Use forkJoin to wait for all inner observables to complete
-                forkJoin(innerObservables).subscribe((adDetails) => {
+                /*                 forkJoin(innerObservables).subscribe((adDetails) => {
                   // Iterate over each ad detail
                   adDetails.forEach((adDetail) => {
+                    console.log(' ad:', adDetail);
                     // Check if the user ID of the current ad matches the user ID of adDetail
                     if (adDetail.data.user.id === this.adDetail.user.id) {
                       // Increment count if user IDs match
@@ -145,7 +182,7 @@ export class AdsDetailComponent {
                     'Count of ads associated with the eeuser:',
                     this.countsAds
                   );
-                });
+                }); */
               });
             });
           }
@@ -153,6 +190,14 @@ export class AdsDetailComponent {
         // Utilisez maintenant this.adId pour obtenir l'ID de l'annonce
       }
     });
+  }
+
+  shuffleArray(array: any[]): any[] {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
   }
   // Fonction pour formater la date
   formatDate(dateString: string): string {

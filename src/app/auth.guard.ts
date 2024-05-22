@@ -3,10 +3,9 @@ import { CanActivate, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-
   constructor(private router: Router) {}
 
   canActivate(): boolean {
@@ -19,21 +18,19 @@ export class AuthGuard implements CanActivate {
         this.router.navigate(['/login']); // Replace 'login' with your actual login route
         return false;
       }
-    
-    return true; // Ou false selon votre logique d'authentification
-  } else {
-    // Gérez le cas où localStorage n'est pas disponible
-    return false;
-  }
 
+      return true; // Ou false selon votre logique d'authentification
+    } else {
+      // Gérez le cas où localStorage n'est pas disponible
+      return false;
+    }
   }
 
   logout(): void {
     // Clear local storage
     localStorage.removeItem('loggedInUserToken');
     localStorage.removeItem('loggedInUser');
-    
+
     window.location.href = '/login';
- 
   }
 }
