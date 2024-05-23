@@ -30,6 +30,17 @@ export class UserService {
 
     return this.http.get(`${this.baseUrl}/users/${userId}`, { headers });
   }
+
+  getConversationsByUser(userId: number, accessToken: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`,
+    });
+
+    return this.http.get(`${this.baseUrl}/users/${userId}/conversations`, {
+      headers,
+    });
+  }
+
   sendResetEmail(email: string): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/auth/lost-password`, { email });
   }

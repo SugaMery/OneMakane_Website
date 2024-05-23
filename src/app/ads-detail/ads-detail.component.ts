@@ -1,5 +1,5 @@
 import { Component, Inject, Input } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AnnonceService } from '../annonce.service';
 import { DOCUMENT } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -19,6 +19,7 @@ export class AdsDetailComponent {
     | { value: string; label: any; setting: string }[]
     | undefined;
   relatedAds: any[] = [];
+  router: any;
   constructor(
     private route: ActivatedRoute,
     private annonceService: AnnonceService,
@@ -26,7 +27,8 @@ export class AdsDetailComponent {
     private categotyService: CategoryService,
     private sanitizer: DomSanitizer,
     private settingService: SettingService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private routers: Router
   ) {}
   countsAds = 0;
   ngOnInit() {
@@ -190,6 +192,9 @@ export class AdsDetailComponent {
         // Utilisez maintenant this.adId pour obtenir l'ID de l'annonce
       }
     });
+  }
+  goToChat(): void {
+    this.routers.navigate(['/chat', this.adDetail.id]);
   }
 
   shuffleArray(array: any[]): any[] {

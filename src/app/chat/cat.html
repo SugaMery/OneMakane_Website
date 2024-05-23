@@ -774,8 +774,8 @@
                                   <p
                                     class="chat-user-message text-truncate mb-0"
                                   >
-                                    {{ conversation.ad.city }} -
-                                    {{ conversation.ad.price }}
+                                    {{ conversation.ad.city }} - {{
+                                    conversation.ad.price }}
                                   </p>
                                 </div>
                                 <div class="font-size-11">5 min</div>
@@ -2919,8 +2919,7 @@
                                     class="align-middle"
                                     style="margin-left: 0.5rem"
                                   >
-                                    {{
-                                      message.created_at | date : "shortTime"
+                                    {{ message.created_at | date : "shortTime"
                                     }}
                                   </span>
                                 </p>

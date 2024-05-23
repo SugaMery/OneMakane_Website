@@ -4,3 +4,29 @@
     flex: 0 0 auto;
     width: auto !important;
 }
+
+::ng-deep .chat-conversation .conversation-list .ctext-wrap-content {
+    padding: 12px 20px;
+    /* background-color: #ECFFEC; */
+    border-radius: 8px 8px 8px 0;
+    color: #fff;
+    position: relative;
+    background: linear-gradient(45deg, #3BB77E, #3BB77E);
+}
+
+::ng-deep .mb-0 {
+    margin-bottom: 0 !important;
+    color: white;
+    font-weight: 500;
+}
+
+::ng-deep .chat-conversation .conversation-list .ctext-wrap-content:before {
+    content: "";
+    position: absolute;
+    border: 5px solid transparent;
+    border-left-color: #3BB77E;
+    border-top-color: #3BB77E;
+    left: 0;
+    right: auto;
+    bottom: -10px;
+}

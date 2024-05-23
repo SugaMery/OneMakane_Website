@@ -18,7 +18,7 @@ const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'chat', component: ChatComponent },
+  { path: 'chat/:ad_id', component: ChatComponent },
 
   { path: 'account-activation', component: ActivityAccountComponent },
   { path: 'reset-password', component: ForgetPasswordComponent },
