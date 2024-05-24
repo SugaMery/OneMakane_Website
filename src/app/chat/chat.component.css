@@ -30,3 +30,34 @@
     right: auto;
     bottom: -10px;
 }
+
+::ng-deep .chat-conversation .list-unstyled .right .conversation-list .ctext-wrap .ctext-wrap-content {
+    -webkit-box-ordinal-group: 3;
+    -ms-flex-order: 2;
+    order: 2;
+    background-color: #f5f7fb !important;
+    color: #343a40 !important;
+    text-align: right;
+    border-radius: 8px 8px 0 8px;
+    background: linear-gradient(45deg, #f5f7fb, #f5f7fb);
+}
+
+::ng-deep .chat-conversation .list-unstyled .right .conversation-list .ctext-wrap .ctext-wrap-content p {
+    color: #343a40 !important;
+}
+
+
+::ng-deep .chat-conversation .list-unstyled .right .conversation-list .ctext-wrap .ctext-wrap-content .chat-time {
+    text-align: right !important;
+    color: #7a7f9a !important;
+}
+
+::ng-deep .p-lg-4 {
+    padding: 1rem !important;
+}
+
+@media (min-width: 992px) {
+    ::ng-deep .border-top {
+        padding: 1rem !important;
+    }
+}

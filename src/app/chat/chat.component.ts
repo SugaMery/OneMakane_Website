@@ -18,8 +18,8 @@ export class ChatComponent implements OnInit {
   messages: any[] = [];
   conversations: any[] = [];
   newMessage: string = '';
-  conversationId: number = 1; // Replace with actual conversation ID
-  senderId: number = 43; // Replace with actual sender ID
+  conversationId: number | undefined;
+  senderId: number | undefined;
   errorMessage: string | undefined;
   ad_id: string | null = null;
 
@@ -31,16 +31,24 @@ export class ChatComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this.initializeChat();
+    this.senderId = Number(this.getFromLocalStorage('loggedInUserId'));
+    this.route.paramMap.subscribe((params) => {
+      this.ad_id = params.get('ad_id');
+      if (this.ad_id) {
+        this.initializeChat();
+      } else {
+        console.error('ad_id is null');
+      }
+    });
     this.getConversationsByUser();
-    console.log('Fetched messages 2', this.messages);
   }
 
   private initializeChat(): void {
     const userId = this.getFromLocalStorage('loggedInUserId');
-    if (userId) {
+    const accessToken = this.getFromLocalStorage('loggedInUserToken');
+    if (userId && accessToken) {
       this.chatService
-        .createConversation(Number(this.ad_id), Number(userId))
+        .createConversation(Number(this.ad_id), Number(userId), accessToken)
         .subscribe(
           (dataChat: any) => {
             if (dataChat.status === 'Success') {
@@ -52,14 +60,14 @@ export class ChatComponent implements OnInit {
           }
         );
     } else {
-      console.error('User ID is not found in localStorage');
+      console.error('User ID or access token is not found in localStorage');
     }
   }
 
   private getConversationsByUser(): void {
     const accessToken = this.getFromLocalStorage('loggedInUserToken');
     const userId = this.getFromLocalStorage('loggedInUserId');
-    if (userId && accessToken) {
+    if (accessToken && userId) {
       this.userService
         .getConversationsByUser(Number(userId), accessToken)
         .subscribe(
@@ -67,6 +75,9 @@ export class ChatComponent implements OnInit {
             this.conversations = dataConversations.data;
             this.conversations.forEach((dataConversation) => {
               this.loadAdDataAndMessages(dataConversation);
+              if (dataConversation.ad.id == this.ad_id) {
+                this.fetchMessages(dataConversation.id);
+              }
             });
           },
           (error) => {
@@ -86,8 +97,6 @@ export class ChatComponent implements OnInit {
     this.annonceService.getAdById(dataConversation.ad.id).subscribe(
       (data) => {
         dataConversation.ad = data.data;
-        console.log('dataConversation with ad', dataConversation);
-        this.fetchMessages(dataConversation.id);
       },
       (error) => {
         this.errorMessage = 'Failed to load ad details';
@@ -106,7 +115,7 @@ export class ChatComponent implements OnInit {
               new Date(a.created_at).getTime() -
               new Date(b.created_at).getTime()
           );
-          console.log('Fetched messages', this.messages);
+          this.conversationId = conversationId;
         },
         (error) => {
           this.errorMessage = 'Failed to load messages';
@@ -118,27 +127,41 @@ export class ChatComponent implements OnInit {
     }
   }
 
+  onConversationClick(conversation: any): void {
+    this.fetchMessages(conversation.id);
+  }
+
   sendMessage(): void {
-    if (this.newMessage.trim()) {
-      this.chatService
-        .sendMessage(this.conversationId, this.senderId, this.newMessage)
-        .subscribe(
-          (response) => {
-            this.messages.push(response.data);
-            this.newMessage = '';
-          },
-          (error) => {
-            this.errorMessage = 'Failed to send message';
-            console.error(error);
-          }
-        );
+    const accessToken = this.getFromLocalStorage('loggedInUserToken');
+    const userId = this.getFromLocalStorage('loggedInUserId');
+    if (accessToken && userId) {
+      if (this.newMessage.trim()) {
+        this.chatService
+          .sendMessage(
+            Number(this.conversationId),
+            Number(userId),
+            this.newMessage,
+            accessToken
+          )
+          .subscribe(
+            (response) => {
+              this.fetchMessages(Number(this.conversationId));
+              this.newMessage = '';
+            },
+            (error) => {
+              this.errorMessage = 'Failed to send message';
+              console.error(error);
+            }
+          );
+      }
+    } else {
+      console.error('User ID or access token is not found in localStorage');
     }
   }
 
   private getFromLocalStorage(key: string): string | null {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      return localStorage.getItem(key);
-    }
-    return null;
+    return typeof window !== 'undefined' && window.localStorage
+      ? localStorage.getItem(key)
+      : null;
   }
 }

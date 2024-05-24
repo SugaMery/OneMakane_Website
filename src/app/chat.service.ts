@@ -43,7 +43,8 @@ export class ChatService {
   sendMessage(
     conversationId: number,
     senderId: number,
-    content: string
+    content: string,
+    accessToken: string
   ): Observable<any> {
     const body = {
       conversation_id: conversationId,
@@ -52,20 +53,24 @@ export class ChatService {
     };
 
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
     });
 
     return this.http.post(`${this.apiUrl}/messages`, body, { headers });
   }
 
-  createConversation(adId: number, buyerId: number): Observable<any> {
+  createConversation(
+    adId: number,
+    buyerId: number,
+    accessToken: string
+  ): Observable<any> {
     const body = {
       ad_id: adId,
       buyer_id: buyerId,
     };
 
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
     });
 
     return this.http.post(`${this.apiUrl}/conversations`, body, { headers });
