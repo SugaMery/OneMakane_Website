@@ -37,6 +37,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { ForgetPasswordMessageComponent } from './forget-password-message/forget-password-message.component';
 import { AccountActivationComponent } from './account-activation/account-activation.component';
 import { ChatComponent } from './chat/chat.component';
+import { AllAdsComponent } from './all-ads/all-ads.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { ChatComponent } from './chat/chat.component';
     ForgetPasswordMessageComponent,
     AccountActivationComponent,
     ChatComponent,
+    AllAdsComponent,
   ],
   imports: [
     BrowserModule,

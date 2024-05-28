@@ -12,3 +12,114 @@
     list-style: none;
     padding: 0;
 }
+
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav>ul>li {
+    position: relative;
+}
+
+.mega-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.position-static:hover .mega-menu {
+    display: flex;
+}
+
+.sub-mega-menu-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
+}
+
+.sub-mega-menu {
+    width: 30%;
+    margin-right: 2%;
+}
+
+.sub-mega-menu:nth-child(3n) {
+    margin-right: 0;
+}
+
+.sub-category-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.sub-category-list li {
+    width: 33.33%;
+    /* Ensures three items per row */
+    margin-bottom: 10px;
+}
+
+.menu-banner-wrap {
+    width: 34%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.menu-banner-wrap img {
+    max-width: 100%;
+    height: auto;
+}
+
+.menu-banner-content {
+    margin-top: 10px;
+}
+
+.menu-banner-price .new-price {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #28a745;
+}
+
+.menu-banner-btn a {
+    display: inline-block;
+    padding: 5px 10px;
+    color: #fff;
+    background-color: #007bff;
+    border-radius: 3px;
+    text-decoration: none;
+}
+
+.menu-banner-discount {
+    font-size: 1.5em;
+    color: #ff5722;
+    margin-top: 10px;
+}
+
+::ng-deep .main-menu>nav>ul>li ul.mega-menu li .menu-banner-wrap .menu-banner-content .menu-banner-btn a {
+    font-size: small;
+}
+
+::ng-deep .main-menu>nav>ul>li ul.mega-menu li .menu-banner-wrap .menu-banner-content .menu-banner-price {
+    margin: 0 0 10px !important;
+}
+
+::ng-deep .menu-banner-wrap {
+    text-align: left !important;
+}

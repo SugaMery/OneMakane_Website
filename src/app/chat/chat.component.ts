@@ -281,6 +281,7 @@ export class ChatComponent implements OnInit {
   }
 
   onConversationClick(conversation: any): void {
+    this.ad_id = conversation;
     const accessToken = this.getFromLocalStorage('loggedInUserToken');
     this.ad_conversation = conversation;
     this.activeConversation = conversation; // Set the clicked conversation as active

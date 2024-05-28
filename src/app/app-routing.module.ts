@@ -13,12 +13,15 @@ import { ForgetPasswordMessageComponent } from './forget-password-message/forget
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { AccountActivationComponent } from './account-activation/account-activation.component';
 import { ChatComponent } from './chat/chat.component';
+import { AllAdsComponent } from './all-ads/all-ads.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'chat/:ad_id', component: ChatComponent },
+  { path: 'chat', component: ChatComponent },
+  { path: 'ads', component: AllAdsComponent },
 
   { path: 'account-activation', component: ActivityAccountComponent },
   { path: 'reset-password', component: ForgetPasswordComponent },

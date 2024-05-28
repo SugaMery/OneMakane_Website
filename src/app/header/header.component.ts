@@ -106,6 +106,8 @@ export class HeaderComponent implements OnInit {
               );
             });
           });
+
+          console.log('Filter root categories', this.categories);
         });
       }
     }
