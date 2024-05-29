@@ -9,6 +9,7 @@ import { CategoryService } from '../category.service';
 import { UserService } from '../user.service';
 import { AuthGuard } from '../auth.guard';
 import { DOCUMENT } from '@angular/common';
+import { Router } from '@angular/router';
 
 interface Category {
   active: boolean;
@@ -42,7 +43,8 @@ export class HeaderComponent implements OnInit {
     private categoryService: CategoryService,
     private userService: UserService,
     private authGuard: AuthGuard,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -74,6 +76,10 @@ export class HeaderComponent implements OnInit {
   logout(): void {
     this.status = false;
     this.authGuard.logout();
+  }
+
+  navigateToCategory(categoryId: number) {
+    this.router.navigate(['/ads-category', categoryId]);
   }
 
   getCategories(): void {

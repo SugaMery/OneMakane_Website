@@ -451,18 +451,25 @@
                   class="position-static"
                   *ngFor="let category of categories.slice(2, 7)"
                 >
-                  <a href="#"
-                    >{{ category.name }} <i class="fi-rs-angle-down"></i
-                  ></a>
+                  <a
+                    href="javascript:void(0)"
+                    (click)="navigateToCategory(category.id)"
+                  >
+                    {{ category.name }} <i class="fi-rs-angle-down"></i>
+                  </a>
                   <ul class="mega-menu">
                     <ul style="width: 80%">
                       <li
                         class="sub-mega-menu sub-mega-menu-width-10 left-menu"
                         *ngFor="let subcategory of category.subcategories"
                       >
-                        <a class="menu-title" href="#">{{
-                          subcategory.name
-                        }}</a>
+                        <a
+                          class="menu-title"
+                          href="javascript:void(0)"
+                          (click)="navigateToCategory(subcategory.id)"
+                        >
+                          {{ subcategory.name }}
+                        </a>
                         <ul>
                           <li
                             *ngFor="
@@ -485,34 +492,31 @@
                         class="menu-banner-wrap"
                         style="width: 100%; height: 100%"
                       >
-                        <a href="/deposer_une_annonce"
-                          ><img
+                        <a href="/deposer_une_annonce">
+                          <img
                             style="border-radius: 1rem"
                             src="../../assets/imgs/slider/slider-1.png"
                             alt="Nest"
-                        /></a>
+                          />
+                        </a>
                         <div class="menu-banner-content">
                           <h3>
                             Ne laissez <br />
                             pas passer <br />
                             cette opportunité
                           </h3>
-                          <!-- <div class="menu-banner-price">
-                            <span class="new-price text-success"
-                              >Save to 50%</span
-                            >
-                          </div> -->
                           <div class="menu-banner-btn">
                             <a href="/deposer_une_annonce">
                               <i class="fi fi-rr-square-plus"></i>
-                              Déposer votre annonce</a
-                            >
+                              Déposer votre annonce
+                            </a>
                           </div>
                         </div>
                       </div>
                     </li>
                   </ul>
                 </li>
+
                 <li>
                   <a href="/blog-category-grid"
                     >Blog <i class="fi-rs-angle-down"></i
