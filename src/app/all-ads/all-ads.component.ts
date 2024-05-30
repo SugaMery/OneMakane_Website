@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AnnonceService } from '../annonce.service';
 import { forkJoin } from 'rxjs';
@@ -73,19 +73,35 @@ interface SubCategory {
 export class AllAdsComponent implements OnInit {
   categoryId: number | undefined;
   filteredAds: any[] = [];
-  categories: any[] = [];
+  categories: Category[] = [];
+  subcategories: Category[] = [];
+  selectedOption: any = null;
+  selectedSubOption: any = null;
+  optionsVisible = false;
+  subOptionsVisible = false;
+  minPrice: number = 0;
+  maxPrice: number = 10000; // Set a reasonable default max price
   filteredAd: any[] = [];
+  allAds: any[] = [];
   displayedAds: any[] = [];
   adsPerPage = 10;
   sortOption = 'featured';
   currentPage = 1;
   totalPages = 1;
   totalAdsCount = 0;
+  searchTitle: string = '';
+  filteredAdsBackup: any[] = [];
   constructor(
-    private route: ActivatedRoute,
+    private categoryService: CategoryService,
     private annonceService: AnnonceService,
-    private categoryService: CategoryService
-  ) {}
+    private route: ActivatedRoute,
+    private renderer: Renderer2
+  ) {
+    // Listen to clicks on the document to close dropdowns if clicked outside
+    this.renderer.listen('document', 'click', (event: Event) => {
+      this.closeDropdowns(event);
+    });
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -115,8 +131,10 @@ export class AllAdsComponent implements OnInit {
         adsByCategory.forEach((ad: { id: string }) => {
           this.annonceService.getAdById(ad.id).subscribe((data) => {
             this.filteredAds.push(data.data);
+            this.allAds.push(data.data);
             this.applyFilters();
           });
+          this.totalAdsCount = this.filteredAds.length;
         });
       }
     });
@@ -128,9 +146,33 @@ export class AllAdsComponent implements OnInit {
         (category: { active: boolean; parent_id: null }) =>
           category.active === true && category.parent_id === null
       );
-      console.log('this.categories', this.categories);
     });
   }
+
+  selectOption(category: Category): void {
+    this.selectedOption = category;
+    this.subcategories = []; // Reset subcategories
+    this.selectedSubOption = null; // Reset selected subcategory
+    this.getSubcategories(category.id);
+    this.optionsVisible = false;
+    this.fetchAds();
+  }
+
+  getSubcategories(parentId: number): void {
+    this.categoryService.getCategoriesFrom().subscribe((subcategory) => {
+      this.subcategories = subcategory.data.filter(
+        (subcategory: { active: boolean; parent_id: number }) =>
+          subcategory.active === true && subcategory.parent_id === parentId
+      );
+    });
+  }
+
+  selectSubOption(subcategory: any): void {
+    this.selectedSubOption = subcategory;
+    this.subOptionsVisible = false;
+    this.fetchAds();
+  }
+
   toggleDropdown(event: MouseEvent): void {
     event.stopPropagation();
     const element = event.currentTarget as HTMLElement;
@@ -140,29 +182,97 @@ export class AllAdsComponent implements OnInit {
     }
   }
 
-  optionsVisible: boolean = false;
-  selectedOption: Category = {
-    active: false,
-    created_at: '',
-    id: 0,
-    model: null,
-    name: '',
-    parent_id: null,
-    slug: null,
-    route: null,
-    url: null,
-    icon_path: '',
-  };
-  toggleOptions(): void {
-    this.optionsVisible = !this.optionsVisible;
+  fetchAds(): void {
+    const selectedCategoryId =
+      this.selectedSubOption?.id || this.selectedOption?.id;
+    if (!selectedCategoryId) {
+      return;
+    }
+
+    // Get subcategories based on selected category (if no subcategory is selected)
+    if (!this.selectedSubOption && this.selectedOption) {
+      this.categoryService.getCategoriesFrom().subscribe((response) => {
+        const subcategories = response.data.filter(
+          (subcategory: any) =>
+            subcategory.active === true &&
+            subcategory.parent_id === this.selectedOption!.id
+        );
+
+        // Collect all category IDs (selected category + subcategories)
+        const categoryIds = subcategories.map(
+          (subcategory: { id: any }) => subcategory.id
+        );
+        categoryIds.push(this.selectedOption!.id);
+
+        // Fetch and filter ads based on collected category IDs
+        this.filterAds(categoryIds);
+      });
+    } else {
+      // Fetch and filter ads based on selected subcategory ID
+      this.filterAds([selectedCategoryId]);
+    }
   }
 
-  selectOption(option: any): void {
-    this.selectedOption = option;
-    console.log('option', option);
-    this.optionsVisible = false;
+  filterAds(categoryIds: number[]): void {
+    this.annonceService.getAds().subscribe((ads) => {
+      if (ads && ads.data) {
+        const adsByCategory = ads.data.filter((ad: any) =>
+          categoryIds.includes(ad.category.id)
+        );
+        this.totalAdsCount = adsByCategory.length;
+        this.allAds = adsByCategory;
+        this.filteredAds = adsByCategory;
+        this.applyFilters();
+      }
+    });
+  }
+  filterPrice(): void {
+    console.log('filteredAds', this.filteredAds);
+    this.filteredAds = this.allAds.filter(
+      (ad) => ad.price >= this.minPrice && ad.price <= this.maxPrice
+    );
+    this.applyFilters(); // Fetch and filter ads by price
+  }
+  filterAdsByPrice(): void {
+    if (this.minPrice > this.maxPrice) {
+      return; // Do not apply filter if min price is greater than max price
+    } else {
+      this.filterPrice();
+      this.totalAdsCount = this.filteredAds.length;
+    }
+    if (this.minPrice == null || this.maxPrice == null) {
+      this.filteredAds = this.allAds.filter(
+        (ad) => ad.price >= this.minPrice || ad.price <= this.maxPrice
+      );
+      this.totalAdsCount = this.filteredAds.length;
+      this.applyFilters();
+    }
+
+    if (this.minPrice == null && this.maxPrice == null) {
+      this.filteredAds = this.allAds;
+      this.applyFilters();
+      this.totalAdsCount = this.filteredAds.length;
+    }
+    console.log('miiin', this.maxPrice, this.minPrice);
   }
 
+  filterAdsByTitle(event: any): void {
+    const searchTerm = event.target.value.toLowerCase();
+    this.filteredAds = this.allAds.filter((conversation) => {
+      console.log('testtttt', this.filteredAds);
+      const title = conversation.title.toLowerCase();
+      return title.includes(searchTerm);
+    });
+    this.applyFilters();
+  }
+
+  getCategoryAndSubcategoryIds(): number[] {
+    const categoryIds = this.subcategories.map((subcategory) => subcategory.id);
+    if (this.selectedOption) {
+      categoryIds.push(this.selectedOption.id);
+    }
+    return categoryIds;
+  }
   filterByCategory(categoryId: number): void {
     this.filteredAds = []; // Clear previous filtered ads
     this.annonceService.getAds().subscribe((ads) => {
@@ -275,5 +385,40 @@ export class AllAdsComponent implements OnInit {
         })
       );
     }
+  }
+
+  toggleOptions(event: Event): void {
+    event.stopPropagation();
+    this.optionsVisible = !this.optionsVisible;
+    if (this.optionsVisible) {
+      this.subOptionsVisible = false; // Close the other dropdown
+    }
+  }
+
+  toggleSubOptions(event: Event): void {
+    event.stopPropagation();
+    this.subOptionsVisible = !this.subOptionsVisible;
+    if (this.subOptionsVisible) {
+      this.optionsVisible = false; // Close the other dropdown
+    }
+  }
+
+  closeDropdowns(event: Event): void {
+    const clickedInsideOptionMenu =
+      (event.target as HTMLElement).closest('.select-menu') ||
+      (event.target as HTMLElement).closest('.select-btn');
+    if (!clickedInsideOptionMenu) {
+      this.optionsVisible = false;
+      this.subOptionsVisible = false;
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    this.closeDropdowns(event);
+  }
+
+  stopEventPropagation(event: Event): void {
+    event.stopPropagation();
   }
 }

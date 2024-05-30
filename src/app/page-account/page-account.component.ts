@@ -33,16 +33,16 @@ export class PageAccountComponent {
     this.accessToken = localStorage.getItem('loggedInUserToken');
     this.annonceService.getAds().subscribe((data) => {
       const adIds = data.data.map((ad: any) => ad.id);
-      //console.log("data ads",data.data);
+      //console.log('data ads', data.data);
 
       data.data.forEach((element: any) => {
-        //console.log("data element",element);
+        // console.log('data element', element);
 
         this.annonceService.getAdById(element.id).subscribe((annonce) => {
-          //console.log("data annonce",annonce.data);
+          //console.log('data annonce', annonce.data);
 
           if (annonce.data.user_id === this.userId) {
-            // console.log("data",element);
+            //console.log('data', element);
           }
         });
       });
@@ -71,7 +71,7 @@ export class PageAccountComponent {
         });
     });
     this.userService
-      .getUserInfoById(Number(this.userId), this.accessToken!)
+      .getUserInfoById(Number(this.userId!), this.accessToken!)
       .subscribe((data) => {
         this.loggedInUserName = data.data.full_name;
         this.userService.getAllUsers(this.accessToken!).subscribe((alldata) => {
@@ -82,9 +82,9 @@ export class PageAccountComponent {
               email: any;
               uuid: string;
             }) => {
-              if (element.id == data.data.id) {
+              if (element && element.id != null && element.id == data.data.id) {
                 this.userData.uuid = element.uuid;
-                this.idPro = element.professional.id;
+                this.idPro = element.professional?.id;
               }
             }
           );

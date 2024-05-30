@@ -1,143 +1,302 @@
 <app-header></app-header>
 <main class="main pages">
-    <div class="page-header breadcrumb-wrap">
-        <div class="container">
-            <div class="breadcrumb">
-                <a href='/' rel='nofollow'><i class="fi-rs-home mr-5"></i>Accueil</a>
-                <span></span> Pages <span></span> Mon Compte
-            </div>
-        </div>        
+  <div class="page-header breadcrumb-wrap">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Accueil</a>
+        <span></span> Pages <span></span> Mon Compte
+      </div>
     </div>
-    <div class="page-content pt-50 pb-150">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 m-auto">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="dashboard-menu">
-                              <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.2.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+  </div>
+  <div class="page-content pt-50 pb-150">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-10 m-auto">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="dashboard-menu">
+                <link
+                  rel="stylesheet"
+                  href="https://cdn-uicons.flaticon.com/2.2.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
+                />
 
-                                <ul class="nav flex-column" role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="false"><i class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="fi fi-rs-list  mr-10"></i>Mes annonces</a>
-                                    </li>
+                <ul class="nav flex-column" role="tablist">
+                  <li class="nav-item">
+                    <a
+                      class="nav-link active"
+                      id="dashboard-tab"
+                      data-bs-toggle="tab"
+                      href="#dashboard"
+                      role="tab"
+                      aria-controls="dashboard"
+                      aria-selected="false"
+                      ><i class="fi-rs-settings-sliders mr-10"></i>Dashboard</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a
+                      class="nav-link"
+                      id="orders-tab"
+                      data-bs-toggle="tab"
+                      href="#orders"
+                      role="tab"
+                      aria-controls="orders"
+                      aria-selected="false"
+                      ><i class="fi fi-rs-list mr-10"></i>Mes annonces</a
+                    >
+                  </li>
 
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="track-orders-tab"  href="/deposer_une_annonce" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi-rr-square-plus mr-10"></i> Ajouter une annonce</a>
-                                    </li>
+                  <li class="nav-item">
+                    <a
+                      class="nav-link"
+                      id="track-orders-tab"
+                      href="/deposer_une_annonce"
+                      role="tab"
+                      aria-controls="track-orders"
+                      aria-selected="false"
+                      ><i class="fi-rr-square-plus mr-10"></i> Ajouter une
+                      annonce</a
+                    >
+                  </li>
 
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab" href="#account-detail" role="tab" aria-controls="account-detail" aria-selected="true"><i class="fi-rs-user mr-10"></i>Détails du compte</a>
-                                    </li> 
-                                    <li class="nav-item">
-                                      <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="fi-rr-lock mr-10"></i>Mot de passe</a>
-                                  </li>                                   
-                                    <li class="nav-item">
-                                        <a class='nav-link' (click)="logout()"><i class="fi-rs-sign-out mr-10"></i>Logout</a>
-                                      </li>                                      
-                                </ul>
-                            </div>
+                  <li class="nav-item">
+                    <a
+                      class="nav-link"
+                      id="account-detail-tab"
+                      data-bs-toggle="tab"
+                      href="#account-detail"
+                      role="tab"
+                      aria-controls="account-detail"
+                      aria-selected="true"
+                      ><i class="fi-rs-user mr-10"></i>Détails du compte</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a
+                      class="nav-link"
+                      id="address-tab"
+                      data-bs-toggle="tab"
+                      href="#address"
+                      role="tab"
+                      aria-controls="address"
+                      aria-selected="true"
+                      ><i class="fi-rr-lock mr-10"></i>Mot de passe</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" (click)="logout()"
+                      ><i class="fi-rs-sign-out mr-10"></i>Logout</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-9">
+              <div
+                class="tab-content account dashboard-content"
+                [ngClass]="{ 'pl-50': !isPhone() }"
+              >
+                <div
+                  class="tab-pane fade active show"
+                  id="dashboard"
+                  role="tabpanel"
+                  aria-labelledby="dashboard-tab"
+                >
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="mb-0">Bonjour {{ loggedInUserName }} !</h3>
+                    </div>
+                    <div class="card-body">
+                      <p>
+                        À partir de votre tableau de bord, vous pouvez
+                        facilement vérifier et afficher vos
+                        <a href="#">commandes récentes</a>, gérer vos
+                        <a href="#">adresses de livraison et de facturation</a>
+                        et
+                        <a href="#"
+                          >modifier votre mot de passe et vos informations de
+                          compte.</a
+                        >
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="tab-pane fade"
+                  id="orders"
+                  role="tabpanel"
+                  aria-labelledby="orders-tab"
+                >
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="mb-0">Ma liste d'annonces</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <div class="table-responsive shopping-summery">
+                          <table class="table table-wishlist">
+                            <thead>
+                              <tr class="main-heading">
+                                <th class="custome-checkbox start pl-30">
+                                  <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    name="checkbox"
+                                    id="exampleCheckbox11"
+                                    value=""
+                                  />
+                                  <label
+                                    class="form-check-label"
+                                    for="exampleCheckbox11"
+                                  ></label>
+                                </th>
+                                <th scope="col" colspan="2">Annonce</th>
+                                <th scope="col">Prix</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Action</th>
+                                <th scope="col" class="end">Supprimé</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr class="pt-30" *ngFor="let ad of ads">
+                                <td class="custome-checkbox pl-30">
+                                  <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    name="checkbox"
+                                    id="exampleCheckbox1"
+                                    value=""
+                                  />
+                                  <label
+                                    class="form-check-label"
+                                    for="exampleCheckbox1"
+                                  ></label>
+                                </td>
+                                <td class="image product-thumbnail pt-40">
+                                  <img src="{{ ad.medias[0].url }}" alt="#" />
+                                </td>
+                                <td class="product-des product-name">
+                                  <h6>
+                                    <a class="product-name mb-10">{{
+                                      ad.title
+                                    }}</a>
+                                  </h6>
+                                  <span class="font-small text-muted">{{
+                                    ad.created_at
+                                  }}</span>
+                                </td>
+                                <td class="price" data-title="Price">
+                                  <h3 class="text-brand">{{ ad.price }} DH</h3>
+                                </td>
+                                <td
+                                  class="text-center detail-info"
+                                  data-title="Stock"
+                                >
+                                  <span
+                                    class="stock-status in-stock mb-0"
+                                    [ngClass]="
+                                      getStatusClass(ad.validation_status)
+                                    "
+                                  >
+                                    {{ ad.validation_status }}
+                                  </span>
+                                </td>
+                                <td class="text-right" data-title="Cart">
+                                  <button
+                                    class="btn btn-sm"
+                                    (click)="showDialog(ad)"
+                                  >
+                                    Plus infos
+                                  </button>
+                                </td>
+                                <td
+                                  class="action text-center"
+                                  data-title="Remove"
+                                >
+                                  <a href="#" class="text-body"
+                                    ><i class="fi-rs-trash"></i
+                                  ></a>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <p-dialog
+                            [(visible)]="adDialog"
+                            [style]="{ width: '1000px' }"
+                            header="Détails de l'annonce"
+                            [modal]="true"
+                            styleClass="p-fluid"
+                          >
+                            <ng-template pTemplate="content">
+                              <div *ngIf="selectedAd">
+                                <div class="image-grid">
+                                  <ng-container
+                                    *ngFor="let media of selectedAd.medias"
+                                  >
+                                    <img [src]="media.url" class="grid-item" />
+                                  </ng-container>
+                                </div>
+
+                                <div class="field">
+                                  <label for="name">Nom</label>
+                                  <input
+                                    type="text"
+                                    pInputText
+                                    id="name"
+                                    [(ngModel)]="selectedAd.title"
+                                    required
+                                    autofocus
+                                  />
+                                </div>
+                                <div class="field">
+                                  <label for="description">Description</label>
+                                  <textarea
+                                    id="description"
+                                    pInputTextarea
+                                    [(ngModel)]="selectedAd.description"
+                                    required
+                                    rows="3"
+                                    cols="20"
+                                  ></textarea>
+                                </div>
+
+                                <div class="field">
+                                  <label for="price">Prix</label>
+                                  <input
+                                    type="text"
+                                    pInputText
+                                    id="price"
+                                    [(ngModel)]="selectedAd.price"
+                                    required
+                                  />
+                                </div>
+                              </div>
+                            </ng-template>
+
+                            <ng-template pTemplate="footer">
+                              <button
+                                pButton
+                                pRipple
+                                label="Annuler"
+                                icon="pi pi-times"
+                                class="p-button-text"
+                                (click)="hideDialog()"
+                              ></button>
+                              <button
+                                pButton
+                                pRipple
+                                label="Enregistrer"
+                                icon="pi pi-check"
+                                class="p-button-text"
+                              ></button>
+                            </ng-template>
+                          </p-dialog>
                         </div>
-                        <div class="col-md-9">
-                            <div class="tab-content account dashboard-content" [ngClass]="{'pl-50': !isPhone()}">
-                                <div class="tab-pane fade active show" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h3 class="mb-0">Bonjour {{ loggedInUserName }} !</h3>
-                                        </div>
-                                        <div class="card-body">
-                                            <p>
-                                                À partir de votre tableau de bord, vous pouvez facilement vérifier et afficher vos <a href="#">commandes récentes</a>,
-                                                gérer vos <a href="#">adresses de livraison et de facturation</a> et <a href="#">modifier votre mot de passe et vos informations de compte.</a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>                                
-                                 <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-                                    <div class="card">
-                                        <div class="card-header">
-                                          <h3 class="mb-0">Ma liste d'annonces</h3>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="table-responsive">
-                                              <div class="table-responsive shopping-summery">
-                                                <table class="table table-wishlist">
-                                                    <thead>
-                                                        <tr class="main-heading">
-                                                            <th class="custome-checkbox start pl-30">
-                                                                <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox11" value="">
-                                                                <label class="form-check-label" for="exampleCheckbox11"></label>
-                                                            </th>
-                                                            <th scope="col" colspan="2">Annonce</th>
-                                                            <th scope="col">Prix</th>
-                                                            <th scope="col">Status</th>
-                                                            <th scope="col">Action</th>
-                                                            <th scope="col" class="end">Supprimé</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr class="pt-30" *ngFor="let ad of ads">
-                                                            <td class="custome-checkbox pl-30">
-                                                                <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="">
-                                                                <label class="form-check-label" for="exampleCheckbox1"></label>
-                                                            </td>
-                                                            <td class="image product-thumbnail pt-40"><img src="{{ad.medias[0].url}}" alt="#"></td>
-                                                            <td class="product-des product-name">
-                                                                <h6><a class="product-name mb-10" >{{ad.title}}</a></h6>
-                                                                <span class="font-small text-muted">{{ad.created_at}}</span>
-
-                                                            </td>
-                                                            <td class="price" data-title="Price">
-                                                                <h3 class="text-brand">{{ad.price}}</h3>
-                                                            </td>
-                                                            <td class="text-center detail-info" data-title="Stock" >
-                                                                <span class="stock-status in-stock mb-0" [ngClass]="getStatusClass(ad.validation_status)"> {{ad.validation_status}} </span>
-                                                            </td>
-                                                            <td class="text-right" data-title="Cart">
-                                                                <button class="btn btn-sm"  (click)="showDialog(ad)">Plus infos</button>
-                                                            </td>
-                                                            <td class="action text-center" data-title="Remove">
-                                                                <a href="#" class="text-body"><i class="fi-rs-trash"></i></a>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-
-                                                <p-dialog [(visible)]="adDialog" [style]="{ width: '450px' }" header="Ad Details" [modal]="true" styleClass="p-fluid">
-                                                    <ng-template pTemplate="content">
-                                                        <img [src]="selectedAd.medias[0].url" class="block m-auto pb-3" *ngIf="" />
-                                                        <div class="field">
-                                                            <label for="name">Name</label>
-                                                            <input type="text" pInputText id="name" [(ngModel)]="selectedAd.title" required autofocus />
-                                                        </div>
-                                                        <div class="field">
-                                                            <label for="description">Description</label>
-                                                            <textarea id="description" pInputTextarea [(ngModel)]="selectedAd.description" required rows="3" cols="20"></textarea>
-                                                        </div>
-                                                
-                                                        <div class="field">
-                                                            <label for="name">Prix</label>
-                                                            <input type="text" pInputText id="name" [(ngModel)]="selectedAd.price" required autofocus />
-                                                        </div>
-                                                    </ng-template>
-                                                
-                                                    <ng-template pTemplate="footer">
-                                                        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-                                                        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" ></button>
-                                                    </ng-template>
-                                                </p-dialog>
-                                                
-                                                
-                                            </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> 
-                                <!-- <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">
                                     <div class="card">
                                         <div class="card-header">
                                             <h3 class="mb-0">Ajouter une annonce</h3>
@@ -452,560 +611,686 @@
                                 </div>
  -->
 
- <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
-  <div class="row">
-      <div class="">
-          <div class="card mb-3 mb-lg-0">
-              <div class="mb-30">
-                  <h2 style="margin-bottom: 1rem;">Modifier le mot de passe</h2>
-                  <p style="margin-bottom: 1rem;">Pour changer votre mot de passe, veuillez saisir le nouveau mot de passe ci-dessous :</p>
-              </div>
-              <form method="post" (ngSubmit)="onPassword()" #registerForm="ngForm">
-
-              <div class="row " >
-              <div class="col-lg-6 col-md-6">
-                <div class="form-group mb-3">
-                  <div class="form-group">
-                    <label for="nouveau_mot_de_passe">Nouveau mot de passe :</label>
-                    <input 
-                      [type]="showPassword ? 'text' : 'password'"
-                      placeholder=" Mot de passe"
-                      [(ngModel)]="userData.password"
-                      name="password"
-                      class="password-input"
-                      (ngModelChange)="clearError('password')"
-                    >
-                    <span class="eyeicon icon" (click)="togglePasswordVisibility()">
-                      <i [ngClass]="showPassword ? 'fi-rs-eye' : 'fi-rr-eye-crossed'"></i>
-                    </span>
-                  </div>
-                  
-                  <div
-                    *ngIf="fieldErrors.password"
-                    class="text-danger requisDiv"
-                    style="margin-top: 1rem"
-                  >
-                    <div> 
-                       Mot de passe est requis.</div>
-                  </div>
-                  <div
-                  *ngIf="error && error.error && error.error.data && error.error.data.password && error.error.data.password.regex"
-                    class="text-danger requisDiv"
-                    style="margin-top: 1rem"
-                  >
-                    <div>Le mot de passe doit inclure au moins une minuscule, une majuscule et un caractère spécial.</div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-6 col-md-6">
-                <div class="form-group mb-3">
-                  <div class="form-group">
-                    <label for="confirmer_mot_de_passe">Confirmer le nouveau mot de passe :</label>
-                    <input 
-                      [type]="showRepeatPassword ? 'text' : 'password'"
-                      placeholder="Confirmer le mot de passe"
-                      [(ngModel)]="userData.repeat_password"
-                      name="repeat_password"
-                      class="password-input"
-                      (ngModelChange)="clearError('repeat_password')"
-                    >
-                    <span class="eyeicon icon" (click)="toggleRepeatPasswordVisibility()">
-                      <i [ngClass]="showRepeatPassword ? 'fi-rs-eye' : 'fi-rr-eye-crossed'"></i>
-                    </span>
-                  </div>
-                  
-                  <div
-                    *ngIf="fieldErrors.repeat_password"
-                    class="text-danger requisDiv"
-                    style="margin-top: 1rem"
-                  >
-                    <div>Confirmer le mot de passe est requis.</div>
-                  </div>
-                  <div
-                    *ngIf="fieldErrors.passwordMismatch"
-                    class="text-danger requisDiv"
-                    style="margin-top: 1rem"
-                  >
-                    <div>Les mots de passe ne correspondent pas.</div>
-                  </div>
-                </div>
-                </div>
-                <div class="form-group mb-30 text-end">
-                  <!-- Add 'text-end' class here -->
-                  <button
-                    type="submit"
-                    class="btn btn-fill-out btn-block hover-up font-weight-bold"
-                    name="register"
-                    (onClick)="onPassword()"
-                  >
-                    Modifier
-                  </button>
-                </div>
-              </div>
-              </form>
-          </div>
-      </div>
-  </div>
-</div>
-
-
-                                
-                                <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
-                                    <div class="card">
-                                        <div class="">
-                                            <h2>Détails du compte</h2>
-                                        </div>
-                                        <div class="card-body">
-                                            <p style="margin-bottom: 2rem;">Voici vos informations personnelles :</p>
-                                            <form method="post" (ngSubmit)="onSubmit()" #registerForm="ngForm">
-                                                <div class="row">
-    
-                                  <!-- First column -->
-                                  <div class="col-lg-6 col-md-6">
-                                    <div class="login_wrap widget-taber-content background-white">
-                                        <div class="padding_eight_all bg-white">
-                                            <div class="form-group mb-3">
-                                                <label for="last_name">Nom de famille :</label>
-                                                <input
-                                                    type="text"
-                                                    required
-                                                    id="last_name"
-                                                    name="last_name"
-                                                    placeholder="Nom de famille"
-                                                    [(ngModel)]="userData.last_name"
-                                                    class="form-control custom-spacing"
-                                                    (ngModelChange)="clearError('last_name')"
-                                                />
-                                                <div
-                                                    *ngIf="fieldErrors.last_name"
-                                                    class="text-danger requisDiv"
-                                                    style="margin-top: 1rem"
-                                                >
-                                                    <div>Nom de famille est requis.</div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group mb-3">
-                                                <label for="email">E-mail :</label>
-                                                <input
-                                                    type="email"
-                                                    required
-                                                    id="email"
-                                                    name="email"
-                                                    placeholder="E-mail"
-                                                    [(ngModel)]="userData.email"
-                                                    class="form-control custom-spacing"
-                                                    (ngModelChange)="clearError('email')"
-                                                />
-                                                <div
-                                                    *ngIf="fieldErrors.email"
-                                                    class="text-danger requisDiv"
-                                                    style="margin-top: 1rem"
-                                                >
-                                                    <div>E-mail est requis.</div>
-                                                </div>
-                                                <div
-                                                    *ngIf="error && error.error && error.error.data && error.error.data.email && error.error.data.email.unique"
-                                                    class="text-danger requisDiv"
-                                                    style="margin-top: 1rem"
-                                                >
-                                                    <div>Cet e-mail existe déjà.</div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group mb-3">
-                                                <label for="address">Adresse :</label>
-                                                <input
-                                                    type="text"
-                                                    required
-                                                    id="address"
-                                                    name="address"
-                                                    placeholder="Adresse"
-                                                    [(ngModel)]="userData.address"
-                                                    class="form-control custom-spacing"
-                                                    (ngModelChange)="clearError('address')"
-                                                />
-                                                <div
-                                                    *ngIf="fieldErrors.address"
-                                                    class="text-danger requisDiv"
-                                                    style="margin-top: 1rem"
-                                                >
-                                                    <div>Adresse est requis.</div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group mb-3">
-                                                <label for="postal_code">Code Postal :</label>
-                                                <input
-                                                    type="text"
-                                                    required
-                                                    id="postal_code"
-                                                    name="postal_code"
-                                                    placeholder="Code Postal"
-                                                    [(ngModel)]="userData.postal_code"
-                                                    class="form-control custom-spacing"
-                                                    (ngModelChange)="clearError('postal_code')"
-                                                />
-                                                <div
-                                                    *ngIf="fieldErrors.postal_code"
-                                                    class="text-danger requisDiv"
-                                                    style="margin-top: 1rem"
-                                                >
-                                                    <div>Code Postal est requis.</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                <div
+                  class="tab-pane fade"
+                  id="address"
+                  role="tabpanel"
+                  aria-labelledby="address-tab"
+                >
+                  <div class="row">
+                    <div class="">
+                      <div class="card mb-3 mb-lg-0">
+                        <div class="mb-30">
+                          <h2 style="margin-bottom: 1rem">
+                            Modifier le mot de passe
+                          </h2>
+                          <p style="margin-bottom: 1rem">
+                            Pour changer votre mot de passe, veuillez saisir le
+                            nouveau mot de passe ci-dessous :
+                          </p>
+                        </div>
+                        <form
+                          method="post"
+                          (ngSubmit)="onPassword()"
+                          #registerForm="ngForm"
+                        >
+                          <div class="row">
+                            <div class="col-lg-6 col-md-6">
+                              <div class="form-group mb-3">
+                                <div class="form-group">
+                                  <label for="nouveau_mot_de_passe"
+                                    >Nouveau mot de passe :</label
+                                  >
+                                  <input
+                                    [type]="showPassword ? 'text' : 'password'"
+                                    placeholder=" Mot de passe"
+                                    [(ngModel)]="userData.password"
+                                    name="password"
+                                    class="password-input"
+                                    (ngModelChange)="clearError('password')"
+                                  />
+                                  <span
+                                    class="eyeicon icon"
+                                    (click)="togglePasswordVisibility()"
+                                  >
+                                    <i
+                                      [ngClass]="
+                                        showPassword
+                                          ? 'fi-rs-eye'
+                                          : 'fi-rr-eye-crossed'
+                                      "
+                                    ></i>
+                                  </span>
                                 </div>
-                                
-                                  
-                                  <!-- Second column -->
-                                  <div class="col-lg-6 col-md-6">
-                                    <div class="login_wrap widget-taber-content background-white">
-                                        <div class="padding_eight_all bg-white">
-                                            <div class="form-group mb-3">
-                                                <label for="first_name">Prénom :</label>
-                                                <input
-                                                    type="text"
-                                                    required
-                                                    id="first_name"
-                                                    name="first_name"
-                                                    placeholder="Prénom"
-                                                    [(ngModel)]="userData.first_name"
-                                                    class="form-control custom-spacing"
-                                                    (ngModelChange)="clearError('first_name')"
-                                                />
-                                                <div
-                                                    *ngIf="fieldErrors.first_name"
-                                                    class="text-danger requisDiv"
-                                                    style="margin-top: 1rem"
-                                                >
-                                                    <div>Prénom est requis.</div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group mb-3">
-                                                <label for="telephone">Téléphone :</label>
-                                                <input
-                                                    type="tel"
-                                                    required
-                                                    id="telephone"
-                                                    name="telephone"
-                                                    placeholder="Téléphone"
-                                                    [(ngModel)]="userData.telephone"
-                                                    class="form-control custom-spacing"
-                                                    (ngModelChange)="clearError('telephone')"
-                                                />
-                                                <div
-                                                    *ngIf="fieldErrors.telephone"
-                                                    class="text-danger requisDiv"
-                                                    style="margin-top: 1rem"
-                                                >
-                                                    <div>Téléphone est requis.</div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group mb-3">
-                                                <label for="city">Ville :</label>
-                                                <input
-                                                    type="text"
-                                                    required
-                                                    id="city"
-                                                    name="city"
-                                                    placeholder="Ville"
-                                                    [(ngModel)]="userData.city"
-                                                    class="form-control custom-spacing"
-                                                    (ngModelChange)="clearError('city')"
-                                                />
-                                                <div
-                                                    *ngIf="fieldErrors.city"
-                                                    class="text-danger requisDiv"
-                                                    style="margin-top: 1rem"
-                                                >
-                                                    <div>Ville est requis.</div>
-                                                </div>
-                                            </div>
-                                            <div class="select-menu" [class.has-error]="fieldErrors.civility">
-                                                <label for="civility">Civilité :</label>
-                                                <div class="select-btn" style="
-                                                    margin-bottom: 1rem;
-                                                    background: #fff;
-                                                    border: 1px solid #ececec;
-                                                    height: 64px;
-                                                    box-shadow: none;
-                                                    padding-left: 20px;
-                                                    font-size: 16px;
-                                                    width: 100%;
-                                                  " (click)="toggleOptions()">
-                                                    <span class="sBtn-text">{{
-                                                        selectedOption || "Civilité"
-                                                    }}</span>
-                                                    <i class="bx bx-chevron-down"></i>
-                                                </div>
-                                                <ul class="options" [ngClass]="{ active: optionsVisible }">
-                                                    <li class="option" (click)="selectOption('Monsieur')">
-                                                        Monsieur
-                                                    </li>
-                                                    <li class="option" (click)="selectOption('Madame')">
-                                                        Madame
-                                                    </li>
-                                                </ul>
-                                                <div
-                                                    *ngIf="fieldErrors.civility"
-                                                    class="text-danger requisDiv"
-                                                    style="margin-bottom: 1rem"
-                                                >
-                                                    <div>Civilité est requise.</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+
+                                <div
+                                  *ngIf="fieldErrors.password"
+                                  class="text-danger requisDiv"
+                                  style="margin-top: 1rem"
+                                >
+                                  <div>Mot de passe est requis.</div>
                                 </div>
-                                
-                                  
-                                <div class="col-lg-6 col-md-6" *ngIf="showProfessionalAccount">
-                                  <div class="login_wrap widget-taber-content background-white">
-                                      <div class="padding_eight_all bg-white">
-                                          <div class="form-group mb-3">
-                                              <label for="company_name">Nom de l'entreprise :</label>
-                                              <input
-                                                  type="text"
-                                                  required
-                                                  id="company_name"
-                                                  name="company_name"
-                                                  placeholder="Nom de l'entreprise"
-                                                  [(ngModel)]="userDataPro.company_name"
-                                                  class="form-control custom-spacing"
-                                                  (ngModelChange)="clearError('company_name')"
-                                              />
-                                              <div
-                                                  *ngIf="fieldErrors.company_name"
-                                                  class="text-danger requisDiv"
-                                                  style="margin-top: 1rem"
-                                              >
-                                                  <div>Nom de l'entreprise est requis.</div>
-                                              </div>
-                                          </div>
-                                          <div class="form-group mb-3">
-                                              <label for="company_address">Adresse de l'entreprise :</label>
-                                              <input
-                                                  type="text"
-                                                  required
-                                                  id="company_address"
-                                                  name="company_address"
-                                                  placeholder="Adresse de l'entreprise"
-                                                  [(ngModel)]="userDataPro.company_address"
-                                                  class="form-control custom-spacing"
-                                                  (ngModelChange)="clearError('company_address')"
-                                              />
-                                              <div
-                                                  *ngIf="fieldErrors.company_address"
-                                                  class="text-danger requisDiv"
-                                                  style="margin-top: 1rem"
-                                              >
-                                                  <div>Adresse de l'entreprise est requis.</div>
-                                              </div>
-                                          </div>
-                                          <div class="form-group mb-3">
-                                              <label for="company_postal_code">Code postal de l'entreprise :</label>
-                                              <input
-                                                  type="text"
-                                                  required
-                                                  id="company_postal_code"
-                                                  name="company_postal_code"
-                                                  placeholder="Code postal de l'entreprise"
-                                                  [(ngModel)]="userDataPro.company_postal_code"
-                                                  class="form-control custom-spacing"
-                                                  (ngModelChange)="clearError('company_postal_code')"
-                                              />
-                                              <div
-                                                  *ngIf="fieldErrors.company_postal_code"
-                                                  class="text-danger requisDiv"
-                                                  style="margin-top: 1rem"
-                                              >
-                                                  <div>Code postal de l'entreprise est requis.</div>
-                                              </div>
-                                          </div>
-                                          <div class="form-group mb-3">
-                                              <label for="activity_sector">Secteur d'activité :</label>
-                                              <input
-                                                  type="text"
-                                                  required
-                                                  id="activity_sector"
-                                                  name="activity_sector"
-                                                  placeholder="Secteur d'activité"
-                                                  [(ngModel)]="userDataPro.activity_sector"
-                                                  class="form-control custom-spacing"
-                                                  (ngModelChange)="clearError('activity_sector')"
-                                              />
-                                              <div
-                                                  *ngIf="fieldErrors.activity_sector"
-                                                  class="text-danger requisDiv"
-                                                  style="margin-top: 1rem"
-                                              >
-                                                  <div>Secteur d'activité est requis.</div>
-                                              </div>
-                                          </div>
-                                          <div class="form-group mb-3">
-                                              <label for="contact_first_name">Prénom du responsable :</label>
-                                              <input
-                                                  type="text"
-                                                  required
-                                                  id="contact_first_name"
-                                                  name="contact_first_name"
-                                                  placeholder="Prénom du responsable"
-                                                  [(ngModel)]="userDataPro.contact_first_name"
-                                                  class="form-control custom-spacing"
-                                                  (ngModelChange)="clearError('contact_first_name')"
-                                              />
-                                              <div
-                                                  *ngIf="fieldErrors.contact_first_name"
-                                                  class="text-danger requisDiv"
-                                                  style="margin-top: 1rem"
-                                              >
-                                                  <div>Prénom du responsable est requis.</div>
-                                              </div>
-                                          </div>
-                                      </div>
+                                <div
+                                  *ngIf="
+                                    error &&
+                                    error.error &&
+                                    error.error.data &&
+                                    error.error.data.password &&
+                                    error.error.data.password.regex
+                                  "
+                                  class="text-danger requisDiv"
+                                  style="margin-top: 1rem"
+                                >
+                                  <div>
+                                    Le mot de passe doit inclure au moins une
+                                    minuscule, une majuscule et un caractère
+                                    spécial.
                                   </div>
+                                </div>
                               </div>
-                              
-                              <div class="col-lg-6 col-md-6" *ngIf="showProfessionalAccount">
-                                <div class="login_wrap widget-taber-content background-white">
-                                    <div class="padding_eight_all bg-white">
-                                        <div class="form-group mb-3">
-                                            <label for="ice">Numéro ICE :</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                id="ice"
-                                                name="ice"
-                                                placeholder="Numéro ICE"
-                                                [(ngModel)]="userDataPro.ice"
-                                                class="form-control custom-spacing"
-                                                (ngModelChange)="clearError('ice')"
-                                            />
-                                            <div
-                                                *ngIf="fieldErrors.ice"
-                                                class="text-danger requisDiv"
-                                                style="margin-top: 1rem"
-                                            >
-                                                <div>Numéro ICE est requis.</div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group mb-3">
-                                            <label for="company_address_rest">Complément d'adresse :</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                id="company_address_rest"
-                                                name="company_address_rest"
-                                                placeholder="Complément d'adresse"
-                                                [(ngModel)]="userDataPro.company_address_rest"
-                                                class="form-control custom-spacing"
-                                                (ngModelChange)="clearError('company_address_rest')"
-                                            />
-                                            <!-- <div
+                            </div>
+                            <div class="col-lg-6 col-md-6">
+                              <div class="form-group mb-3">
+                                <div class="form-group">
+                                  <label for="confirmer_mot_de_passe"
+                                    >Confirmer le nouveau mot de passe :</label
+                                  >
+                                  <input
+                                    [type]="
+                                      showRepeatPassword ? 'text' : 'password'
+                                    "
+                                    placeholder="Confirmer le mot de passe"
+                                    [(ngModel)]="userData.repeat_password"
+                                    name="repeat_password"
+                                    class="password-input"
+                                    (ngModelChange)="
+                                      clearError('repeat_password')
+                                    "
+                                  />
+                                  <span
+                                    class="eyeicon icon"
+                                    (click)="toggleRepeatPasswordVisibility()"
+                                  >
+                                    <i
+                                      [ngClass]="
+                                        showRepeatPassword
+                                          ? 'fi-rs-eye'
+                                          : 'fi-rr-eye-crossed'
+                                      "
+                                    ></i>
+                                  </span>
+                                </div>
+
+                                <div
+                                  *ngIf="fieldErrors.repeat_password"
+                                  class="text-danger requisDiv"
+                                  style="margin-top: 1rem"
+                                >
+                                  <div>
+                                    Confirmer le mot de passe est requis.
+                                  </div>
+                                </div>
+                                <div
+                                  *ngIf="fieldErrors.passwordMismatch"
+                                  class="text-danger requisDiv"
+                                  style="margin-top: 1rem"
+                                >
+                                  <div>
+                                    Les mots de passe ne correspondent pas.
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group mb-30 text-end">
+                              <!-- Add 'text-end' class here -->
+                              <button
+                                type="submit"
+                                class="btn btn-fill-out btn-block hover-up font-weight-bold"
+                                name="register"
+                                (onClick)="onPassword()"
+                              >
+                                Modifier
+                              </button>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="tab-pane fade"
+                  id="account-detail"
+                  role="tabpanel"
+                  aria-labelledby="account-detail-tab"
+                >
+                  <div class="card">
+                    <div class="">
+                      <h2>Détails du compte</h2>
+                    </div>
+                    <div class="card-body">
+                      <p style="margin-bottom: 2rem">
+                        Voici vos informations personnelles :
+                      </p>
+                      <form
+                        method="post"
+                        (ngSubmit)="onSubmit()"
+                        #registerForm="ngForm"
+                      >
+                        <div class="row">
+                          <!-- First column -->
+                          <div class="col-lg-6 col-md-6">
+                            <div
+                              class="login_wrap widget-taber-content background-white"
+                            >
+                              <div class="padding_eight_all bg-white">
+                                <div class="form-group mb-3">
+                                  <label for="last_name"
+                                    >Nom de famille :</label
+                                  >
+                                  <input
+                                    type="text"
+                                    required
+                                    id="last_name"
+                                    name="last_name"
+                                    placeholder="Nom de famille"
+                                    [(ngModel)]="userData.last_name"
+                                    class="form-control custom-spacing"
+                                    (ngModelChange)="clearError('last_name')"
+                                  />
+                                  <div
+                                    *ngIf="fieldErrors.last_name"
+                                    class="text-danger requisDiv"
+                                    style="margin-top: 1rem"
+                                  >
+                                    <div>Nom de famille est requis.</div>
+                                  </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                  <label for="email">E-mail :</label>
+                                  <input
+                                    type="email"
+                                    required
+                                    id="email"
+                                    name="email"
+                                    placeholder="E-mail"
+                                    [(ngModel)]="userData.email"
+                                    class="form-control custom-spacing"
+                                    (ngModelChange)="clearError('email')"
+                                  />
+                                  <div
+                                    *ngIf="fieldErrors.email"
+                                    class="text-danger requisDiv"
+                                    style="margin-top: 1rem"
+                                  >
+                                    <div>E-mail est requis.</div>
+                                  </div>
+                                  <div
+                                    *ngIf="
+                                      error &&
+                                      error.error &&
+                                      error.error.data &&
+                                      error.error.data.email &&
+                                      error.error.data.email.unique
+                                    "
+                                    class="text-danger requisDiv"
+                                    style="margin-top: 1rem"
+                                  >
+                                    <div>Cet e-mail existe déjà.</div>
+                                  </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                  <label for="address">Adresse :</label>
+                                  <input
+                                    type="text"
+                                    required
+                                    id="address"
+                                    name="address"
+                                    placeholder="Adresse"
+                                    [(ngModel)]="userData.address"
+                                    class="form-control custom-spacing"
+                                    (ngModelChange)="clearError('address')"
+                                  />
+                                  <div
+                                    *ngIf="fieldErrors.address"
+                                    class="text-danger requisDiv"
+                                    style="margin-top: 1rem"
+                                  >
+                                    <div>Adresse est requis.</div>
+                                  </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                  <label for="postal_code">Code Postal :</label>
+                                  <input
+                                    type="text"
+                                    required
+                                    id="postal_code"
+                                    name="postal_code"
+                                    placeholder="Code Postal"
+                                    [(ngModel)]="userData.postal_code"
+                                    class="form-control custom-spacing"
+                                    (ngModelChange)="clearError('postal_code')"
+                                  />
+                                  <div
+                                    *ngIf="fieldErrors.postal_code"
+                                    class="text-danger requisDiv"
+                                    style="margin-top: 1rem"
+                                  >
+                                    <div>Code Postal est requis.</div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- Second column -->
+                          <div class="col-lg-6 col-md-6">
+                            <div
+                              class="login_wrap widget-taber-content background-white"
+                            >
+                              <div class="padding_eight_all bg-white">
+                                <div class="form-group mb-3">
+                                  <label for="first_name">Prénom :</label>
+                                  <input
+                                    type="text"
+                                    required
+                                    id="first_name"
+                                    name="first_name"
+                                    placeholder="Prénom"
+                                    [(ngModel)]="userData.first_name"
+                                    class="form-control custom-spacing"
+                                    (ngModelChange)="clearError('first_name')"
+                                  />
+                                  <div
+                                    *ngIf="fieldErrors.first_name"
+                                    class="text-danger requisDiv"
+                                    style="margin-top: 1rem"
+                                  >
+                                    <div>Prénom est requis.</div>
+                                  </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                  <label for="telephone">Téléphone :</label>
+                                  <input
+                                    type="tel"
+                                    required
+                                    id="telephone"
+                                    name="telephone"
+                                    placeholder="Téléphone"
+                                    [(ngModel)]="userData.telephone"
+                                    class="form-control custom-spacing"
+                                    (ngModelChange)="clearError('telephone')"
+                                  />
+                                  <div
+                                    *ngIf="fieldErrors.telephone"
+                                    class="text-danger requisDiv"
+                                    style="margin-top: 1rem"
+                                  >
+                                    <div>Téléphone est requis.</div>
+                                  </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                  <label for="city">Ville :</label>
+                                  <input
+                                    type="text"
+                                    required
+                                    id="city"
+                                    name="city"
+                                    placeholder="Ville"
+                                    [(ngModel)]="userData.city"
+                                    class="form-control custom-spacing"
+                                    (ngModelChange)="clearError('city')"
+                                  />
+                                  <div
+                                    *ngIf="fieldErrors.city"
+                                    class="text-danger requisDiv"
+                                    style="margin-top: 1rem"
+                                  >
+                                    <div>Ville est requis.</div>
+                                  </div>
+                                </div>
+                                <div
+                                  class="select-menu"
+                                  [class.has-error]="fieldErrors.civility"
+                                >
+                                  <label for="civility">Civilité :</label>
+                                  <div
+                                    class="select-btn"
+                                    style="
+                                      margin-bottom: 1rem;
+                                      background: #fff;
+                                      border: 1px solid #ececec;
+                                      height: 64px;
+                                      box-shadow: none;
+                                      padding-left: 20px;
+                                      font-size: 16px;
+                                      width: 100%;
+                                    "
+                                    (click)="toggleOptions()"
+                                  >
+                                    <span class="sBtn-text">{{
+                                      selectedOption || "Civilité"
+                                    }}</span>
+                                    <i class="bx bx-chevron-down"></i>
+                                  </div>
+                                  <ul
+                                    class="options"
+                                    [ngClass]="{ active: optionsVisible }"
+                                  >
+                                    <li
+                                      class="option"
+                                      (click)="selectOption('Monsieur')"
+                                    >
+                                      Monsieur
+                                    </li>
+                                    <li
+                                      class="option"
+                                      (click)="selectOption('Madame')"
+                                    >
+                                      Madame
+                                    </li>
+                                  </ul>
+                                  <div
+                                    *ngIf="fieldErrors.civility"
+                                    class="text-danger requisDiv"
+                                    style="margin-bottom: 1rem"
+                                  >
+                                    <div>Civilité est requise.</div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div
+                            class="col-lg-6 col-md-6"
+                            *ngIf="showProfessionalAccount"
+                          >
+                            <div
+                              class="login_wrap widget-taber-content background-white"
+                            >
+                              <div class="padding_eight_all bg-white">
+                                <div class="form-group mb-3">
+                                  <label for="company_name"
+                                    >Nom de l'entreprise :</label
+                                  >
+                                  <input
+                                    type="text"
+                                    required
+                                    id="company_name"
+                                    name="company_name"
+                                    placeholder="Nom de l'entreprise"
+                                    [(ngModel)]="userDataPro.company_name"
+                                    class="form-control custom-spacing"
+                                    (ngModelChange)="clearError('company_name')"
+                                  />
+                                  <div
+                                    *ngIf="fieldErrors.company_name"
+                                    class="text-danger requisDiv"
+                                    style="margin-top: 1rem"
+                                  >
+                                    <div>Nom de l'entreprise est requis.</div>
+                                  </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                  <label for="company_address"
+                                    >Adresse de l'entreprise :</label
+                                  >
+                                  <input
+                                    type="text"
+                                    required
+                                    id="company_address"
+                                    name="company_address"
+                                    placeholder="Adresse de l'entreprise"
+                                    [(ngModel)]="userDataPro.company_address"
+                                    class="form-control custom-spacing"
+                                    (ngModelChange)="
+                                      clearError('company_address')
+                                    "
+                                  />
+                                  <div
+                                    *ngIf="fieldErrors.company_address"
+                                    class="text-danger requisDiv"
+                                    style="margin-top: 1rem"
+                                  >
+                                    <div>
+                                      Adresse de l'entreprise est requis.
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                  <label for="company_postal_code"
+                                    >Code postal de l'entreprise :</label
+                                  >
+                                  <input
+                                    type="text"
+                                    required
+                                    id="company_postal_code"
+                                    name="company_postal_code"
+                                    placeholder="Code postal de l'entreprise"
+                                    [(ngModel)]="
+                                      userDataPro.company_postal_code
+                                    "
+                                    class="form-control custom-spacing"
+                                    (ngModelChange)="
+                                      clearError('company_postal_code')
+                                    "
+                                  />
+                                  <div
+                                    *ngIf="fieldErrors.company_postal_code"
+                                    class="text-danger requisDiv"
+                                    style="margin-top: 1rem"
+                                  >
+                                    <div>
+                                      Code postal de l'entreprise est requis.
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                  <label for="activity_sector"
+                                    >Secteur d'activité :</label
+                                  >
+                                  <input
+                                    type="text"
+                                    required
+                                    id="activity_sector"
+                                    name="activity_sector"
+                                    placeholder="Secteur d'activité"
+                                    [(ngModel)]="userDataPro.activity_sector"
+                                    class="form-control custom-spacing"
+                                    (ngModelChange)="
+                                      clearError('activity_sector')
+                                    "
+                                  />
+                                  <div
+                                    *ngIf="fieldErrors.activity_sector"
+                                    class="text-danger requisDiv"
+                                    style="margin-top: 1rem"
+                                  >
+                                    <div>Secteur d'activité est requis.</div>
+                                  </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                  <label for="contact_first_name"
+                                    >Prénom du responsable :</label
+                                  >
+                                  <input
+                                    type="text"
+                                    required
+                                    id="contact_first_name"
+                                    name="contact_first_name"
+                                    placeholder="Prénom du responsable"
+                                    [(ngModel)]="userDataPro.contact_first_name"
+                                    class="form-control custom-spacing"
+                                    (ngModelChange)="
+                                      clearError('contact_first_name')
+                                    "
+                                  />
+                                  <div
+                                    *ngIf="fieldErrors.contact_first_name"
+                                    class="text-danger requisDiv"
+                                    style="margin-top: 1rem"
+                                  >
+                                    <div>Prénom du responsable est requis.</div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div
+                            class="col-lg-6 col-md-6"
+                            *ngIf="showProfessionalAccount"
+                          >
+                            <div
+                              class="login_wrap widget-taber-content background-white"
+                            >
+                              <div class="padding_eight_all bg-white">
+                                <div class="form-group mb-3">
+                                  <label for="ice">Numéro ICE :</label>
+                                  <input
+                                    type="text"
+                                    required
+                                    id="ice"
+                                    name="ice"
+                                    placeholder="Numéro ICE"
+                                    [(ngModel)]="userDataPro.ice"
+                                    class="form-control custom-spacing"
+                                    (ngModelChange)="clearError('ice')"
+                                  />
+                                  <div
+                                    *ngIf="fieldErrors.ice"
+                                    class="text-danger requisDiv"
+                                    style="margin-top: 1rem"
+                                  >
+                                    <div>Numéro ICE est requis.</div>
+                                  </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                  <label for="company_address_rest"
+                                    >Complément d'adresse :</label
+                                  >
+                                  <input
+                                    type="text"
+                                    required
+                                    id="company_address_rest"
+                                    name="company_address_rest"
+                                    placeholder="Complément d'adresse"
+                                    [(ngModel)]="
+                                      userDataPro.company_address_rest
+                                    "
+                                    class="form-control custom-spacing"
+                                    (ngModelChange)="
+                                      clearError('company_address_rest')
+                                    "
+                                  />
+                                  <!-- <div
                                                 *ngIf="fieldErrors.company_address_rest"
                                                 class="text-danger requisDiv"
                                                 style="margin-top: 1rem"
                                             >
                                                 <div>Complément d'adresse est requis.</div>
                                             </div> -->
-                                        </div>
-                                        <div class="form-group mb-3">
-                                            <label for="company_city">Ville de l'entreprise :</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                id="company_city"
-                                                name="company_city"
-                                                placeholder="Ville de l'entreprise"
-                                                [(ngModel)]="userDataPro.company_city"
-                                                class="form-control custom-spacing"
-                                                (ngModelChange)="clearError('company_name')"
-                                            />
-                                            <div
-                                                *ngIf="fieldErrors.company_city"
-                                                class="text-danger requisDiv"
-                                                style="margin-top: 1rem"
-                                            >
-                                                <div>Ville de l'entreprise est requis.</div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group mb-3">
-                                            <label for="contact_email">Email du responsable :</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                id="contact_email"
-                                                name="contact_email"
-                                                placeholder="Email du responsable"
-                                                [(ngModel)]="userDataPro.contact_email"
-                                                class="form-control custom-spacing"
-                                                (ngModelChange)="clearError('contact_email')"
-                                            />
-                                            <div
-                                                *ngIf="fieldErrors.contact_email"
-                                                class="text-danger requisDiv"
-                                                style="margin-top: 1rem"
-                                            >
-                                                <div>Email du responsable est requis.</div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group mb-3">
-                                            <label for="contact_last_name">Nom du responsable :</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                id="contact_last_name"
-                                                name="contact_last_name"
-                                                placeholder="Nom du responsable"
-                                                [(ngModel)]="userDataPro.contact_last_name"
-                                                class="form-control custom-spacing"
-                                                (ngModelChange)="clearError('contact_last_name')"
-                                            />
-                                            <div
-                                                *ngIf="fieldErrors.contact_last_name"
-                                                class="text-danger requisDiv"
-                                                style="margin-top: 1rem"
-                                            >
-                                                <div>Nom du responsable est requis.</div>
-                                            </div>
-                                        </div>
-                                        <!-- Ajoutez d'autres champs ici si nécessaire -->
-                                    </div>
                                 </div>
-                            </div>
-                            
-                                                </div>
-                                  
-
-                                  
-                                                <div class="form-group mb-30 text-end">
-                                                  <!-- Add 'text-end' class here -->
-                                                  <button
-                                                    type="submit"
-                                                    class="btn btn-fill-out btn-block hover-up font-weight-bold"
-                                                    name="register"
-                                                    (onClick)="onSubmit()"
-                                                  >
-                                                    Modifier
-                                                  </button>
-                                                </div>
-                                
-                                              </form>
-                                            
-                                        </div>
-                                    </div>
+                                <div class="form-group mb-3">
+                                  <label for="company_city"
+                                    >Ville de l'entreprise :</label
+                                  >
+                                  <input
+                                    type="text"
+                                    required
+                                    id="company_city"
+                                    name="company_city"
+                                    placeholder="Ville de l'entreprise"
+                                    [(ngModel)]="userDataPro.company_city"
+                                    class="form-control custom-spacing"
+                                    (ngModelChange)="clearError('company_name')"
+                                  />
+                                  <div
+                                    *ngIf="fieldErrors.company_city"
+                                    class="text-danger requisDiv"
+                                    style="margin-top: 1rem"
+                                  >
+                                    <div>Ville de l'entreprise est requis.</div>
+                                  </div>
                                 </div>
-                                
+                                <div class="form-group mb-3">
+                                  <label for="contact_email"
+                                    >Email du responsable :</label
+                                  >
+                                  <input
+                                    type="text"
+                                    required
+                                    id="contact_email"
+                                    name="contact_email"
+                                    placeholder="Email du responsable"
+                                    [(ngModel)]="userDataPro.contact_email"
+                                    class="form-control custom-spacing"
+                                    (ngModelChange)="
+                                      clearError('contact_email')
+                                    "
+                                  />
+                                  <div
+                                    *ngIf="fieldErrors.contact_email"
+                                    class="text-danger requisDiv"
+                                    style="margin-top: 1rem"
+                                  >
+                                    <div>Email du responsable est requis.</div>
+                                  </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                  <label for="contact_last_name"
+                                    >Nom du responsable :</label
+                                  >
+                                  <input
+                                    type="text"
+                                    required
+                                    id="contact_last_name"
+                                    name="contact_last_name"
+                                    placeholder="Nom du responsable"
+                                    [(ngModel)]="userDataPro.contact_last_name"
+                                    class="form-control custom-spacing"
+                                    (ngModelChange)="
+                                      clearError('contact_last_name')
+                                    "
+                                  />
+                                  <div
+                                    *ngIf="fieldErrors.contact_last_name"
+                                    class="text-danger requisDiv"
+                                    style="margin-top: 1rem"
+                                  >
+                                    <div>Nom du responsable est requis.</div>
+                                  </div>
+                                </div>
+                                <!-- Ajoutez d'autres champs ici si nécessaire -->
+                              </div>
                             </div>
+                          </div>
                         </div>
+
+                        <div class="form-group mb-30 text-end">
+                          <!-- Add 'text-end' class here -->
+                          <button
+                            type="submit"
+                            class="btn btn-fill-out btn-block hover-up font-weight-bold"
+                            name="register"
+                            (onClick)="onSubmit()"
+                          >
+                            Modifier
+                          </button>
+                        </div>
+                      </form>
                     </div>
+                  </div>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </main>
-
-
-
-
 
 <app-footer></app-footer>

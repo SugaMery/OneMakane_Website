@@ -13,19 +13,101 @@
       <div class="col-lg-12">
         <a class="shop-filter-toogle">
           <span class="fi-rs-filter mr-5"></span>
-          Filters
+          Filtres
           <i class="fi-rs-angle-small-down angle-down"></i>
           <i class="fi-rs-angle-small-up angle-up"></i>
         </a>
         <div class="shop-product-fillter-header">
           <div class="row">
-            <div class="col-xl-3 col-lg-6 col-md-6 mb-lg-0 mb-md-2 mb-sm-2">
+            <div class="col-xl-4 col-lg-6 col-md-6 mb-lg-0 mb-md-5 mb-sm-5">
               <div class="card">
+                <h5 class="mb-10">Rechercher :</h5>
+                <div class="sidebar-widget price_range range">
+                  <div class="price-filter mb-20">
+                    <div class="price-filter-inner">
+                      <div class="d-flex justify-content-between">
+                        <input
+                          type="text"
+                          placeholder="Rechercher par titre"
+                          [(ngModel)]="searchTitle"
+                          (input)="filterAdsByTitle($event)"
+                          class="form-control"
+                          style="width: 100%"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-4 col-lg-6 col-md-6 mb-lg-0 mb-md-2 mb-sm-2">
+              <div class="card">
+                <h5 class="mb-30">Sélection par Catégorie :</h5>
                 <div class="select-menu">
                   <div
                     class="select-btn"
                     style="
-                      margin-bottom: 1rem;
+                      background: #fff;
+                      border: 1px solid #ececec;
+                      box-shadow: none;
+                      padding-left: 20px;
+                      font-size: 16px;
+                      width: 100%;
+                    "
+                    (click)="toggleOptions($event)"
+                  >
+                    <span class="sBtn-text">
+                      <div style="display: flex; align-items: center">
+                        <img
+                          src="{{ selectedOption?.media?.url }}"
+                          *ngIf="selectedOption?.name"
+                          alt=""
+                          class="iconUrl"
+                          style="max-width: 35px; margin-right: 1rem"
+                        />
+                        <p style="margin: 0">
+                          {{
+                            selectedOption?.name || "Choisissez une catégorie"
+                          }}
+                        </p>
+                      </div>
+                    </span>
+                    <i class="bx bx-chevron-down"></i>
+                  </div>
+                  <ul
+                    class="options options-container"
+                    [ngClass]="{
+                      active: optionsVisible
+                    }"
+                    (click)="stopEventPropagation($event)"
+                    style="font-size: smaller"
+                  >
+                    <li
+                      class="option"
+                      *ngFor="let category of categories"
+                      (click)="selectOption(category)"
+                    >
+                      <span class="d-inline-flex align-items-center">
+                        <img
+                          src="{{ category.media?.url }}"
+                          alt=""
+                          class="iconUrl"
+                          style="max-width: 35px; margin-right: 1rem"
+                        />
+                        {{ category.name }}
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div
+                  class="select-menu"
+                  *ngIf="subcategories.length > 0"
+                  style="margin-top: 1rem"
+                >
+                  <div
+                    class="select-btn"
+                    style="
                       background: #fff;
                       border: 1px solid #ececec;
                       height: 64px;
@@ -34,283 +116,77 @@
                       font-size: 16px;
                       width: 100%;
                     "
-                    (click)="toggleOptions()"
+                    (click)="toggleSubOptions($event)"
                   >
                     <span class="sBtn-text">
                       <div style="display: flex; align-items: center">
                         <img
-                          src="{{ selectedOption.media?.url }}"
-                          *ngIf="selectedOption.name"
+                          src="{{ selectedOption?.media?.url }}"
+                          *ngIf="selectedSubOption?.name"
                           alt=""
                           class="iconUrl"
-                          style="max-width: 15%; margin-right: 1rem"
+                          style="max-width: 35px; margin-right: 1rem"
                         />
                         <p style="margin: 0">
-                          {{ selectedOption.name || "Choisissez" }}
+                          {{ selectedSubOption?.name || "Select Subcategory" }}
                         </p>
                       </div>
                     </span>
                     <i class="bx bx-chevron-down"></i>
                   </div>
-                  <div
-                    class="options-container"
-                    style="max-height: 200px; overflow-y: auto"
+                  <ul
+                    class="options options-container"
+                    [ngClass]="{
+                      active: subOptionsVisible
+                    }"
+                    (click)="stopEventPropagation($event)"
+                    style="font-size: smaller"
                   >
-                    <ul
-                      class="options"
-                      [ngClass]="{
-                        active: optionsVisible
-                      }"
-                      style="font-size: smaller"
+                    <li
+                      class="option"
+                      *ngFor="let subcategory of subcategories"
+                      (click)="selectSubOption(subcategory)"
                     >
-                      <li
-                        class="option"
-                        *ngFor="let category of categories"
-                        (click)="selectOption(category)"
-                      >
-                        <span class="d-inline-flex align-items-center">
-                          <img
-                            src="{{ category.media?.url }}"
-                            alt=""
-                            class="iconUrl"
-                            style="max-width: 15%; margin-right: 1rem"
-                          />
-                          {{ category.name }}
-                        </span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 col-md-6 mb-lg-0 mb-md-2 mb-sm-2">
-              <div class="card">
-                <h5 class="mb-30">By Vendors</h5>
-                <div class="d-flex">
-                  <div class="custome-checkbox mr-80">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      name="checkbox"
-                      id="exampleCheckbox1"
-                      value=""
-                    />
-                    <label class="form-check-label" for="exampleCheckbox1"
-                      ><span>Aldi</span></label
-                    >
-                    <br />
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      name="checkbox"
-                      id="exampleCheckbox2"
-                      value=""
-                    />
-                    <label class="form-check-label" for="exampleCheckbox2"
-                      ><span>Adidas</span></label
-                    >
-                    <br />
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      name="checkbox"
-                      id="exampleCheckbox3"
-                      value=""
-                    />
-                    <label class="form-check-label" for="exampleCheckbox3"
-                      ><span>Burbe</span></label
-                    >
-                    <br />
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      name="checkbox"
-                      id="exampleCheckbox4"
-                      value=""
-                    />
-                    <label class="form-check-label" for="exampleCheckbox4"
-                      ><span>Chanel</span></label
-                    >
-                    <br />
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      name="checkbox"
-                      id="exampleCheckbox5"
-                      value=""
-                    />
-                    <label class="form-check-label" for="exampleCheckbox5"
-                      ><span>Prada</span></label
-                    >
-                    <br />
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      name="checkbox"
-                      id="exampleCheckbox6"
-                      value=""
-                    />
-                    <label class="form-check-label" for="exampleCheckbox6"
-                      ><span>Kroger</span></label
-                    >
-                    <br />
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      name="checkbox"
-                      id="exampleCheckbox7"
-                      value=""
-                    />
-                    <label class="form-check-label" for="exampleCheckbox7"
-                      ><span>Traders</span></label
-                    >
-                    <br />
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      name="checkbox"
-                      id="exampleCheckbox8"
-                      value=""
-                    />
-                    <label class="form-check-label" for="exampleCheckbox8"
-                      ><span>Publix</span></label
-                    >
-                  </div>
-                  <div class="custome-checkbox">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      name="checkbox"
-                      id="exampleCheckbox11"
-                      value=""
-                    />
-                    <label class="form-check-label" for="exampleCheckbox11"
-                      ><span>Harris</span></label
-                    >
-                    <br />
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      name="checkbox"
-                      id="exampleCheckbox21"
-                      value=""
-                    />
-                    <label class="form-check-label" for="exampleCheckbox21"
-                      ><span>Costco</span></label
-                    >
-                    <br />
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      name="checkbox"
-                      id="exampleCheckbox31"
-                      value=""
-                    />
-                    <label class="form-check-label" for="exampleCheckbox31"
-                      ><span>Targets</span></label
-                    >
-                    <br />
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      name="checkbox"
-                      id="exampleCheckbox41"
-                      value=""
-                    />
-                    <label class="form-check-label" for="exampleCheckbox41"
-                      ><span>Green Tea</span></label
-                    >
-                    <br />
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      name="checkbox"
-                      id="exampleCheckbox51"
-                      value=""
-                    />
-                    <label class="form-check-label" for="exampleCheckbox51"
-                      ><span>iSnack</span></label
-                    >
-                    <br />
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      name="checkbox"
-                      id="exampleCheckbox61"
-                      value=""
-                    />
-                    <label class="form-check-label" for="exampleCheckbox61"
-                      ><span>Pambox</span></label
-                    >
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 col-md-6 mb-lg-0 mb-md-2 mb-sm-2">
-              <div class="card">
-                <h5 class="mb-30">By Tags</h5>
-                <div class="sidebar-widget widget-tags">
-                  <ul class="tags-list">
-                    <li class="hover-up">
-                      <a href="/blog-category-grid"
-                        ><i class="fi-rs-cross mr-10"></i>Milk</a
-                      >
-                    </li>
-                    <li class="hover-up">
-                      <a href="/blog-category-grid"
-                        ><i class="fi-rs-cross mr-10"></i>Broccoli</a
-                      >
-                    </li>
-                    <li class="hover-up">
-                      <a href="/blog-category-grid"
-                        ><i class="fi-rs-cross mr-10"></i>Smoothie</a
-                      >
-                    </li>
-                    <li class="hover-up">
-                      <a href="/blog-category-grid"
-                        ><i class="fi-rs-cross mr-10"></i>Fruit</a
-                      >
-                    </li>
-                    <li class="hover-up mr-0">
-                      <a href="/blog-category-grid"
-                        ><i class="fi-rs-cross mr-10"></i>Salad</a
-                      >
-                    </li>
-                    <li class="hover-up mr-0">
-                      <a href="/blog-category-grid"
-                        ><i class="fi-rs-cross mr-10"></i>Appetizer</a
-                      >
-                    </li>
-                    <li class="hover-up mr-0 mb-0">
-                      <a href="/blog-category-grid"
-                        ><i class="fi-rs-cross mr-10"></i>Appetizer</a
-                      >
+                      <span class="d-inline-flex align-items-center">
+                        <img
+                          src="{{ selectedOption?.media?.url }}"
+                          alt=""
+                          class="iconUrl"
+                          style="max-width: 35px; margin-right: 1rem"
+                        />
+                        {{ subcategory.name }}
+                      </span>
                     </li>
                   </ul>
                 </div>
               </div>
             </div>
-            <div class="col-xl-3 col-lg-6 col-md-6 mb-lg-0 mb-md-5 mb-sm-5">
+            <div class="col-xl-4 col-lg-6 col-md-6 mb-lg-0 mb-md-5 mb-sm-5">
               <div class="card">
-                <h5 class="mb-10">By Price</h5>
+                <h5 class="mb-10">Sélection par prix :</h5>
                 <div class="sidebar-widget price_range range">
                   <div class="price-filter mb-20">
                     <div class="price-filter-inner">
-                      <div id="slider-range1" class="mb-20"></div>
                       <div class="d-flex justify-content-between">
                         <div class="caption">
-                          From:
-                          <strong
-                            id="slider-range1-value1"
-                            class="text-brand"
-                          ></strong>
+                          De :
+                          <input
+                            type="number"
+                            [(ngModel)]="minPrice"
+                            (input)="filterAdsByPrice()"
+                            class="form-control"
+                            style="width: 85%; display: inline-block"
+                          />
                         </div>
                         <div class="caption">
-                          To:
-                          <strong
-                            id="slider-range1-value2"
-                            class="text-brand"
-                          ></strong>
+                          À :
+                          <input
+                            type="number"
+                            [(ngModel)]="maxPrice"
+                            (input)="filterAdsByPrice()"
+                            class="form-control"
+                            style="width: 90%; display: inline-block"
+                          />
                         </div>
                       </div>
                     </div>
@@ -323,53 +199,6 @@
                       id="exampleCheckbox211"
                       value=""
                     />
-                    <label class="form-check-label" for="exampleCheckbox211"
-                      ><span>$0.00 - $20.00 </span></label
-                    >
-                    <br />
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      name="checkbox"
-                      id="exampleCheckbox22"
-                      value=""
-                    />
-                    <label class="form-check-label" for="exampleCheckbox22"
-                      ><span>$20.00 - $40.00 </span></label
-                    >
-                    <br />
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      name="checkbox"
-                      id="exampleCheckbox23"
-                      value=""
-                    />
-                    <label class="form-check-label" for="exampleCheckbox23"
-                      ><span>$40.00 - $60.00 </span></label
-                    >
-                    <br />
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      name="checkbox"
-                      id="exampleCheckbox24"
-                      value=""
-                    />
-                    <label class="form-check-label" for="exampleCheckbox24"
-                      ><span>$60.00 - $80.00 </span></label
-                    >
-                    <br />
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      name="checkbox"
-                      id="exampleCheckbox25"
-                      value=""
-                    />
-                    <label class="form-check-label" for="exampleCheckbox25"
-                      ><span>Over $100.00</span></label
-                    >
                   </div>
                 </div>
               </div>
