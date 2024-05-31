@@ -202,12 +202,11 @@
                                   </span>
                                 </td>
                                 <td class="text-right" data-title="Cart">
-                                  <button
-                                    class="btn btn-sm"
-                                    (click)="showDialog(ad)"
-                                  >
-                                    Plus infos
-                                  </button>
+                                  <a [href]="'/modifier-annonce/' + ad.id">
+                                    <button class="btn btn-sm">
+                                      Plus infos
+                                    </button>
+                                  </a>
                                 </td>
                                 <td
                                   class="action text-center"
