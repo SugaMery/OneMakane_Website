@@ -129,7 +129,7 @@ export class HomePageComponent implements OnInit {
         numScroll: 1,
       },
     ];
-
+    
     if (this.document.defaultView && this.document.defaultView.localStorage) {
       const accessToken =
         this.document.defaultView.localStorage.getItem('loggedInUserToken');

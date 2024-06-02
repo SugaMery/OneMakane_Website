@@ -10,6 +10,7 @@ import { SettingService } from '../setting.service';
   selector: 'app-page-account',
   templateUrl: './page-account.component.html',
   styleUrl: './page-account.component.css',
+  
 })
 export class PageAccountComponent {
   userInfo: any;
@@ -17,6 +18,12 @@ export class PageAccountComponent {
   userId!: string | null;
   accessToken!: string | null;
   idPro: any;
+  deleteReasons: any = {
+    reason1: false,
+    reason2: false
+  };
+  deleteDialog: boolean =false;
+  selectedReason: string | null = null;
 
   constructor(
     private authService: AuthGuard,
@@ -28,6 +35,31 @@ export class PageAccountComponent {
   ) {}
   settings: any;
   ads: any[] = [];
+  confirmDeletion(ad:any) {
+    // Get the selected reason
+    const selectedReason = (document.querySelector('input[name="reason"]:checked') as HTMLInputElement).value;
+    this.annonceService.deleteAd(ad.id,ad.uuid,Number(selectedReason),this.accessToken!).subscribe((data)=>{
+     console.log("Onemakan",data);
+     this.ads = this.ads.filter(ad => ad !== this.selectedAd);
+    })
+
+    // Perform the deletion logic based on the selected reason
+    switch (selectedReason) {
+      case '1':
+        console.log("Vendu sur Onemakan",ad);
+        break;
+      case '2':
+        console.log("Vendu par un autre moyen");
+        break;
+      case '3':
+        console.log("Ne souhaite plus vendre");
+        break;
+    }
+  
+    // Close the dialog
+    this.adDialog = false;
+  }
+  
   ngOnInit(): void {
     this.userId = localStorage.getItem('loggedInUserId');
     this.accessToken = localStorage.getItem('loggedInUserToken');
@@ -140,7 +172,12 @@ export class PageAccountComponent {
   showDialog(ad: any) {
     this.selectedAd = ad; // Set the selected ad object
     this.adDialog = true;
+/*     this.annonceService.getDeleteReasons(this.accessToken!).subscribe((data)=>{
+      console.log("dattttddd",data);
+    }) */
+
   }
+  
   hideDialog() {
     this.productDialog = false;
     this.submitted = false;

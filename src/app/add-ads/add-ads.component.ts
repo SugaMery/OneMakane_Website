@@ -1070,6 +1070,7 @@ export class AddAdsComponent {
         },
         validation_status: 'pending',
       };
+      console.log("mediiiiEEEEEEEEEEEEE",this.selectedFiles);
 
       this.annonceService.createAnnonce(annonceData, accessToken!).subscribe(
         (response) => {
@@ -1096,7 +1097,7 @@ export class AddAdsComponent {
             )
             .subscribe(
               (response) => {
-                window.location.reload();
+                //window.location.reload();
               },
               (error) => {
                 console.error('Error inserting state and genre:', error);

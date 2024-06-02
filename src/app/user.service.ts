@@ -31,6 +31,17 @@ export class UserService {
     return this.http.get(`${this.baseUrl}/users/${userId}`, { headers });
   }
 
+  logout(accessToken: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`,
+    });
+
+    return this.http.get(`${this.baseUrl}/auth/logout`, { headers });
+  }
+  refreshToken(accessToken: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/refresh-token`, { accessToken });
+  }
+
   getConversationsByUser(userId: number, accessToken: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${accessToken}`,

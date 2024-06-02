@@ -212,7 +212,7 @@
                                   class="action text-center"
                                   data-title="Remove"
                                 >
-                                  <a href="#" class="text-body"
+                                  <a  class="text-body" (click)="showDialog(ad)"
                                     ><i class="fi-rs-trash"></i
                                   ></a>
                                 </td>
@@ -220,76 +220,54 @@
                             </tbody>
                           </table>
                           <p-dialog
-                            [(visible)]="adDialog"
-                            [style]="{ width: '1000px' }"
-                            header="Détails de l'annonce"
-                            [modal]="true"
-                            styleClass="p-fluid"
-                          >
-                            <ng-template pTemplate="content">
-                              <div *ngIf="selectedAd">
-                                <div class="image-grid">
-                                  <ng-container
-                                    *ngFor="let media of selectedAd.medias"
-                                  >
-                                    <img [src]="media.url" class="grid-item" />
-                                  </ng-container>
+                          [(visible)]="adDialog"
+                          [style]="{ width: '500px' }"
+                          header="Confirmer la suppression"
+                          [modal]="true"
+                          styleClass="p-fluid"
+                        >
+                          <ng-template pTemplate="content">
+                            <div>
+                              <p>Êtes-vous sûr de vouloir supprimer cette annonce ?</p>
+                              <div class="payment_option">
+                                <div class="custome-radio">
+                                  <input class="form-check-input" type="radio" name="reason" id="option1" value="1" required>
+                                  <label class="form-check-label" for="option1">J'ai vendu mon bien sur Onemakan</label>
                                 </div>
-
-                                <div class="field">
-                                  <label for="name">Nom</label>
-                                  <input
-                                    type="text"
-                                    pInputText
-                                    id="name"
-                                    [(ngModel)]="selectedAd.title"
-                                    required
-                                    autofocus
-                                  />
+                                <div class="custome-radio">
+                                  <input class="form-check-input" type="radio" name="reason" id="option2" value="2" required>
+                                  <label class="form-check-label" for="option2">J'ai vendu mon bien par un autre moyen</label>
                                 </div>
-                                <div class="field">
-                                  <label for="description">Description</label>
-                                  <textarea
-                                    id="description"
-                                    pInputTextarea
-                                    [(ngModel)]="selectedAd.description"
-                                    required
-                                    rows="3"
-                                    cols="20"
-                                  ></textarea>
-                                </div>
-
-                                <div class="field">
-                                  <label for="price">Prix</label>
-                                  <input
-                                    type="text"
-                                    pInputText
-                                    id="price"
-                                    [(ngModel)]="selectedAd.price"
-                                    required
-                                  />
+                                <div class="custome-radio">
+                                  <input class="form-check-input" type="radio" name="reason" id="option3" value="3" required>
+                                  <label class="form-check-label" for="option3">Je ne souhaite plus vendre mon bien</label>
                                 </div>
                               </div>
-                            </ng-template>
-
-                            <ng-template pTemplate="footer">
+                            </div>
+                          </ng-template>
+                        
+                          <ng-template pTemplate="footer">
+                            <div style="padding: 1rem !important;">
                               <button
                                 pButton
                                 pRipple
                                 label="Annuler"
                                 icon="pi pi-times"
                                 class="p-button-text"
-                                (click)="hideDialog()"
+                                (click)="adDialog = false"
                               ></button>
                               <button
                                 pButton
                                 pRipple
-                                label="Enregistrer"
+                                label="Confirmer"
                                 icon="pi pi-check"
-                                class="p-button-text"
+                                class="p-button-danger"
+                                (click)="confirmDeletion(selectedAd)"
                               ></button>
-                            </ng-template>
-                          </p-dialog>
+                            </div>
+                          </ng-template>
+                        </p-dialog>
+                        
                         </div>
                       </div>
                     </div>

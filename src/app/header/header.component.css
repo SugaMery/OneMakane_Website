@@ -123,3 +123,10 @@ nav>ul>li {
 ::ng-deep .menu-banner-wrap {
     text-align: left !important;
 }
+
+ @media only screen and (max-width: 768px){
+    ::ng-deep .logo.logo-width-1 a img {
+        width: 180px; 
+        min-width: 180px; 
+   }
+ }

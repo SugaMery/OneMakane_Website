@@ -57,6 +57,7 @@ export class AnnonceService {
     });
   }
 
+
   uploadImages(mediaData: any, accessToken: string): Observable<any> {
     const url = `${this.apiUrl}/medias`;
     return this.http.post<any>(url, mediaData, {
@@ -67,6 +68,7 @@ export class AnnonceService {
   uploadFile(file: File, accessToken: string): Promise<any> {
     const formData = new FormData();
     formData.append('media_file', file);
+    //formData.append('media_type','image')
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${accessToken}`,
@@ -86,6 +88,12 @@ export class AnnonceService {
     const url = `${this.apiUrl}/ads/${adId}`;
     return this.http.get<any>(url);
   }
+  updateAnnonce(adId: string,adUuid : string,annonceData: any, accessToken: string): Observable<any> {
+    const url = `${this.apiUrl}/ads/${adId}/${adUuid}`;
+    return this.http.patch<any>(url, annonceData, {
+      headers: this.getHeaders(accessToken),
+    });
+  }
 
   insertSetting(
     adId: string,
@@ -96,6 +104,32 @@ export class AnnonceService {
     const url = `${this.apiUrl}/ads/${adId}/${categoryModel}`;
     return this.http.post<any>(url, setting, {
       headers: this.getHeaders(accessToken),
+    });
+  }
+
+  UpdateSetting(
+    adId: string,
+    setting: any,
+    accessToken: string
+  ): Observable<any> {
+    const url = `${this.apiUrl}/ads/${adId}/ad-models/update`;
+    return this.http.patch<any>(url, setting, {
+      headers: this.getHeaders(accessToken),
+    });
+  }
+
+
+
+  getDeleteReasons(accessToken: string): Observable<any> {
+    const headers = this.getHeaders(accessToken);
+    return this.http.get(`${this.apiUrl}/deleted-reasons`, { headers });
+  }
+
+  deleteAd(adId: string,uuid : string , deleteReasonId: number, accessToken: string): Observable<any> {
+    const headers = this.getHeaders(accessToken);
+    return this.http.delete(`${this.apiUrl}/ads/${adId}`, {
+      headers,
+      body: { uuid: uuid, deleted_reason_id: deleteReasonId }
     });
   }
 }

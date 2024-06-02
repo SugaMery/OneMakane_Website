@@ -31739,3 +31739,13 @@ table th {
     height: 110px;
 
 }
+
+::ng-deep .p-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+::ng-deep .btn:hover {
+    border-color: #22c55e !important;
+}
