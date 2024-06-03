@@ -102,8 +102,9 @@ export class AllAdsComponent implements OnInit {
       this.closeDropdowns(event);
     });
   }
-
+  searchQuery: string | undefined;
   ngOnInit(): void {
+    console.log('searchQuery', this.searchQuery);
     const id = this.route.snapshot.paramMap.get('id');
     if (id !== null) {
       this.categoryId = +id;
@@ -111,6 +112,30 @@ export class AllAdsComponent implements OnInit {
     } else {
       // Gérer le cas où l'ID est null, peut-être rediriger ou afficher un message d'erreur
     }
+
+    this.route.queryParams.subscribe((queryParams) => {
+      this.searchQuery = queryParams['search'] || '';
+      console.log('this.ser', this.searchQuery);
+      if (this.searchQuery) {
+        console.log('this.ser222', this.searchQuery);
+
+        this.filterAdsByTitles();
+      }
+    });
+  }
+
+  filterAdsByTitles(): void {
+    const searchTerm = this.searchQuery!.toLowerCase();
+    console.log('ttttrrr', searchTerm, this.filteredAds);
+    this.searchTitle = searchTerm;
+    this.filteredAds = this.allAds.filter((conversation) => {
+      console.log('testtttt', this.filteredAds);
+      const title = conversation.title.toLowerCase();
+      return title.includes(searchTerm);
+    });
+    this.totalAdsCount = this.filteredAds.length;
+
+    this.applyFilters();
   }
 
   applyFilters(): void {

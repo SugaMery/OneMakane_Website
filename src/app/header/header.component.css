@@ -124,9 +124,32 @@ nav>ul>li {
     text-align: left !important;
 }
 
- @media only screen and (max-width: 768px){
+@media only screen and (max-width: 768px) {
     ::ng-deep .logo.logo-width-1 a img {
-        width: 180px; 
-        min-width: 180px; 
-   }
- }
+        width: 180px;
+        min-width: 180px;
+    }
+}
+
+
+::ng-deep .select2-container--open .select2-dropdown--below {
+    border-top: 0rem;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    margin-top: 1rem;
+    width: 250px !important;
+}
+
+::ng-deep .header-style-1 .select2-container--default .select2-selection--single {
+
+    width: 200px;
+}
+
+::ng-deep .header-style-1 .search-style-2 form input {
+    /* max-width: 400px; */
+    border-width: 0px;
+    border-radius: 0 5px 5px 0;
+    margin-left: 60px;
+    background-color: #fff;
+    border: none;
+}

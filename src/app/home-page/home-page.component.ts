@@ -129,12 +129,14 @@ export class HomePageComponent implements OnInit {
         numScroll: 1,
       },
     ];
-    
+
     if (this.document.defaultView && this.document.defaultView.localStorage) {
       const accessToken =
         this.document.defaultView.localStorage.getItem('loggedInUserToken');
       this.annonceService.getAds().subscribe((data) => {
         this.ads = data.data;
+        const jobs = 'ad_jobs';
+
         //this.products=data.data;
         // Clear previous categorized ads
         this.categorizedAds = {};
@@ -143,6 +145,9 @@ export class HomePageComponent implements OnInit {
           this.annonceService.getAdById(element.id).subscribe((adData) => {
             if (!adData || !adData.data) {
               return;
+            }
+            if (adData.data.category.model == jobs) {
+              this.ads_jobs.push(adData.data);
             }
             element.image = adData.data.image;
             if (!this.categorizedAds[element.category.name]) {
@@ -162,80 +167,66 @@ export class HomePageComponent implements OnInit {
                 }
                 const modelFields = category.data.model_fields;
                 const queryParams = { model: category.data.model };
-                this.settingService
-                  .getSettings(accessToken!, queryParams)
-                  .subscribe(
-                    (setting) => {
-                      if (!setting || !setting.data) {
-                        return;
-                      }
-                      const transformedFields = Object.keys(modelFields).map(
-                        (key) => ({
-                          value: key,
-                          label: modelFields[key].label,
-                          setting: key,
-                        })
-                      );
 
-                      transformedFields.forEach(
-                        (field: {
-                          value: string;
-                          label: any;
-                          setting: string;
-                        }) => {
-                          const matchedSetting = setting.data.find(
-                            (settingItem: { name: string }) =>
-                              settingItem.name === field.value
-                          );
-                          if (matchedSetting) {
-                            if (
-                              adData.data.additional &&
-                              adData.data.additional[field.value]
-                            ) {
-                              field.setting =
-                                matchedSetting.content[
-                                  adData.data.additional[field.value]
-                                ];
-                              //console.log('jj', field.setting);
-                              //console.log('Transformed f', matchedSetting);
-                            } /*  else {
+                if (
+                  this.document.defaultView &&
+                  this.document.defaultView.localStorage
+                ) {
+                  const accessToken =
+                    this.document.defaultView.localStorage.getItem(
+                      'loggedInUserToken'
+                    );
+                  this.settingService
+                    .getSettings(accessToken!, queryParams)
+                    .subscribe(
+                      (setting) => {
+                        if (!setting || !setting.data) {
+                          return;
+                        }
+                        const transformedFields = Object.keys(modelFields).map(
+                          (key) => ({
+                            value: key,
+                            label: modelFields[key].label,
+                            setting: key,
+                          })
+                        );
+
+                        transformedFields.forEach(
+                          (field: {
+                            value: string;
+                            label: any;
+                            setting: string;
+                          }) => {
+                            const matchedSetting = setting.data.find(
+                              (settingItem: { name: string }) =>
+                                settingItem.name === field.value
+                            );
+                            if (matchedSetting) {
+                              if (
+                                adData.data.additional &&
+                                adData.data.additional[field.value]
+                              ) {
+                                field.setting =
+                                  matchedSetting.content[
+                                    adData.data.additional[field.value]
+                                  ];
+                                //console.log('jj', field.setting);
+                                //console.log('Transformed f', matchedSetting);
+                              } /*  else {
                                         console.error(`No setting found for key '${field.value}' in data.data.additional`);
                                     } */
-                          }
-                        }
-                      );
-
-                      this.transformedField = transformedFields;
-                      adData.data.additional = transformedFields;
-                      const jobs = 'ad_jobs';
-                      if (adData.data.category.model == jobs) {
-                        this.ads_jobs.push(adData.data);
-                        this.ads_jobs.forEach((element) => {
-                          element.additional.forEach(
-                            (data: { value: string }) => {
-                              if (data.value == 'type') {
-                                element.job = data;
-                                //data.setting = this.settings.
-                              }
-                              if (data.value == 'region') {
-                                element.region = data;
-
-                                //data.setting = this.settings.
-                              }
-                              if (data.value == 'study_level') {
-                                element.study_level = data;
-
-                                //data.setting = this.settings.
-                              }
                             }
-                          );
-                        });
+                          }
+                        );
+
+                        this.transformedField = transformedFields;
+                        adData.data.additional = transformedFields;
+                      },
+                      (error) => {
+                        console.error('Error fetching settings:', error);
                       }
-                    },
-                    (error) => {
-                      console.error('Error fetching settings:', error);
-                    }
-                  );
+                    );
+                }
               });
           });
         });

@@ -222,7 +222,7 @@
                       />Français</a
                     >
                   </li>
-                  <li>
+                  <!--                   <li>
                     <a href="#"
                       ><img
                         src="../../assets/imgs/theme/flag-dt.png"
@@ -237,7 +237,7 @@
                         alt=""
                       />Pусский</a
                     >
-                  </li>
+                  </li> -->
                 </ul>
               </li>
             </ul>
@@ -247,7 +247,10 @@
     </div>
   </div>
 
-  <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+  <div
+    class="header-middle header-middle-ptb-1 d-none d-lg-block"
+    style="margin-top: 1rem"
+  >
     <div class="container">
       <div class="header-wrap">
         <div class="logo logo-width-1">
@@ -257,20 +260,25 @@
         </div>
         <div class="header-right">
           <div class="search-style-2">
-            <form action="#">
-              <select class="select-active">
-                <option>Les catégories</option>
-                <option>Lait et produits laitiers</option>
-                <option>Vins & Alcools</option>
-                <option>Vêtements & Beauté</option>
-                <option>Nourriture pour animaux & Jouets</option>
-                <option>Fast food</option>
-                <option>Matériel de pâtisserie</option>
-                <option>Légumes</option>
-                <option>Produits de la mer frais</option>
-                <option>Nouilles & Riz</option>
-                <option>Crème glacée</option>
+            <form (ngSubmit)="onSubmit()">
+              <select
+                class="select-active3"
+                [(ngModel)]="selectedCategoryId"
+                name="category"
+                #selectActive
+              >
+                <option value="" disabled selected>Les catégories</option>
+                <ng-container *ngFor="let category of categories">
+                  <option [value]="category.id">{{ category.name }}</option>
+                </ng-container>
               </select>
+              <input
+                type="text"
+                placeholder="Rechercher des annonces..."
+                [(ngModel)]="searchQuery"
+                name="search"
+              />
+              <button type="submit">Search</button>
             </form>
           </div>
           <div class="header-action-right">
@@ -510,49 +518,48 @@
                     </li>
                   </ul>
                 </li>
-                
-                
-                
-                <li
-                  class="position-static"
-                >
-                <a href="javascript:void(0)" >
-                  Autre <i class="fi-rs-angle-down"></i>
-              </a>
+
+                <li class="position-static">
+                  <a href="javascript:void(0)">
+                    Autre <i class="fi-rs-angle-down"></i>
+                  </a>
                   <ul class="mega-menu">
                     <ul style="width: 80%">
                       <li *ngFor="let category of categories.slice(9)">
-                        <a class="menu-title" href="javascript:void(0)" (click)="navigateToCategory(category.id)">
+                        <a
+                          class="menu-title"
+                          href="javascript:void(0)"
+                          (click)="navigateToCategory(category.id)"
+                        >
                           {{ category.name }}
-                      </a>
-                      
-  <ul>
-    <li
-    class="sub-mega-menu-width-10 left-menu"
-    *ngFor="let subcategory of category.subcategories"
-  >
-    <a
-      class="menu-title"
-      href="javascript:void(0)"
-      (click)="navigateToCategory(subcategory.id)"
-    >
-      {{ subcategory.name }}
-    </a>
-    <ul>
-      <li
-        *ngFor="
-          let subsubcat of subcategory.subsubcategories
-        "
-      >
-        <a href="/shop-product-right">{{
-          subsubcat.name
-        }}</a>
-      </li>
-    </ul>
-  </li>
-  </ul>
+                        </a>
 
-</li>
+                        <ul>
+                          <li
+                            class="sub-mega-menu-width-10 left-menu"
+                            *ngFor="let subcategory of category.subcategories"
+                          >
+                            <a
+                              class="menu-title"
+                              href="javascript:void(0)"
+                              (click)="navigateToCategory(subcategory.id)"
+                            >
+                              {{ subcategory.name }}
+                            </a>
+                            <ul>
+                              <li
+                                *ngFor="
+                                  let subsubcat of subcategory.subsubcategories
+                                "
+                              >
+                                <a href="/shop-product-right">{{
+                                  subsubcat.name
+                                }}</a>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
                     </ul>
 
                     <li
@@ -587,7 +594,6 @@
                     </li>
                   </ul>
                 </li>
-
               </ul>
             </nav>
           </div>
@@ -683,90 +689,128 @@
 </header>
 <div class="mobile-header-active mobile-header-wrapper-style">
   <div class="mobile-header-wrapper-inner">
-      <div class="mobile-header-top">
-          <div class="mobile-header-logo">
-              <a href="/"><img src="../../assets/imgs/theme/logo.png" alt="logo"></a>
-          </div>
-          <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
-              <button class="close-style search-close">
-                  <i class="icon-top"></i>
-                  <i class="icon-bottom"></i>
-              </button>
-          </div>
+    <div class="mobile-header-top">
+      <div class="mobile-header-logo">
+        <a href="/"
+          ><img src="../../assets/imgs/theme/logo.png" alt="logo"
+        /></a>
       </div>
-      <div class="mobile-header-content-area">
-          <div class="mobile-search search-style-3 mobile-header-border">
-              <form action="#">
-                  <input type="text" placeholder="Rechercher des annonces...">
-                  <button type="submit"><i class="fi-rs-search"></i></button>
-              </form>
-          </div>
-          <div class="mobile-search header-action-icon-2">
-            <div class="banner-text">
-              <link
-                rel="stylesheet"
-                href="https://cdn-uicons.flaticon.com/2.2.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
-              />
-              <a class="btn" href="/deposer_une_annonce" style="width: 100%"
-                ><i class="fi fi-rr-square-plus"></i> Déposer votre annonce</a
+      <div
+        class="mobile-menu-close close-style-wrap close-style-position-inherit"
+      >
+        <button class="close-style search-close">
+          <i class="icon-top"></i>
+          <i class="icon-bottom"></i>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-header-content-area">
+      <div class="mobile-search search-style-3 mobile-header-border">
+        <form action="#">
+          <input type="text" placeholder="Rechercher des annonces..." />
+          <button type="submit"><i class="fi-rs-search"></i></button>
+        </form>
+      </div>
+      <div class="mobile-search header-action-icon-2">
+        <div class="banner-text">
+          <link
+            rel="stylesheet"
+            href="https://cdn-uicons.flaticon.com/2.2.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
+          />
+          <a class="btn" href="/deposer_une_annonce" style="width: 100%"
+            ><i class="fi fi-rr-square-plus"></i> Déposer votre annonce</a
+          >
+        </div>
+      </div>
+      <div class="mobile-search header-action-icon-2">
+        <div class="banner-text">
+          <link
+            rel="stylesheet"
+            href="https://cdn-uicons.flaticon.com/2.2.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
+          />
+          <a
+            class="btn"
+            href="/chat"
+            style="
+              background: linear-gradient(45deg, #fdc040, #fdc040);
+              width: 100%;
+            "
+            ><i class="fi fi-rr-messages"></i> Messages
+          </a>
+        </div>
+      </div>
+
+      <div class="mobile-menu-wrap mobile-header-border">
+        <!-- mobile menu start -->
+        <nav>
+          <ul class="mobile-menu font-heading">
+            <li
+              class="menu-item-has-children"
+              *ngFor="let category of categories.slice(1)"
+            >
+              <span class="menu-expand"
+                ><i class="fi-rs-angle-small-down"></i
+              ></span>
+              <a (click)="navigateToCategory(category.id)">
+                {{ category.name }}</a
               >
-            </div>
-          </div>
-          <div class="mobile-search header-action-icon-2">
-            <div class="banner-text">
-              <link
-                rel="stylesheet"
-                href="https://cdn-uicons.flaticon.com/2.2.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
-              />
-              <a
-              class="btn"
-              href="/chat"
-              style="background: linear-gradient(45deg, #fdc040, #fdc040);width: 100%"
-              ><i class="fi fi-rr-messages"></i> Messages
-            </a>
-            </div>
-          </div>
-
-          <div class="mobile-menu-wrap mobile-header-border">
-              <!-- mobile menu start -->
-              <nav>
-                  <ul class="mobile-menu font-heading">
-                    <li class="menu-item-has-children" *ngFor="let category of categories.slice(1)"><span class="menu-expand"><i class="fi-rs-angle-small-down"></i></span>
-                      <a (click)="navigateToCategory(category.id)"> {{ category.name }}</a>
-                      <ul class="dropdown" style="display: none;">
-                          <li class="menu-item-has-children" *ngFor="let subcategory of category.subcategories" ><span class="menu-expand"><i class="fi-rs-angle-small-down"></i></span>
-                              <a (click)="navigateToCategory(subcategory.id)">{{ subcategory.name }}</a>
-                              <ul class="dropdown" style="display: none;">
-                                  <li *ngFor="let subsubcat of subcategory.subsubcategories"><a (click)="navigateToCategory(subsubcat.id)">{{ subsubcat.name }}</a></li>
-                              </ul>
-                          </li>
-                      </ul>
-                  </li>
-
+              <ul class="dropdown" style="display: none">
+                <li
+                  class="menu-item-has-children"
+                  *ngFor="let subcategory of category.subcategories"
+                >
+                  <span class="menu-expand"
+                    ><i class="fi-rs-angle-small-down"></i
+                  ></span>
+                  <a (click)="navigateToCategory(subcategory.id)">{{
+                    subcategory.name
+                  }}</a>
+                  <ul class="dropdown" style="display: none">
+                    <li *ngFor="let subsubcat of subcategory.subsubcategories">
+                      <a (click)="navigateToCategory(subsubcat.id)">{{
+                        subsubcat.name
+                      }}</a>
+                    </li>
                   </ul>
-              </nav>
-              <!-- mobile menu end -->
-          </div>
-          <div class="mobile-header-info-wrap">
-              <div class="single-mobile-header-info">
-                  <a href="/page-contact"><i class="fi-rs-marker"></i> Our location </a>
-              </div>
-              <div class="single-mobile-header-info">
-                  <a href="/page-login"><i class="fi-rs-user"></i>Log In / Sign Up </a>
-              </div>
-              <div class="single-mobile-header-info">
-                  <a href="#"><i class="fi-rs-headphones"></i>(+01) - 2345 - 6789 </a>
-              </div>
-          </div>
-          <div class="mobile-social-icon mb-50">
-              <h6 class="mb-15">Follow Us</h6>
-              <a href="#"><img src="assets/imgs/theme/icons/icon-facebook-white.svg" alt=""></a>
-              <a href="#"><img src="assets/imgs/theme/icons/icon-twitter-white.svg" alt=""></a>
-              <a href="#"><img src="assets/imgs/theme/icons/icon-instagram-white.svg" alt=""></a>
-              <a href="#"><img src="assets/imgs/theme/icons/icon-pinterest-white.svg" alt=""></a>
-              <a href="#"><img src="assets/imgs/theme/icons/icon-youtube-white.svg" alt=""></a>
-          </div>
-          <div class="site-copyright">Copyright 2024 © Nest. All rights reserved. Powered by AliThemes.</div>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+        <!-- mobile menu end -->
       </div>
+      <div class="mobile-header-info-wrap">
+        <div class="single-mobile-header-info">
+          <a href="/page-contact"><i class="fi-rs-marker"></i> Our location </a>
+        </div>
+        <div class="single-mobile-header-info">
+          <a href="/page-login"><i class="fi-rs-user"></i>Log In / Sign Up </a>
+        </div>
+        <div class="single-mobile-header-info">
+          <a href="#"><i class="fi-rs-headphones"></i>(+01) - 2345 - 6789 </a>
+        </div>
+      </div>
+      <div class="mobile-social-icon mb-50">
+        <h6 class="mb-15">Follow Us</h6>
+        <a href="#"
+          ><img src="assets/imgs/theme/icons/icon-facebook-white.svg" alt=""
+        /></a>
+        <a href="#"
+          ><img src="assets/imgs/theme/icons/icon-twitter-white.svg" alt=""
+        /></a>
+        <a href="#"
+          ><img src="assets/imgs/theme/icons/icon-instagram-white.svg" alt=""
+        /></a>
+        <a href="#"
+          ><img src="assets/imgs/theme/icons/icon-pinterest-white.svg" alt=""
+        /></a>
+        <a href="#"
+          ><img src="assets/imgs/theme/icons/icon-youtube-white.svg" alt=""
+        /></a>
+      </div>
+      <div class="site-copyright">
+        Copyright 2024 © Nest. All rights reserved. Powered by AliThemes.
+      </div>
+    </div>
   </div>
 </div>

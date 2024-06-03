@@ -523,7 +523,7 @@
         }
     });
 
-    $('.btn-close').on('click', function(e) {
+    $('.btn-close').on('click', function (e) {
         $('.zoomContainer').remove();
     });
 
@@ -554,6 +554,23 @@
         e.preventDefault();
         $(".checkout-login-info3").slideToggle(1000);
     });
+
+
+    $(".select-active1").select2();
+
+    /*--- Checkout toggle function ----*/
+    $(".checkout-click1").on("click", function (e) {
+        e.preventDefault();
+        $(".checkout-login-info").slideToggle(900);
+    });
+
+    /*--- Checkout toggle function ----*/
+    $(".checkout-click3").on("click", function (e) {
+        e.preventDefault();
+        $(".checkout-login-info3").slideToggle(1000);
+    });
+
+
 
     /*-------------------------
         Create an account toggle

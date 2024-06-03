@@ -83,40 +83,35 @@ export class HeaderComponent implements OnInit {
   }
 
   getCategories(): void {
-    if (this.document.defaultView && this.document.defaultView.localStorage) {
-      const accessToken =
-        this.document.defaultView.localStorage.getItem('loggedInUserToken');
-      if (accessToken) {
-        this.categoryService.getCategoriesFrom().subscribe((categories) => {
-          // Filter root categories
-          this.categories = categories.data.filter(
-            (category: { active: boolean; parent_id: null }) =>
-              category.active === true && category.parent_id === null
+    this.categoryService.getCategoriesFrom().subscribe((categories) => {
+      // Filter root categories
+      this.categories = categories.data.filter(
+        (category: { active: boolean; parent_id: null }) =>
+          category.active === true && category.parent_id === null
+      );
+      console.log('ttttttttttttt', categories, this.categories);
+
+      // Loop through root categories
+      this.categories.forEach((category: any) => {
+        // Find subcategories for each root category
+        category.subcategories = categories.data.filter(
+          (subcat: any) =>
+            subcat.active === true && subcat.parent_id === category.id
+        );
+
+        // Loop through subcategories
+        category.subcategories.forEach((subcategory: any) => {
+          // Find sub-subcategories for each subcategory
+          subcategory.subsubcategories = categories.data.filter(
+            (subsubcat: any) =>
+              subsubcat.active === true &&
+              subsubcat.parent_id === subcategory.id
           );
-
-          // Loop through root categories
-          this.categories.forEach((category: any) => {
-            // Find subcategories for each root category
-            category.subcategories = categories.data.filter(
-              (subcat: any) =>
-                subcat.active === true && subcat.parent_id === category.id
-            );
-
-            // Loop through subcategories
-            category.subcategories.forEach((subcategory: any) => {
-              // Find sub-subcategories for each subcategory
-              subcategory.subsubcategories = categories.data.filter(
-                (subsubcat: any) =>
-                  subsubcat.active === true &&
-                  subsubcat.parent_id === subcategory.id
-              );
-            });
-          });
-
-          console.log('Filter root categories', this.categories);
         });
-      }
-    }
+      });
+
+      console.log('Filter root categories', this.categories);
+    });
   }
 
   toggleMoreCategories(): void {
@@ -126,6 +121,22 @@ export class HeaderComponent implements OnInit {
     ) as HTMLElement;
     if (moreSlideOpen) {
       moreSlideOpen.style.display = this.showMore ? 'block' : 'none';
+    }
+  }
+
+  selectedCategoryId: any;
+  searchQuery: string = '';
+
+  navigateToCategory1(categoryId: number, searchQuery: string): void {
+    this.router.navigate(['/ads-category', categoryId], {
+      queryParams: { search: searchQuery },
+    });
+  }
+
+  onSubmit(): void {
+    console.log('zzzzz', this.selectedCategoryId);
+    if (this.selectedCategoryId) {
+      this.navigateToCategory1(this.selectedCategoryId, this.searchQuery);
     }
   }
 }

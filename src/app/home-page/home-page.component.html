@@ -653,7 +653,10 @@
         data-wow-delay="0"
       >
         <h3 class="">Offres d'emploi</h3>
-        <a class="show-all" href="">
+        <a
+          class="show-all"
+          [href]="'/ads-category/' + ads_jobs[0]?.category?.id"
+        >
           Voir plus
           <i class="fi-rs-angle-right"></i>
         </a>
@@ -696,25 +699,9 @@
                   </div>
                 </div>
 
-                <div>
-                  <span class="font-small text-muted"
-                    >Type de contrat
-                    <a [href]="'/ads/' + ad.id">
-                      {{ ad.job.setting || "" }}
-                    </a></span
-                  >
-                </div>
-                <div>
-                  <span class="font-small text-muted"
-                    >Région
-                    <a [href]="'/ads/' + ad.id">
-                      {{ ad.region.setting || "" }}
-                    </a></span
-                  >
-                </div>
                 <div class="product-card-bottom">
                   <div class="product-price">
-                    <span>{{ ad.study_level.setting }} </span>
+                    Offert par : <span> {{ ad.user.full_name }}</span>
                   </div>
                 </div>
               </div>
