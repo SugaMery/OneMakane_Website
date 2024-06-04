@@ -262,7 +262,7 @@
           <div class="search-style-2">
             <form (ngSubmit)="onSubmit()">
               <select
-                class="select-active3"
+                class="select-active"
                 [(ngModel)]="selectedCategoryId"
                 name="category"
                 #selectActive
@@ -278,7 +278,11 @@
                 [(ngModel)]="searchQuery"
                 name="search"
               />
-              <button type="submit">Search</button>
+    <i class="fi fi-rr-search" style="
+    font-size: x-large;
+    margin-top: 0.7rem;
+    margin-right: 1rem;
+"></i>
             </form>
           </div>
           <div class="header-action-right">

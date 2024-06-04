@@ -15,6 +15,7 @@ import { AccountActivationComponent } from './account-activation/account-activat
 import { ChatComponent } from './chat/chat.component';
 import { AllAdsComponent } from './all-ads/all-ads.component';
 import { EditAdsComponent } from './edit-ads/edit-ads.component';
+import { MessageAddAnnonceComponent } from './message-add-annonce/message-add-annonce.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -34,6 +35,10 @@ const routes: Routes = [
   {
     path: 'reset-password/:user_id/:password_token',
     component: ResetPasswordComponent,
+  },
+  {
+    path: 'annonce_in_progress',
+    component: MessageAddAnnonceComponent,
   },
   {
     path: 'account-activation/:userId/:activationToken',

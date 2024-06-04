@@ -4,6 +4,7 @@ import { UserService } from '../user.service';
 import { CategoryService } from '../category.service';
 import { AnnonceService } from '../annonce.service';
 import { SettingService } from '../setting.service';
+import { Router } from '@angular/router';
 declare var $: any;
 
 interface Category {
@@ -149,7 +150,8 @@ export class AddAdsComponent {
     private annonceService: AnnonceService,
     private userService: UserService,
     private categoryService: CategoryService,
-    private settingsService: SettingService
+    private settingsService: SettingService,
+    private router: Router
   ) {}
 
   // Liste de catégories avec leurs mots-clés associés
@@ -1097,7 +1099,7 @@ export class AddAdsComponent {
             )
             .subscribe(
               (response) => {
-                //window.location.reload();
+                this.router.navigate(['/login']); // Replace 'login' with your actual login route
               },
               (error) => {
                 console.error('Error inserting state and genre:', error);
@@ -1105,7 +1107,7 @@ export class AddAdsComponent {
             );
 
           this.resetFormData();
-
+          window.location.href = '/annonce_in_progress';
           this.selectedOption = {
             active: false,
             created_at: '',

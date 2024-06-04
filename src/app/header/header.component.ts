@@ -79,7 +79,7 @@ export class HeaderComponent implements OnInit {
   }
 
   navigateToCategory(categoryId: number) {
-    this.router.navigate(['/ads-category', categoryId]);
+    window.location.href = `/ads-category/${categoryId}`;
   }
 
   getCategories(): void {

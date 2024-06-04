@@ -1,6 +1,6 @@
 import { Component, EventEmitter, HostListener, Output } from '@angular/core';
 import { AuthGuard } from '../auth.guard';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
 import { CategoryService } from '../category.service';
 import { AnnonceService } from '../annonce.service';
@@ -31,10 +31,34 @@ export class PageAccountComponent {
     private annonceService: AnnonceService,
     private userService: UserService,
     private categoryService: CategoryService,
-    private settingsService: SettingService
+    private settingsService: SettingService,
+    private route: ActivatedRoute
   ) {}
   settings: any;
   ads: any[] = [];
+
+  ngAfterViewInit() {
+    this.route.fragment.subscribe(fragment => {
+      if (fragment === 'orders') {
+        this.activateTab('orders-tab', 'orders');
+      }
+    });
+  }
+
+  activateTab(tabId: string, contentId: string) {
+    const tabElement = document.getElementById(tabId);
+    const contentElement = document.getElementById(contentId);
+
+    if (tabElement && contentElement) {
+      const activeTabs = document.querySelectorAll('.nav-link.active, .tab-pane.active');
+      activeTabs.forEach(tab => {
+        tab.classList.remove('active', 'show');
+      });
+
+      tabElement.classList.add('active');
+      contentElement.classList.add('active', 'show');
+    }
+  }
   confirmDeletion(ad:any) {
     // Get the selected reason
     const selectedReason = (document.querySelector('input[name="reason"]:checked') as HTMLInputElement).value;
