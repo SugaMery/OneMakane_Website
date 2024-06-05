@@ -153,3 +153,7 @@ nav>ul>li {
     background-color: #fff;
     border: none;
 }
+
+::ng-deep input:-internal-autofill-selected {
+    background-color: #ff5722;
+}

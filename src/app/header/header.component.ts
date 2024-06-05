@@ -134,6 +134,23 @@ export class HeaderComponent implements OnInit {
   }
 
   onSubmit(): void {
+    // Get the select element by class
+    // Get the select element by class
+    const selectElement = document.querySelector(
+      '.select-active'
+    ) as HTMLSelectElement;
+
+    // Check if the select element is found
+    if (selectElement) {
+      // Get the selected option's value
+      const selectedOptionValue = selectElement.value;
+
+      // Display the selected option's value in the console
+      console.log('yyyyyyyyyyy', selectedOptionValue);
+    } else {
+      console.log('Select element not found');
+    }
+
     console.log('zzzzz', this.selectedCategoryId);
     if (this.selectedCategoryId) {
       this.navigateToCategory1(this.selectedCategoryId, this.searchQuery);
