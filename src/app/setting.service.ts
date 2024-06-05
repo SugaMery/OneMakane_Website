@@ -21,4 +21,21 @@ export class SettingService {
     };
     return this.http.get(this.apiUrl, options);
   }
+
+  private devApiUrl = 'https://devapi.onemakan.com/v1';
+
+
+  createMarque(
+    route: string,
+    accessToken: string
+  ): Observable<any> {
+    const url = `${this.devApiUrl}/${route}`;
+
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`,
+    });
+
+    return this.http.get(url, { headers });
+  }
 }

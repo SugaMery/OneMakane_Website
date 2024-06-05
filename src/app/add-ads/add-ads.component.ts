@@ -26,6 +26,9 @@ interface Category {
 }
 
 interface ModelField {
+  route: any;
+  table: any;
+  content: any;
   label: string;
   type: string;
   help: string;
@@ -48,11 +51,13 @@ interface Setting {
   selectedOption?: SelectedOption;
   label?: string;
   optionsVisible?: boolean;
+  type: string
 }
 
 interface SelectedOption {
   value: string;
   label: string;
+  name? : string
 }
 
 interface CustomCategory {
@@ -144,6 +149,8 @@ export class AddAdsComponent {
   submitted: boolean = false;
   statuses!: any[];
   filteredAds: any[] = [];
+  settingsOption: ModelFields | undefined;
+  setting: any;
 
   constructor(
     private authService: AuthGuard,
@@ -685,6 +692,32 @@ export class AddAdsComponent {
     }
   }
 
+
+  parseOptions1(content: string | StringIndexed): { id: number; name: string }[] {
+    if (Array.isArray(content)) {
+      return content.map((item) => ({
+        id: item.id,
+        name: item.name,
+      }));
+    } else {
+      return [];
+    }
+
+  }
+
+
+  parseOptions2(content: string | StringIndexed): { label: number; content: string }[] {
+    if (Array.isArray(content)) {
+      return content.map((item) => ({
+        label: item.label,
+        content: item.content,
+      }));
+    } else {
+      return [];
+    }
+
+  }
+
   toggledOptions(setting: Setting): void {
     this.settings.forEach((s) => {
       if (s !== setting) {
@@ -695,6 +728,7 @@ export class AddAdsComponent {
   }
 
   selectdOptiond(option: any, setting: Setting): void {
+    console.log("rrrrrrrrrrrrrrr",option,setting);
     setting.selectedOption = option;
     this.fieldsErrors[setting.label!] = false;
     setting.optionsVisible = false;
@@ -967,6 +1001,7 @@ export class AddAdsComponent {
     this.selectedOption = category;
     if (this.selectedOption) {
       this.formData.category_id = category.id;
+      console.log("categorie gggggggggg",this.selectedOption)
       this.settings = [];
       this.fetchSettings();
     } else {
@@ -980,35 +1015,85 @@ export class AddAdsComponent {
     this.selectedSubCategory = null;
     this.genreOptionsVisible = false;
   }
+  marquesPopulaires: Array<{ id: number, name: string }> = [];
+  autresMarques: Array<{ id: number, name: string }> = [];
 
+  transformData(data: any): Array<{ id: number, name: string }> {
+    return Object.entries(data).map(([key, value]) => ({ id: +key, name: value as string }));
+  }
+
+  
   fetchSettings(): void {
     const queryParams = { model: this.selectedOption.model };
     const accessToken = localStorage.getItem('loggedInUserToken');
-
-    this.settingsService
-      .getSettings(accessToken!, queryParams)
-      .subscribe((response: any) => {
-        const modelFields: { [key: string]: { label: string } } =
-          this.selectedOption.model_fields!;
-        const keys = Object.keys(modelFields);
-        this.settings = response.data.map((setting: Setting) => {
-          const name: string = setting.name;
-          const keyExists = keys.includes(name);
-          let label = '';
-          if (keyExists) {
-            label = modelFields[name].label;
-          }
-          return {
-            content: setting.content,
+    const settingsOption = this.selectedOption.model_fields;
+  console.log("ooooo",settingsOption);
+    for (const key in settingsOption) {
+      if (settingsOption.hasOwnProperty(key)) {
+        const field = settingsOption[key];
+  
+        if (field.route) {
+          this.settingsService.createMarque(field.route, accessToken!).subscribe((response) => {
+            if (response.status === 'Success' && response.data) {
+              this.marquesPopulaires = this.transformData(response.data['Marques populaires']);
+              this.autresMarques = this.transformData(response.data['Autres marques']);
+              
+              // Update field.content to have the desired structure
+              field.content = [
+                { label: 'Marques Populaires', content: this.marquesPopulaires },
+                { label: 'Autres Marques', content: this.autresMarques }
+              ];
+  
+              // Create a new setting object for table type
+              const newSetting: any = {
+                name: field.label,
+                label: field.label,
+                content: field.content,
+                optionsVisible: false,
+                type: "table"
+              };
+  
+              // Push the new setting object to the settings array
+              this.settings.push(newSetting);
+            }
+          });
+        } else if (field.type === 'select') {
+          this.settingsService.getSettings(accessToken!, queryParams).subscribe((setting) => {
+            setting.data.forEach((data: { content: any; name: string }) => {
+              if (data.name === key) {
+                field.content = data.content;
+  
+                const newSetting: any = {
+                  name: field.label,
+                  label: field.label,
+                  content: data.content,
+                  optionsVisible: false,
+                  type: "select"
+                };
+  
+                this.settings.push(newSetting);
+              }
+            });
+          });
+        }else if (field.type === 'date') {
+          const newSetting: any = {
+            name: field.label,
+            label: field.label,
+            content: field.content,
             optionsVisible: false,
-            label: label,
-            name: setting.name,
+            type: "date"
           };
-        });
-        console.log('settings', this.settings);
-      });
+  
+          this.settings.push(newSetting);
+        }
+      }
+    }
+  
+    console.log("this.settings", this.settings);
   }
-
+  
+  
+  
   onSubmit(): void {
     let isValid = true;
     if (!this.formData.ville) {
