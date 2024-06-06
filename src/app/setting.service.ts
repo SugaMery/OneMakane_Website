@@ -16,7 +16,6 @@ export class SettingService {
     });
 
     const options = {
-      headers: headers,
       params: queryParams,
     };
     return this.http.get(this.apiUrl, options);
@@ -24,13 +23,8 @@ export class SettingService {
 
   private devApiUrl = 'https://devapi.onemakan.com/v1';
 
-
-  createMarque(
-    route: string,
-    accessToken: string
-  ): Observable<any> {
+  createMarque(route: string, accessToken: string): Observable<any> {
     const url = `${this.devApiUrl}/${route}`;
-
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${accessToken}`,

@@ -40,6 +40,7 @@ import { ChatComponent } from './chat/chat.component';
 import { AllAdsComponent } from './all-ads/all-ads.component';
 import { EditAdsComponent } from './edit-ads/edit-ads.component';
 import { MessageAddAnnonceComponent } from './message-add-annonce/message-add-annonce.component';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   declarations: [
@@ -82,6 +83,7 @@ import { MessageAddAnnonceComponent } from './message-add-annonce/message-add-an
     CarouselModule,
     AvatarModule,
     AvatarGroupModule,
+    CalendarModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: () => {

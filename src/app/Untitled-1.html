@@ -4,7 +4,7 @@
     <div class="container">
       <div class="breadcrumb">
         <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Accueil</a>
-        <span></span> Pages <span></span> Mon Compte
+        <span></span> Ajouter une annonce
       </div>
     </div>
   </div>
@@ -157,8 +157,7 @@
                                                         .icon_path
                                                     }}"
                                                     alt=""
-                                                  />{{
-                                                    suggestedCategory!.name
+                                                  />{{ suggestedCategory!.name
                                                   }}
 
                                                   <!-- Pour chaque sous-catégorie de la catégorie suggérée -->
@@ -229,11 +228,9 @@
                                                     "
                                                   />
                                                   <p style="margin: 0">
-                                                    {{
-                                                      selectedOption
-                                                        .parentCategoy?.name ||
-                                                        "Choisissez"
-                                                    }}
+                                                    {{ selectedOption
+                                                    .parentCategoy?.name ||
+                                                    "Choisissez" }}
                                                     <i
                                                       class="fi-rs-angle-right"
                                                       *ngIf="
@@ -281,7 +278,7 @@
                                                     "
                                                   />
                                                   {{
-                                                    category.parentCategoy?.name
+                                                  category.parentCategoy?.name
                                                   }}
                                                   <i
                                                     class="fi-rs-angle-right"
@@ -364,7 +361,9 @@
                                           <div class="select-menu">
                                             <label>{{ setting.label }}</label>
 
+                                            <!-- Display Select Button -->
                                             <div
+                                              *ngIf="setting.type === 'select'"
                                               class="select-btn"
                                               style="
                                                 margin-bottom: 1rem;
@@ -385,17 +384,17 @@
                                                     align-items: center;
                                                   "
                                                 >
-                                                  {{
-                                                    setting.selectedOption
-                                                      ? setting.selectedOption
-                                                          .label
-                                                      : "Choisissez"
-                                                  }}
+                                                  {{ setting.selectedOption ?
+                                                  setting.selectedOption .label
+                                                  : "Choisissez" }}
                                                 </div>
                                               </span>
                                               <i class="bx bx-chevron-down"></i>
                                             </div>
+
+                                            <!-- Display Select Options -->
                                             <ul
+                                              *ngIf="setting.type === 'select'"
                                               class="options"
                                               [class.active]="
                                                 setting.optionsVisible
@@ -419,23 +418,186 @@
                                               >
                                                 <span
                                                   class="d-inline-flex align-items-center"
+                                                  >{{ option.label }}</span
+                                                >
+                                              </li>
+                                            </ul>
+
+                                            <div
+                                              *ngIf="
+                                                setting.type === 'multiple'
+                                              "
+                                              class="select-btn"
+                                              style="
+                                                margin-bottom: 1rem;
+                                                background: #fff;
+                                                border: 1px solid #ececec;
+                                                height: 55px;
+                                                box-shadow: none;
+                                                padding-left: 20px;
+                                                font-size: 15px;
+                                                width: 100%;
+                                              "
+                                              (click)="toggledOptions(setting)"
+                                            >
+                                              <span class="sBtn-text">
+                                                <div
+                                                  style="
+                                                    display: flex;
+                                                    align-items: center;
+                                                  "
+                                                >
+                                                  {{ setting.selectedOption ?
+                                                  setting.selectedOption .label
+                                                  : "Choisissez" }}
+                                                </div>
+                                              </span>
+                                              <i class="bx bx-chevron-down"></i>
+                                            </div>
+
+                                            <!-- Display Select Options -->
+                                            <ul
+                                              *ngIf="
+                                                setting.type === 'multiple'
+                                              "
+                                              class="options"
+                                              [class.active]="
+                                                setting.optionsVisible
+                                              "
+                                              style="font-size: smaller"
+                                            >
+                                              <li
+                                                class="option"
+                                                *ngFor="
+                                                  let option of parseOptions(
+                                                    setting.content
+                                                  )
+                                                "
+                                                [value]="option.value"
+                                              >
+                                                <span
+                                                  class="d-inline-flex align-items-center"
                                                 >
                                                   {{ option.label }}
                                                 </span>
+                                                <input
+                                                  class="form-check-input"
+                                                  type="checkbox"
+                                                  name="checkbox"
+                                                  id="exampleCheckbox{{
+                                                    option.value
+                                                  }}"
+                                                  [value]="option.value"
+                                                />
+                                                <label
+                                                  class="form-check-label"
+                                                  for="exampleCheckbox{{
+                                                    option.value
+                                                  }}"
+                                                ></label>
                                               </li>
                                             </ul>
-                                          </div>
-                                          <div
-                                            *ngIf="fieldsErrors[setting.label!]"
-                                            class="text-danger requisDiv"
-                                          >
-                                            <div>
-                                              {{
-                                                setting.label
-                                                  ? setting.label +
-                                                    " est requise."
-                                                  : ""
-                                              }}
+
+                                            <!-- Display Table -->
+                                            <div
+                                              *ngIf="setting.type === 'table'"
+                                              class="select-btn"
+                                              style="
+                                                margin-bottom: 1rem;
+                                                background: #fff;
+                                                border: 1px solid #ececec;
+                                                height: 55px;
+                                                box-shadow: none;
+                                                padding-left: 20px;
+                                                font-size: 15px;
+                                                width: 100%;
+                                              "
+                                              (click)="toggledOptions(setting)"
+                                            >
+                                              <span class="sBtn-text">
+                                                <div
+                                                  style="
+                                                    display: flex;
+                                                    align-items: center;
+                                                  "
+                                                >
+                                                  {{ setting.selectedOption ?
+                                                  setting.selectedOption .name :
+                                                  "Choisissez" }}
+                                                </div>
+                                              </span>
+                                              <i class="bx bx-chevron-down"></i>
+                                            </div>
+
+                                            <!-- Display Select Options -->
+                                            <ul
+                                              *ngIf="setting.type === 'table'"
+                                              class="options"
+                                              [class.active]="
+                                                setting.optionsVisible
+                                              "
+                                              style="font-size: smaller"
+                                            >
+                                              <div
+                                                *ngFor="
+                                                  let optioned of parseOptions2(
+                                                    setting.content
+                                                  )
+                                                "
+                                              >
+                                                {{ optioned.label }}
+                                                <li
+                                                  class="option"
+                                                  *ngFor="
+                                                    let option of parseOptions1(
+                                                      optioned.content
+                                                    )
+                                                  "
+                                                  [value]="option.id"
+                                                  (click)="
+                                                    selectdOptiond(
+                                                      option,
+                                                      setting
+                                                    )
+                                                  "
+                                                >
+                                                  <span
+                                                    class="d-inline-flex align-items-center"
+                                                    >{{ option.name }}</span
+                                                  >
+                                                </li>
+                                              </div>
+                                            </ul>
+                                            <!-- Display Date Input for 'date' type -->
+                                            <div
+                                              *ngIf="setting.type === 'date'"
+                                              style="margin-bottom: 1rem"
+                                            >
+                                              <p-calendar
+                                                [(ngModel)]="setting.content"
+                                                [iconDisplay]="'input'"
+                                                [showIcon]="true"
+                                                inputId="icondisplay"
+                                                [ngStyle]="{
+                                                  width: '100%',
+                                                  display: 'grid'
+                                                }"
+                                                [ngModelOptions]="{
+                                                  standalone: true
+                                                }"
+                                                placeholder="Enter la date"
+                                              ></p-calendar>
+                                            </div>
+                                            <div
+                                              *ngIf="
+                                                fieldsErrors[setting.label!]
+                                              "
+                                              class="text-danger requisDiv"
+                                            >
+                                              <div>
+                                                {{ setting.label ? setting.label
+                                                + " est requise." : "" }}
+                                              </div>
                                             </div>
                                           </div>
                                         </div>

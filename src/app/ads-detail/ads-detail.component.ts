@@ -44,124 +44,120 @@ export class AdsDetailComponent {
         ) {
           const accessToken =
             this.document.defaultView.localStorage.getItem('loggedInUserToken');
-          if (accessToken) {
-            // Fetch ad details
-            this.annonceService.getAdById(this.adId).subscribe((data) => {
-              this.adDetail = data.data;
-              this.categoryService
-                .getCategoryById(data.data.category_id)
-                .subscribe((category) => {
-                  const modelFields = category.data.model_fields;
-                  const queryParams = { model: category.data.model };
+          // Fetch ad details
+          this.annonceService.getAdById(this.adId).subscribe((data) => {
+            this.adDetail = data.data;
+            this.categoryService
+              .getCategoryById(data.data.category_id)
+              .subscribe((category) => {
+                const modelFields = category.data.model_fields;
+                const queryParams = { model: category.data.model };
 
-                  this.settingService
-                    .getSettings(accessToken!, queryParams)
-                    .subscribe(
-                      (setting) => {
-                        if (setting.data) {
-                          const transformedFields = Object.keys(
-                            modelFields
-                          ).map((key) => ({
+                this.settingService
+                  .getSettings(accessToken!, queryParams)
+                  .subscribe(
+                    (setting) => {
+                      if (setting.data) {
+                        const transformedFields = Object.keys(modelFields).map(
+                          (key) => ({
                             value: key,
                             label: modelFields[key].label,
                             setting: key,
-                          }));
+                          })
+                        );
 
-                          transformedFields.forEach(
-                            (field: {
-                              value: string;
-                              label: any;
-                              setting: string;
-                            }) => {
-                              const matchedSetting = setting.data.find(
-                                (settingItem: { name: string }) =>
-                                  settingItem.name === field.value
-                              );
-                              if (matchedSetting) {
-                                if (
-                                  data.data.additional &&
-                                  data.data.additional[field.value]
-                                ) {
-                                  field.setting =
-                                    matchedSetting.content[
-                                      data.data.additional[field.value]
-                                    ];
-                                  console.log('jj', field.setting);
-                                  console.log('Transformed f', matchedSetting);
-                                } else {
-                                  console.error(
-                                    `No setting found for key '${field.value}' in data.data.additional`
-                                  );
-                                }
+                        transformedFields.forEach(
+                          (field: {
+                            value: string;
+                            label: any;
+                            setting: string;
+                          }) => {
+                            const matchedSetting = setting.data.find(
+                              (settingItem: { name: string }) =>
+                                settingItem.name === field.value
+                            );
+                            if (matchedSetting) {
+                              if (
+                                data.data.additional &&
+                                data.data.additional[field.value]
+                              ) {
+                                field.setting =
+                                  matchedSetting.content[
+                                    data.data.additional[field.value]
+                                  ];
+                                console.log('jj', field.setting);
+                                console.log('Transformed f', matchedSetting);
+                              } else {
+                                console.error(
+                                  `No setting found for key '${field.value}' in data.data.additional`
+                                );
                               }
                             }
-                          );
-                          this.transformedField = transformedFields;
-                          console.log(
-                            'Transformed fields with updated labels:',
-                            transformedFields
-                          );
-                        } else {
-                          console.error('No data found in settings.');
-                        }
-                      },
-                      (error) => {
-                        console.error('Error fetching settings:', error);
+                          }
+                        );
+                        this.transformedField = transformedFields;
+                        console.log(
+                          'Transformed fields with updated labels:',
+                          transformedFields
+                        );
+                      } else {
+                        console.error('No data found in settings.');
                       }
-                    );
-                });
-              console.log('datarrr', data);
-
-              // Count ads where adDetail.user.id matches
-              // Initialize count variable outside of the subscription
-              let count = 0;
-
-              // Create an array to store all inner observables
-              const innerObservables: Observable<any>[] = [];
-
-              this.annonceService.getAds().subscribe((adsData) => {
-                let relatedAdsTemp: any[] = [];
-                // Iterate over each ad
-                adsData.data.forEach((ad: { id: any }) => {
-                  // Push each inner observable to the array
-                  innerObservables.push(this.annonceService.getAdById(ad.id));
-                });
-                console.log('ads detail', adsData);
-                adsData.data.forEach((adDetail: { id: string }) => {
-                  this.annonceService
-                    .getAdById(adDetail.id)
-                    .subscribe((adDetails) => {
-                      if (adDetails.data.user_id == this.adDetail.user_id) {
-                        count++;
-                      }
-
-                      if (
-                        adDetails.data.category.id == this.adDetail.category.id
-                      ) {
-                        this.relatedAds.push(adDetails.data);
-                      }
-
-                      console.log(
-                        'Count of ads associated with the user:',
-                        count
-                      );
-                      this.countsAds = count;
-                      console.log(
-                        'adDetails',
-                        adDetails.data.user_id,
-                        this.adDetail.user_id
-                      );
-                    });
-                });
-                if (relatedAdsTemp.length > 0) {
-                  this.relatedAds = this.shuffleArray(relatedAdsTemp).slice(
-                    0,
-                    4
+                    },
+                    (error) => {
+                      console.error('Error fetching settings:', error);
+                    }
                   );
-                }
-                console.log('annooo related ', this.relatedAds);
-                // Use forkJoin to wait for all inner observables to complete
-                /*                 forkJoin(innerObservables).subscribe((adDetails) => {
+              });
+            console.log('datarrr', data);
+
+            // Count ads where adDetail.user.id matches
+            // Initialize count variable outside of the subscription
+            let count = 0;
+
+            // Create an array to store all inner observables
+            const innerObservables: Observable<any>[] = [];
+
+            this.annonceService.getAds().subscribe((adsData) => {
+              let relatedAdsTemp: any[] = [];
+              // Iterate over each ad
+              adsData.data.forEach((ad: { id: any }) => {
+                // Push each inner observable to the array
+                innerObservables.push(this.annonceService.getAdById(ad.id));
+              });
+              console.log('ads detail', adsData);
+              adsData.data.forEach((adDetail: { id: string }) => {
+                this.annonceService
+                  .getAdById(adDetail.id)
+                  .subscribe((adDetails) => {
+                    if (adDetails.data.user_id == this.adDetail.user_id) {
+                      count++;
+                    }
+
+                    if (
+                      adDetails.data.category.id == this.adDetail.category.id
+                    ) {
+                      this.relatedAds.push(adDetails.data);
+                    }
+
+                    console.log(
+                      'Count of ads associated with the user:',
+                      count
+                    );
+                    this.countsAds = count;
+                    console.log(
+                      'adDetails',
+                      adDetails.data.user_id,
+                      this.adDetail.user_id
+                    );
+                  });
+              });
+              if (relatedAdsTemp.length > 0) {
+                this.relatedAds = this.shuffleArray(relatedAdsTemp).slice(0, 4);
+              }
+              console.log('annooo related ', this.relatedAds);
+              // Use forkJoin to wait for all inner observables to complete
+              /*                 forkJoin(innerObservables).subscribe((adDetails) => {
                   // Iterate over each ad detail
                   adDetails.forEach((adDetail) => {
                     console.log(' ad:', adDetail);
@@ -185,9 +181,8 @@ export class AdsDetailComponent {
                     this.countsAds
                   );
                 }); */
-              });
             });
-          }
+          });
         }
         // Utilisez maintenant this.adId pour obtenir l'ID de l'annonce
       }

@@ -415,7 +415,7 @@
               <div class="d-flex categori-dropdown-inner">
                 <ul>
                   <li *ngFor="let category of categories.slice(0, 5)">
-                    <a>
+                    <a (click)="navigateToCategory(category.id)">
                       <img [src]="category?.media?.url" alt="" />{{
                         category.name
                       }}
@@ -424,7 +424,7 @@
                 </ul>
                 <ul class="end">
                   <li *ngFor="let category of categories.slice(5, 10)">
-                    <a>
+                    <a (click)="navigateToCategory(category.id)">
                       <img [src]="category?.media?.url" alt="" />{{
                         category.name
                       }}
@@ -481,7 +481,7 @@
                               let subsubcat of subcategory.subsubcategories
                             "
                           >
-                            <a href="/shop-product-right">{{
+                            <a (click)="navigateToCategory(subsubcat.id)">{{
                               subsubcat.name
                             }}</a>
                           </li>
