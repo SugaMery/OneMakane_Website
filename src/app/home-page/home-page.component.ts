@@ -28,6 +28,8 @@ interface Product {
 export class HomePageComponent implements OnInit {
   categories: any[] = [];
   Souscategories: any[] = [];
+  Souscategorie: any[] = [];
+
   displayedCategories: any[] = [];
   hiddenCategories: any[] = [];
   showMore: boolean = false;
@@ -91,6 +93,9 @@ export class HomePageComponent implements OnInit {
     },
     // Add more products here if needed
   ];
+  navigateToCategory(categoryId: number) {
+    window.location.href = `/ads-category/${categoryId}`;
+  }
 
   ngOnInit(): void {
     this.getAdsForCarousel();
@@ -317,13 +322,19 @@ export class HomePageComponent implements OnInit {
     if (this.document.defaultView && this.document.defaultView.localStorage) {
       const accessToken =
         this.document.defaultView.localStorage.getItem('loggedInUserToken');
+
       this.categoryService.getCategoriesFrom().subscribe((categories) => {
-        this.categories = categories.data.filter(
+        const allCategories = categories.data;
+
+        // Filter active main categories (parent_id === null)
+        this.categories = allCategories.filter(
           (category: { active: boolean; parent_id: null }) =>
             category.active === true && category.parent_id === null
         );
-        this.Souscategories = categories.data.filter(
-          (category: { active: boolean; parent_id: null }) =>
+
+        // Filter active subcategories (parent_id !== null)
+        this.Souscategories = allCategories.filter(
+          (category: { active: boolean; parent_id: number }) =>
             category.active === true && category.parent_id !== null
         );
 
@@ -333,11 +344,8 @@ export class HomePageComponent implements OnInit {
           this.Souscategories.length > 0 &&
           this.Souscategories[0].media
         ) {
-          // Add console log to check if the media property exists
-
-          // Check if the media object has the url property
           if (this.Souscategories[0].media.url) {
-            // Log the URL to the console
+            console.log(this.Souscategories[0].media.url);
           } else {
             console.log('URL property does not exist in media object');
           }
@@ -346,8 +354,22 @@ export class HomePageComponent implements OnInit {
             'Media property or Souscategories array does not exist or is empty'
           );
         }
+
         this.displayedCategories = this.categories.slice(0, 11);
         this.hiddenCategories = this.categories.slice(11);
+
+        // Create a list to include subcategories with a reference to their parent category
+        this.Souscategorie = this.categories.reduce((acc, category) => {
+          const subcategories = this.Souscategories.filter(
+            (subCategory) => subCategory.parent_id === category.id
+          );
+          return acc.concat(
+            subcategories.map((subCategory) => ({
+              ...subCategory,
+              parentCategory: category,
+            }))
+          );
+        }, []);
       });
     }
   }
