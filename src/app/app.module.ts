@@ -41,6 +41,8 @@ import { AllAdsComponent } from './all-ads/all-ads.component';
 import { EditAdsComponent } from './edit-ads/edit-ads.component';
 import { MessageAddAnnonceComponent } from './message-add-annonce/message-add-annonce.component';
 import { CalendarModule } from 'primeng/calendar';
+import { AboutUsComponent } from './about-us/about-us.component';
+import { ContactUsComponent } from './contact-us/contact-us.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +66,8 @@ import { CalendarModule } from 'primeng/calendar';
     AllAdsComponent,
     EditAdsComponent,
     MessageAddAnnonceComponent,
+    AboutUsComponent,
+    ContactUsComponent,
   ],
   imports: [
     BrowserModule,

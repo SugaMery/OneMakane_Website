@@ -89,7 +89,7 @@ export class HeaderComponent implements OnInit {
         (category: { active: boolean; parent_id: null }) =>
           category.active === true && category.parent_id === null
       );
-      console.log('ttttttttttttt', categories, this.categories);
+      //console.log('ttttttttttttt', categories, this.categories);
 
       // Loop through root categories
       this.categories.forEach((category: any) => {
@@ -110,7 +110,7 @@ export class HeaderComponent implements OnInit {
         });
       });
 
-      console.log('Filter root categories', this.categories);
+      //console.log('Filter root categories', this.categories);
     });
   }
 
@@ -146,12 +146,12 @@ export class HeaderComponent implements OnInit {
       const selectedOptionValue = selectElement.value;
 
       // Display the selected option's value in the console
-      console.log('yyyyyyyyyyy', selectedOptionValue);
+      //console.log('yyyyyyyyyyy', selectedOptionValue);
     } else {
       console.log('Select element not found');
     }
 
-    console.log('zzzzz', this.selectedCategoryId);
+    //console.log('zzzzz', this.selectedCategoryId);
     if (this.selectedCategoryId) {
       this.navigateToCategory1(this.selectedCategoryId, this.searchQuery);
     }

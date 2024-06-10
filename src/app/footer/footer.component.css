@@ -1,0 +1,7 @@
+::ng-deep .footer-link-widget:not(:last-child) {
+    margin-right: 10px !important;
+}
+
+::ng-deep footer .hotline {
+    min-width: 300px !important;
+}

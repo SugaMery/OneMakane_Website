@@ -452,14 +452,8 @@
                     alt="offres spéciales"
                   /><a href="/shop-grid-right">Offres</a>
                 </li> -->
-                <li
-                  class="position-static"
-                  *ngFor="let category of categories.slice(2, 10)"
-                >
-                  <a
-                    href="javascript:void(0)"
-                    (click)="navigateToCategory(category.id)"
-                  >
+                <li class="position-static" *ngFor="let category of categories.slice(0, 10)">
+                  <a href="javascript:void(0)" (click)="navigateToCategory(category.id)">
                     {{ category.name }} <i class="fi-rs-angle-down"></i>
                   </a>
                   <ul class="mega-menu">
@@ -475,28 +469,20 @@
                         >
                           {{ subcategory.name }}
                         </a>
-                        <ul>
-                          <li
-                            *ngFor="
-                              let subsubcat of subcategory.subsubcategories
-                            "
-                          >
-                            <a (click)="navigateToCategory(subsubcat.id)">{{
-                              subsubcat.name
-                            }}</a>
+                        <ul *ngIf="subcategory.subsubcategories?.length">
+                          <li *ngFor="let subsubcat of subcategory.subsubcategories">
+                            <a (click)="navigateToCategory(subsubcat.id)">
+                              {{ subsubcat.name }}
+                            </a>
                           </li>
                         </ul>
                       </li>
                     </ul>
-
                     <li
                       class="sub-mega-menu sub-mega-menu-width-40 right-menu"
                       style="height: 35%; width: 30% !important"
                     >
-                      <div
-                        class="menu-banner-wrap"
-                        style="width: 100%; height: 100%"
-                      >
+                      <div class="menu-banner-wrap" style="width: 100%; height: 100%">
                         <a href="/deposer_une_annonce">
                           <img
                             style="border-radius: 1rem"
@@ -521,6 +507,9 @@
                     </li>
                   </ul>
                 </li>
+                
+                
+                
 
                 <li class="position-static">
                   <a href="javascript:void(0)">

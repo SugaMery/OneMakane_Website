@@ -1,0 +1,119 @@
+<app-header></app-header>
+<main class="main pages">
+  <div class="page-header breadcrumb-wrap">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Accueil</a>
+        <span></span> À Propos du OneMakan <span></span> Qui sommes-nous ?
+      </div>
+    </div>
+  </div>
+
+  <div class="page-content pt-50">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-10 col-lg-12 m-auto">
+                <section class="row align-items-end mb-50">
+                    <div class="col-lg-4 mb-lg-0 mb-md-5 mb-sm-5">
+                        <h4 class="mb-20 text-brand">Comment pouvons-nous vous aider ?</h4>
+                        <h1 class="mb-30">Faites-nous savoir comment nous pouvons vous aider</h1>
+                        <p class="mb-20">Chez OneMakan, nous sommes là pour vous aider à publier et gérer vos annonces efficacement. Contactez-nous pour toute question ou assistance.</p>
+                        <p>Nous sommes dédiés à offrir un service client de qualité pour répondre à toutes vos préoccupations.</p>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="row">
+                            <div class="col-lg-6 mb-4">
+                                <h5 class="mb-20">01. Retour d'expérience</h5>
+                                <p>Votre avis compte ! Dites-nous ce que vous pensez de notre plateforme et comment nous pouvons l'améliorer.</p>
+                            </div>
+                            <div class="col-lg-6 mb-4">
+                                <h5 class="mb-20">02. Services aux employeurs</h5>
+                                <p>Découvrez nos services dédiés aux employeurs pour la publication d'offres d'emploi et la gestion des candidatures.</p>
+                            </div>
+                            <div class="col-lg-6 mb-lg-0 mb-4">
+                                <h5 class="mb-20 text-brand">03. Questions de facturation</h5>
+                                <p>Pour toute question concernant la facturation et les paiements, notre équipe est là pour vous assister.</p>
+                            </div>
+                            <div class="col-lg-6">
+                                <h5 class="mb-20">04. Questions générales</h5>
+                                <p>Pour toute autre question ou assistance, n'hésitez pas à nous contacter. Nous sommes là pour vous aider.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+    <section class="container mb-50 d-none d-md-block">
+        <div class="border-radius-15 overflow-hidden">
+            <div id="map-panes" class="leaflet-map">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3396.8629000652572!2d-8.012158924383744!3d31.637603974160488!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzHCsDM4JzE1LjQiTiA4wrAwMCczNC41Ilc!5e0!3m2!1sfr!2sma!4v1717953427857!5m2!1sfr!2sma" width="1586" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>            </div>
+        </div>
+    </section>
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-10 col-lg-12 m-auto">
+                <section class="mb-50">
+                    <div class="row mb-60">
+                        <div class="col-md-4 mb-4 mb-md-0">
+                            <h4 class="mb-15 text-brand">Bureau</h4>
+                            Avenue Yacoub el Mansour<br />
+                            Guéliz, 40000, Marrakech, Maroc<br />
+                            <abbr title="Téléphone">Téléphone :</abbr> (+212)6-99050501 <br />
+                            <abbr title="Email">Email : </abbr>support&#64;onemakan.ma<br />
+                        </div>                                             
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-8">
+                          <div class="contact-from-area padding-20-row-col">
+                            <h5 class="text-brand mb-10">Formulaire de contact</h5>
+                            <h2 class="mb-10">Laissez-nous un message</h2>
+                            <p class="text-muted mb-30 font-sm">Votre adresse email ne sera pas publiée. Les champs obligatoires sont marqués *</p>
+                            <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form-style mt-30" id="contact-form">
+                              <div class="row">
+                                <div class="col-lg-6 col-md-6">
+                                  <div class="input-style mb-20">
+                                    <input formControlName="name" name="name" placeholder="Nom" type="text" />
+                                  </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                  <div class="input-style mb-20">
+                                    <input formControlName="email" name="email" placeholder="Votre Email" type="email" />
+                                  </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                  <div class="input-style mb-20">
+                                    <input formControlName="telephone" name="telephone" placeholder="Votre Téléphone" type="tel" />
+                                  </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                  <div class="input-style mb-20">
+                                    <input formControlName="subject" name="subject" placeholder="Sujet" type="text" />
+                                  </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12">
+                                  <div class="textarea-style mb-30">
+                                    <textarea formControlName="message" name="message" placeholder="Message"></textarea>
+                                  </div>
+                                  <button class="submit submit-auto-width" type="submit">Envoyer le message</button>
+                                </div>
+                              </div>
+                            </form>
+                            <p class="form-messege"></p>
+                          </div>
+                        </div>
+                        <div class="col-lg-4 pl-50 d-lg-block d-none">
+                          <img class="border-radius-15 mt-50" src="assets/imgs/page/contact-2.png" alt="" />
+                        </div>
+                      </div>
+                      
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <app-footer></app-footer>
+  <app-preloader></app-preloader>
+</main>

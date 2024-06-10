@@ -16,6 +16,8 @@ import { ChatComponent } from './chat/chat.component';
 import { AllAdsComponent } from './all-ads/all-ads.component';
 import { EditAdsComponent } from './edit-ads/edit-ads.component';
 import { MessageAddAnnonceComponent } from './message-add-annonce/message-add-annonce.component';
+import { AboutUsComponent } from './about-us/about-us.component';
+import { ContactUsComponent } from './contact-us/contact-us.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -50,6 +52,13 @@ const routes: Routes = [
     component: AddAdsComponent,
     canActivate: [AuthGuard],
   },
+  
+  {
+    path: 'qui-sommes-nous',
+    component: AboutUsComponent  },
+    {
+      path: 'contact-nous',
+      component: ContactUsComponent  },
   {
     path: 'page-account',
     component: PageAccountComponent,

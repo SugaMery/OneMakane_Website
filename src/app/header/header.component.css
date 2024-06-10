@@ -157,3 +157,121 @@ nav>ul>li {
 ::ng-deep input:-internal-autofill-selected {
     background-color: #ff5722;
 }
+
+::ng-deep  .position-static {
+    position: static;
+  }
+  
+  ::ng-deep  .mega-menu {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  ::ng-deep  .sub-mega-menu {
+    padding: 10px;
+  }
+  
+  .left-menu {
+    flex: 1;
+  }
+  
+  ::ng-deep  .right-menu {
+    flex: 0 0 30%;
+    height: 35%;
+  }
+  
+  ::ng-deep  .menu-banner-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  ::ng-deep   .menu-banner-wrap img {
+    width: 100%;
+    height: auto;
+    border-radius: 1rem;
+  }
+  
+  ::ng-deep  .menu-banner-content {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  ::ng-deep  .menu-banner-btn {
+    margin-top: 10px;
+  }
+  
+
+  ::ng-deep .sub-mega-menu {
+    width: 40%;
+    margin-right: 1% !important;
+}
+
+
+
+
+::ng-deep .position-static {
+    position: static;
+  }
+  
+  ::ng-deep .mega-menu {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  ::ng-deep .sub-mega-menu {
+    padding: 10px;
+    flex: 1;
+  }
+  
+  ::ng-deep  .left-menu {
+    flex: 1;
+  }
+  
+  ::ng-deep .right-menu {
+    flex: 0 0 30%;
+    height: 35%;
+  }
+  
+  ::ng-deep .menu-banner-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  ::ng-deep .menu-banner-wrap img {
+    width: 100%;
+    height: auto;
+    border-radius: 1rem;
+  }
+  
+  ::ng-deep .menu-banner-content {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  ::ng-deep .menu-banner-btn {
+    margin-top: 10px;
+  }
+  
+  ::ng-deep .sub-mega-menu ul {
+    padding-left: 20px; /* Adjust padding for subcategories */
+  }
+  
+  ::ng-deep .menu-title {
+    font-weight: bold;
+  }
+  
+  ::ng-deep .sub-mega-menu ul ul {
+    padding-left: 40px; /* Adjust padding for sub-subcategories */
+  }
+  
+  /* Ensure consistent spacing even for empty subcategory lists */
+  ::ng-deep  .sub-mega-menu ul:empty::before {
+    content: '';
+    display: block;
+    height: 1rem; /* Adjust height as needed */
+  }
+  

@@ -131,7 +131,7 @@
                   src="../../assets/imgs/theme/icons/icon-location.svg"
                   alt=""
                 /><strong>Adresse : </strong>
-                <span>Marrakech Maroc</span>
+                <span>Avenue Yaacoub Almansour centre d'affaire Sara Guéliz ,Marraakech</span>
               </li>
               <li>
                 <img
@@ -151,7 +151,7 @@
                   src="../../assets/imgs/theme/icons/icon-clock.svg"
                   alt=""
                 /><strong>Horaires : </strong
-                ><span>10:00 - 18:00, Lun - Sam</span>
+                ><span>09:00 - 19:00, Lun - Ven</span>
               </li>
             </ul>
           </div>
@@ -160,32 +160,38 @@
           class="footer-link-widget col wow animate__animated animate__fadeInUp"
           data-wow-delay=".1s"
         >
-          <h4 class="widget-title">Entreprise</h4>
+          <h4 class="widget-title">À Propos du OneMakan</h4>
           <ul class="footer-list mb-sm-5 mb-md-0">
-            <li><a href="#">À propos de nous</a></li>
+            <li><a href="qui-sommes-nous">Qui sommes-nous ?</a></li>
             <li><a href="#">Politique de confidentialité</a></li>
             <li><a href="#">Conditions générales</a></li>
-            <li><a href="#">Contactez-nous</a></li>
-            <li><a href="#">Centre de support</a></li>
+            <li><a href="contact-nous">Contactez-nous</a></li>
           </ul>
         </div>
         <div
           class="footer-link-widget col wow animate__animated animate__fadeInUp"
           data-wow-delay=".2s"
         >
-          <h4 class="widget-title">Compte</h4>
+          <h4 class="widget-title">Mon Compte </h4>
           <ul class="footer-list mb-sm-5 mb-md-0">
-            <li><a href="#">Connexion</a></li>
-            <li><a href="#">Consulter le compte</a></li>
-            <li><a href="#">Mes annonces</a></li>
-            <li><a href="#">Suivre ma commande</a></li>
+            <li><a href="/login">Connexion</a></li>
+            <li><a href="/register">Créer un compte</a></li>
+            <li><a href="/page-account#orders">Mes annonces</a></li>
+            <li><a href="#">Mes favoris</a></li>
+            <li><a href="#">Mes Messages</a></li>
           </ul>
         </div>
         <div
           class="footer-link-widget col wow animate__animated animate__fadeInUp"
           data-wow-delay=".3s"
         >
-          <h4 class="widget-title">Corporate</h4>
+        <h4 class="widget-title">Catégories en Vedette</h4>
+        <ul class="footer-list mb-sm-5 mb-md-0">
+          <li *ngFor="let category of categories.slice(0, 5)">
+            <a (click)="navigateToCategory(category.id)">{{ category.name }}</a>
+          </li>
+        </ul>
+        
           <!--                     <ul class="footer-list mb-sm-5 mb-md-0">
                         <li><a href="#">Become a Vendor</a></li>
                         <li><a href="#">Affiliate Program</a></li>
@@ -194,21 +200,6 @@
                         <li><a href="#">Our Suppliers</a></li>
                         <li><a href="#">Accessibility</a></li>
                         <li><a href="#">Promotions</a></li>
-                    </ul> -->
-        </div>
-        <div
-          class="footer-link-widget col wow animate__animated animate__fadeInUp"
-          data-wow-delay=".4s"
-        >
-          <h4 class="widget-title">Popular</h4>
-          <!--                     <ul class="footer-list mb-sm-5 mb-md-0">
-                        <li><a href="#">Milk & Flavoured Milk</a></li>
-                        <li><a href="#">Butter and Margarine</a></li>
-                        <li><a href="#">Eggs Substitutes</a></li>
-                        <li><a href="#">Marmalades</a></li>
-                        <li><a href="#">Sour Cream and Dips</a></li>
-                        <li><a href="#">Tea & Kombucha</a></li>
-                        <li><a href="#">Cheese</a></li>
                     </ul> -->
         </div>
         <div
@@ -249,7 +240,7 @@
       <div class="col-xl-4 col-lg-6 col-md-6">
         <p class="font-sm mb-0">
           &copy; 2024, Site d'annonces
-          <strong class="text-brand"> OneMakane</strong><br />Tous droits
+          <strong class="text-brand"> OneMakan</strong><br />Tous droits
           réservés
         </p>
       </div>
@@ -259,44 +250,37 @@
             src="../../assets/imgs/theme/icons/phone-call.svg"
             alt="hotline"
           />
-          <p>1900 - 6666<span>Ouvert de 8h00 à 19h00</span></p>
-        </div>
-        <div class="hotline d-lg-inline-flex">
-          <img
-            src="../../assets/imgs/theme/icons/phone-call.svg"
-            alt="hotline"
-          />
-          <p>1900 - 8888<span>Centre de support 24/7</span></p>
+          <p>+212699050501 <span>Ouvert de 9h00 à 19h00</span></p>
         </div>
       </div>
       <div class="col-xl-4 col-lg-6 col-md-6 text-end d-none d-md-block">
         <div class="mobile-social-icon">
           <h6>Suivez-nous</h6>
-          <a href="#"
+          <a href="https://web.facebook.com/Onemakan.ma"
             ><img
               src="../../assets/imgs/theme/icons/icon-facebook-white.svg"
               alt=""
           /></a>
-          <a href="#"
+<!--           <a href="#"
             ><img
               src="../../assets/imgs/theme/icons/icon-twitter-white.svg"
               alt=""
-          /></a>
-          <a href="#"
+          /></a> -->
+          <a href="https://www.instagram.com/onemakan.ma/"
             ><img
               src="../../assets/imgs/theme/icons/icon-instagram-white.svg"
               alt=""
           /></a>
-          <a href="#"
+<!--           <a href="#"
             ><img
               src="../../assets/imgs/theme/icons/icon-pinterest-white.svg"
               alt=""
-          /></a>
-          <a href="#"
+          /></a> -->
+<!--           <a href="#"
             ><img
               src="../../assets/imgs/theme/icons/icon-youtube-white.svg"
               alt=""
-          /></a>
+          /></a> -->
         </div>
       </div>
     </div>
