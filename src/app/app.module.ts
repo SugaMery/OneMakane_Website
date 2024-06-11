@@ -43,6 +43,7 @@ import { MessageAddAnnonceComponent } from './message-add-annonce/message-add-an
 import { CalendarModule } from 'primeng/calendar';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
+import { ConditionsGeneralesComponent } from './conditions-generales/conditions-generales.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import { ContactUsComponent } from './contact-us/contact-us.component';
     MessageAddAnnonceComponent,
     AboutUsComponent,
     ContactUsComponent,
+    ConditionsGeneralesComponent,
   ],
   imports: [
     BrowserModule,

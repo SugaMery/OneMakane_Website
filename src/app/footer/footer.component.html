@@ -131,7 +131,10 @@
                   src="../../assets/imgs/theme/icons/icon-location.svg"
                   alt=""
                 /><strong>Adresse : </strong>
-                <span>Avenue Yaacoub Almansour centre d'affaire Sara Guéliz ,Marraakech</span>
+                <span
+                  >Avenue Yaacoub Almansour centre d'affaire Sara Guéliz
+                  ,Marraakech</span
+                >
               </li>
               <li>
                 <img
@@ -164,7 +167,7 @@
           <ul class="footer-list mb-sm-5 mb-md-0">
             <li><a href="qui-sommes-nous">Qui sommes-nous ?</a></li>
             <li><a href="#">Politique de confidentialité</a></li>
-            <li><a href="#">Conditions générales</a></li>
+            <li><a href="#">Conditions générales de ventes </a></li>
             <li><a href="contact-nous">Contactez-nous</a></li>
           </ul>
         </div>
@@ -172,7 +175,7 @@
           class="footer-link-widget col wow animate__animated animate__fadeInUp"
           data-wow-delay=".2s"
         >
-          <h4 class="widget-title">Mon Compte </h4>
+          <h4 class="widget-title">Mon Compte</h4>
           <ul class="footer-list mb-sm-5 mb-md-0">
             <li><a href="/login">Connexion</a></li>
             <li><a href="/register">Créer un compte</a></li>
@@ -185,13 +188,15 @@
           class="footer-link-widget col wow animate__animated animate__fadeInUp"
           data-wow-delay=".3s"
         >
-        <h4 class="widget-title">Catégories en Vedette</h4>
-        <ul class="footer-list mb-sm-5 mb-md-0">
-          <li *ngFor="let category of categories.slice(0, 5)">
-            <a (click)="navigateToCategory(category.id)">{{ category.name }}</a>
-          </li>
-        </ul>
-        
+          <h4 class="widget-title">Catégories en Vedette</h4>
+          <ul class="footer-list mb-sm-5 mb-md-0">
+            <li *ngFor="let category of categories.slice(0, 5)">
+              <a (click)="navigateToCategory(category.id)">{{
+                category.name
+              }}</a>
+            </li>
+          </ul>
+
           <!--                     <ul class="footer-list mb-sm-5 mb-md-0">
                         <li><a href="#">Become a Vendor</a></li>
                         <li><a href="#">Affiliate Program</a></li>
@@ -261,7 +266,7 @@
               src="../../assets/imgs/theme/icons/icon-facebook-white.svg"
               alt=""
           /></a>
-<!--           <a href="#"
+          <!--           <a href="#"
             ><img
               src="../../assets/imgs/theme/icons/icon-twitter-white.svg"
               alt=""
@@ -271,12 +276,12 @@
               src="../../assets/imgs/theme/icons/icon-instagram-white.svg"
               alt=""
           /></a>
-<!--           <a href="#"
+          <!--           <a href="#"
             ><img
               src="../../assets/imgs/theme/icons/icon-pinterest-white.svg"
               alt=""
           /></a> -->
-<!--           <a href="#"
+          <!--           <a href="#"
             ><img
               src="../../assets/imgs/theme/icons/icon-youtube-white.svg"
               alt=""
