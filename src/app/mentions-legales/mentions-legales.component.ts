@@ -2,17 +2,17 @@ import { Component } from '@angular/core';
 import { PageService } from '../page.service';
 
 @Component({
-  selector: 'app-conditions-generales',
-  templateUrl: './conditions-generales.component.html',
-  styleUrl: './conditions-generales.component.css',
+  selector: 'app-mentions-legales',
+  templateUrl: './mentions-legales.component.html',
+  styleUrl: './mentions-legales.component.css',
 })
-export class ConditionsGeneralesComponent {
+export class MentionsLegalesComponent {
   pageContent: any;
 
   constructor(private pageService: PageService) {}
 
   ngOnInit(): void {
-    this.loadPage('2', '1'); // Example pageId and langId
+    this.loadPage('3', '1'); // Example pageId and langId
   }
 
   loadPage(pageId: string, langId: string): void {

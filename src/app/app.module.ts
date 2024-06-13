@@ -44,6 +44,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
 import { ConditionsGeneralesComponent } from './conditions-generales/conditions-generales.component';
+import { MentionsLegalesComponent } from './mentions-legales/mentions-legales.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { ConditionsGeneralesComponent } from './conditions-generales/conditions-
     AboutUsComponent,
     ContactUsComponent,
     ConditionsGeneralesComponent,
+    MentionsLegalesComponent,
   ],
   imports: [
     BrowserModule,

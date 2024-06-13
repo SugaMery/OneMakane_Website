@@ -31766,3 +31766,7 @@ table th {
 ::ng-deep .p-datepicker .p-yearpicker {
   margin: 0.5rem 0px !important;
 }
+
+.full-width-calendar {
+  width: 100%;
+}

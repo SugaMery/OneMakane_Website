@@ -261,7 +261,7 @@
                                               <li
                                                 class="option"
                                                 *ngFor="
-                                                  let category of categories
+                                                  let category of allcategories
                                                 "
                                                 (click)="selectOption(category)"
                                               >
@@ -281,7 +281,8 @@
                                                     "
                                                   />
                                                   {{
-                                                    category.parentCategoy?.name
+                                                    category?.parentCategoy
+                                                      ?.name
                                                   }}
                                                   <i
                                                     class="fi-rs-angle-right"
@@ -364,7 +365,9 @@
                                           <div class="select-menu">
                                             <label>{{ setting.label }}</label>
 
+                                            <!-- Display Select Button -->
                                             <div
+                                              *ngIf="setting.type === 'select'"
                                               class="select-btn"
                                               style="
                                                 margin-bottom: 1rem;
@@ -395,7 +398,10 @@
                                               </span>
                                               <i class="bx bx-chevron-down"></i>
                                             </div>
+
+                                            <!-- Display Select Options -->
                                             <ul
+                                              *ngIf="setting.type === 'select'"
                                               class="options"
                                               [class.active]="
                                                 setting.optionsVisible
@@ -419,23 +425,149 @@
                                               >
                                                 <span
                                                   class="d-inline-flex align-items-center"
+                                                  >{{ option.label }}</span
                                                 >
-                                                  {{ option.label }}
-                                                </span>
                                               </li>
                                             </ul>
-                                          </div>
-                                          <div
-                                            *ngIf="fieldsErrors[setting.label!]"
-                                            class="text-danger requisDiv"
-                                          >
-                                            <div>
-                                              {{
-                                                setting.label
-                                                  ? setting.label +
-                                                    " est requise."
-                                                  : ""
-                                              }}
+
+                                            <!-- Display Table -->
+                                            <div
+                                              *ngIf="setting.type === 'table'"
+                                              class="select-btn"
+                                              style="
+                                                margin-bottom: 1rem;
+                                                background: #fff;
+                                                border: 1px solid #ececec;
+                                                height: 55px;
+                                                box-shadow: none;
+                                                padding-left: 20px;
+                                                font-size: 15px;
+                                                width: 100%;
+                                              "
+                                              (click)="toggledOptions(setting)"
+                                            >
+                                              <span class="sBtn-text">
+                                                <div
+                                                  style="
+                                                    display: flex;
+                                                    align-items: center;
+                                                  "
+                                                >
+                                                  {{
+                                                    setting.selectedOption
+                                                      ? setting.selectedOption
+                                                          .name
+                                                      : "Choisissez"
+                                                  }}
+                                                </div>
+                                              </span>
+                                              <i class="bx bx-chevron-down"></i>
+                                            </div>
+
+                                            <!-- Display Select Options -->
+                                            <ul
+                                              *ngIf="setting.type === 'table'"
+                                              class="options"
+                                              [class.active]="
+                                                setting.optionsVisible
+                                              "
+                                              style="font-size: smaller"
+                                            >
+                                              <div
+                                                *ngFor="
+                                                  let optioned of parseOptions2(
+                                                    setting.content
+                                                  )
+                                                "
+                                              >
+                                                {{ optioned.label }}
+                                                <li
+                                                  class="option"
+                                                  *ngFor="
+                                                    let option of parseOptions1(
+                                                      optioned.content
+                                                    )
+                                                  "
+                                                  [value]="option.id"
+                                                  (click)="
+                                                    selectdOptiond(
+                                                      option,
+                                                      setting
+                                                    )
+                                                  "
+                                                >
+                                                  <span
+                                                    class="d-inline-flex align-items-center"
+                                                    >{{ option.name }}</span
+                                                  >
+                                                </li>
+                                              </div>
+                                            </ul>
+                                            <!-- Display Date Input for 'date' type -->
+                                            <div
+                                              *ngIf="setting.type === 'date'"
+                                              style="margin-bottom: 1rem"
+                                            >
+                                              <p-calendar
+                                                [(ngModel)]="setting.content"
+                                                [iconDisplay]="'input'"
+                                                [showIcon]="true"
+                                                placeholder="{{
+                                                  setting.label
+                                                }}"
+                                                inputId="icondisplay"
+                                                class="full-width-calendar"
+                                                [style]="{ width: '100%' }"
+                                              ></p-calendar>
+                                            </div>
+
+                                            <div
+                                              *ngIf="setting.type === 'text'"
+                                              style="margin-bottom: 1rem"
+                                            >
+                                              <input
+                                                id="titre"
+                                                name="titre"
+                                                [(ngModel)]="setting.content"
+                                                placeholder="{{
+                                                  setting.label
+                                                }}"
+                                                type="text"
+                                                required
+                                                maxlength="50"
+                                              />
+                                            </div>
+                                            <div
+                                              *ngIf="setting.type === 'number'"
+                                              style="margin-bottom: 1rem"
+                                            >
+                                              <input
+                                                id="titre"
+                                                name="titre"
+                                                [(ngModel)]="setting.content"
+                                                placeholder="{{
+                                                  setting.label
+                                                }}"
+                                                type="number"
+                                                required
+                                                maxlength="50"
+                                              />
+                                            </div>
+
+                                            <div
+                                              *ngIf="
+                                                fieldsErrors[setting.label!]
+                                              "
+                                              class="text-danger requisDiv"
+                                            >
+                                              <div>
+                                                {{
+                                                  setting.label
+                                                    ? setting.label +
+                                                      " est requise."
+                                                    : ""
+                                                }}
+                                              </div>
                                             </div>
                                           </div>
                                         </div>

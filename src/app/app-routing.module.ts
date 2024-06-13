@@ -19,6 +19,7 @@ import { MessageAddAnnonceComponent } from './message-add-annonce/message-add-an
 import { AboutUsComponent } from './about-us/about-us.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
 import { ConditionsGeneralesComponent } from './conditions-generales/conditions-generales.component';
+import { MentionsLegalesComponent } from './mentions-legales/mentions-legales.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -39,6 +40,10 @@ const routes: Routes = [
   {
     path: 'conditions_generales_de_ventes',
     component: ConditionsGeneralesComponent,
+  },
+  {
+    path: 'mentions_legales',
+    component: MentionsLegalesComponent,
   },
   {
     path: 'reset-password/:user_id/:password_token',
