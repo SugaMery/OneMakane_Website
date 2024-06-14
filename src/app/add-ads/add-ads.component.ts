@@ -26,6 +26,7 @@ interface Category {
 }
 
 interface ModelField {
+  options: any;
   route: any;
   table: any;
   content: any;
@@ -43,6 +44,7 @@ interface StringIndexed {
 }
 
 interface Setting {
+  key: any;
   id: number;
   name: string;
   model: string;
@@ -52,12 +54,14 @@ interface Setting {
   label?: string;
   optionsVisible?: boolean;
   type: string;
+  selectedOptions: any[]; // Define selectedOptions array
 }
 
 interface SelectedOption {
   value: string;
   label: string;
   name?: string;
+  id?: number;
 }
 
 interface CustomCategory {
@@ -152,7 +156,7 @@ export class AddAdsComponent {
   filteredAds: any[] = [];
   settingsOption: ModelFields | undefined;
   setting: any;
-
+  date!: string;
   constructor(
     private authService: AuthGuard,
     private annonceService: AnnonceService,
@@ -164,7 +168,7 @@ export class AddAdsComponent {
 
   // Liste de catégories avec leurs mots-clés associés
   Customcategories: CustomCategory[] = [
-    {
+    /*     {
       name: 'Immobilier',
       keywords: ['appartement', 'maison', 'terrain'],
       icon_path:
@@ -579,7 +583,7 @@ export class AddAdsComponent {
           ],
         },
       ],
-    },
+    }, */
   ];
 
   selectSubCategory(subcategory: SubCategory) {
@@ -692,6 +696,21 @@ export class AddAdsComponent {
       return [];
     }
   }
+  toggleOption(option: any, setting: any) {
+    // Implement your toggle logic here
+    // For example, toggle the selected state of the option
+    option.selected = !option.selected;
+    // Add any additional logic you need
+  }
+  parseOptionsGO(
+    content: any[]
+  ): { value: string; label: string; id: string }[] {
+    return content.map((option) => ({
+      value: option.value,
+      label: option.label,
+      id: option.id, // Ensure id is retrieved from your data structure
+    }));
+  }
 
   parseOptions1(
     content: string | StringIndexed
@@ -767,7 +786,8 @@ export class AddAdsComponent {
   ngOnInit(): void {
     this.getUserInfo();
     this.fetchCategories();
-
+    const currentDate = new Date();
+    this.date = this.formatDate(currentDate);
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
     this.annonceService.getAds().subscribe((data) => {
@@ -875,7 +895,7 @@ export class AddAdsComponent {
 
           if (isUnique) {
             uniqueResults.add(category.id);
-            console.log('goooood', category);
+            //console.log('goooood', category);
           }
         });
 
@@ -987,18 +1007,76 @@ export class AddAdsComponent {
 
   emitNextCallbackSetting(): boolean {
     this.fieldsErrors = {};
+    console.log('great ', this.settings, this.date);
+
     this.settings.forEach((setting) => {
-      if (!setting.selectedOption) {
-        this.fieldsErrors[setting.label!] = true;
+      if (
+        setting.type == 'text' ||
+        setting.type == 'number' ||
+        setting.type == 'date' ||
+        setting.type == 'bool'
+      ) {
+        if (setting.content === null) {
+          console.log('great ', setting);
+
+          this.fieldsErrors[setting.label!] = true;
+        }
+      } else if (setting.type == 'select') {
+        if (!setting.selectedOption) {
+          this.fieldsErrors[setting.label!] = true;
+        }
+      } else if (setting.type == 'multiple') {
+        if (!setting.selectedOptions) {
+          this.fieldsErrors[setting.label!] = true;
+        }
       }
     });
     const hasErrors = Object.keys(this.fieldsErrors).length > 0;
     if (hasErrors) {
+      const settingADS: { [key: string]: any } = {};
+      for (let i = 0; i < this.settings.length; i++) {
+        const setting = this.settings[i];
+        if (
+          setting.type === 'text' ||
+          setting.type === 'number' ||
+          setting.type === 'date' ||
+          setting.type === 'bool' ||
+          setting.type === 'select' ||
+          setting.type === 'options'
+        ) {
+          if (setting.selectedOption) {
+            settingADS[setting.key] = setting.selectedOption.value;
+          } else {
+            settingADS[setting.key] = setting.content;
+          }
+        } else if (setting.type === 'table') {
+          settingADS[setting.key] = setting.selectedOption?.id;
+        } else if (setting.type === 'multiple') {
+          const list: any[] = [];
+          setting.selectedOptions.forEach((element) => {
+            list.push(element.value);
+          });
+          console.log('listtttttttttteee', list);
+          settingADS[setting.key] = list;
+        }
+      }
+      console.log('settingADS', settingADS);
+
       return false;
     }
     return true;
   }
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-based
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+  }
 
+  onDateInputChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.date = input.value;
+  }
   emitNextCallbackTitre(): boolean {
     //this.getAds();
     let isValid = true;
@@ -1057,11 +1135,11 @@ export class AddAdsComponent {
     const accessToken = localStorage.getItem('loggedInUserToken');
     const settingsOption = this.selectedOption.model_fields;
     console.log('ooooo', settingsOption);
-  
+
     for (const key in settingsOption) {
       if (settingsOption.hasOwnProperty(key)) {
         const field = settingsOption[key];
-  
+
         if (field.route) {
           this.settingsService
             .createMarque(field.route, accessToken!)
@@ -1073,13 +1151,16 @@ export class AddAdsComponent {
                 this.autresMarques = this.transformData(
                   response.data['Autres marques']
                 );
-  
+
                 // Update field.content to have the desired structure
                 field.content = [
-                  { label: 'Marques Populaires', content: this.marquesPopulaires },
+                  {
+                    label: 'Marques Populaires',
+                    content: this.marquesPopulaires,
+                  },
                   { label: 'Autres Marques', content: this.autresMarques },
                 ];
-  
+
                 // Create a new setting object for table type
                 const newSetting: any = {
                   name: field.label,
@@ -1087,28 +1168,30 @@ export class AddAdsComponent {
                   content: field.content,
                   optionsVisible: false,
                   type: 'table',
+                  key: key,
                 };
-  
+
                 // Push the new setting object to the settings array
                 this.settings.push(newSetting);
               }
             });
-        } else if (field.type === 'select') {
+        } else if (field.type === 'select' && !field.options) {
           this.settingsService
             .getSettings(accessToken!, queryParams)
             .subscribe((setting) => {
               setting.data.forEach((data: { content: any; name: string }) => {
                 if (data.name === key) {
                   field.content = data.content;
-  
+
                   const newSetting: any = {
                     name: field.label,
                     label: field.label,
                     content: data.content,
                     optionsVisible: false,
                     type: 'select',
+                    key: key,
                   };
-  
+
                   this.settings.push(newSetting);
                 }
               });
@@ -1117,11 +1200,12 @@ export class AddAdsComponent {
           const newSetting: any = {
             name: field.label,
             label: field.label,
-            content: field.content,
+            content: this.date,
             optionsVisible: false,
             type: 'date',
+            key: key,
           };
-  
+
           this.settings.push(newSetting);
         } else if (field.type === 'text' || field.type === 'number') {
           const newSetting: any = {
@@ -1129,17 +1213,96 @@ export class AddAdsComponent {
             label: field.label,
             content: field.content,
             optionsVisible: false,
+            key: key,
+
             type: field.type, // 'text' or 'number'
           };
-  
+
+          this.settings.push(newSetting);
+        } else if (field.type === 'multiple') {
+          // Handle multiple type
+          this.settingsService
+            .getSettings(accessToken!, queryParams)
+            .subscribe((setting) => {
+              setting.data.forEach((data: { content: any; name: string }) => {
+                if (data.name === key) {
+                  field.content = data.content;
+
+                  const newSetting: any = {
+                    name: field.label,
+                    label: field.label,
+                    content: field.content, // Assuming field.content is an array of options
+                    optionsVisible: false,
+                    selectedOptions: [], // For tracking selected options
+                    type: 'multiple',
+                    key: key,
+                  };
+
+                  this.settings.push(newSetting);
+                }
+              });
+            });
+        } else if (field.options) {
+          console.log('teeeeeeeeeeeessss', field.options);
+          const newSetting: any = {
+            name: field.label,
+            label: field.label,
+            content: field.options,
+            optionsVisible: false,
+            type: 'options', // 'text' or 'number'
+            key: key,
+          };
+          console.log('teeeeeeeeeeeessss hhhhhhhhhhhh', newSetting);
+
+          this.settings.push(newSetting);
+        } else if (field.type === 'bool') {
+          const newSetting: any = {
+            name: field.label,
+            label: field.label,
+            content: field.options,
+            optionsVisible: false,
+            type: field.type, // 'text' or 'number'
+            key: key,
+          };
+
           this.settings.push(newSetting);
         }
       }
     }
-  
+
     console.log('this.settings', this.settings);
   }
-  
+  // Inside your component class
+  toggleOptionsGO(setting: any) {
+    setting.optionsVisible = !setting.optionsVisible;
+  }
+  updateSetting(setting: any, value: string) {
+    setting.content = value;
+    // Optionally, you can perform additional logic here
+    // For example, update backend or emit event, etc.
+  }
+  getSelectedLabels(setting: any): string {
+    return setting.selectedOptions
+      .map((option: { label: any }) => option.label)
+      .join(', ');
+  }
+
+  isOptionSelected(option: any, setting: any): boolean {
+    return setting.selectedOptions.some(
+      (selected: { value: any }) => selected.value === option.value
+    );
+  }
+
+  selectOptionGO(option: any, setting: any) {
+    const index = setting.selectedOptions.findIndex(
+      (selected: { value: any }) => selected.value === option.value
+    );
+    if (index !== -1) {
+      setting.selectedOptions.splice(index, 1); // Deselect option
+    } else {
+      setting.selectedOptions.push(option); // Select option
+    }
+  }
 
   onSubmit(): void {
     let isValid = true;
@@ -1175,7 +1338,6 @@ export class AddAdsComponent {
     }
 
     const mediaIds: string[] = [];
-
     Promise.all(
       this.selectedFiles.map((file) => {
         return this.annonceService
@@ -1217,11 +1379,32 @@ export class AddAdsComponent {
           const settingADS: { [key: string]: any } = {};
           for (let i = 0; i < this.settings.length; i++) {
             const setting = this.settings[i];
-            if (setting.selectedOption) {
-              settingADS[setting.name] = setting.selectedOption.value;
+            if (
+              setting.type === 'text' ||
+              setting.type === 'number' ||
+              setting.type === 'date' ||
+              setting.type === 'bool' ||
+              setting.type === 'select' ||
+              setting.type === 'options'
+            ) {
+              if (setting.selectedOption) {
+                settingADS[setting.key] = setting.selectedOption.value;
+              } else {
+                settingADS[setting.key] = setting.content;
+              }
+            } else if (setting.type === 'table') {
+              settingADS[setting.key] = setting.selectedOption?.id;
+            } else if (setting.type === 'multiple') {
+              const list: any[] = [];
+              setting.selectedOptions.forEach((element) => {
+                list.push(element.value);
+              });
+              console.log('listtttttttttteee', list);
+              settingADS[setting.key] = list;
             }
           }
           console.log('settingADS', settingADS);
+
           this.annonceService
             .insertSetting(
               response.data.id,
@@ -1229,6 +1412,7 @@ export class AddAdsComponent {
               settingADS,
               accessToken
             )
+
             .subscribe(
               (response) => {
                 this.router.navigate(['/login']); // Replace 'login' with your actual login route

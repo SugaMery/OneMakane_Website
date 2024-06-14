@@ -430,6 +430,148 @@
                                               </li>
                                             </ul>
 
+                                            <div
+                                              *ngIf="setting.type === 'options'"
+                                              class="select-btn"
+                                              style="
+                                                margin-bottom: 1rem;
+                                                background: #fff;
+                                                border: 1px solid #ececec;
+                                                height: 55px;
+                                                box-shadow: none;
+                                                padding-left: 20px;
+                                                font-size: 15px;
+                                                width: 100%;
+                                              "
+                                              (click)="toggledOptions(setting)"
+                                            >
+                                              <span class="sBtn-text">
+                                                <div
+                                                  style="
+                                                    display: flex;
+                                                    align-items: center;
+                                                  "
+                                                >
+                                                  {{
+                                                    setting.selectedOption
+                                                      ? setting.selectedOption
+                                                          .label
+                                                      : "Choisissez"
+                                                  }}
+                                                </div>
+                                              </span>
+                                              <i class="bx bx-chevron-down"></i>
+                                            </div>
+                                            <div
+                                              *ngIf="setting.type === 'bool'"
+                                              class="payment_option"
+                                            >
+                                              <div
+                                                class="custome-radio d-inline-flex align-items-center"
+                                                style="margin-right: 2rem"
+                                              >
+                                                <input
+                                                  class="form-check-input"
+                                                  type="radio"
+                                                  name="{{ setting.name }}"
+                                                  id="{{ setting.name }}Yes"
+                                                  value="yes"
+                                                  [checked]="
+                                                    setting.content === 'yes'
+                                                  "
+                                                  (change)="
+                                                    updateSetting(
+                                                      setting,
+                                                      'yes'
+                                                    )
+                                                  "
+                                                />
+                                                <label
+                                                  class="form-check-label"
+                                                  for="{{ setting.name }}Yes"
+                                                  >Oui</label
+                                                >
+                                              </div>
+                                              <div
+                                                class="custome-radio d-inline-flex align-items-center"
+                                              >
+                                                <input
+                                                  class="form-check-input"
+                                                  type="radio"
+                                                  name="{{ setting.name }}"
+                                                  id="{{ setting.name }}No"
+                                                  value="no"
+                                                  [checked]="
+                                                    setting.content === 'no'
+                                                  "
+                                                  (change)="
+                                                    updateSetting(setting, 'no')
+                                                  "
+                                                />
+                                                <label
+                                                  class="form-check-label"
+                                                  for="{{ setting.name }}No"
+                                                  >Non
+                                                </label>
+                                              </div>
+                                            </div>
+
+                                            <div
+                                              *ngIf="setting.type === 'radio'"
+                                              class="payment_option"
+                                            >
+                                              <div
+                                                class="custom-radio d-inline-flex align-items-center"
+                                                style="margin-right: 2rem"
+                                              >
+                                                <input
+                                                  class="form-check-input"
+                                                  type="radio"
+                                                  name="{{ setting.name }}"
+                                                  id="{{ setting.name }}Yes"
+                                                  [value]="setting.content"
+                                                  [checked]="
+                                                    setting.content === 'yes'
+                                                  "
+                                                />
+                                                <label
+                                                  class="form-check-label"
+                                                  for="{{ setting.name }}Yes"
+                                                  >{{ setting.label }}</label
+                                                >
+                                              </div>
+                                            </div>
+                                            <!-- Display Select Options -->
+                                            <ul
+                                              *ngIf="setting.type === 'options'"
+                                              class="options"
+                                              [class.active]="
+                                                setting.optionsVisible
+                                              "
+                                              style="font-size: smaller"
+                                            >
+                                              <li
+                                                class="option"
+                                                *ngFor="
+                                                  let option of parseOptions(
+                                                    setting.content
+                                                  )
+                                                "
+                                                [value]="option.value"
+                                                (click)="
+                                                  selectdOptiond(
+                                                    option,
+                                                    setting
+                                                  )
+                                                "
+                                              >
+                                                <span
+                                                  class="d-inline-flex align-items-center"
+                                                  >{{ option.label }}</span
+                                                >
+                                              </li>
+                                            </ul>
+
                                             <!-- Display Table -->
                                             <div
                                               *ngIf="setting.type === 'table'"
@@ -509,7 +651,7 @@
                                               style="margin-bottom: 1rem"
                                             >
                                               <p-calendar
-                                                [(ngModel)]="setting.content"
+                                                [(ngModel)]="date"
                                                 [iconDisplay]="'input'"
                                                 [showIcon]="true"
                                                 placeholder="{{
@@ -553,6 +695,103 @@
                                                 maxlength="50"
                                               />
                                             </div>
+
+                                            <!-- Display Select Button -->
+                                            <!-- Display Select Button -->
+                                            <div
+                                              *ngIf="
+                                                setting.type === 'multiple'
+                                              "
+                                              class="select-btn"
+                                              style="
+                                                margin-bottom: 1rem;
+                                                background: #fff;
+                                                border: 1px solid #ececec;
+                                                height: 55px;
+                                                box-shadow: none;
+                                                padding-left: 20px;
+                                                font-size: 15px;
+                                                width: 100%;
+                                              "
+                                              (click)="toggleOptionsGO(setting)"
+                                            >
+                                              <span class="sBtn-text">
+                                                <div
+                                                  style="
+                                                    display: flex;
+                                                    align-items: center;
+                                                  "
+                                                >
+                                                  {{
+                                                    setting.selectedOptions
+                                                      .length > 0
+                                                      ? getSelectedLabels(
+                                                          setting
+                                                        )
+                                                      : "Choisissez"
+                                                  }}
+                                                </div>
+                                              </span>
+                                              <i class="bx bx-chevron-down"></i>
+                                            </div>
+
+                                            <!-- Display Select Options -->
+                                            <ul
+                                              *ngIf="
+                                                setting.type === 'multiple'
+                                              "
+                                              class="options"
+                                              [class.active]="
+                                                setting.optionsVisible
+                                              "
+                                              style="font-size: smaller"
+                                            >
+                                              <li
+                                                class="option"
+                                                *ngFor="
+                                                  let option of parseOptions(
+                                                    setting.content
+                                                  )
+                                                "
+                                                [class.selected]="
+                                                  isOptionSelected(
+                                                    option,
+                                                    setting
+                                                  )
+                                                "
+                                                (click)="
+                                                  selectOptionGO(
+                                                    option,
+                                                    setting
+                                                  )
+                                                "
+                                              >
+                                                <div class="checkbox-container">
+                                                  <input
+                                                    class="checkbox"
+                                                    type="checkbox"
+                                                    id="{{ option.value }}"
+                                                    name="{{ option.label }}"
+                                                    [checked]="
+                                                      isOptionSelected(
+                                                        option,
+                                                        setting
+                                                      )
+                                                    "
+                                                    (change)="
+                                                      toggleOption(
+                                                        option,
+                                                        setting
+                                                      )
+                                                    "
+                                                  />
+                                                  <label
+                                                    for="{{ option.value }}"
+                                                    >{{ option.label }}</label
+                                                  >
+                                                </div>
+                                              </li>
+                                            </ul>
 
                                             <div
                                               *ngIf="

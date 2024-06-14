@@ -31770,3 +31770,60 @@ table th {
 .full-width-calendar {
   width: 100%;
 }
+
+
+
+/* Styling for the checkboxes and labels */
+::ng-deep .options {
+  list-style-type: none;
+  /* Remove default list styles */
+  padding-left: 0;
+  /* Remove default padding */
+}
+
+::ng-deep .option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  /* Adjust margin as needed */
+}
+
+::ng-deep .option input[type="checkbox"] {
+  margin-right: 0.5rem;
+  /* Space between checkbox and label */
+  cursor: pointer;
+  /* Change cursor to pointer on hover */
+}
+
+::ng-deep .option label {
+  cursor: pointer;
+  /* Change cursor to pointer on hover */
+}
+
+/* Optional: Style for selected options */
+::ng-deep .option.selected label {
+  font-weight: bold;
+  /* Example: Highlight selected options */
+  color: #007bff;
+  /* Example: Change color of selected labels */
+}
+
+::ng-deep .form-group input.checkbox {
+  background: #fff;
+  border: 1px solid #ececec;
+  height: 64px;
+  box-shadow: none;
+  padding-left: 20px;
+  font-size: 16px;
+  width: 100%;
+  WIDTH: max-content !important;
+}
+
+
+::ng-deep .checkbox-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  justify-content: start;
+
+}
