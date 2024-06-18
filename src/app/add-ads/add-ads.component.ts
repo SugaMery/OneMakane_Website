@@ -1276,11 +1276,11 @@ export class AddAdsComponent {
   toggleOptionsGO(setting: any) {
     setting.optionsVisible = !setting.optionsVisible;
   }
-  updateSetting(setting: any, value: string) {
+  updateSetting(setting: any, value: boolean) {
     setting.content = value;
-    // Optionally, you can perform additional logic here
-    // For example, update backend or emit event, etc.
+    // Any additional logic to handle the updated setting
   }
+  
   getSelectedLabels(setting: any): string {
     return setting.selectedOptions
       .map((option: { label: any }) => option.label)

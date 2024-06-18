@@ -58,6 +58,7 @@ export class AdsDetailComponent {
                   .subscribe(
                     (setting) => {
                       if (setting.data) {
+                        console.log("setting.data",setting.data);
                         const transformedFields = Object.keys(modelFields).map(
                           (key) => ({
                             value: key,

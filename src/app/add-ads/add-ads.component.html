@@ -275,10 +275,7 @@
                                                     }}"
                                                     alt=""
                                                     class="iconUrl"
-                                                    style="
-                                                      max-width: 3%;
-                                                      margin-right: 1rem;
-                                                    "
+                                                    [ngStyle]="{ 'max-width': isPhone() ? '1rem' : '3%', 'margin-right': '1rem' }"
                                                   />
                                                   {{
                                                     category?.parentCategoy
@@ -463,58 +460,49 @@
                                               <i class="bx bx-chevron-down"></i>
                                             </div>
                                             <div
-                                              *ngIf="setting.type === 'bool'"
-                                              class="payment_option"
+                                            *ngIf="setting.type === 'bool'"
+                                            class="payment_option"
+                                          >
+                                            <div
+                                              class="custome-radio d-inline-flex align-items-center"
+                                              style="margin-right: 2rem"
                                             >
-                                              <div
-                                                class="custome-radio d-inline-flex align-items-center"
-                                                style="margin-right: 2rem"
+                                              <input
+                                                class="form-check-input"
+                                                type="radio"
+                                                name="{{ setting.name }}"
+                                                id="{{ setting.name }}True"
+                                                value="true"
+                                                [checked]="setting.content === 'true'"
+                                                (change)="updateSetting(setting, true)"
+                                              />
+                                              <label
+                                                class="form-check-label"
+                                                for="{{ setting.name }}True"
+                                                >Oui</label
                                               >
-                                                <input
-                                                  class="form-check-input"
-                                                  type="radio"
-                                                  name="{{ setting.name }}"
-                                                  id="{{ setting.name }}Yes"
-                                                  value="yes"
-                                                  [checked]="
-                                                    setting.content === 'yes'
-                                                  "
-                                                  (change)="
-                                                    updateSetting(
-                                                      setting,
-                                                      'yes'
-                                                    )
-                                                  "
-                                                />
-                                                <label
-                                                  class="form-check-label"
-                                                  for="{{ setting.name }}Yes"
-                                                  >Oui</label
-                                                >
-                                              </div>
-                                              <div
-                                                class="custome-radio d-inline-flex align-items-center"
-                                              >
-                                                <input
-                                                  class="form-check-input"
-                                                  type="radio"
-                                                  name="{{ setting.name }}"
-                                                  id="{{ setting.name }}No"
-                                                  value="no"
-                                                  [checked]="
-                                                    setting.content === 'no'
-                                                  "
-                                                  (change)="
-                                                    updateSetting(setting, 'no')
-                                                  "
-                                                />
-                                                <label
-                                                  class="form-check-label"
-                                                  for="{{ setting.name }}No"
-                                                  >Non
-                                                </label>
-                                              </div>
                                             </div>
+                                            <div
+                                              class="custome-radio d-inline-flex align-items-center"
+                                            >
+                                              <input
+                                                class="form-check-input"
+                                                type="radio"
+                                                name="{{ setting.name }}"
+                                                id="{{ setting.name }}False"
+                                                value="false"
+                                                [checked]="setting.content === 'false'"
+                                                (change)="updateSetting(setting, false)"
+                                              />
+                                              <label
+                                                class="form-check-label"
+                                                for="{{ setting.name }}False"
+                                                >Non</label
+                                              >
+                                            </div>
+                                          </div>
+                                          
+                                          
 
                                             <div
                                               *ngIf="setting.type === 'radio'"

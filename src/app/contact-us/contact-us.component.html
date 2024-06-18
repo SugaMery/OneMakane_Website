@@ -14,13 +14,13 @@
         <div class="row">
             <div class="col-xl-10 col-lg-12 m-auto">
                 <section class="row align-items-end mb-50">
-                    <div class="col-lg-4 mb-lg-0 mb-md-5 mb-sm-5">
+                    <div class="col-lg-6 mb-lg-0 mb-md-5 mb-sm-5">
                         <h4 class="mb-20 text-brand">Comment pouvons-nous vous aider ?</h4>
                         <h1 class="mb-30">Faites-nous savoir comment nous pouvons vous aider</h1>
                         <p class="mb-20">Chez OneMakan, nous sommes là pour vous aider à publier et gérer vos annonces efficacement. Contactez-nous pour toute question ou assistance.</p>
                         <p>Nous sommes dédiés à offrir un service client de qualité pour répondre à toutes vos préoccupations.</p>
                     </div>
-                    <div class="col-lg-8">
+                    <div class="col-lg-6">
                         <div class="row">
                             <div class="col-lg-6 mb-4">
                                 <h5 class="mb-20">01. Retour d'expérience</h5>
@@ -65,48 +65,79 @@
                         </div>                                             
                     </div>
                     <div class="row">
-                        <div class="col-xl-8">
+                      <div class="col-xl-8">
                           <div class="contact-from-area padding-20-row-col">
-                            <h5 class="text-brand mb-10">Formulaire de contact</h5>
-                            <h2 class="mb-10">Laissez-nous un message</h2>
-                            <p class="text-muted mb-30 font-sm">Votre adresse email ne sera pas publiée. Les champs obligatoires sont marqués *</p>
-                            <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form-style mt-30" id="contact-form">
-                              <div class="row">
-                                <div class="col-lg-6 col-md-6">
-                                  <div class="input-style mb-20">
-                                    <input formControlName="name" name="name" placeholder="Nom" type="text" />
+                              <h5 class="text-brand mb-10">Formulaire de contact</h5>
+                              <h2 class="mb-10">Laissez-nous un message</h2>
+                              <p class="text-muted mb-30 font-sm">Votre adresse email ne sera pas publiée. Les champs obligatoires sont marqués *</p>
+                              <form [formGroup]="contactForm"  class="contact-form-style mt-30" id="contact-form">
+                                  <div class="row">
+                                      <div class="col-lg-6 col-md-6">
+                                          <div class="input-style mb-20">
+                                              <input formControlName="name" name="name" placeholder="Nom" type="text" />
+                                          </div>
+                                          <div *ngIf="contactForm.get('name')?.invalid && contactForm.get('name')?.touched" class="error" style="
+                                          margin-bottom: 1rem;
+                                          color: red;
+                                      ">
+                                              <span *ngIf="contactForm.get('name')?.errors?.['required']">Le nom est requis.</span>
+                                          </div>
+                                      </div>
+                                      <div class="col-lg-6 col-md-6">
+                                          <div class="input-style mb-20">
+                                              <input formControlName="email" name="email" placeholder="Votre Email" type="email" />
+                                          </div>
+                                          <div *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched" class="error" style="
+                                          margin-bottom: 1rem;
+                                          color: red;
+                                      ">
+                                              <span *ngIf="contactForm.get('email')?.errors?.['required']">L'email est requis.</span>
+                                              <span *ngIf="contactForm.get('email')?.errors?.['email']">L'email doit être valide.</span>
+                                          </div>
+                                      </div>
+                                      <div class="col-lg-6 col-md-6">
+                                          <div class="input-style mb-20">
+                                              <input formControlName="phone" name="phone" placeholder="Votre Téléphone" type="tel" />
+                                          </div>
+                                          <div *ngIf="contactForm.get('phone')?.invalid && contactForm.get('phone')?.touched" class="error" style="
+                                          margin-bottom: 1rem;
+                                          color: red;
+                                      "> 
+                                              <span *ngIf="contactForm.get('phone')?.errors?.['pattern']">Le numéro de téléphone doit être valide.</span>
+                                          </div>
+                                      </div>
+                                      <div class="col-lg-6 col-md-6">
+                                          <div class="input-style mb-20">
+                                              <input formControlName="object" name="object" placeholder="Sujet" type="text" />
+                                          </div>
+                                          <div *ngIf="contactForm.get('object')?.invalid && contactForm.get('object')?.touched" class="error" style="
+                                          margin-bottom: 1rem;
+                                          color: red;
+                                      ">
+                                              <span *ngIf="contactForm.get('object')?.errors?.['required']">Le sujet est requis.</span>
+                                          </div>
+                                      </div>
+                                      <div class="col-lg-12 col-md-12">
+                                          <div class="textarea-style mb-30">
+                                              <textarea formControlName="message" name="message" placeholder="Message"></textarea>
+                                          </div>
+                                          <div *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched" class="error">
+                                              <span *ngIf="contactForm.get('message')?.errors?.['required']">Le message est requis.</span>
+                                          </div>
+                                          <button class="submit submit-auto-width" style="
+                                          float: right;
+                                      " onclick="onSubmit()" type="submit">Envoyer le message</button>
+                                      </div>
                                   </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6">
-                                  <div class="input-style mb-20">
-                                    <input formControlName="email" name="email" placeholder="Votre Email" type="email" />
-                                  </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6">
-                                  <div class="input-style mb-20">
-                                    <input formControlName="telephone" name="telephone" placeholder="Votre Téléphone" type="tel" />
-                                  </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6">
-                                  <div class="input-style mb-20">
-                                    <input formControlName="subject" name="subject" placeholder="Sujet" type="text" />
-                                  </div>
-                                </div>
-                                <div class="col-lg-12 col-md-12">
-                                  <div class="textarea-style mb-30">
-                                    <textarea formControlName="message" name="message" placeholder="Message"></textarea>
-                                  </div>
-                                  <button class="submit submit-auto-width" type="submit">Envoyer le message</button>
-                                </div>
-                              </div>
-                            </form>
-                            <p class="form-messege"></p>
+                              </form>
+                              <p class="form-message"></p>
                           </div>
-                        </div>
-                        <div class="col-lg-4 pl-50 d-lg-block d-none">
-                          <img class="border-radius-15 mt-50" src="assets/imgs/page/contact-2.png" alt="" />
-                        </div>
                       </div>
+                      <div class="col-lg-4 pl-50 d-lg-block d-none">
+                          <img class="border-radius-15 mt-50" src="assets/imgs/page/contact-2.png" alt="" />
+                      </div>
+                  </div>
+                  
                       
                 </section>
             </div>

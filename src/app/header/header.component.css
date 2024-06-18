@@ -277,3 +277,26 @@ nav>ul>li {
   height: 1rem;
   /* Adjust height as needed */
 }
+
+
+::ng-deep .main-menu>nav>ul>li ul.mega-menu li {
+  line-height: 1;
+  display: block;
+  position: relative;
+  float: left;
+  padding-right: 30px !important;
+}
+
+
+::ng-deep .burger-icon.burger-icon-white>span::before, .burger-icon.burger-icon-white>span::after {
+  background-color: #253D4E;
+  background: white !important;
+}
+
+
+::ng-deep .header-action-2 .header-action-icon-2.test:hover .cart-dropdown-wrap {
+  opacity: 1;
+  visibility: visible;
+  top: calc(100% + 10px);
+  margin-top: 1rem;
+}

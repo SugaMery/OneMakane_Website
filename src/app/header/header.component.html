@@ -174,12 +174,7 @@
 </div>
 
 <header class="header-area header-style-1 header-style-5 header-height-2">
-  <div class="mobile-promotion">
-    <span
-      >Ouverture exceptionnelle, <strong>jusqu'à 15%</strong> de réduction sur
-      tous les articles. Plus que <strong>3 jours</strong> restants</span
-    >
-  </div>
+
   <div class="header-top header-top-ptb-1 d-none d-lg-block">
     <div class="container">
       <div class="row align-items-center">
@@ -210,6 +205,7 @@
                 <strong class="text-brand"> +212699050501</strong>
               </li>
               <li>
+                
                 <a class="language-dropdown-active" href="#"
                   >Français <i class="fi-rs-angle-small-down"></i
                 ></a>
@@ -302,8 +298,8 @@
                   style="
                     margin-top: auto;
                     padding-left: inherit;
-                    padding-right: inherit;
                   "
+                  *ngIf="status"
                 >
                   <link
                     rel="stylesheet"
@@ -637,70 +633,82 @@
         <div class="header-action-right d-block d-lg-none">
           <div class="header-action-2">
             <div class="header-action-icon-2">
-              <a href="/shop-wishlist">
-                <img
-                  alt="Nest"
-                  src="../../assets/imgs/theme/icons/icon-heart.svg"
-                />
-                <span class="pro-count white">4</span>
+              <a href="">
+
+                <i class="fi fi-rr-heart"></i>
               </a>
             </div>
-            <div class="header-action-icon-2">
-              <a class="mini-cart-icon" href="#">
-                <img
-                  alt="Nest"
-                  src="../../assets/imgs/theme/icons/icon-cart.svg"
-                />
-                <span class="pro-count white">2</span>
+
+
+
+            <div class="header-action-icon-2 test">
+              <a >
+                <i class="fi fi-rr-user"></i>
               </a>
-              <div class="cart-dropdown-wrap cart-dropdown-hm2">
+              <a 
+                ><span class="lable ml-0">{{ loggedInUserName }}</span></a
+              >
+              <div
+                class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown"
+                *ngIf="!status"
+                
+              >
                 <ul>
                   <li>
-                    <div class="shopping-cart-img">
-                      <a href="/shop-product-right"
-                        ><img
-                          alt="Nest"
-                          src="../../assets/imgs/shop/thumbnail-3.jpg"
-                      /></a>
-                    </div>
-                    <div class="shopping-cart-title">
-                      <h4>
-                        <a href="/shop-product-right">Plain Striola Shirts</a>
-                      </h4>
-                      <h3><span>1 × </span>$800.00</h3>
-                    </div>
-                    <div class="shopping-cart-delete">
-                      <a href="#"><i class="fi-rs-cross-small"></i></a>
-                    </div>
+                    <a href="/login"
+                      ><i class="fi fi-rs-user mr-10"></i>Connexion</a
+                    >
                   </li>
                   <li>
-                    <div class="shopping-cart-img">
-                      <a href="/shop-product-right"
-                        ><img
-                          alt="Nest"
-                          src="../../assets/imgs/shop/thumbnail-4.jpg"
-                      /></a>
-                    </div>
-                    <div class="shopping-cart-title">
-                      <h4>
-                        <a href="/shop-product-right">Macbook Pro 2024</a>
-                      </h4>
-                      <h3><span>1 × </span>$3500.00</h3>
-                    </div>
-                    <div class="shopping-cart-delete">
-                      <a href="#"><i class="fi-rs-cross-small"></i></a>
-                    </div>
+                    <a href="/register"
+                      ><i class="fi fi-rs-user mr-10"></i>Créer un compte</a
+                    >
                   </li>
                 </ul>
-                <div class="shopping-cart-footer">
-                  <div class="shopping-cart-total">
-                    <h4>Total <span>$383.00</span></h4>
-                  </div>
-                  <div class="shopping-cart-button">
-                    <a href="/shop-cart">View cart</a>
-                    <a href="/shop-checkout">Checkout</a>
-                  </div>
-                </div>
+              </div>
+
+              <div
+                class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown"
+                *ngIf="status"
+              >
+                <ul>
+                  <li>
+                    <a href="/page-account#account-detail"
+                      ><i class="fi fi-rs-user mr-10"></i>Mon compte</a
+                    >
+                  </li>
+                  <li>
+                    <a href="/deposer_une_annonce"
+                      ><i class="fi fi-rr-square-plus mr-10"></i>Déposer votre
+                      annonce</a
+                    >
+                  </li>
+                  <li>
+                    <a href="/page-account#orders"
+                      ><i class="fi fi-rs-list mr-10"></i>Mes annonces</a
+                    >
+                  </li>
+                  <li>
+                    <a href="/"
+                      ><i class="fi fi-rr-heart mr-10"></i>Mes favoris</a
+                    >
+                  </li>
+                  <li>
+                    <a href="/chat"
+                      ><i class="fi fi-rr-messages mr-10"></i>Mes Messages</a
+                    >
+                  </li>
+                  <li>
+                    <a href="/page-account#address"
+                      ><i class="fi fi-rr-lock mr-10"></i>Mot de passe</a
+                    >
+                  </li>
+                  <li>
+                    <a (click)="logout()" href="javascript:void(0)">
+                      <i class="fi fi-rs-sign-out mr-10"></i>Déconnexion
+                    </a>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
