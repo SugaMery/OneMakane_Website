@@ -8,7 +8,7 @@
             <div class="d-flex categori-dropdown-inner">
               <ul>
                 <li *ngFor="let category of displayedCategories">
-                  <a href="/page-account">
+                  <a [href]="'/ads-category/' + category.id">
                     <img
                       [src]="category.media?.url"
                       alt="{{ category.name }}"
@@ -25,7 +25,7 @@
               <div class="d-flex categori-dropdown-inner">
                 <ul>
                   <li *ngFor="let category of hiddenCategories">
-                    <a href="/page-account">
+                    <a [href]="'/ads-category/' + category.id">
                       <img
                         [src]="category.icon_path"
                         alt="{{ category.name }}"
@@ -62,7 +62,7 @@
                   <p class="mb-65">Déposer votre annonce maintenant</p>
                   <button
                     style="max-width: 450px; border-radius: 50px"
-                    onclick="window.location.href='/page-account'"
+                    onclick="window.location.href='/deposer_une_annonce'"
                     class="btn"
                     type="submit"
                   >
@@ -82,7 +82,7 @@
                   <p class="mb-65">Déposer votre annonce maintenant</p>
                   <button
                     style="max-width: 450px; border-radius: 50px"
-                    onclick="window.location.href='/page-account'"
+                    onclick="window.location.href='/deposer_une_annonce'"
                     class="btn"
                     type="submit"
                   >
@@ -104,7 +104,7 @@
                   <h4 class="mb-30">
                     Le meilleur chez nous pour des annonces de qualité
                   </h4>
-                  <a class="btn btn-xs mb-50" href="/page-account"
+                  <a class="btn btn-xs mb-50" href="/deposer_une_annonce"
                     >Déposer votre annonce
                     <i class="fi-rs-arrow-small-right"></i
                   ></a>
@@ -121,7 +121,7 @@
                     avec nos annonces <br />
                     de qualité
                   </h5>
-                  <a class="btn btn-xs" href="/page-account"
+                  <a class="btn btn-xs" href="/deposer_une_annonce"
                     >Déposer votre annonce
                     <i class="fi-rs-arrow-small-right"></i
                   ></a>
@@ -145,7 +145,7 @@
               class="list-inline-item nav-item"
               *ngFor="let category of categories.slice(0, 4)"
             >
-              <a class="nav-link" href="/shop-grid-right">{{
+              <a class="nav-link" [href]="'/ads/' + category.id">{{
                 category.name
               }}</a>
             </li>
@@ -276,7 +276,9 @@
                           />
                           <img
                             class="hover-img"
-                            [src]="adsfirst.medias[1]?.url"
+                            [src]="
+                              adsfirst.medias[1]?.url || adsfirst.medias[0]?.url
+                            "
                             alt=""
                             style="height: 100%"
                           />
@@ -635,7 +637,10 @@
                                 />
                                 <img
                                   class="hover-img"
-                                  [src]="adsfirst.medias[1]?.url"
+                                  [src]="
+                                    adsfirst.medias[1]?.url ||
+                                    adsfirst.medias[0]?.url
+                                  "
                                   alt=""
                                   style="height: 100%"
                                 />

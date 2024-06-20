@@ -7,7 +7,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 @Component({
   selector: 'app-forget-password',
   templateUrl: './forget-password.component.html',
-  styleUrl: './forget-password.component.css'
+  styleUrl: './forget-password.component.css',
 })
 export class ForgetPasswordComponent {
   email: string = '';
@@ -27,18 +27,15 @@ export class ForgetPasswordComponent {
     [key: string]: boolean;
     email: boolean;
   } = {
-    email : false,
+    email: false,
   };
-
- 
 
   clearError(fieldName: string): void {
     this.fieldErrors[fieldName] = false;
   }
 
-  
   validateForm(): boolean {
-    this.error="";
+    this.error = '';
     let isValid = true;
 
     if (!this.userData.email) {
@@ -49,9 +46,9 @@ export class ForgetPasswordComponent {
     }
     return isValid;
   }
-  
+
   onSubmit(): void {
-    if(this.validateForm()){
+    if (this.validateForm()) {
       this.userService.sendResetEmail(this.userData.email).subscribe(
         (response) => {
           // Store user ID and token in local storage
@@ -60,12 +57,11 @@ export class ForgetPasswordComponent {
         },
         (error) => {
           // Handle login error
-          
+
           this.error = error;
           console.error(error);
         }
       );
     }
- 
   }
 }

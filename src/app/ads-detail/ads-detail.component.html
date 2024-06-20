@@ -4,8 +4,9 @@
     <div class="container">
       <div class="breadcrumb">
         <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Accueil</a>
-        <span></span> <a href="/shop-grid-right">{{adDetail.category?.name}}</a>
-        <span></span> {{adDetail.title}}
+        <span></span>
+        <a href="/shop-grid-right">{{ adDetail.category?.name }}</a>
+        <span></span> {{ adDetail.title }}
       </div>
     </div>
   </div>
@@ -113,7 +114,14 @@
                               {{ field.label }}
                             </th>
                             <td>
-                              <p>{{ field.setting }}</p>
+                              <p *ngIf="field.type !== 'multiple'">
+                                {{ field.setting }}
+                              </p>
+                              <ul *ngIf="field.type === 'multiple'">
+                                <li *ngFor="let item of field.setting">
+                                  {{ item }}
+                                </li>
+                              </ul>
                             </td>
                           </tr>
                         </tbody>
@@ -215,7 +223,7 @@
                               />
                               <img
                                 class="hover-img"
-                                [src]="ad.medias[1]?.url"
+                                [src]="ad.medias[1]?.url || ad.medias[0]?.url"
                                 alt=""
                                 style="height: 100%"
                               />

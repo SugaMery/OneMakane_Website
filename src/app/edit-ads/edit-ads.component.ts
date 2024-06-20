@@ -1,4 +1,10 @@
-import { Component, HostListener, Inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AnnonceService } from '../annonce.service';
 import { CategoryService } from '../category.service';
@@ -61,9 +67,9 @@ type Status = 'approved' | 'pending' | 'draft' | 'rejected';
   templateUrl: './edit-ads.component.html',
   styleUrl: './edit-ads.component.css',
 })
-export class EditAdsComponent {
+export class EditAdsComponent implements OnInit {
   ad: any = {};
-  categories: Category[] = [];  
+  categories: Category[] = [];
   selectedOption: any = {
     active: false,
     created_at: '',
@@ -89,7 +95,7 @@ export class EditAdsComponent {
     code_postal: '',
     files: [],
   };
-  count : number = 0;
+  count: number = 0;
   adDetail: any = [];
   transformedField:
     | { value: string; label: any; setting: string }[]
@@ -113,7 +119,7 @@ export class EditAdsComponent {
     approved: 'Approuvé',
     pending: 'En attente',
     draft: 'Brouillon',
-    rejected: 'Rejeté'
+    rejected: 'Rejeté',
   };
   maxImages = false;
   selectedFiles: File[] = [];
@@ -131,7 +137,7 @@ export class EditAdsComponent {
     });
     this.fetchCategories();
     this.fetchSettings();
-    console.log("settingsss",this.settings);
+    console.log('settingsss', this.settings);
   }
 
   initializeAd(): void {
@@ -160,14 +166,22 @@ export class EditAdsComponent {
       if (accessToken) {
         this.adService.getAdById(this.adId).subscribe((data) => {
           this.adDetail = data.data;
-          this.fetchCategoryAndSettings(data.data.category_id, accessToken, data.data.additional);
+          this.fetchCategoryAndSettings(
+            data.data.category_id,
+            accessToken,
+            data.data.additional
+          );
           this.fetchRelatedAds(data.data.user_id, data.data.category.id);
         });
       }
     }
   }
 
-  fetchCategoryAndSettings(categoryId: string, accessToken: string, additionalData: any): void {
+  fetchCategoryAndSettings(
+    categoryId: string,
+    accessToken: string,
+    additionalData: any
+  ): void {
     this.categoryService.getCategoryById(categoryId).subscribe((category) => {
       const modelFields = category.data.model_fields;
       const queryParams = { model: category.data.model };
@@ -187,7 +201,11 @@ export class EditAdsComponent {
     });
   }
 
-  transformFields(modelFields: any, settingsData: any, additionalData: any): void {
+  transformFields(
+    modelFields: any,
+    settingsData: any,
+    additionalData: any
+  ): void {
     const transformedFields = Object.keys(modelFields).map((key) => ({
       value: key,
       label: modelFields[key].label,
@@ -195,12 +213,16 @@ export class EditAdsComponent {
     }));
 
     transformedFields.forEach((field) => {
-      const matchedSetting = settingsData.find((settingItem: { name: string }) => settingItem.name === field.value);
+      const matchedSetting = settingsData.find(
+        (settingItem: { name: string }) => settingItem.name === field.value
+      );
       if (matchedSetting) {
         if (additionalData && additionalData[field.value]) {
           field.setting = matchedSetting.content[additionalData[field.value]];
         } else {
-          console.error(`No setting found for key '${field.value}' in additionalData`);
+          console.error(
+            `No setting found for key '${field.value}' in additionalData`
+          );
         }
       }
     });
@@ -243,7 +265,7 @@ export class EditAdsComponent {
         (response: any) => {
           const modelFields = this.selectedOption.model_fields || {};
           const keys = Object.keys(modelFields);
-          this.settings=[];
+          this.settings = [];
           this.settings = response.data.map((setting: Setting) => {
             const name = setting.name;
             let label = '';
@@ -266,7 +288,7 @@ export class EditAdsComponent {
                 }
               });
             }
-            console.log("transformedField",this.transformedField);
+            console.log('transformedField', this.transformedField);
 
             return (
               transformedSetting || {
@@ -284,7 +306,6 @@ export class EditAdsComponent {
         }
       );
     }
-
   }
 
   onFileSelected(event: any): void {
@@ -318,22 +339,22 @@ export class EditAdsComponent {
         return;
       }
       this.uploadFilesAndUpdateAnnonce(accessToken);
-      console.log('catttttteg',this.selectedOption.id,this.ad.category)
-
-
+      console.log('catttttteg', this.selectedOption.id, this.ad.category);
     }
   }
 
   createSetting(settingADS: { [key: string]: any }, accessToken: string): void {
-    this.annonceService.insertSetting(this.adId,"ad-models", settingADS, accessToken).subscribe(
-      () => {
-        //this.uploadFilesAndUpdateAnnonce(accessToken);
-        console.log("create");
-      },
-      (error) => {
-        console.error('Error creating setting:', error);
-      }
-    );
+    this.annonceService
+      .insertSetting(this.adId, 'ad-models', settingADS, accessToken)
+      .subscribe(
+        () => {
+          //this.uploadFilesAndUpdateAnnonce(accessToken);
+          console.log('create');
+        },
+        (error) => {
+          console.error('Error creating setting:', error);
+        }
+      );
   }
 
   uploadFilesAndUpdateAnnonce(accessToken: string): void {
@@ -343,37 +364,44 @@ export class EditAdsComponent {
 
     Promise.all(
       this.selectedFiles.map((file) => {
-        return this.annonceService.uploadFile(file, accessToken).then((response) => {
-          mediaIds.push(response.data.id);
-        });
+        return this.annonceService
+          .uploadFile(file, accessToken)
+          .then((response) => {
+            mediaIds.push(response.data.id);
+          });
       })
     )
       .then(() => {
         const annonceData = this.createAnnonceData(mediaIds);
-        this.annonceService.updateAnnonce(this.adId, this.ad.uuid, annonceData, accessToken).subscribe(() => {
-          const settingADS: { [key: string]: any } = {};
-          for (let i = 0; i < this.settings.length; i++) {
-            const setting = this.settings[i];
-            if (setting.selectedOption) {
-              settingADS[setting.name] = setting.selectedOption.value;
+        this.annonceService
+          .updateAnnonce(this.adId, this.ad.uuid, annonceData, accessToken)
+          .subscribe(() => {
+            const settingADS: { [key: string]: any } = {};
+            for (let i = 0; i < this.settings.length; i++) {
+              const setting = this.settings[i];
+              if (setting.selectedOption) {
+                settingADS[setting.name] = setting.selectedOption.value;
+              }
             }
-          }
-          this.annonceService
-          .UpdateSetting(this.adId, settingADS, accessToken)
-          .subscribe(
-            () => {
-              //this.uploadFilesAndUpdateAnnonce(accessToken);
-              console.log("update");
-            },
-            (error) => {
-              console.error('Error inserting state and genre:', error.error.message);
-              if (error.error.message === "This AdBook doesn't exists") {
-                this.createSetting(settingADS, accessToken);
-              }          
-            }
-          );
-          window.location.reload();
-        });
+            this.annonceService
+              .UpdateSetting(this.adId, settingADS, accessToken)
+              .subscribe(
+                () => {
+                  //this.uploadFilesAndUpdateAnnonce(accessToken);
+                  console.log('update');
+                },
+                (error) => {
+                  console.error(
+                    'Error inserting state and genre:',
+                    error.error.message
+                  );
+                  if (error.error.message === "This AdBook doesn't exists") {
+                    this.createSetting(settingADS, accessToken);
+                  }
+                }
+              );
+            window.location.reload();
+          });
       })
       .catch((error) => {
         console.error('Error uploading files:', error);
@@ -397,14 +425,22 @@ export class EditAdsComponent {
     };
   }
 
-  parseOptions(content: string | StringIndexed): { value: string; label: string }[] {
+  parseOptions(
+    content: string | StringIndexed
+  ): { value: string; label: string }[] {
     if (typeof content === 'string') {
       const options = JSON.parse(content);
       return typeof options === 'object' && options !== null
-        ? Object.keys(options).map((key) => ({ value: key, label: options[key] }))
+        ? Object.keys(options).map((key) => ({
+            value: key,
+            label: options[key],
+          }))
         : [];
     } else if (typeof content === 'object') {
-      return Object.keys(content).map((key) => ({ value: key, label: content[key] }));
+      return Object.keys(content).map((key) => ({
+        value: key,
+        label: content[key],
+      }));
     } else {
       return [];
     }
@@ -414,18 +450,20 @@ export class EditAdsComponent {
     this.categoryService.getCategoriesFrom().subscribe(
       (categories) => {
         this.categories = categories.data.filter(
-          (category: Category) => category.active === true && category.parent_id !== null
+          (category: Category) =>
+            category.active === true && category.parent_id !== null
         );
         this.categories.forEach((category) => {
           this.enrichCategoryWithParentAndModelFields(category);
         });
 
         if (this.ad?.category) {
-          this.selectedOption = this.categories.find((category) => this.ad.category.id === category.id);
+          this.selectedOption = this.categories.find(
+            (category) => this.ad.category.id === category.id
+          );
         } else {
-          console.error("Ad category is undefined");
+          console.error('Ad category is undefined');
         }
-
       },
       (error) => {
         console.error('Error fetching categories: ', error);
@@ -437,14 +475,16 @@ export class EditAdsComponent {
     const parentId = category.parent_id?.toString();
     const Id = category.id?.toString();
     if (parentId) {
-      this.categoryService.getCategoryById(parentId).subscribe(
-        (parent) => (category.parentCategoy = parent.data)
-      );
+      this.categoryService
+        .getCategoryById(parentId)
+        .subscribe((parent) => (category.parentCategoy = parent.data));
     }
     if (Id) {
-      this.categoryService.getCategoryById(Id).subscribe(
-        (parent) => (category.model_fields = parent.data!.model_fields)
-      );
+      this.categoryService
+        .getCategoryById(Id)
+        .subscribe(
+          (parent) => (category.model_fields = parent.data!.model_fields)
+        );
     }
   }
 
@@ -454,7 +494,6 @@ export class EditAdsComponent {
   }
   toggleOptions(): void {
     this.optionsVisible = !this.optionsVisible;
-
   }
   toggledOptions(setting: Setting): void {
     this.settings.forEach((s: Setting) => {
@@ -468,10 +507,9 @@ export class EditAdsComponent {
     this.selectedOption = category;
     if (this.selectedOption) {
       this.formData.category_id = category.id;
-      this.settings=[];
+      this.settings = [];
       this.fetchCategories();
       this.fetchSettings();
-
     } else {
       if (this.selectedSubCategory!.id) {
         this.formData.category_id = this.selectedSubCategory!.id;
@@ -494,7 +532,7 @@ export class EditAdsComponent {
   deleteImage(index: number) {
     if (index > -1 && index < this.uploadedImages.length) {
       const deletedImage = this.uploadedImages.splice(index, 1)[0];
-      this.selectedFiles.splice(index-this.count, 1)[0];
+      this.selectedFiles.splice(index - this.count, 1)[0];
       if (!this.deletedImages.includes(deletedImage)) {
         this.deletedImages.push(deletedImage);
       }
@@ -559,9 +597,11 @@ export class EditAdsComponent {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
-      hour12: false
+      hour12: false,
     };
-    return new Intl.DateTimeFormat('fr-FR', options).format(date).replace(',', ' à');
+    return new Intl.DateTimeFormat('fr-FR', options)
+      .format(date)
+      .replace(',', ' à');
   }
-  onSubmit(){}
+  onSubmit() {}
 }

@@ -174,7 +174,6 @@
 </div>
 
 <header class="header-area header-style-1 header-style-5 header-height-2">
-
   <div class="header-top header-top-ptb-1 d-none d-lg-block">
     <div class="container">
       <div class="row align-items-center">
@@ -205,7 +204,6 @@
                 <strong class="text-brand"> +212699050501</strong>
               </li>
               <li>
-                
                 <a class="language-dropdown-active" href="#"
                   >Français <i class="fi-rs-angle-small-down"></i
                 ></a>
@@ -295,10 +293,7 @@
                 </div>
                 <div
                   class="banner-text"
-                  style="
-                    margin-top: auto;
-                    padding-left: inherit;
-                  "
+                  style="margin-top: auto; padding-left: inherit"
                   *ngIf="status"
                 >
                   <link
@@ -474,10 +469,7 @@
                   class="position-static"
                   *ngFor="let category of categories.slice(0, 6)"
                 >
-                  <a
-                    href="javascript:void(0)"
-                    (click)="navigateToCategory(category.id)"
-                  >
+                  <a href="javascript:void(0)">
                     {{ category.name }} <i class="fi-rs-angle-down"></i>
                   </a>
                   <ul class="mega-menu">
@@ -634,24 +626,20 @@
           <div class="header-action-2">
             <div class="header-action-icon-2">
               <a href="">
-
                 <i class="fi fi-rr-heart"></i>
               </a>
             </div>
 
-
-
             <div class="header-action-icon-2 test">
-              <a >
+              <a>
                 <i class="fi fi-rr-user"></i>
               </a>
-              <a 
+              <a
                 ><span class="lable ml-0">{{ loggedInUserName }}</span></a
               >
               <div
                 class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown"
                 *ngIf="!status"
-                
               >
                 <ul>
                   <li>

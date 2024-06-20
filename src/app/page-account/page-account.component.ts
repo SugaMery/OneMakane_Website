@@ -1,4 +1,10 @@
-import { Component, EventEmitter, HostListener, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { AuthGuard } from '../auth.guard';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
@@ -10,9 +16,8 @@ import { SettingService } from '../setting.service';
   selector: 'app-page-account',
   templateUrl: './page-account.component.html',
   styleUrl: './page-account.component.css',
-  
 })
-export class PageAccountComponent {
+export class PageAccountComponent implements OnInit {
   userInfo: any;
   loggedInUserName: string | undefined;
   userId!: string | null;
@@ -20,9 +25,9 @@ export class PageAccountComponent {
   idPro: any;
   deleteReasons: any = {
     reason1: false,
-    reason2: false
+    reason2: false,
   };
-  deleteDialog: boolean =false;
+  deleteDialog: boolean = false;
   selectedReason: string | null = null;
 
   constructor(
@@ -38,7 +43,7 @@ export class PageAccountComponent {
   ads: any[] = [];
 
   ngAfterViewInit() {
-    this.route.fragment.subscribe(fragment => {
+    this.route.fragment.subscribe((fragment) => {
       if (fragment === 'orders') {
         this.activateTab('orders-tab', 'orders');
       }
@@ -50,8 +55,10 @@ export class PageAccountComponent {
     const contentElement = document.getElementById(contentId);
 
     if (tabElement && contentElement) {
-      const activeTabs = document.querySelectorAll('.nav-link.active, .tab-pane.active');
-      activeTabs.forEach(tab => {
+      const activeTabs = document.querySelectorAll(
+        '.nav-link.active, .tab-pane.active'
+      );
+      activeTabs.forEach((tab) => {
         tab.classList.remove('active', 'show');
       });
 
@@ -59,31 +66,35 @@ export class PageAccountComponent {
       contentElement.classList.add('active', 'show');
     }
   }
-  confirmDeletion(ad:any) {
+  confirmDeletion(ad: any) {
     // Get the selected reason
-    const selectedReason = (document.querySelector('input[name="reason"]:checked') as HTMLInputElement).value;
-    this.annonceService.deleteAd(ad.id,ad.uuid,Number(selectedReason),this.accessToken!).subscribe((data)=>{
-     console.log("Onemakan",data);
-     this.ads = this.ads.filter(ad => ad !== this.selectedAd);
-    })
+    const selectedReason = (
+      document.querySelector('input[name="reason"]:checked') as HTMLInputElement
+    ).value;
+    this.annonceService
+      .deleteAd(ad.id, ad.uuid, Number(selectedReason), this.accessToken!)
+      .subscribe((data) => {
+        console.log('Onemakan', data);
+        this.ads = this.ads.filter((ad) => ad !== this.selectedAd);
+      });
 
     // Perform the deletion logic based on the selected reason
     switch (selectedReason) {
       case '1':
-        console.log("Vendu sur Onemakan",ad);
+        console.log('Vendu sur Onemakan', ad);
         break;
       case '2':
-        console.log("Vendu par un autre moyen");
+        console.log('Vendu par un autre moyen');
         break;
       case '3':
-        console.log("Ne souhaite plus vendre");
+        console.log('Ne souhaite plus vendre');
         break;
     }
-  
+
     // Close the dialog
     this.adDialog = false;
   }
-  
+
   ngOnInit(): void {
     this.userId = localStorage.getItem('loggedInUserId');
     this.accessToken = localStorage.getItem('loggedInUserToken');
@@ -196,12 +207,11 @@ export class PageAccountComponent {
   showDialog(ad: any) {
     this.selectedAd = ad; // Set the selected ad object
     this.adDialog = true;
-/*     this.annonceService.getDeleteReasons(this.accessToken!).subscribe((data)=>{
+    /*     this.annonceService.getDeleteReasons(this.accessToken!).subscribe((data)=>{
       console.log("dattttddd",data);
     }) */
-
   }
-  
+
   hideDialog() {
     this.productDialog = false;
     this.submitted = false;

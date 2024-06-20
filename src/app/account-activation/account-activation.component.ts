@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './account-activation.component.html',
   styleUrl: './account-activation.component.css',
 })
-export class AccountActivationComponent {
+export class AccountActivationComponent implements OnInit {
   userId!: string;
   activationToken!: string;
   constructor(

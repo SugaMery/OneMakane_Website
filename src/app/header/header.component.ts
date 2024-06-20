@@ -32,12 +32,13 @@ interface Category {
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   loggedInUserName: string = 'Compte';
   categories: any[] = [];
   Souscategories: any[] = [];
   showMore: boolean = false;
   status: boolean = false;
+  allcategories: Category[] = [];
 
   constructor(
     private categoryService: CategoryService,
@@ -48,7 +49,10 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.categories = [];
+    this.Souscategories = [];
     this.checkLoggedInUser();
+
     this.getCategories();
   }
 
@@ -81,7 +85,69 @@ export class HeaderComponent implements OnInit {
   navigateToCategory(categoryId: number) {
     window.location.href = `/ads-category/${categoryId}`;
   }
+  fetchCategories(): void {
+    const accessToken = localStorage.getItem('loggedInUserToken');
+    if (!accessToken) {
+      return;
+    }
+    this.categoryService.getCategoriesFrom().subscribe(
+      (categories) => {
+        this.categories = categories.data.filter(
+          (category: Category) =>
+            category.active === true && category.parent_id !== null
+        );
+        for (let i = 0; i < this.categories.length; i++) {
+          const parentId = this.categories[i].parent_id?.toString();
+          const Id = this.categories[i].id?.toString();
+          if (!parentId) {
+            continue;
+          }
+          this.categoryService
+            .getCategoryById(parentId)
+            .subscribe(
+              (parent) => (this.categories[i].parentCategoy = parent.data)
+            );
+          this.categoryService
+            .getCategoryById(Id)
+            .subscribe(
+              (parent) =>
+                (this.categories[i].model_fields = parent.data!.model_fields)
+            );
+        }
+        console.log('categories categories 555', this.categories);
+        const uniqueResults = new Set<number>(); // Assuming category ids are numbers
 
+        this.categories.forEach((category) => {
+          let isUnique = true;
+
+          this.categories.forEach((potentialParent) => {
+            if (category.parent_id === potentialParent.id) {
+              isUnique = false;
+            }
+          });
+
+          if (isUnique) {
+            uniqueResults.add(category.id);
+            //console.log('goooood', category);
+          }
+        });
+
+        // Display unique results without repetition
+        uniqueResults.forEach((categoryId) => {
+          const uniqueCategory = this.categories.find(
+            (cat) => cat.id === categoryId
+          );
+          if (uniqueCategory) {
+            this.allcategories.push(uniqueCategory);
+          }
+        });
+      },
+      (error) => {
+        console.error('Error fetching categories: ', error);
+      }
+    );
+    console.log('categories categories', this.categories);
+  }
   getCategories(): void {
     this.categoryService.getCategoriesFrom().subscribe((categories) => {
       // Filter root categories

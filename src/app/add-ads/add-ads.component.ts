@@ -1,4 +1,10 @@
-import { Component, EventEmitter, HostListener, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { AuthGuard } from '../auth.guard';
 import { UserService } from '../user.service';
 import { CategoryService } from '../category.service';
@@ -83,7 +89,7 @@ interface SubCategory {
   templateUrl: './add-ads.component.html',
   styleUrl: './add-ads.component.css',
 })
-export class AddAdsComponent {
+export class AddAdsComponent implements OnInit {
   userInfo: any;
   loggedInUserName: string | undefined;
   deletedImages: string[] = [];
@@ -1280,7 +1286,7 @@ export class AddAdsComponent {
     setting.content = value;
     // Any additional logic to handle the updated setting
   }
-  
+
   getSelectedLabels(setting: any): string {
     return setting.selectedOptions
       .map((option: { label: any }) => option.label)

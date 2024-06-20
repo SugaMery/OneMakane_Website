@@ -115,9 +115,9 @@ export class AllAdsComponent implements OnInit {
 
     this.route.queryParams.subscribe((queryParams) => {
       this.searchQuery = queryParams['search'] || '';
-      console.log('this.ser', this.searchQuery);
+      //console.log('this.ser', this.searchQuery);
       if (this.searchQuery) {
-        console.log('this.ser222', this.searchQuery);
+        //console.log('this.ser222', this.searchQuery);
 
         this.filterAdsByTitles();
       }

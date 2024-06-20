@@ -1,19 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CategoryService } from '../category.service';
 
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
-  styleUrl: './footer.component.css'
+  styleUrl: './footer.component.css',
 })
-export class FooterComponent {
-  categories: any[] = [];
+export class FooterComponent implements OnInit {
+  categoriesFooter: any[] = [];
   Souscategories: any[] = [];
 
-
-  constructor(
-    private categoryService: CategoryService,
-  ) {}
+  constructor(private categoryService: CategoryService) {}
 
   ngOnInit(): void {
     this.getCategories();
@@ -25,14 +22,14 @@ export class FooterComponent {
   getCategories(): void {
     this.categoryService.getCategoriesFrom().subscribe((categories) => {
       // Filter root categories
-      this.categories = categories.data.filter(
+      this.categoriesFooter = categories.data.filter(
         (category: { active: boolean; parent_id: null }) =>
           category.active === true && category.parent_id === null
       );
-      //console.log('ttttttttttttt', categories, this.categories);
+      //console.log('ttttttttttttt', categories, this.categoriesFooter);
 
       // Loop through root categories
-      this.categories.forEach((category: any) => {
+      this.categoriesFooter.forEach((category: any) => {
         // Find subcategories for each root category
         category.subcategories = categories.data.filter(
           (subcat: any) =>
@@ -50,8 +47,7 @@ export class FooterComponent {
         });
       });
 
-      //console.log('Filter root categories', this.categories);
+      //console.log('Filter root categories', this.categoriesFooter);
     });
   }
-
 }

@@ -1,4 +1,4 @@
-import { Component, Inject, Input } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AnnonceService } from '../annonce.service';
 import { DOCUMENT } from '@angular/common';
@@ -12,11 +12,16 @@ import { Observable, forkJoin } from 'rxjs';
   templateUrl: './ads-detail.component.html',
   styleUrl: './ads-detail.component.css',
 })
-export class AdsDetailComponent {
+export class AdsDetailComponent implements OnInit {
   adId: string = '';
   adDetail: any = [];
   transformedField:
-    | { value: string; label: any; setting: string }[]
+    | {
+        type: any;
+        value: string;
+        label: any;
+        setting: string;
+      }[]
     | undefined;
   relatedAds: any[] = [];
   router: any;
@@ -58,25 +63,31 @@ export class AdsDetailComponent {
                   .subscribe(
                     (setting) => {
                       if (setting.data) {
-                        console.log("setting.data",setting.data);
+                        console.log('setting.data', setting.data);
+
+                        // Transform modelFields into transformedFields with initial structure
                         const transformedFields = Object.keys(modelFields).map(
                           (key) => ({
                             value: key,
                             label: modelFields[key].label,
-                            setting: key,
+                            setting: key, // Initialize setting with key, you'll update this later
+                            type: modelFields[key].type,
+                            options: modelFields[key].options,
                           })
                         );
 
-                        transformedFields.forEach(
-                          (field: {
-                            value: string;
-                            label: any;
-                            setting: string;
-                          }) => {
+                        transformedFields.forEach((field) => {
+                          // Check if options are defined and type is 'select'
+                          if (
+                            !modelFields[field.value].options &&
+                            modelFields[field.value].type === 'select'
+                          ) {
+                            // Apply the logic for 'get setting'
                             const matchedSetting = setting.data.find(
                               (settingItem: { name: string }) =>
                                 settingItem.name === field.value
                             );
+
                             if (matchedSetting) {
                               if (
                                 data.data.additional &&
@@ -86,19 +97,53 @@ export class AdsDetailComponent {
                                   matchedSetting.content[
                                     data.data.additional[field.value]
                                   ];
-                                console.log('jj', field.setting);
-                                console.log('Transformed f', matchedSetting);
+                                console.log('Updated setting:', field.setting);
                               } else {
                                 console.error(
-                                  `No setting found for key '${field.value}' in data.data.additional`
+                                  `No additional data found for key '${field.value}'`
                                 );
                               }
+                            } else {
+                              console.error(
+                                `No setting found for key '${field.value}'`,
+                                field,
+                                modelFields
+                              );
+                            }
+                          } else if (
+                            modelFields[field.value].type === 'number' ||
+                            modelFields[field.value].type === 'text' ||
+                            modelFields[field.value].type === 'date'
+                          ) {
+                            field.setting = data.data.additional[field.value];
+                          } else if (modelFields[field.value].options) {
+                            field.setting =
+                              modelFields[field.value].options[
+                                data.data.additional[field.value]
+                              ];
+                            console.error(
+                              `No setting found for key '${field.value}'`,
+                              field,
+                              modelFields
+                            );
+                            // Apply the logic when options are not defined or type is not 'select'
+                          } else if (modelFields[field.value].type === 'bool') {
+                          } else if (
+                            modelFields[field.value].type === 'multiple'
+                          ) {
+                            try {
+                              field.setting = JSON.parse(
+                                data.data.additional[field.value]
+                              );
+                            } catch (error) {
+                              console.error('Error parsing JSON:', error);
                             }
                           }
-                        );
+                        });
+
                         this.transformedField = transformedFields;
                         console.log(
-                          'Transformed fields with updated labels:',
+                          'Transformed fields with updated settings:',
                           transformedFields
                         );
                       } else {
@@ -110,6 +155,7 @@ export class AdsDetailComponent {
                     }
                   );
               });
+
             console.log('datarrr', data);
 
             // Count ads where adDetail.user.id matches

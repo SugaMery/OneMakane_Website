@@ -55,8 +55,8 @@ export class RegisterComponent {
     termsAccepted: boolean;
     enteredSecurityCode: boolean;
     repeat_passwords: boolean;
-    passwordMismatch : boolean;
-    emailExists : boolean;
+    passwordMismatch: boolean;
+    emailExists: boolean;
 
     company_name: boolean;
     company_address: boolean;
@@ -68,7 +68,7 @@ export class RegisterComponent {
     company_city: boolean;
     contact_email: boolean;
     contact_last_name: boolean;
-    security_code_incorect : boolean;
+    security_code_incorect: boolean;
   } = {
     first_name: false,
     last_name: false,
@@ -85,9 +85,8 @@ export class RegisterComponent {
     termsAccepted: false,
     enteredSecurityCode: false,
     repeat_passwords: false,
-    emailExists : false,
-    passwordMismatch : false,
-    
+    emailExists: false,
+    passwordMismatch: false,
 
     company_name: false,
     company_address: false,
@@ -99,7 +98,7 @@ export class RegisterComponent {
     company_city: false,
     contact_email: false,
     contact_last_name: false,
-    security_code_incorect : false
+    security_code_incorect: false,
   };
 
   showProfessionalAccount: boolean = false;
@@ -147,9 +146,9 @@ export class RegisterComponent {
     }
   }
   validateForm(): boolean {
-    this.error="";
+    this.error = '';
     let isValid = true;
-  
+
     // Check if required fields are empty
     if (!this.userData.first_name) {
       this.fieldErrors.first_name = true;
@@ -159,7 +158,7 @@ export class RegisterComponent {
     }
 
     // Add similar checks for other fields...
-  
+
     if (!this.userData.last_name) {
       this.fieldErrors.last_name = true;
       isValid = false;
@@ -224,30 +223,27 @@ export class RegisterComponent {
     }
 
     if (!this.userData.enteredSecurityCode) {
-  this.fieldErrors.security_code_incorect=false;
+      this.fieldErrors.security_code_incorect = false;
       this.fieldErrors.enteredSecurityCode = true;
       isValid = false;
     } else {
       this.fieldErrors.enteredSecurityCode = false;
     }
-    if(!this.fieldErrors.enteredSecurityCode ){
-
-      if(this.userData.enteredSecurityCode !==
-        this.userData.generatedSecurityCode){
-          this.fieldErrors.security_code_incorect = true;
-          isValid = false;
-        }else{
-          this.fieldErrors.security_code_incorect=false;
-        }
-  
+    if (!this.fieldErrors.enteredSecurityCode) {
+      if (
+        this.userData.enteredSecurityCode !==
+        this.userData.generatedSecurityCode
+      ) {
+        this.fieldErrors.security_code_incorect = true;
+        isValid = false;
+      } else {
+        this.fieldErrors.security_code_incorect = false;
+      }
     }
 
-
-
-    if(this.selectedOption){
+    if (this.selectedOption) {
       if (this.selectedOption == 'Monsieur') {
         this.userData.civility = 'Mr';
-
       } else {
         this.userData.civility = 'Mrs';
       }
@@ -260,15 +256,12 @@ export class RegisterComponent {
       }
     }
 
-
-
     if (!this.userData.termsAccepted) {
       this.fieldErrors.termsAccepted = true;
       isValid = false;
     } else {
       this.fieldErrors.termsAccepted = false;
-    } 
-
+    }
 
     // Check if passwords match
     if (!this.fieldErrors.password && !this.fieldErrors.repeat_password) {
@@ -282,23 +275,22 @@ export class RegisterComponent {
       this.fieldErrors.passwordMismatch = false;
     }
 
-
-    if(this.showProfessionalAccount){
+    if (this.showProfessionalAccount) {
       if (!this.userDataPro.activity_sector) {
         this.fieldErrors.activity_sector = true;
         isValid = false;
       } else {
         this.fieldErrors.activity_sector = false;
-      } 
+      }
 
       if (!this.userDataPro.company_address) {
         this.fieldErrors.company_address = true;
         isValid = false;
       } else {
         this.fieldErrors.company_address = false;
-      } 
+      }
 
-/*       if (!this.userDataPro.company_address_rest) {
+      /*       if (!this.userDataPro.company_address_rest) {
         this.fieldErrors.company_address_rest = true;
         isValid = false;
       } else {
@@ -310,88 +302,82 @@ export class RegisterComponent {
         isValid = false;
       } else {
         this.fieldErrors.city = false;
-      } 
+      }
 
       if (!this.userDataPro.company_name) {
         this.fieldErrors.company_name = true;
         isValid = false;
       } else {
         this.fieldErrors.company_name = false;
-      } 
+      }
 
       if (!this.userDataPro.company_postal_code) {
         this.fieldErrors.company_postal_code = true;
         isValid = false;
       } else {
         this.fieldErrors.company_postal_code = false;
-      } 
+      }
 
       if (!this.userDataPro.contact_email) {
         this.fieldErrors.contact_email = true;
         isValid = false;
       } else {
         this.fieldErrors.contact_email = false;
-      } 
+      }
 
       if (!this.userDataPro.contact_first_name) {
         this.fieldErrors.contact_first_name = true;
         isValid = false;
       } else {
         this.fieldErrors.contact_first_name = false;
-      } 
+      }
 
       if (!this.userDataPro.contact_last_name) {
         this.fieldErrors.contact_last_name = true;
         isValid = false;
       } else {
         this.fieldErrors.contact_last_name = false;
-      } 
+      }
 
       if (!this.userDataPro.ice) {
         this.fieldErrors.ice = true;
         isValid = false;
       } else {
         this.fieldErrors.ice = false;
-      } 
+      }
     }
     // Additional checks for other fields...
-  
-
 
     // If all fields are filled, allow to proceed to the next step
     return isValid;
   }
-  
+
   showPassword: boolean = false;
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
-  
+
   showRepeatPassword: boolean = false;
 
   toggleRepeatPasswordVisibility(): void {
     this.showRepeatPassword = !this.showRepeatPassword;
   }
-  
-  
 
-  visible:boolean = true;
-  changetype:boolean =true;
-  error: any; 
-  viewpass(){
+  visible: boolean = true;
+  changetype: boolean = true;
+  error: any;
+  viewpass() {
     this.visible = !this.visible;
     this.changetype = !this.changetype;
   }
-  
+
   clearError(fieldName: string): void {
     this.fieldErrors[fieldName] = false;
   }
 
   onSubmit(): void {
     if (this.validateForm()) {
-     
-
       if (this.selectedOption == 'Monsieur') {
         this.userData.civility = 'Mr';
       } else {
@@ -407,7 +393,6 @@ export class RegisterComponent {
       console.log('Registration successful', userDataToSend);
 
       if (this.showProfessionalAccount) {
-        
         this.userData.professional = this.userDataPro;
         this.userService.registerUser(userDataToSend).subscribe(
           () => {
@@ -426,12 +411,12 @@ export class RegisterComponent {
             console.log('Registration data', data);
 
             // Handle successful registration
-            window.location.href = '/account-activation'; 
+            window.location.href = '/account-activation';
           },
           (error) => {
             // Handle registration error
             console.error('Failed to register user', error);
-            this.error = error; 
+            this.error = error;
           }
         );
       }
@@ -453,6 +438,4 @@ export class RegisterComponent {
     // Reset other form fields as needed
     // this.userData = { ... }; // Reset other form fields if needed
   }
-
-  
 }

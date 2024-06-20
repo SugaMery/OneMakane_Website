@@ -9,30 +9,31 @@ import { ContactService } from '../contact.service';
 export class ContactUsComponent {
   contactForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private contactService: ContactService) { }
+  constructor(
+    private fb: FormBuilder,
+    private contactService: ContactService
+  ) {}
 
   ngOnInit(): void {
-
     this.contactForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', Validators.pattern('^[0-9]+$')],
       object: ['', Validators.required],
-      message: ['', Validators.required]
+      message: ['', Validators.required],
     });
   }
 
   onSubmit() {
-
     if (this.contactForm.valid) {
-      console.log("this.con",this.contactForm,this.contactForm.value);
+      console.log('this.con', this.contactForm, this.contactForm.value);
       this.contactService.sendContactDetails(this.contactForm.value).subscribe(
-        response => {
+        (response) => {
           console.log('Success!', response);
           // Optionally, handle the response, show a success message, etc.
           this.contactForm.reset();
         },
-        error => {
+        (error) => {
           console.error('Error!', error);
           // Optionally, handle the error, show an error message, etc.
         }
@@ -44,7 +45,7 @@ export class ContactUsComponent {
   }
 
   markFormGroupTouched(formGroup: FormGroup) {
-    Object.values(formGroup.controls).forEach(control => {
+    Object.values(formGroup.controls).forEach((control) => {
       control.markAsTouched();
 
       if (control instanceof FormGroup) {
