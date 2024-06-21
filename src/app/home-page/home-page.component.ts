@@ -99,6 +99,7 @@ export class HomePageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAdsForCarousel();
+    this.fetchCategories();
     this.getCategories();
     this.responsiveOptions = [
       {
@@ -138,10 +139,10 @@ export class HomePageComponent implements OnInit {
     if (this.document.defaultView && this.document.defaultView.localStorage) {
       const accessToken =
         this.document.defaultView.localStorage.getItem('loggedInUserToken');
-      this.annonceService.getAds().subscribe((data) => {
+      this.annonceService.getAds('pending').subscribe((data) => {
         this.ads = data.data;
         const jobs = 'ad_jobs';
-
+        console.log('nggg', data);
         //this.products=data.data;
         // Clear previous categorized ads
         this.categorizedAds = {};
@@ -237,9 +238,35 @@ export class HomePageComponent implements OnInit {
         });
       });
     }
+    console.log('dddddddddddddddddddddddd');
     this.convertAdsToArray();
   }
-
+  allcategories: any[] = [];
+  fetchCategories(): void {
+    const accessToken = localStorage.getItem('loggedInUserToken');
+    if (!accessToken) {
+      return;
+    }
+    this.categoryService.getCategoriesFrom().subscribe(
+      (categories) => {
+        this.categories = categories.data.filter(
+          (category: any) =>
+            category.active === true && category.parent_id !== null
+        );
+        for (let i = 0; i < this.categories.length; i++) {
+          const parentId = this.categories[i].parent_id?.toString();
+          const Id = this.categories[i].id?.toString();
+          if (!parentId) {
+            continue;
+          }
+        }
+      },
+      (error) => {
+        console.error('Error fetching categories: ', error);
+      }
+    );
+    console.log('categories categories', this.categories);
+  }
   ngOnChanges() {}
   isPhone(): boolean {
     const screenWidth = window.innerWidth;
@@ -318,60 +345,55 @@ export class HomePageComponent implements OnInit {
     }
   }
 
-  getCategories(): void {
-    if (this.document.defaultView && this.document.defaultView.localStorage) {
-      const accessToken =
-        this.document.defaultView.localStorage.getItem('loggedInUserToken');
+  getCategories() {
+    this.categoryService.getCategoriesFrom().subscribe((categories) => {
+      const allCategories = categories.data;
+      console.log('allllllllllllllcategotie', categories);
+      // Filter active main categories (parent_id === null)
+      this.categories = allCategories.filter(
+        (category: { active: boolean; parent_id: null }) =>
+          category.active === true && category.parent_id === null
+      );
 
-      this.categoryService.getCategoriesFrom().subscribe((categories) => {
-        const allCategories = categories.data;
+      // Filter active subcategories (parent_id !== null)
+      this.Souscategories = allCategories.filter(
+        (category: { active: boolean; parent_id: number }) =>
+          category.active === true && category.parent_id !== null
+      );
 
-        // Filter active main categories (parent_id === null)
-        this.categories = allCategories.filter(
-          (category: { active: boolean; parent_id: null }) =>
-            category.active === true && category.parent_id === null
-        );
-
-        // Filter active subcategories (parent_id !== null)
-        this.Souscategories = allCategories.filter(
-          (category: { active: boolean; parent_id: number }) =>
-            category.active === true && category.parent_id !== null
-        );
-
-        // Check if the first element of Souscategories has the media property
-        if (
-          this.Souscategories &&
-          this.Souscategories.length > 0 &&
-          this.Souscategories[0].media
-        ) {
-          if (this.Souscategories[0].media.url) {
-            console.log(this.Souscategories[0].media.url);
-          } else {
-            console.log('URL property does not exist in media object');
-          }
+      // Check if the first element of Souscategories has the media property
+      if (
+        this.Souscategories &&
+        this.Souscategories.length > 0 &&
+        this.Souscategories[0].media
+      ) {
+        if (this.Souscategories[0].media.url) {
+          console.log(this.Souscategories[0].media.url);
         } else {
-          console.log(
-            'Media property or Souscategories array does not exist or is empty'
-          );
+          console.log('URL property does not exist in media object');
         }
+      } else {
+        console.log(
+          'Media property or Souscategories array does not exist or is empty'
+        );
+      }
 
-        this.displayedCategories = this.categories.slice(0, 11);
-        this.hiddenCategories = this.categories.slice(11);
+      this.displayedCategories = this.categories.slice(0, 11);
+      this.hiddenCategories = this.categories.slice(11);
 
-        // Create a list to include subcategories with a reference to their parent category
-        this.Souscategorie = this.categories.reduce((acc, category) => {
-          const subcategories = this.Souscategories.filter(
-            (subCategory) => subCategory.parent_id === category.id
-          );
-          return acc.concat(
-            subcategories.map((subCategory) => ({
-              ...subCategory,
-              parentCategory: category,
-            }))
-          );
-        }, []);
-      });
-    }
+      // Create a list to include subcategories with a reference to their parent category
+      this.Souscategorie = this.categories.reduce((acc, category) => {
+        const subcategories = this.Souscategories.filter(
+          (subCategory) => subCategory.parent_id === category.id
+        );
+        return acc.concat(
+          subcategories.map((subCategory) => ({
+            ...subCategory,
+            parentCategory: category,
+          }))
+        );
+      }, []);
+    });
   }
 
   toggleShowMore(): void {

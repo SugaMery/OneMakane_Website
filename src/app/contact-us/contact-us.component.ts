@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ContactService } from '../contact.service';
+import { CategoryService } from '../category.service';
 @Component({
   selector: 'app-contact-us',
   templateUrl: './contact-us.component.html',
@@ -11,10 +12,13 @@ export class ContactUsComponent {
 
   constructor(
     private fb: FormBuilder,
-    private contactService: ContactService
+    private contactService: ContactService,
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit(): void {
+    this.fetchCategories();
+
     this.contactForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -23,7 +27,35 @@ export class ContactUsComponent {
       message: ['', Validators.required],
     });
   }
+  categories: any[] = [];
+  Souscategories: any[] = [];
 
+  allcategories: any[] = [];
+  fetchCategories(): void {
+    const accessToken = localStorage.getItem('loggedInUserToken');
+    if (!accessToken) {
+      return;
+    }
+    this.categoryService.getCategoriesFrom().subscribe(
+      (categories) => {
+        this.categories = categories.data.filter(
+          (category: any) =>
+            category.active === true && category.parent_id !== null
+        );
+        for (let i = 0; i < this.categories.length; i++) {
+          const parentId = this.categories[i].parent_id?.toString();
+          const Id = this.categories[i].id?.toString();
+          if (!parentId) {
+            continue;
+          }
+        }
+      },
+      (error) => {
+        console.error('Error fetching categories: ', error);
+      }
+    );
+    console.log('categories categories', this.categories);
+  }
   onSubmit() {
     if (this.contactForm.valid) {
       console.log('this.con', this.contactForm, this.contactForm.value);

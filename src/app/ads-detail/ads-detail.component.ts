@@ -13,6 +13,36 @@ import { Observable, forkJoin } from 'rxjs';
   styleUrl: './ads-detail.component.css',
 })
 export class AdsDetailComponent implements OnInit {
+  categories: any[] = [];
+  Souscategories: any[] = [];
+
+  allcategories: any[] = [];
+  fetchCategories(): void {
+    const accessToken = localStorage.getItem('loggedInUserToken');
+    if (!accessToken) {
+      return;
+    }
+    this.categoryService.getCategoriesFrom().subscribe(
+      (categories) => {
+        this.categories = categories.data.filter(
+          (category: any) =>
+            category.active === true && category.parent_id !== null
+        );
+        for (let i = 0; i < this.categories.length; i++) {
+          const parentId = this.categories[i].parent_id?.toString();
+          const Id = this.categories[i].id?.toString();
+          if (!parentId) {
+            continue;
+          }
+        }
+      },
+      (error) => {
+        console.error('Error fetching categories: ', error);
+      }
+    );
+    console.log('categories categories', this.categories);
+  }
+
   adId: string = '';
   adDetail: any = [];
   transformedField:
@@ -37,6 +67,7 @@ export class AdsDetailComponent implements OnInit {
   ) {}
   countsAds = 0;
   ngOnInit() {
+    this.fetchCategories();
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id !== null) {
@@ -56,6 +87,7 @@ export class AdsDetailComponent implements OnInit {
               .getCategoryById(data.data.category_id)
               .subscribe((category) => {
                 const modelFields = category.data.model_fields;
+                console.log('modelllllfield', modelFields.value);
                 const queryParams = { model: category.data.model };
 
                 this.settingService
@@ -75,7 +107,7 @@ export class AdsDetailComponent implements OnInit {
                             options: modelFields[key].options,
                           })
                         );
-
+                        console.log('transformedFields', transformedFields);
                         transformedFields.forEach((field) => {
                           // Check if options are defined and type is 'select'
                           if (
@@ -110,13 +142,20 @@ export class AdsDetailComponent implements OnInit {
                                 modelFields
                               );
                             }
+                            console.log('greeeeeeeeeeeeeeeeeeeee1', field);
                           } else if (
                             modelFields[field.value].type === 'number' ||
                             modelFields[field.value].type === 'text' ||
                             modelFields[field.value].type === 'date'
                           ) {
                             field.setting = data.data.additional[field.value];
-                          } else if (modelFields[field.value].options) {
+
+                            console.log('greeeeeeeeeeeeeeeeeeeee2', field);
+                          } else if (
+                            modelFields[field.value].options &&
+                            modelFields[field.value].type !== 'bool'
+                          ) {
+                            console.log('greeeeeeeeeeeeeeeeeeeee3', field);
                             field.setting =
                               modelFields[field.value].options[
                                 data.data.additional[field.value]
@@ -127,7 +166,6 @@ export class AdsDetailComponent implements OnInit {
                               modelFields
                             );
                             // Apply the logic when options are not defined or type is not 'select'
-                          } else if (modelFields[field.value].type === 'bool') {
                           } else if (
                             modelFields[field.value].type === 'multiple'
                           ) {
@@ -138,6 +176,7 @@ export class AdsDetailComponent implements OnInit {
                             } catch (error) {
                               console.error('Error parsing JSON:', error);
                             }
+                            console.log('greeeeeeeeeeeeeeeeeeeee 4', field);
                           }
                         });
 
@@ -165,7 +204,7 @@ export class AdsDetailComponent implements OnInit {
             // Create an array to store all inner observables
             const innerObservables: Observable<any>[] = [];
 
-            this.annonceService.getAds().subscribe((adsData) => {
+            this.annonceService.getAds('pending').subscribe((adsData) => {
               let relatedAdsTemp: any[] = [];
               // Iterate over each ad
               adsData.data.forEach((ad: { id: any }) => {

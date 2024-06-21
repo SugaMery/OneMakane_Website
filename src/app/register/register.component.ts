@@ -2,6 +2,7 @@ import { Component, HostListener } from '@angular/core';
 import { UserService } from '../user.service';
 
 import { Router } from '@angular/router';
+import { CategoryService } from '../category.service';
 
 @Component({
   selector: 'app-register',
@@ -133,8 +134,44 @@ export class RegisterComponent {
     return Math.floor(1000 + Math.random() * 9000).toString();
   }
 
-  constructor(private router: Router, private userService: UserService) {}
+  constructor(
+    private router: Router,
+    private userService: UserService,
+    private categoryService: CategoryService
+  ) {}
 
+  ngOnInit() {
+    this.fetchCategories();
+  }
+  categories: any[] = [];
+  Souscategories: any[] = [];
+  allcategories: any[] = [];
+
+  fetchCategories(): void {
+    const accessToken = localStorage.getItem('loggedInUserToken');
+    if (!accessToken) {
+      return;
+    }
+    this.categoryService.getCategoriesFrom().subscribe(
+      (categories) => {
+        this.categories = categories.data.filter(
+          (category: any) =>
+            category.active === true && category.parent_id !== null
+        );
+        for (let i = 0; i < this.categories.length; i++) {
+          const parentId = this.categories[i].parent_id?.toString();
+          const Id = this.categories[i].id?.toString();
+          if (!parentId) {
+            continue;
+          }
+        }
+      },
+      (error) => {
+        console.error('Error fetching categories: ', error);
+      }
+    );
+    console.log('categories categories', this.categories);
+  }
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const targetElement = event.target as HTMLElement;

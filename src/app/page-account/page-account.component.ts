@@ -98,7 +98,7 @@ export class PageAccountComponent implements OnInit {
   ngOnInit(): void {
     this.userId = localStorage.getItem('loggedInUserId');
     this.accessToken = localStorage.getItem('loggedInUserToken');
-    this.annonceService.getAds().subscribe((data) => {
+    this.annonceService.getAds('pending').subscribe((data) => {
       const adIds = data.data.map((ad: any) => ad.id);
       //console.log('data ads', data.data);
 

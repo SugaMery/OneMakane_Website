@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
 import { error } from 'console';
+import { CategoryService } from '../category.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -13,13 +14,43 @@ export class ResetPasswordComponent {
   passwordToken!: string;
 
   ngOnInit(): void {
+    this.fetchCategories();
+
     this.route.params.subscribe((params) => {
       this.userId = params['user_id'];
       this.passwordToken = params['password_token'];
       console.log('user', this.userId);
     });
   }
+  categories: any[] = [];
+  Souscategories: any[] = [];
 
+  allcategories: any[] = [];
+  fetchCategories(): void {
+    const accessToken = localStorage.getItem('loggedInUserToken');
+    if (!accessToken) {
+      return;
+    }
+    this.categoryService.getCategoriesFrom().subscribe(
+      (categories) => {
+        this.categories = categories.data.filter(
+          (category: any) =>
+            category.active === true && category.parent_id !== null
+        );
+        for (let i = 0; i < this.categories.length; i++) {
+          const parentId = this.categories[i].parent_id?.toString();
+          const Id = this.categories[i].id?.toString();
+          if (!parentId) {
+            continue;
+          }
+        }
+      },
+      (error) => {
+        console.error('Error fetching categories: ', error);
+      }
+    );
+    console.log('categories categories', this.categories);
+  }
   userData = {
     password: '',
     repeat_password: '',
@@ -41,7 +72,8 @@ export class ResetPasswordComponent {
   constructor(
     private router: Router,
     private userService: UserService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private categoryService: CategoryService
   ) {}
 
   validateForm(): boolean {

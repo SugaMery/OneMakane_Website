@@ -657,7 +657,7 @@ export class AddAdsComponent implements OnInit {
   }
 
   emitNextCallbackDescriprion(): boolean {
-    //this.getAds();
+    //this.getAds('pending');
     let isValid = true;
     if (!this.formData.titre) {
       this.fieldErrors.titre = true;
@@ -796,7 +796,7 @@ export class AddAdsComponent implements OnInit {
     this.date = this.formatDate(currentDate);
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
-    this.annonceService.getAds().subscribe((data) => {
+    this.annonceService.getAds('pending').subscribe((data) => {
       const adIds = data.data.map((ad: any) => ad.id);
       const adPromises = adIds.map((adId: any) => {
         return this.annonceService.getAdById(adId).toPromise();
@@ -1014,7 +1014,34 @@ export class AddAdsComponent implements OnInit {
   emitNextCallbackSetting(): boolean {
     this.fieldsErrors = {};
     console.log('great ', this.settings, this.date);
-
+    const settingADS: { [key: string]: any } = {};
+    for (let i = 0; i < this.settings.length; i++) {
+      const setting = this.settings[i];
+      if (
+        setting.type === 'text' ||
+        setting.type === 'number' ||
+        setting.type === 'date' ||
+        setting.type === 'bool' ||
+        setting.type === 'select' ||
+        setting.type === 'options'
+      ) {
+        if (setting.selectedOption) {
+          settingADS[setting.key] = setting.selectedOption.value;
+        } else {
+          settingADS[setting.key] = setting.content;
+        }
+      } else if (setting.type === 'table') {
+        settingADS[setting.key] = setting.selectedOption?.id;
+      } else if (setting.type === 'multiple') {
+        const list: any[] = [];
+        setting.selectedOptions.forEach((element) => {
+          list.push(element.value);
+        });
+        console.log('listtttttttttteee', list);
+        settingADS[setting.key] = list;
+      }
+    }
+    console.log('settingADS', settingADS);
     this.settings.forEach((setting) => {
       if (
         setting.type == 'text' ||
@@ -1084,7 +1111,7 @@ export class AddAdsComponent implements OnInit {
     this.date = input.value;
   }
   emitNextCallbackTitre(): boolean {
-    //this.getAds();
+    //this.getAds('pending');
     let isValid = true;
     if (this.settings.length === 0) {
       this.fetchSettings();
@@ -1421,28 +1448,26 @@ export class AddAdsComponent implements OnInit {
 
             .subscribe(
               (response) => {
-                this.router.navigate(['/login']); // Replace 'login' with your actual login route
+                this.resetFormData();
+                window.location.href = '/annonce_in_progress';
+                this.selectedOption = {
+                  active: false,
+                  created_at: '',
+                  id: 0,
+                  model: null,
+                  name: '',
+                  parent_id: null,
+                  slug: null,
+                  url: null,
+                  route: null,
+                  icon_path: '',
+                };
+                console.log('Annonce créée avec succès !', response);
               },
               (error) => {
                 console.error('Error inserting state and genre:', error);
               }
             );
-
-          this.resetFormData();
-          window.location.href = '/annonce_in_progress';
-          this.selectedOption = {
-            active: false,
-            created_at: '',
-            id: 0,
-            model: null,
-            name: '',
-            parent_id: null,
-            slug: null,
-            url: null,
-            route: null,
-            icon_path: '',
-          };
-          console.log('Annonce créée avec succès !', response);
         },
         (error) => {
           console.error("Erreur lors de la création de l'annonce :", error);
@@ -1595,7 +1620,7 @@ export class AddAdsComponent implements OnInit {
     this.uploadFiles();
   }
 
-  // getAds(): void {
+  // getAds('pending'): void {
   //   const accessToken = localStorage.getItem('loggedInUserToken');
   //   this.annonceService.getAds(accessToken!).subscribe((ads: any[]) => {
   //     this.adds = ads;

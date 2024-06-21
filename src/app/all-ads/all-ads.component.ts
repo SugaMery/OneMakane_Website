@@ -102,8 +102,37 @@ export class AllAdsComponent implements OnInit {
       this.closeDropdowns(event);
     });
   }
+  Souscategories: any[] = [];
+
+  allcategories: any[] = [];
+  fetchCategories(): void {
+    const accessToken = localStorage.getItem('loggedInUserToken');
+    if (!accessToken) {
+      return;
+    }
+    this.categoryService.getCategoriesFrom().subscribe(
+      (categories) => {
+        this.categories = categories.data.filter(
+          (category: any) =>
+            category.active === true && category.parent_id !== null
+        );
+        for (let i = 0; i < this.categories.length; i++) {
+          const parentId = this.categories[i].parent_id?.toString();
+          const Id = this.categories[i].id?.toString();
+          if (!parentId) {
+            continue;
+          }
+        }
+      },
+      (error) => {
+        console.error('Error fetching categories: ', error);
+      }
+    );
+    console.log('categories categories', this.categories);
+  }
   searchQuery: string | undefined;
   ngOnInit(): void {
+    this.fetchCategories();
     console.log('searchQuery', this.searchQuery);
     const id = this.route.snapshot.paramMap.get('id');
     if (id !== null) {
@@ -144,7 +173,7 @@ export class AllAdsComponent implements OnInit {
     this.getCategories();
   }
   getAds(): void {
-    this.annonceService.getAds().subscribe((ads) => {
+    this.annonceService.getAds('pending').subscribe((ads) => {
       if (ads && ads.data) {
         const adsByCategory = ads.data.filter(
           (ad: { category: { id: number | undefined } }) =>
@@ -239,7 +268,7 @@ export class AllAdsComponent implements OnInit {
   }
 
   filterAds(categoryIds: number[]): void {
-    this.annonceService.getAds().subscribe((ads) => {
+    this.annonceService.getAds('pending').subscribe((ads) => {
       if (ads && ads.data) {
         const adsByCategory = ads.data.filter((ad: any) =>
           categoryIds.includes(ad.category.id)
@@ -300,7 +329,7 @@ export class AllAdsComponent implements OnInit {
   }
   filterByCategory(categoryId: number): void {
     this.filteredAds = []; // Clear previous filtered ads
-    this.annonceService.getAds().subscribe((ads) => {
+    this.annonceService.getAds('pending').subscribe((ads) => {
       if (ads && ads.data) {
         ads.data.forEach((ad: { category: { id: number }; id: string }) => {
           if (ad.category.id === categoryId) {

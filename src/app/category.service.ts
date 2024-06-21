@@ -24,8 +24,12 @@ export class CategoryService {
   }
 
   getCategoriesFrom(): Observable<any> {
-    const url = `${this.devApiUrl}/categories`;
-    return this.http.get<any[]>(url).pipe(catchError(this.handleError));
+    const headers = new HttpHeaders({
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      Pragma: 'no-cache',
+      Expires: '0',
+    });
+    return this.http.get<any>(`${this.devApiUrl}/categories`, { headers });
   }
 
   getCategoryById(categoryId: string): Observable<any> {

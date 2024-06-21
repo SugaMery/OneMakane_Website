@@ -57,7 +57,6 @@ export class AnnonceService {
     });
   }
 
-
   uploadImages(mediaData: any, accessToken: string): Observable<any> {
     const url = `${this.apiUrl}/medias`;
     return this.http.post<any>(url, mediaData, {
@@ -79,8 +78,8 @@ export class AnnonceService {
       .toPromise();
   }
 
-  getAds(): Observable<any> {
-    const url = `${this.apiUrl}/ads`;
+  getAds(validation_status: string): Observable<any> {
+    const url = `${this.apiUrl}/ads?validation_status=${validation_status}`;
     return this.http.get<any>(url);
   }
 
@@ -88,7 +87,12 @@ export class AnnonceService {
     const url = `${this.apiUrl}/ads/${adId}`;
     return this.http.get<any>(url);
   }
-  updateAnnonce(adId: string,adUuid : string,annonceData: any, accessToken: string): Observable<any> {
+  updateAnnonce(
+    adId: string,
+    adUuid: string,
+    annonceData: any,
+    accessToken: string
+  ): Observable<any> {
     const url = `${this.apiUrl}/ads/${adId}/${adUuid}`;
     return this.http.patch<any>(url, annonceData, {
       headers: this.getHeaders(accessToken),
@@ -118,18 +122,21 @@ export class AnnonceService {
     });
   }
 
-
-
   getDeleteReasons(accessToken: string): Observable<any> {
     const headers = this.getHeaders(accessToken);
     return this.http.get(`${this.apiUrl}/deleted-reasons`, { headers });
   }
 
-  deleteAd(adId: string,uuid : string , deleteReasonId: number, accessToken: string): Observable<any> {
+  deleteAd(
+    adId: string,
+    uuid: string,
+    deleteReasonId: number,
+    accessToken: string
+  ): Observable<any> {
     const headers = this.getHeaders(accessToken);
     return this.http.delete(`${this.apiUrl}/ads/${adId}`, {
       headers,
-      body: { uuid: uuid, deleted_reason_id: deleteReasonId }
+      body: { uuid: uuid, deleted_reason_id: deleteReasonId },
     });
   }
 }

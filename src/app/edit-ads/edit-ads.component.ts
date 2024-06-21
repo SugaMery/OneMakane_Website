@@ -234,7 +234,7 @@ export class EditAdsComponent implements OnInit {
     let count = 0;
     const innerObservables: Observable<any>[] = [];
 
-    this.adService.getAds().subscribe((adsData) => {
+    this.adService.getAds('pending').subscribe((adsData) => {
       adsData.data.forEach((ad: { id: any }) => {
         innerObservables.push(this.adService.getAdById(ad.id));
       });
