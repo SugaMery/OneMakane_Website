@@ -50,14 +50,14 @@ interface Filter {
   label: string;
   type: string;
   help: string;
-  conditions?: any[]; // Adjust this type according to your actual conditions type
   options?: any; // Add other properties as needed
+  conditions?: { [key: string]: string };
+  selectedCondition?: { key: string; value: string };
 }
 
 interface Filters {
   [key: string]: Filter;
 }
-
 
 interface SelectedOption {
   value: string;
@@ -119,7 +119,6 @@ export class AllAdsComponent implements OnInit {
 
   allcategories: any[] = [];
   fetchCategories(): void {
-
     this.categoryService.getCategoriesFrom().subscribe(
       (categories) => {
         this.categories = categories.data.filter(
@@ -141,6 +140,16 @@ export class AllAdsComponent implements OnInit {
     console.log('categories categories', this.categories);
   }
   searchQuery: string | undefined;
+  selectOptioneds(
+    filterKey: string,
+    condition: { key: string; value: string }
+  ): void {
+    this.selectedFilter = {
+      ...this.filters[filterKey],
+      selectedCondition: condition,
+    };
+    this.optionsVisibleMap[filterKey] = false; // Close the dropdown after selection
+  }
   ngOnInit(): void {
     this.fetchCategories();
     console.log('searchQuery', this.searchQuery);
@@ -148,7 +157,7 @@ export class AllAdsComponent implements OnInit {
     if (id !== null) {
       this.categoryId = +id;
       this.getAds();
-      this.getCategoriesFiltres();
+      this.getCategoriesFilters();
     } else {
       // Gérer le cas où l'ID est null, peut-être rediriger ou afficher un message d'erreur
     }
@@ -278,12 +287,24 @@ export class AllAdsComponent implements OnInit {
     }
   }
   filters: Filters = {};
-    getCategoriesFiltres(): void {
+  getCategoriesFilters(): void {
     const category_id = this.categoryId?.toString();
     this.categoryService.getCategoryById(category_id!).subscribe((datas) => {
-      this.filters = datas.data.filters ;
-      console.log("filitzr",this.filters);
+      this.filters = datas.data.filters;
+      console.log('filters', this.filters);
+
+      // Initialize options visibility map
+      Object.keys(this.filters).forEach((key) => {
+        this.optionsVisibleMap[key] = false;
+      });
     });
+  }
+
+  optionsVisibleMap: { [key: string]: boolean } = {};
+
+  toggleOptioned(key: string): void {
+    // Toggle the visibility for the clicked filter
+    this.optionsVisibleMap[key] = !this.optionsVisibleMap[key];
   }
   getFilterKeys(): string[] {
     return Object.keys(this.filters);
@@ -293,24 +314,35 @@ export class AllAdsComponent implements OnInit {
     console.log('Applying condition:', condition, 'to filter:', filter);
     // Add your logic here to handle the condition application
   }
-  toggleOptioned(event: MouseEvent): void {
-    event.stopPropagation();
-    this.optionsVisibled = !this.optionsVisibled;
-  }
 
+  getConditionsArray(conditionsObj: {
+    [key: string]: string;
+  }): { key: string; value: string }[] {
+    return Object.entries(conditionsObj).map(([key, value]) => ({
+      key,
+      value,
+    }));
+  }
   selectedFilter: Filter | null = null;
   optionsVisibled = false;
 
   selectFilter(key: string): void {
     this.selectedFilter = this.filters[key];
-    this.optionsVisibled = false; // Close dropdown after selection if needed
+    this.optionsVisibleds = false; // Close dropdown after selection if needed
     // You can add logic here to apply the selected filter
+    console.log('prrrrrrrrreeeeeeeeeeeeeeeeeeeee', this.filters[key]);
+
     console.log('Selected filter:', this.selectedFilter);
   }
   isConditionType(filter: Filter): boolean {
     return filter.type === 'condition';
   }
 
+  optionsVisibleds = false;
+  toggleOptioneds(event: MouseEvent): void {
+    this.optionsVisibleds = !this.optionsVisibleds;
+    event.stopPropagation(); // Prevent event bubbling
+  }
   filterAds(categoryIds: number[]): void {
     this.annonceService.getAds('pending').subscribe((ads) => {
       if (ads && ads.data) {
