@@ -18,10 +18,7 @@ export class AdsDetailComponent implements OnInit {
 
   allcategories: any[] = [];
   fetchCategories(): void {
-    const accessToken = localStorage.getItem('loggedInUserToken');
-    if (!accessToken) {
-      return;
-    }
+
     this.categoryService.getCategoriesFrom().subscribe(
       (categories) => {
         this.categories = categories.data.filter(
@@ -40,7 +37,6 @@ export class AdsDetailComponent implements OnInit {
         console.error('Error fetching categories: ', error);
       }
     );
-    console.log('categories categories', this.categories);
   }
 
   adId: string = '';
@@ -73,7 +69,6 @@ export class AdsDetailComponent implements OnInit {
       if (id !== null) {
         this.adId = id;
 
-        console.log('trrtrtrt', this.adId);
         if (
           this.document.defaultView &&
           this.document.defaultView.localStorage
@@ -87,7 +82,6 @@ export class AdsDetailComponent implements OnInit {
               .getCategoryById(data.data.category_id)
               .subscribe((category) => {
                 const modelFields = category.data.model_fields;
-                console.log('modelllllfield', modelFields.value);
                 const queryParams = { model: category.data.model };
 
                 this.settingService
@@ -95,7 +89,6 @@ export class AdsDetailComponent implements OnInit {
                   .subscribe(
                     (setting) => {
                       if (setting.data) {
-                        console.log('setting.data', setting.data);
 
                         // Transform modelFields into transformedFields with initial structure
                         const transformedFields = Object.keys(modelFields).map(
@@ -107,10 +100,38 @@ export class AdsDetailComponent implements OnInit {
                             options: modelFields[key].options,
                           })
                         );
-                        console.log('transformedFields', transformedFields);
                         transformedFields.forEach((field) => {
                           // Check if options are defined and type is 'select'
-                          if (
+                                                    // Check if options are defined and type is 'select'
+                                                    if (
+                                                      modelFields[field.value].route
+                                                    ) {
+                                                      const fieldValue = data.data.additional[field.value];
+  // Perform the service call with the appropriate route and accessToken
+  this.settingService.createMarque(modelFields[field.value].route, accessToken!).subscribe((response) => {
+    
+    // Extract the relevant categories
+    const marquesPopulaires = response.data['Marques populaires'];
+    const autresMarques = response.data['Autres marques'];
+    
+    // Convert objects to arrays
+    const marquesPopulairesArray = Object.entries(marquesPopulaires).map(([key, value]) => ({ id: key, name: value }));
+    const autresMarquesArray = Object.entries(autresMarques).map(([key, value]) => ({ id: key, name: value }));
+    
+    // Combine arrays if needed
+    const allMarquesArray = [...marquesPopulairesArray, ...autresMarquesArray];
+    
+    // Filter the array to find the item with the specified ID
+    const filteredResponse = allMarquesArray.filter((item: { id: string; }) => item.id === String(fieldValue));
+    
+    // Handle the filtered response
+    if (filteredResponse.length > 0) {
+         field.setting = filteredResponse[0].name!.toString();
+    } 
+});
+
+                                                    }
+                          else if (
                             !modelFields[field.value].options &&
                             modelFields[field.value].type === 'select'
                           ) {
@@ -129,7 +150,6 @@ export class AdsDetailComponent implements OnInit {
                                   matchedSetting.content[
                                     data.data.additional[field.value]
                                   ];
-                                console.log('Updated setting:', field.setting);
                               } else {
                                 console.error(
                                   `No additional data found for key '${field.value}'`
@@ -142,7 +162,7 @@ export class AdsDetailComponent implements OnInit {
                                 modelFields
                               );
                             }
-                            console.log('greeeeeeeeeeeeeeeeeeeee1', field);
+                           
                           } else if (
                             modelFields[field.value].type === 'number' ||
                             modelFields[field.value].type === 'text' ||
@@ -150,12 +170,12 @@ export class AdsDetailComponent implements OnInit {
                           ) {
                             field.setting = data.data.additional[field.value];
 
-                            console.log('greeeeeeeeeeeeeeeeeeeee2', field);
+                           
                           } else if (
                             modelFields[field.value].options &&
                             modelFields[field.value].type !== 'bool'
                           ) {
-                            console.log('greeeeeeeeeeeeeeeeeeeee3', field);
+                            
                             field.setting =
                               modelFields[field.value].options[
                                 data.data.additional[field.value]
@@ -176,15 +196,13 @@ export class AdsDetailComponent implements OnInit {
                             } catch (error) {
                               console.error('Error parsing JSON:', error);
                             }
-                            console.log('greeeeeeeeeeeeeeeeeeeee 4', field);
+                           
                           }
                         });
+ 
+                        
+                        this.transformedField = transformedFields.filter(fild => fild.value !== 'need_cv');
 
-                        this.transformedField = transformedFields;
-                        console.log(
-                          'Transformed fields with updated settings:',
-                          transformedFields
-                        );
                       } else {
                         console.error('No data found in settings.');
                       }
@@ -195,7 +213,6 @@ export class AdsDetailComponent implements OnInit {
                   );
               });
 
-            console.log('datarrr', data);
 
             // Count ads where adDetail.user.id matches
             // Initialize count variable outside of the subscription
@@ -211,7 +228,6 @@ export class AdsDetailComponent implements OnInit {
                 // Push each inner observable to the array
                 innerObservables.push(this.annonceService.getAdById(ad.id));
               });
-              console.log('ads detail', adsData);
               adsData.data.forEach((adDetail: { id: string }) => {
                 this.annonceService
                   .getAdById(adDetail.id)
@@ -226,46 +242,28 @@ export class AdsDetailComponent implements OnInit {
                       this.relatedAds.push(adDetails.data);
                     }
 
-                    console.log(
-                      'Count of ads associated with the user:',
-                      count
-                    );
                     this.countsAds = count;
-                    console.log(
-                      'adDetails',
-                      adDetails.data.user_id,
-                      this.adDetail.user_id
-                    );
+
                   });
               });
               if (relatedAdsTemp.length > 0) {
                 this.relatedAds = this.shuffleArray(relatedAdsTemp).slice(0, 4);
               }
-              console.log('annooo related ', this.relatedAds);
               // Use forkJoin to wait for all inner observables to complete
               /*                 forkJoin(innerObservables).subscribe((adDetails) => {
                   // Iterate over each ad detail
                   adDetails.forEach((adDetail) => {
-                    console.log(' ad:', adDetail);
                     // Check if the user ID of the current ad matches the user ID of adDetail
                     if (adDetail.data.user.id === this.adDetail.user.id) {
                       // Increment count if user IDs match
                       count++;
-                      console.log(
-                        'User associated with ad:',
-                        adDetail.data.user.id,
-                        this.adDetail.user.id
-                      );
+
                     }
                   });
 
                   // Log the count after all inner observables have completed
-                  console.log('Count of ads associated with the user:', count);
                   this.countsAds = count;
-                  console.log(
-                    'Count of ads associated with the eeuser:',
-                    this.countsAds
-                  );
+
                 }); */
             });
           });

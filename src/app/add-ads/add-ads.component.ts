@@ -101,6 +101,7 @@ export class AddAdsComponent implements OnInit {
   suggestedCategory!: CustomCategory | null;
   fieldsErrors: { [settingLabel: string]: boolean } = {};
   formData = {
+    category_parent_id: 0,
     titre: '',
     description: '',
     prix: '',
@@ -163,6 +164,8 @@ export class AddAdsComponent implements OnInit {
   settingsOption: ModelFields | undefined;
   setting: any;
   date!: string;
+  categoriesParent: any;
+  selectedOptionName: any;
   constructor(
     private authService: AuthGuard,
     private annonceService: AnnonceService,
@@ -717,32 +720,79 @@ export class AddAdsComponent implements OnInit {
       id: option.id, // Ensure id is retrieved from your data structure
     }));
   }
+// Define inputFocused and filteredOptions properties in your component
+inputFocused: boolean = false;
+filteredOptions: { label: number, filteredContent: { id: number, name: string }[] }[] = [];
 
-  parseOptions1(
-    content: string | StringIndexed
-  ): { id: number; name: string }[] {
-    if (Array.isArray(content)) {
-      return content.map((item) => ({
-        id: item.id,
-        name: item.name,
-      }));
-    } else {
-      return [];
-    }
-  }
+// Method to handle input events and filter options
+onInput(event: Event, setting: any): void {
+  const inputElement = event.target as HTMLInputElement;
+  
+  // Check if the input element ID is "table"
+  if (inputElement.id === "table") {
+    const input = inputElement.value.trim().toLowerCase();
+    setting.inputValue = input;
+    
+    // Filter options based on input value
+    this.filteredOptions = this.parseOptions2(setting.content).map(optioned => ({
+      label: optioned.label,
+      filteredContent: this.parseOptions1(optioned.content).filter(option => option.name.toLowerCase().includes(input))
+    }));
 
-  parseOptions2(
-    content: string | StringIndexed
-  ): { label: number; content: string }[] {
-    if (Array.isArray(content)) {
-      return content.map((item) => ({
-        label: item.label,
-        content: item.content,
-      }));
-    } else {
-      return [];
-    }
+    this.inputFocused = input.length > 0; // Set inputFocused based on input value
   }
+}
+
+
+// Adjust toggleOptionr method to close the options when clicking outside
+toggleOptionr(setting: any) {
+  setting.optionsVisible = !setting.optionsVisible;
+  if (!setting.optionsVisible) {
+    this.inputFocused = false; // Reset inputFocused when closing options
+  }
+}
+
+// Method to select an option and close the options
+selectOptionr(option: any, setting: any) {
+  this.selectedOptionName = option.name;
+  setting.selectedOption = option;
+  setting.optionsVisible = false;
+  this.inputFocused = false; // Reset inputFocused when an option is selected
+}
+
+// TrackBy functions remain the same
+trackByOptioned(index: number, item: any): any {
+  return item.label;
+}
+
+trackByOption(index: number, item: any): any {
+  return item.id;
+}
+
+// ParseOptions1 and ParseOptions2 functions remain the same
+parseOptions1(content: string | StringIndexed): { id: number; name: string }[] {
+  if (Array.isArray(content)) {
+    return content.map((item) => ({
+      id: item.id,
+      name: item.name,
+    }));
+  } else {
+    return [];
+  }
+}
+
+parseOptions2(content: string | StringIndexed): { label: number; content: string }[] {
+  if (Array.isArray(content)) {
+    return content.map((item) => ({
+      label: item.label,
+      content: item.content,
+    }));
+  } else {
+    return [];
+  }
+}
+
+
 
   toggledOptions(setting: Setting): void {
     this.settings.forEach((s) => {
@@ -754,8 +804,8 @@ export class AddAdsComponent implements OnInit {
   }
 
   selectdOptiond(option: any, setting: Setting): void {
-    console.log('rrrrrrrrrrrrrrr', option, setting);
     setting.selectedOption = option;
+    //this.selectedOptionName = option.name
     this.fieldsErrors[setting.label!] = false;
     setting.optionsVisible = false;
   }
@@ -764,6 +814,11 @@ export class AddAdsComponent implements OnInit {
     this.selectedOption = option;
     this.optionsVisible = false;
   }
+
+// In your component class
+hasFilteredOptions(): boolean {
+  return this.filteredOptions.some(optioned => optioned.filteredContent.length > 0);
+}
 
   suggestCategory(title: string): CustomCategory | null {
     for (const category of this.Customcategories) {
@@ -792,8 +847,6 @@ export class AddAdsComponent implements OnInit {
   ngOnInit(): void {
     this.getUserInfo();
     this.fetchCategories();
-    const currentDate = new Date();
-    this.date = this.formatDate(currentDate);
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
     this.annonceService.getAds('pending').subscribe((data) => {
@@ -840,6 +893,7 @@ export class AddAdsComponent implements OnInit {
       ville: '',
       code_postal: '',
       files: [],
+      category_parent_id:0
     };
   }
 
@@ -863,62 +917,12 @@ export class AddAdsComponent implements OnInit {
     if (!accessToken) {
       return;
     }
-    this.categoryService.getCategoriesFrom().subscribe(
-      (categories) => {
-        this.categories = categories.data.filter(
-          (category: Category) =>
-            category.active === true && category.parent_id !== null
-        );
-        for (let i = 0; i < this.categories.length; i++) {
-          const parentId = this.categories[i].parent_id?.toString();
-          const Id = this.categories[i].id?.toString();
-          if (!parentId) {
-            continue;
-          }
-          this.categoryService
-            .getCategoryById(parentId)
-            .subscribe(
-              (parent) => (this.categories[i].parentCategoy = parent.data)
-            );
-          this.categoryService
-            .getCategoryById(Id)
-            .subscribe(
-              (parent) =>
-                (this.categories[i].model_fields = parent.data!.model_fields)
-            );
-        }
-        console.log('categories categories 555', this.categories);
-        const uniqueResults = new Set<number>(); // Assuming category ids are numbers
-
-        this.categories.forEach((category) => {
-          let isUnique = true;
-
-          this.categories.forEach((potentialParent) => {
-            if (category.parent_id === potentialParent.id) {
-              isUnique = false;
-            }
-          });
-
-          if (isUnique) {
-            uniqueResults.add(category.id);
-            //console.log('goooood', category);
-          }
-        });
-
-        // Display unique results without repetition
-        uniqueResults.forEach((categoryId) => {
-          const uniqueCategory = this.categories.find(
-            (cat) => cat.id === categoryId
-          );
-          if (uniqueCategory) {
-            this.allcategories.push(uniqueCategory);
-          }
-        });
-      },
-      (error) => {
-        console.error('Error fetching categories: ', error);
-      }
-    );
+    const queryParams = {
+      parent: 1,
+    };
+    this.categoryService.getCategories(queryParams).subscribe((categorieParent)=>{
+      this.categoriesParent = categorieParent.data
+    })
     console.log('categories categories', this.categories);
   }
 
@@ -1020,7 +1024,6 @@ export class AddAdsComponent implements OnInit {
       if (
         setting.type === 'text' ||
         setting.type === 'number' ||
-        setting.type === 'date' ||
         setting.type === 'bool' ||
         setting.type === 'select' ||
         setting.type === 'options'
@@ -1039,6 +1042,10 @@ export class AddAdsComponent implements OnInit {
         });
         console.log('listtttttttttteee', list);
         settingADS[setting.key] = list;
+      }else if (setting.type === 'date'){
+        const date = new Date(setting.content);
+        setting.content = this.formatDate(date);
+
       }
     }
     console.log('settingADS', settingADS);
@@ -1113,35 +1120,51 @@ export class AddAdsComponent implements OnInit {
   emitNextCallbackTitre(): boolean {
     //this.getAds('pending');
     let isValid = true;
-    if (this.settings.length === 0) {
-      this.fetchSettings();
-    }
 
-    if (!this.formData.titre) {
+
+    if (!this.formData.titre ) {
       this.fieldErrors.titre = true;
       isValid = false;
     } else {
       this.fieldErrors.titre = false;
     }
 
-    if (!this.formData.category_id) {
+    if (!this.formData.category_id ) {
       this.fieldErrors.category = true;
       return false;
     }
+    
 
     if (!isValid) {
       return false;
     }
     return true;
   }
-
+  openselect = false;
   selectOption(category: Category): void {
+          this.filteredSubcategories=[];
+this.formData.category_id=0;
     this.selectedOption = category;
     if (this.selectedOption) {
-      this.formData.category_id = category.id;
-      console.log('categorie gggggggggg', this.selectedOption);
-      this.settings = [];
-      this.fetchSettings();
+
+      this.categoryService.getCategories({active: 1}).subscribe((data)=>{
+        this.filteredSubcategories=data.data.filter((parent: { parent_id: number; })=>   parent.parent_id == category.id)
+      });
+      // Assuming allCategories is an array of objects and category.id is the parent_id you want to filter by
+/*       this.categoryService.getCategories({active:1}).subscribe((all) => {
+        all.data.forEach((element: { id: string; }) => {
+                  this.categoryService.getCategoryById(element.id).subscribe((data)=>{
+                    if(data.data.parent_id==category.id){
+                      this.filteredSubcategories.push(data.data);
+                    }
+
+                  })
+        });
+      }); */
+            
+      this.selectedSubcategory = null; // Reset subcategory when parent changes
+      this.openselect=true;
+      this.subcategoryOptionsVisible=false;
     } else {
       if (this.selectedSubCategory!.id) {
         this.formData.category_id = this.selectedSubCategory!.id;
@@ -1162,12 +1185,37 @@ export class AddAdsComponent implements OnInit {
       name: value as string,
     }));
   }
+  filteredSubcategories: any[] = [];
+  selectedSubcategory: any = null;
+  subcategoryOptionsVisible: boolean = false;
 
+  selectSubcategory(subcategory: any) {
+    this.subcategoryOptionsVisible = false;
+    
+    this.selectedSubcategory = subcategory;
+    this.categoryService.getCategoryById(subcategory.id).subscribe((data)=>{
+      this.selectedSubcategory = data.data;
+      this.settings=[];
+      this.fetchSettings();
+
+    });
+
+    this.formData.category_id = subcategory.id;
+
+  }
+
+  toggleSubcategoryOptions() {
+    this.subcategoryOptionsVisible = !this.subcategoryOptionsVisible;
+    this.optionsVisible = false ;
+    this.fieldErrors['category'] = false;
+
+  }
   fetchSettings(): void {
-    const queryParams = { model: this.selectedOption.model };
+    console.log('ooooo',this.selectedSubcategory);
+    const queryParams = { model: this.selectedSubcategory.model };
     const accessToken = localStorage.getItem('loggedInUserToken');
-    const settingsOption = this.selectedOption.model_fields;
-    console.log('ooooo', settingsOption);
+    const settingsOption = this.selectedSubcategory.model_fields;
+    console.log('ooooo11',settingsOption);
 
     for (const key in settingsOption) {
       if (settingsOption.hasOwnProperty(key)) {
@@ -1385,7 +1433,7 @@ export class AddAdsComponent implements OnInit {
     ).then(() => {
       const annonceData = {
         user_id: userId,
-        category_id: this.selectedOption.id,
+        category_id: this.selectedSubcategory.id,
         title: this.formData.titre,
         description: this.formData.description,
         state: this.formData.state,
@@ -1415,7 +1463,6 @@ export class AddAdsComponent implements OnInit {
             if (
               setting.type === 'text' ||
               setting.type === 'number' ||
-              setting.type === 'date' ||
               setting.type === 'bool' ||
               setting.type === 'select' ||
               setting.type === 'options'
@@ -1434,6 +1481,10 @@ export class AddAdsComponent implements OnInit {
               });
               console.log('listtttttttttteee', list);
               settingADS[setting.key] = list;
+            }else if (setting.type === 'date'){
+              const date = new Date(setting.content);
+              settingADS[setting.key] = this.formatDate(date);
+      
             }
           }
           console.log('settingADS', settingADS);
@@ -1487,6 +1538,7 @@ export class AddAdsComponent implements OnInit {
       this.optionsVisible = false;
       this.stateOptionsVisible = false;
       this.genreOptionsVisible = false;
+      this.subcategoryOptionsVisible=false;
     }
     if (!this.isDescendant(targetElement, 'select-menu')) {
       // Close all select menus
@@ -1521,6 +1573,7 @@ export class AddAdsComponent implements OnInit {
     this.fieldErrors['category'] = false;
     this.stateOptionsVisible = false;
     this.genreOptionsVisible = false;
+    this.subcategoryOptionsVisible=false;
   }
 
   toggleUrgent(checked: boolean) {

@@ -141,6 +141,8 @@
                                                         subcategory
                                                       )
                                                     "
+                                                    name="checkbox"
+
                                                   />
                                                   <label
                                                     class="form-check-label"
@@ -189,8 +191,11 @@
                                       </div>
                                       <div class="row">
                                         <div class="form-group col-md-12">
-                                          <label
+<!--                                           <label
                                             >Ou choisissez une autre Catégorie
+                                          </label> -->
+                                                                                  <label
+                                            >Choisir une catégorie
                                           </label>
                                           <div class="select-menu">
                                             <div
@@ -216,36 +221,21 @@
                                                 >
                                                   <img
                                                     src="{{
-                                                      selectedOption
-                                                        .parentCategoy?.media
+                                                      selectedOption.media
                                                         ?.url
                                                     }}"
                                                     *ngIf="selectedOption.name"
                                                     alt=""
                                                     class="iconUrl"
-                                                    style="
-                                                      max-width: 8%;
-                                                      margin-right: 1rem;
-                                                    "
+                                                    [ngStyle]="{ 'width': isPhone() ? '2rem' : '2.5rem', 'margin-right': '1rem' }"
+
                                                   />
                                                   <p style="margin: 0">
                                                     {{
-                                                      selectedOption
-                                                        .parentCategoy?.name ||
+                                                      selectedOption.name ||
                                                         "Choisissez"
                                                     }}
-                                                    <i
-                                                      class="fi-rs-angle-right"
-                                                      *ngIf="
-                                                        selectedOption.name
-                                                      "
-                                                      style="
-                                                        padding-left: 1rem;
-                                                        padding-right: 0.5rem;
-                                                        font-size: 15px;
-                                                      "
-                                                    ></i>
-                                                    {{ selectedOption.name }}
+
                                                   </p>
                                                 </div>
                                               </span>
@@ -261,7 +251,7 @@
                                               <li
                                                 class="option"
                                                 *ngFor="
-                                                  let category of allcategories
+                                                  let category of categoriesParent
                                                 "
                                                 (click)="selectOption(category)"
                                               >
@@ -270,30 +260,111 @@
                                                 >
                                                   <img
                                                     src="{{
-                                                      category.parentCategoy
-                                                        ?.media?.url
+                                                      category.media?.url
                                                     }}"
                                                     alt=""
                                                     class="iconUrl"
-                                                    [ngStyle]="{ 'max-width': isPhone() ? '1rem' : '3%', 'margin-right': '1rem' }"
+                                                    [ngStyle]="{ 'width': isPhone() ? '2rem' : '2.5rem', 'margin-right': '1rem' }"
                                                   />
                                                   {{
-                                                    category?.parentCategoy
-                                                      ?.name
+                                                    category?.name
                                                   }}
-                                                  <i
-                                                    class="fi-rs-angle-right"
-                                                    style="
-                                                      padding-left: 1rem;
-                                                      padding-right: 0.5rem;
-                                                      font-size: 15px;
-                                                    "
-                                                  ></i>
-                                                  {{ category.name }}
+                          
                                                 </span>
                                               </li>
                                             </ul>
                                           </div>
+
+                                          <div class="select-menu" *ngIf="openselect
+                                          ">
+                                          <div
+                                          class="select-btn"
+                                          style="
+                                            margin-bottom: 1rem;
+                                            background: #fff;
+                                            border: 1px solid #ececec;
+                                            height: 64px;
+                                            box-shadow: none;
+                                            padding-left: 20px;
+                                            font-size: 16px;
+                                            width: 100%;
+                                          "
+                                          (click)="toggleSubcategoryOptions()"
+                                        >
+                                          <span class="sBtn-text">
+                                            <div
+                                              style="
+                                                display: flex;
+                                                align-items: center;
+                                              "
+                                            >
+                                              <img
+                                                src="{{
+                                                  selectedOption.media
+                                                    ?.url
+                                                }}"
+                                                *ngIf="selectedSubcategory?.name"
+                                                alt=""
+                                                class="iconUrl"
+                                                [ngStyle]="{ 'width': isPhone() ? '2rem' : '2.5rem', 'margin-right': '1rem' }"
+
+                                              />
+                                              <p style="margin: 0">
+                                                {{
+                                                  selectedSubcategory?.name ||
+                                                    "Choisissez"
+                                                }}
+
+                                              </p>
+                                            </div>
+                                          </span>
+                                          <i class="bx bx-chevron-down"></i>
+                                        </div>
+                                        <ul
+                                          class="options"
+                                          [ngClass]="{
+                                            active: subcategoryOptionsVisible
+                                          }"
+                                          style="font-size: smaller"
+                                        >
+                                          <li
+                                            class="option"
+                                            *ngFor="
+                                              let subcategory of filteredSubcategories
+                                            "
+                                            (click)="selectSubcategory(subcategory)"
+                                          >
+                                            <span
+                                              class="d-inline-flex align-items-center"
+                                            >
+                                              <img
+                                                src="{{
+                                                  selectedOption.media?.url
+                                                }}"
+                                                alt=""
+                                                class="iconUrl"
+                                                [ngStyle]="{ 'width': isPhone() ? '2rem' : '3%', 'margin-right': '1rem' }"
+                                              />
+                                              {{
+                                                subcategory?.name
+                                              }}
+                      
+                                            </span>
+                                          </li>
+                                        </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                                        </div>
                                           <div
                                             *ngIf="fieldErrors.category"
                                             class="text-danger requisDiv"
@@ -302,6 +373,11 @@
                                           </div>
                                         </div>
                                       </div>
+
+               
+
+
+
                                     </div>
                                   </div>
                                 </div>
@@ -559,87 +635,65 @@
                                                 >
                                               </li>
                                             </ul>
-
-                                            <!-- Display Table -->
-                                            <div
-                                              *ngIf="setting.type === 'table'"
-                                              class="select-btn"
-                                              style="
-                                                margin-bottom: 1rem;
-                                                background: #fff;
-                                                border: 1px solid #ececec;
-                                                height: 55px;
-                                                box-shadow: none;
-                                                padding-left: 20px;
-                                                font-size: 15px;
-                                                width: 100%;
-                                              "
-                                              (click)="toggledOptions(setting)"
-                                            >
-                                              <span class="sBtn-text">
-                                                <div
-                                                  style="
-                                                    display: flex;
-                                                    align-items: center;
-                                                  "
-                                                >
-                                                  {{
-                                                    setting.selectedOption
-                                                      ? setting.selectedOption
-                                                          .name
-                                                      : "Choisissez"
-                                                  }}
-                                                </div>
-                                              </span>
+                                            <div *ngIf="setting.type === 'table'" style="margin-bottom: 1rem">
+                                              <input
+                                                id="table"
+                                                name="table"
+                                                [(ngModel)]="selectedOptionName"
+                                                placeholder="{{ setting.label }}"
+                                                type="text"
+                                                required
+                                                maxlength="50"
+                                                (input)="onInput($event, setting)"
+                                                (focus)="onInput($event, setting)"
+                                                (blur)="onInput($event, setting)"
+                                                (click)="toggleOptionr(setting)"
+                                              />
                                               <i class="bx bx-chevron-down"></i>
                                             </div>
-
+                                            
                                             <!-- Display Select Options -->
                                             <ul
-                                              *ngIf="setting.type === 'table'"
+                                              *ngIf="setting.type === 'table' && (inputFocused || setting.optionsVisible)"
                                               class="options"
-                                              [class.active]="
-                                                setting.optionsVisible
-                                              "
-                                              style="font-size: smaller"
+                                              [class.active]="setting.optionsVisible"
+                                              style="font-size: smaller; margin-top: 5px;"
                                             >
-                                              <div
-                                                *ngFor="
-                                                  let optioned of parseOptions2(
-                                                    setting.content
-                                                  )
-                                                "
-                                              >
-                                                {{ optioned.label }}
-                                                <li
-                                                  class="option"
-                                                  *ngFor="
-                                                    let option of parseOptions1(
-                                                      optioned.content
-                                                    )
-                                                  "
-                                                  [value]="option.id"
-                                                  (click)="
-                                                    selectdOptiond(
-                                                      option,
-                                                      setting
-                                                    )
-                                                  "
-                                                >
-                                                  <span
-                                                    class="d-inline-flex align-items-center"
-                                                    >{{ option.name }}</span
+                                              <ng-container *ngFor="let optioned of filteredOptions; trackBy: trackByOptioned">
+                                                <ng-container *ngIf="optioned.filteredContent.length > 0">
+                                                  <div>{{ optioned.label }}</div>
+                                                  <li
+                                                    class="option"
+                                                    *ngFor="let option of optioned.filteredContent; trackBy: trackByOption"
+                                                    [value]="option.id"
+                                                    (click)="selectOptionr(option, setting)"
                                                   >
-                                                </li>
-                                              </div>
+                                                    <span class="d-inline-flex align-items-center">{{ option.name }}</span>
+                                                  </li>
+                                                </ng-container>
+                                              </ng-container>
+                                                                                          <!-- No Results Message -->
+                                            <div class="no-results-message" *ngIf="!hasFilteredOptions()">
+                                              Aucun résultat trouvé
+                                            </div>
                                             </ul>
+                                            
+
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                          
                                             <!-- Display Date Input for 'date' type -->
                                             <div
                                               *ngIf="setting.type === 'date'"
                                               style="margin-bottom: 1rem"
                                             >
                                               <p-calendar
-                                                [(ngModel)]="date"
+                                              name="date"
+                                                [(ngModel)]="setting.content"
                                                 [iconDisplay]="'input'"
                                                 [showIcon]="true"
                                                 placeholder="{{
@@ -649,7 +703,7 @@
                                                 class="full-width-calendar"
                                                 [style]="{ width: '100%' }"
                                               ></p-calendar>
-                                            </div>
+                                            </div> 
 
                                             <div
                                               *ngIf="setting.type === 'text'"
@@ -682,7 +736,7 @@
                                                 required
                                                 maxlength="50"
                                               />
-                                            </div>
+                                            </div> 
 
                                             <!-- Display Select Button -->
                                             <!-- Display Select Button -->

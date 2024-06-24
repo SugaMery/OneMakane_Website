@@ -46,6 +46,19 @@ interface Setting {
   optionsVisible?: boolean;
 }
 
+interface Filter {
+  label: string;
+  type: string;
+  help: string;
+  conditions?: any[]; // Adjust this type according to your actual conditions type
+  options?: any; // Add other properties as needed
+}
+
+interface Filters {
+  [key: string]: Filter;
+}
+
+
 interface SelectedOption {
   value: string;
   label: string;
@@ -106,10 +119,7 @@ export class AllAdsComponent implements OnInit {
 
   allcategories: any[] = [];
   fetchCategories(): void {
-    const accessToken = localStorage.getItem('loggedInUserToken');
-    if (!accessToken) {
-      return;
-    }
+
     this.categoryService.getCategoriesFrom().subscribe(
       (categories) => {
         this.categories = categories.data.filter(
@@ -138,6 +148,7 @@ export class AllAdsComponent implements OnInit {
     if (id !== null) {
       this.categoryId = +id;
       this.getAds();
+      this.getCategoriesFiltres();
     } else {
       // Gérer le cas où l'ID est null, peut-être rediriger ou afficher un message d'erreur
     }
@@ -265,6 +276,39 @@ export class AllAdsComponent implements OnInit {
       // Fetch and filter ads based on selected subcategory ID
       this.filterAds([selectedCategoryId]);
     }
+  }
+  filters: Filters = {};
+    getCategoriesFiltres(): void {
+    const category_id = this.categoryId?.toString();
+    this.categoryService.getCategoryById(category_id!).subscribe((datas) => {
+      this.filters = datas.data.filters ;
+      console.log("filitzr",this.filters);
+    });
+  }
+  getFilterKeys(): string[] {
+    return Object.keys(this.filters);
+  }
+
+  applyCondition(filter: Filter, condition: any): void {
+    console.log('Applying condition:', condition, 'to filter:', filter);
+    // Add your logic here to handle the condition application
+  }
+  toggleOptioned(event: MouseEvent): void {
+    event.stopPropagation();
+    this.optionsVisibled = !this.optionsVisibled;
+  }
+
+  selectedFilter: Filter | null = null;
+  optionsVisibled = false;
+
+  selectFilter(key: string): void {
+    this.selectedFilter = this.filters[key];
+    this.optionsVisibled = false; // Close dropdown after selection if needed
+    // You can add logic here to apply the selected filter
+    console.log('Selected filter:', this.selectedFilter);
+  }
+  isConditionType(filter: Filter): boolean {
+    return filter.type === 'condition';
   }
 
   filterAds(categoryIds: number[]): void {

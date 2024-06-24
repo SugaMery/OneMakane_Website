@@ -40,6 +40,45 @@
                 </div>
               </div>
             </div>
+            <div class="col-xl-4 col-lg-6 col-md-6 mb-lg-0 mb-md-2 mb-sm-2" *ngFor="let key of getFilterKeys()">
+              <div class="card">
+                <h5 class="mb-30">{{ filters[key].label }}</h5>
+                <div *ngIf="filters[key].conditions">
+                  <h6 class="mt-3">Conditions :</h6>
+                  <ul>
+                    <li *ngFor="let condition of filters[key].conditions">
+                      {{ condition }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-xl-4 col-lg-6 col-md-6 mb-lg-0 mb-md-2 mb-sm-2">
+              <div class="card">
+                <h5 class="mb-30">Filtrer par :</h5>
+                <div class="select-menu">
+                  <div class="select-btn"
+                       style="background: #fff; border: 1px solid #ececec; box-shadow: none; padding-left: 20px; font-size: 16px; width: 100%;"
+                       (click)="toggleOptioned($event)">
+                    <span class="sBtn-text">
+                      <div style="display: flex; align-items: center">
+                        <p style="margin: 0">{{ selectedFilter?.label || "Choisissez un filtre" }}</p>
+                      </div>
+                    </span>
+                    <i class="bx bx-chevron-down"></i>
+                  </div>
+                  <ul class="options options-container" [ngClass]="{ active: optionsVisibled }"
+                      (click)="stopEventPropagation($event)" style="font-size: smaller">
+                    <li class="option" *ngFor="let key of getFilterKeys()" (click)="selectFilter(key)">
+                      <span class="d-inline-flex align-items-center">{{ filters[key].label }}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            
             <div class="col-xl-4 col-lg-6 col-md-6 mb-lg-0 mb-md-2 mb-sm-2">
               <div class="card">
                 <h5 class="mb-30">Sélection par Catégorie :</h5>
@@ -305,6 +344,55 @@
                 </ul>
               </div>
             </div>
+
+
+<!--             <div class="sort-by-cover" *ngFor="let key of getFilterKeys()">
+              <div class="sort-by-product-wrap">
+                <div class="sort-by">
+                  <span><i class="fi-rs-apps-sort"></i>{{ filters[key].label }} :</span>
+                </div>
+                <div class="sort-by-dropdown-wrap">
+                  <span
+                    >{{ getSortOptionLabel(sortOption) }}
+                    <i class="fi-rs-angle-small-down"></i
+                  ></span>
+                </div>
+              </div>
+              <div class="sort-by-dropdown">
+                <ul>
+                  <li *ngFor="let condition of filters[key].conditions">
+                    <a (click)="applyCondition(filters[key], condition)">
+                      {{ condition }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+
+            <div *ngFor="let key of getFilterKeys()">
+              <div class="filter-category">
+                <div class="filter-label">{{ filters[key].label }}</div>
+                <div class="filter-dropdown-wrap">
+                  <span>
+                    <i class="fi-rs-apps-sort"></i> Choisir une condition
+                    <i class="fi-rs-angle-small-down"></i>
+                  </span>
+                  <div class="filter-dropdown">
+                    <ul>
+                      <li *ngFor="let condition of filters[key].conditions">
+                        <a (click)="applyCondition(filters[key], condition)">
+                          {{ condition }}
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+            
+            
+            
           </div>
         </div>
 

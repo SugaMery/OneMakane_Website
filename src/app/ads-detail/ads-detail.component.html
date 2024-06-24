@@ -117,11 +117,13 @@
                               <p *ngIf="field.type !== 'multiple'">
                                 {{ field.setting }}
                               </p>
-                              <ul *ngIf="field.type === 'multiple'">
-                                <li *ngFor="let item of field.setting">
-                                  {{ item }}
-                                </li>
-                              </ul>
+                                <ul *ngIf="field.type === 'multiple'"  class="mylist">
+                                  <li *ngFor="let item of field.setting">
+                                    {{ item }}
+                                  </li>
+                                </ul>
+               
+
                             </td>
                           </tr>
                         </tbody>

@@ -17,10 +17,7 @@ export class MessageAddAnnonceComponent {
 
   allcategories: any[] = [];
   fetchCategories(): void {
-    const accessToken = localStorage.getItem('loggedInUserToken');
-    if (!accessToken) {
-      return;
-    }
+
     this.categoryService.getCategoriesFrom().subscribe(
       (categories) => {
         this.categories = categories.data.filter(

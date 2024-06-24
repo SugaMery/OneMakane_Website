@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -19,9 +19,7 @@ export class CategoryService {
     return this.headers.set('Authorization', `Bearer ${accessToken}`);
   }
 
-  getCategories(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl).pipe(catchError(this.handleError));
-  }
+
 
   getCategoriesFrom(): Observable<any> {
     const headers = new HttpHeaders({
@@ -30,6 +28,26 @@ export class CategoryService {
       Expires: '0',
     });
     return this.http.get<any>(`${this.devApiUrl}/categories`, { headers });
+  }
+
+  getCategories(params: any): Observable<any> {
+    const headers = new HttpHeaders({
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      Pragma: 'no-cache',
+      Expires: '0',
+    });
+
+    let httpParams = new HttpParams();
+    for (const key in params) {
+      if (params.hasOwnProperty(key)) {
+        httpParams = httpParams.set(key, params[key]);
+      }
+    }
+
+    return this.http.get<any>(`${this.devApiUrl}/categories`, {
+      headers,
+      params: httpParams,
+    });
   }
 
   getCategoryById(categoryId: string): Observable<any> {

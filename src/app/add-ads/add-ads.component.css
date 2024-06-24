@@ -31829,3 +31829,7 @@ table th {
 }
 
 
+::ng-deep .options .option{
+  height: 35px !important;
+
+}

@@ -81,11 +81,12 @@ export class HeaderComponent {
     this.status = false;
     this.authGuard.logout();
   }
+  preFilterValues: any[] = [];
 
   navigateToCategory(categoryId: number) {
     window.location.href = `/ads-category/${categoryId}`;
   }
-  fetchCategories(): void {
+/*   fetchCategories(): void {
     const accessToken = localStorage.getItem('loggedInUserToken');
     if (!accessToken) {
       return;
@@ -147,7 +148,7 @@ export class HeaderComponent {
       }
     );
     console.log('categories categories', this.categories);
-  }
+  } */
   getCategories(): void {
     this.categoryService.getCategoriesFrom().subscribe((categories) => {
       // Filter root categories
@@ -167,19 +168,71 @@ export class HeaderComponent {
 
         // Loop through subcategories
         category.subcategories.forEach((subcategory: any) => {
-          // Find sub-subcategories for each subcategory
-          subcategory.subsubcategories = categories.data.filter(
+          //Find sub-subcategories for each subcategory
+/*           subcategory.subsubcategories = categories.data.filter(
             (subsubcat: any) =>
               subsubcat.active === true &&
               subsubcat.parent_id === subcategory.id
           );
+          console.log("subcategory", subcategory);
+ */
+
+   this.categoryService.getCategoryById(subcategory.id).subscribe((data) => {
+      const preFilter = data.data.pre_filter;
+      //console.log("daaaaaaaaaaaaaaaaaaaateeeee", preFilter);
+
+      // Clear the array before populating it
+      this.preFilterValues = [];
+      subcategory.subsubscategories =  [];
+
+      // Collect values in the array
+      for (const key in preFilter) {
+        if (preFilter.hasOwnProperty(key)) {
+          //this.preFilterValues.push(preFilter[key]);
+          const list = preFilter[key];
+          for (const keys in list) {
+            if(list.hasOwnProperty(keys)){
+              //console.log('kkkkkkkkkkk',list[keys]);
+              const alreadyExists = this.preFilterValues.some(item => item[keys] === list[keys]);
+
+              // If it doesn't exist, push it into this.preFilterValues
+              if (!alreadyExists) {
+                this.preFilterValues.push({ [keys]: list[keys] });
+
+                // Push this.preFilterValues into subcategory.subsubcategories
+                subcategory.subsubscategories.push({ [keys]: list[keys] });
+            
+              }
+
+            }
+          }
+
+          
+        }
+      }
+
+
+// Ensure subcategory.subsubcategories is initialized as an array
+
+// Log to check values for debugging
+
+      // Log the array to verify the values
+      //console.log('preFilterValues:', this.preFilterValues);
+    }); 
+    //console.log("subcategory", subcategory, this.preFilterValues, subcategory.subsubscategories);
+   
         });
       });
 
       //console.log('Filter root categories', this.categories);
     });
   }
-
+  getValueFromObject(obj: any): string {
+    // obj is like { vtt: 'VTT' }
+    const key = Object.keys(obj)[0]; // Get the key ('vtt' in this case)
+    return obj[key]; // Return the corresponding value ('VTT')
+  }
+  
   toggleMoreCategories(): void {
     this.showMore = !this.showMore;
     const moreSlideOpen = document.querySelector(
@@ -194,11 +247,17 @@ export class HeaderComponent {
   searchQuery: string = '';
 
   navigateToCategory1(categoryId: number, searchQuery: string): void {
-    this.router.navigate(['/ads-category', categoryId], {
-      queryParams: { search: searchQuery },
+    const url = `/ads-category/${categoryId}?search=${searchQuery}`;
+    window.location.href = url;
+  }
+  navigateToCategorys(subcategory : any,subsubcat: any) {
+    const key = Object.keys(subsubcat)[0]; // Get the key ('vtt' in this case)
+    const value = subsubcat[key]; // Get the corresponding value ('VTT' in this case)
+
+    this.router.navigate(['/ads-category', subcategory], {
+      queryParams: { search: value },
     });
   }
-
   onSubmit(): void {
     // Get the select element by class
     // Get the select element by class
