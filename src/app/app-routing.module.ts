@@ -20,6 +20,8 @@ import { AboutUsComponent } from './about-us/about-us.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
 import { ConditionsGeneralesComponent } from './conditions-generales/conditions-generales.component';
 import { MentionsLegalesComponent } from './mentions-legales/mentions-legales.component';
+import { PageService } from './page.service';
+import { CategoryService } from './category.service';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -28,7 +30,8 @@ const routes: Routes = [
   { path: 'chat/:ad_id', component: ChatComponent, canActivate: [AuthGuard] },
   { path: 'chat', component: ChatComponent, canActivate: [AuthGuard] },
   { path: 'ads-category/:id', component: AllAdsComponent },
-
+  { path: ':slug1', component: ConditionsGeneralesComponent },
+  { path: ':slug2/', component: MentionsLegalesComponent },
   { path: 'account-activation', component: ActivityAccountComponent },
   { path: 'reset-password', component: ForgetPasswordComponent },
   { path: 'reset-password/email', component: ForgetPasswordMessageComponent },
@@ -83,4 +86,18 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+  /*   slugPage: string = '';
+  constructor(private pageService: PageService) {}
+
+  loadPage(pageId: string, langId: string): void {
+    this.pageService.getPage(pageId, langId).subscribe(
+      (data) => {
+        this.slugPage = data.data.title;
+      },
+      (error) => {
+        console.error('Error fetching page data', error);
+      }
+    );
+  } */
+}

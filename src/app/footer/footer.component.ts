@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from '../category.service';
+import { PageService } from '../page.service';
 
 @Component({
   selector: 'app-footer',
@@ -9,11 +10,27 @@ import { CategoryService } from '../category.service';
 export class FooterComponent implements OnInit {
   categoriesFooter: any[] = [];
   Souscategories: any[] = [];
+  slugPage1: string = '';
+  titrePage1: string = '';
+  slugPage2: string = '';
+  titrePage2: string = '';
 
-  constructor(private categoryService: CategoryService) {}
+  constructor(
+    private pageService: PageService,
+    private categoryService: CategoryService
+  ) {}
 
   ngOnInit(): void {
     this.getCategories();
+
+    this.pageService.getPage('2', '1').subscribe((data) => {
+      this.slugPage1 = data.data.page.slug; // Assuming 'slug' is the property in your data structure
+      this.titrePage1 = data.data.title;
+    });
+    this.pageService.getPage('3', '1').subscribe((data) => {
+      this.slugPage2 = data.data.page.slug; // Assuming 'slug' is the property in your data structure
+      this.titrePage2 = data.data.title;
+    });
   }
   navigateToCategory(categoryId: number) {
     window.location.href = `/ads-category/${categoryId}`;

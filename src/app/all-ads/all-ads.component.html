@@ -19,7 +19,7 @@
         </a>
         <div class="shop-product-fillter-header">
           <div class="row">
-            <div class="col-xl-4 col-lg-6 col-md-6 mb-lg-0 mb-md-5 mb-sm-5">
+            <div class="col-xl-3 col-lg-6 col-md-6 mb-lg-0 mb-md-5 mb-sm-5">
               <div class="card">
                 <h5 class="mb-10">Rechercher :</h5>
                 <div class="sidebar-widget price_range range">
@@ -41,7 +41,7 @@
               </div>
             </div>
             <div
-              class="col-xl-4 col-lg-6 col-md-6 mb-lg-0 mb-md-2 mb-sm-2"
+              class="col-xl-3 col-lg-6 col-md-6 mb-lg-0 mb-md-2 mb-sm-2"
               *ngFor="let key of getFilterKeys()"
             >
               <div class="card">
@@ -62,7 +62,10 @@
                     <span class="sBtn-text">
                       <div style="display: flex; align-items: center">
                         <p style="margin: 0">
-                          {{ selectedFilter?.label || "Choisissez un filtre" }}
+                          {{
+                            filters[key].selectedCondition?.value ||
+                              "Choisissez un filtre"
+                          }}
                         </p>
                       </div>
                     </span>
@@ -83,16 +86,63 @@
                       "
                       (click)="selectOptioneds(key, condition)"
                     >
-                      <span class="d-inline-flex align-items-center">{{
-                        condition.value
-                      }}</span>
+                      <span class="d-inline-flex align-items-center">
+                        {{ condition.value }}
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="select-menu" *ngIf="filters[key].options">
+                  <div
+                    class="select-btn"
+                    style="
+                      background: #fff;
+                      border: 1px solid #ececec;
+                      box-shadow: none;
+                      padding-left: 20px;
+                      font-size: 16px;
+                      width: 100%;
+                    "
+                    (click)="toggleOptioned(key)"
+                  >
+                    <span class="sBtn-text">
+                      <div style="display: flex; align-items: center">
+                        <p style="margin: 0">
+                          {{
+                            filters[key].selectedCondition?.value ||
+                              "Choisissez une option"
+                          }}
+                        </p>
+                      </div>
+                    </span>
+                    <i class="bx bx-chevron-down"></i>
+                  </div>
+                  <ul
+                    class="options options-container"
+                    [ngClass]="{ active: optionsVisibleMap[key] }"
+                    (click)="stopEventPropagation($event)"
+                    style="font-size: smaller"
+                  >
+                    <li
+                      class="option"
+                      *ngFor="let optionKey of getOptionKeys(key)"
+                      (click)="
+                        selectOptioneds(key, {
+                          key: optionKey,
+                          value: getOptionValues(key, optionKey)
+                        })
+                      "
+                    >
+                      <span class="d-inline-flex align-items-center">
+                        {{ getOptionValues(key, optionKey) }}
+                      </span>
                     </li>
                   </ul>
                 </div>
               </div>
             </div>
 
-            <div class="col-xl-4 col-lg-6 col-md-6 mb-lg-0 mb-md-2 mb-sm-2">
+            <div class="col-xl-3 col-lg-6 col-md-6 mb-lg-0 mb-md-2 mb-sm-2">
               <div class="card">
                 <h5 class="mb-30">Sélection par Catégorie :</h5>
                 <div class="select-menu">
@@ -213,7 +263,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-xl-4 col-lg-6 col-md-6 mb-lg-0 mb-md-5 mb-sm-5">
+            <div class="col-xl-3 col-lg-6 col-md-6 mb-lg-0 mb-md-5 mb-sm-5">
               <div class="card">
                 <h5 class="mb-10">Sélection par prix :</h5>
                 <div class="sidebar-widget price_range range">

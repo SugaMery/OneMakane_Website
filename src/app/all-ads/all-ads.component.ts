@@ -149,6 +149,25 @@ export class AllAdsComponent implements OnInit {
       selectedCondition: condition,
     };
     this.optionsVisibleMap[filterKey] = false; // Close the dropdown after selection
+    this.filters[filterKey].selectedCondition = condition;
+    console.log(
+      'prrrrrrrrreeeeeeeeeeeeeeeeeeeee',
+      this.filters[filterKey],
+      condition
+    );
+  }
+  // Add this method to your component class to get option keys and values
+  getOptionKeys(filterKey: string): string[] {
+    return Object.keys(this.filters[filterKey].options || {});
+  }
+
+  getOptionValues(filterKey: string, optionKey: string): string {
+    return this.filters[filterKey].options[optionKey];
+  }
+
+  getSelectedOptions(filterKey: string): { [key: string]: string } {
+    const selectedConditionKey = this.filters[filterKey].selectedCondition!.key;
+    return this.filters[filterKey].options[selectedConditionKey];
   }
   ngOnInit(): void {
     this.fetchCategories();
@@ -330,7 +349,6 @@ export class AllAdsComponent implements OnInit {
     this.selectedFilter = this.filters[key];
     this.optionsVisibleds = false; // Close dropdown after selection if needed
     // You can add logic here to apply the selected filter
-    console.log('prrrrrrrrreeeeeeeeeeeeeeeeeeeee', this.filters[key]);
 
     console.log('Selected filter:', this.selectedFilter);
   }
