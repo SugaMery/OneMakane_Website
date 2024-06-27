@@ -22,6 +22,7 @@ import { ConditionsGeneralesComponent } from './conditions-generales/conditions-
 import { MentionsLegalesComponent } from './mentions-legales/mentions-legales.component';
 import { PageService } from './page.service';
 import { CategoryService } from './category.service';
+import { AdsGridComponent } from './ads-grid/ads-grid.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -29,7 +30,8 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'chat/:ad_id', component: ChatComponent, canActivate: [AuthGuard] },
   { path: 'chat', component: ChatComponent, canActivate: [AuthGuard] },
-  { path: 'ads-category/:id', component: AllAdsComponent },
+/*   { path: 'ads-category/:id', component: AllAdsComponent },
+ */  { path: 'ads-category/:id', component: AdsGridComponent },
   { path: ':slug1', component: ConditionsGeneralesComponent },
   { path: ':slug2/', component: MentionsLegalesComponent },
   { path: 'account-activation', component: ActivityAccountComponent },
@@ -80,6 +82,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   { path: 'ads/:id', component: AdsDetailComponent },
+
 ];
 
 @NgModule({

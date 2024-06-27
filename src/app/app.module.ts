@@ -45,6 +45,7 @@ import { AboutUsComponent } from './about-us/about-us.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
 import { ConditionsGeneralesComponent } from './conditions-generales/conditions-generales.component';
 import { MentionsLegalesComponent } from './mentions-legales/mentions-legales.component';
+import { AdsGridComponent } from './ads-grid/ads-grid.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { MentionsLegalesComponent } from './mentions-legales/mentions-legales.co
     ContactUsComponent,
     ConditionsGeneralesComponent,
     MentionsLegalesComponent,
+    AdsGridComponent,
   ],
   imports: [
     BrowserModule,
