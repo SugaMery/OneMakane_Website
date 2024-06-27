@@ -78,8 +78,8 @@ export class AnnonceService {
       .toPromise();
   }
 
-  getAds(validation_status: string): Observable<any> {
-    const url = `${this.apiUrl}/ads?validation_status=${validation_status}`;
+  getAds(): Observable<any> {
+    const url = `${this.apiUrl}/ads`;
     return this.http.get<any>(url);
   }
 

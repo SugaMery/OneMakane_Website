@@ -720,79 +720,87 @@ export class AddAdsComponent implements OnInit {
       id: option.id, // Ensure id is retrieved from your data structure
     }));
   }
-// Define inputFocused and filteredOptions properties in your component
-inputFocused: boolean = false;
-filteredOptions: { label: number, filteredContent: { id: number, name: string }[] }[] = [];
+  // Define inputFocused and filteredOptions properties in your component
+  inputFocused: boolean = false;
+  filteredOptions: {
+    label: number;
+    filteredContent: { id: number; name: string }[];
+  }[] = [];
 
-// Method to handle input events and filter options
-onInput(event: Event, setting: any): void {
-  const inputElement = event.target as HTMLInputElement;
-  
-  // Check if the input element ID is "table"
-  if (inputElement.id === "table") {
-    const input = inputElement.value.trim().toLowerCase();
-    setting.inputValue = input;
-    
-    // Filter options based on input value
-    this.filteredOptions = this.parseOptions2(setting.content).map(optioned => ({
-      label: optioned.label,
-      filteredContent: this.parseOptions1(optioned.content).filter(option => option.name.toLowerCase().includes(input))
-    }));
+  // Method to handle input events and filter options
+  onInput(event: Event, setting: any): void {
+    const inputElement = event.target as HTMLInputElement;
 
-    this.inputFocused = input.length > 0; // Set inputFocused based on input value
+    // Check if the input element ID is "table"
+    if (inputElement.id === 'table') {
+      const input = inputElement.value.trim().toLowerCase();
+      setting.inputValue = input;
+
+      // Filter options based on input value
+      this.filteredOptions = this.parseOptions2(setting.content).map(
+        (optioned) => ({
+          label: optioned.label,
+          filteredContent: this.parseOptions1(optioned.content).filter(
+            (option) => option.name.toLowerCase().includes(input)
+          ),
+        })
+      );
+
+      this.inputFocused = input.length > 0; // Set inputFocused based on input value
+    }
   }
-}
 
-
-// Adjust toggleOptionr method to close the options when clicking outside
-toggleOptionr(setting: any) {
-  setting.optionsVisible = !setting.optionsVisible;
-  if (!setting.optionsVisible) {
-    this.inputFocused = false; // Reset inputFocused when closing options
+  // Adjust toggleOptionr method to close the options when clicking outside
+  toggleOptionr(setting: any) {
+    setting.optionsVisible = !setting.optionsVisible;
+    if (!setting.optionsVisible) {
+      this.inputFocused = false; // Reset inputFocused when closing options
+    }
   }
-}
 
-// Method to select an option and close the options
-selectOptionr(option: any, setting: any) {
-  this.selectedOptionName = option.name;
-  setting.selectedOption = option;
-  setting.optionsVisible = false;
-  this.inputFocused = false; // Reset inputFocused when an option is selected
-}
-
-// TrackBy functions remain the same
-trackByOptioned(index: number, item: any): any {
-  return item.label;
-}
-
-trackByOption(index: number, item: any): any {
-  return item.id;
-}
-
-// ParseOptions1 and ParseOptions2 functions remain the same
-parseOptions1(content: string | StringIndexed): { id: number; name: string }[] {
-  if (Array.isArray(content)) {
-    return content.map((item) => ({
-      id: item.id,
-      name: item.name,
-    }));
-  } else {
-    return [];
+  // Method to select an option and close the options
+  selectOptionr(option: any, setting: any) {
+    this.selectedOptionName = option.name;
+    setting.selectedOption = option;
+    setting.optionsVisible = false;
+    this.inputFocused = false; // Reset inputFocused when an option is selected
   }
-}
 
-parseOptions2(content: string | StringIndexed): { label: number; content: string }[] {
-  if (Array.isArray(content)) {
-    return content.map((item) => ({
-      label: item.label,
-      content: item.content,
-    }));
-  } else {
-    return [];
+  // TrackBy functions remain the same
+  trackByOptioned(index: number, item: any): any {
+    return item.label;
   }
-}
 
+  trackByOption(index: number, item: any): any {
+    return item.id;
+  }
 
+  // ParseOptions1 and ParseOptions2 functions remain the same
+  parseOptions1(
+    content: string | StringIndexed
+  ): { id: number; name: string }[] {
+    if (Array.isArray(content)) {
+      return content.map((item) => ({
+        id: item.id,
+        name: item.name,
+      }));
+    } else {
+      return [];
+    }
+  }
+
+  parseOptions2(
+    content: string | StringIndexed
+  ): { label: number; content: string }[] {
+    if (Array.isArray(content)) {
+      return content.map((item) => ({
+        label: item.label,
+        content: item.content,
+      }));
+    } else {
+      return [];
+    }
+  }
 
   toggledOptions(setting: Setting): void {
     this.settings.forEach((s) => {
@@ -815,10 +823,12 @@ parseOptions2(content: string | StringIndexed): { label: number; content: string
     this.optionsVisible = false;
   }
 
-// In your component class
-hasFilteredOptions(): boolean {
-  return this.filteredOptions.some(optioned => optioned.filteredContent.length > 0);
-}
+  // In your component class
+  hasFilteredOptions(): boolean {
+    return this.filteredOptions.some(
+      (optioned) => optioned.filteredContent.length > 0
+    );
+  }
 
   suggestCategory(title: string): CustomCategory | null {
     for (const category of this.Customcategories) {
@@ -849,7 +859,7 @@ hasFilteredOptions(): boolean {
     this.fetchCategories();
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
-    this.annonceService.getAds('pending').subscribe((data) => {
+    this.annonceService.getAds().subscribe((data) => {
       const adIds = data.data.map((ad: any) => ad.id);
       const adPromises = adIds.map((adId: any) => {
         return this.annonceService.getAdById(adId).toPromise();
@@ -893,7 +903,7 @@ hasFilteredOptions(): boolean {
       ville: '',
       code_postal: '',
       files: [],
-      category_parent_id:0
+      category_parent_id: 0,
     };
   }
 
@@ -920,9 +930,11 @@ hasFilteredOptions(): boolean {
     const queryParams = {
       parent: 1,
     };
-    this.categoryService.getCategories(queryParams).subscribe((categorieParent)=>{
-      this.categoriesParent = categorieParent.data
-    })
+    this.categoryService
+      .getCategories(queryParams)
+      .subscribe((categorieParent) => {
+        this.categoriesParent = categorieParent.data;
+      });
     console.log('categories categories', this.categories);
   }
 
@@ -1042,10 +1054,9 @@ hasFilteredOptions(): boolean {
         });
         console.log('listtttttttttteee', list);
         settingADS[setting.key] = list;
-      }else if (setting.type === 'date'){
+      } else if (setting.type === 'date') {
         const date = new Date(setting.content);
         setting.content = this.formatDate(date);
-
       }
     }
     console.log('settingADS', settingADS);
@@ -1121,19 +1132,17 @@ hasFilteredOptions(): boolean {
     //this.getAds('pending');
     let isValid = true;
 
-
-    if (!this.formData.titre ) {
+    if (!this.formData.titre) {
       this.fieldErrors.titre = true;
       isValid = false;
     } else {
       this.fieldErrors.titre = false;
     }
 
-    if (!this.formData.category_id ) {
+    if (!this.formData.category_id) {
       this.fieldErrors.category = true;
       return false;
     }
-    
 
     if (!isValid) {
       return false;
@@ -1142,16 +1151,17 @@ hasFilteredOptions(): boolean {
   }
   openselect = false;
   selectOption(category: Category): void {
-          this.filteredSubcategories=[];
-this.formData.category_id=0;
+    this.filteredSubcategories = [];
+    this.formData.category_id = 0;
     this.selectedOption = category;
     if (this.selectedOption) {
-
-      this.categoryService.getCategories({active: 1}).subscribe((data)=>{
-        this.filteredSubcategories=data.data.filter((parent: { parent_id: number; })=>   parent.parent_id == category.id)
+      this.categoryService.getCategories({ active: 1 }).subscribe((data) => {
+        this.filteredSubcategories = data.data.filter(
+          (parent: { parent_id: number }) => parent.parent_id == category.id
+        );
       });
       // Assuming allCategories is an array of objects and category.id is the parent_id you want to filter by
-/*       this.categoryService.getCategories({active:1}).subscribe((all) => {
+      /*       this.categoryService.getCategories({active:1}).subscribe((all) => {
         all.data.forEach((element: { id: string; }) => {
                   this.categoryService.getCategoryById(element.id).subscribe((data)=>{
                     if(data.data.parent_id==category.id){
@@ -1161,10 +1171,10 @@ this.formData.category_id=0;
                   })
         });
       }); */
-            
+
       this.selectedSubcategory = null; // Reset subcategory when parent changes
-      this.openselect=true;
-      this.subcategoryOptionsVisible=false;
+      this.openselect = true;
+      this.subcategoryOptionsVisible = false;
     } else {
       if (this.selectedSubCategory!.id) {
         this.formData.category_id = this.selectedSubCategory!.id;
@@ -1191,31 +1201,28 @@ this.formData.category_id=0;
 
   selectSubcategory(subcategory: any) {
     this.subcategoryOptionsVisible = false;
-    
-    this.selectedSubcategory = subcategory;
-    this.categoryService.getCategoryById(subcategory.id).subscribe((data)=>{
-      this.selectedSubcategory = data.data;
-      this.settings=[];
-      this.fetchSettings();
 
+    this.selectedSubcategory = subcategory;
+    this.categoryService.getCategoryById(subcategory.id).subscribe((data) => {
+      this.selectedSubcategory = data.data;
+      this.settings = [];
+      this.fetchSettings();
     });
 
     this.formData.category_id = subcategory.id;
-
   }
 
   toggleSubcategoryOptions() {
     this.subcategoryOptionsVisible = !this.subcategoryOptionsVisible;
-    this.optionsVisible = false ;
+    this.optionsVisible = false;
     this.fieldErrors['category'] = false;
-
   }
   fetchSettings(): void {
-    console.log('ooooo',this.selectedSubcategory);
+    console.log('ooooo', this.selectedSubcategory);
     const queryParams = { model: this.selectedSubcategory.model };
     const accessToken = localStorage.getItem('loggedInUserToken');
     const settingsOption = this.selectedSubcategory.model_fields;
-    console.log('ooooo11',settingsOption);
+    console.log('ooooo11', settingsOption);
 
     for (const key in settingsOption) {
       if (settingsOption.hasOwnProperty(key)) {
@@ -1481,10 +1488,9 @@ this.formData.category_id=0;
               });
               console.log('listtttttttttteee', list);
               settingADS[setting.key] = list;
-            }else if (setting.type === 'date'){
+            } else if (setting.type === 'date') {
               const date = new Date(setting.content);
               settingADS[setting.key] = this.formatDate(date);
-      
             }
           }
           console.log('settingADS', settingADS);
@@ -1538,7 +1544,7 @@ this.formData.category_id=0;
       this.optionsVisible = false;
       this.stateOptionsVisible = false;
       this.genreOptionsVisible = false;
-      this.subcategoryOptionsVisible=false;
+      this.subcategoryOptionsVisible = false;
     }
     if (!this.isDescendant(targetElement, 'select-menu')) {
       // Close all select menus
@@ -1573,7 +1579,7 @@ this.formData.category_id=0;
     this.fieldErrors['category'] = false;
     this.stateOptionsVisible = false;
     this.genreOptionsVisible = false;
-    this.subcategoryOptionsVisible=false;
+    this.subcategoryOptionsVisible = false;
   }
 
   toggleUrgent(checked: boolean) {

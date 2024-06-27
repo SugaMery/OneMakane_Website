@@ -18,7 +18,6 @@ export class AdsDetailComponent implements OnInit {
 
   allcategories: any[] = [];
   fetchCategories(): void {
-
     this.categoryService.getCategoriesFrom().subscribe(
       (categories) => {
         this.categories = categories.data.filter(
@@ -89,7 +88,6 @@ export class AdsDetailComponent implements OnInit {
                   .subscribe(
                     (setting) => {
                       if (setting.data) {
-
                         // Transform modelFields into transformedFields with initial structure
                         const transformedFields = Object.keys(modelFields).map(
                           (key) => ({
@@ -102,36 +100,56 @@ export class AdsDetailComponent implements OnInit {
                         );
                         transformedFields.forEach((field) => {
                           // Check if options are defined and type is 'select'
-                                                    // Check if options are defined and type is 'select'
-                                                    if (
-                                                      modelFields[field.value].route
-                                                    ) {
-                                                      const fieldValue = data.data.additional[field.value];
-  // Perform the service call with the appropriate route and accessToken
-  this.settingService.createMarque(modelFields[field.value].route, accessToken!).subscribe((response) => {
-    
-    // Extract the relevant categories
-    const marquesPopulaires = response.data['Marques populaires'];
-    const autresMarques = response.data['Autres marques'];
-    
-    // Convert objects to arrays
-    const marquesPopulairesArray = Object.entries(marquesPopulaires).map(([key, value]) => ({ id: key, name: value }));
-    const autresMarquesArray = Object.entries(autresMarques).map(([key, value]) => ({ id: key, name: value }));
-    
-    // Combine arrays if needed
-    const allMarquesArray = [...marquesPopulairesArray, ...autresMarquesArray];
-    
-    // Filter the array to find the item with the specified ID
-    const filteredResponse = allMarquesArray.filter((item: { id: string; }) => item.id === String(fieldValue));
-    
-    // Handle the filtered response
-    if (filteredResponse.length > 0) {
-         field.setting = filteredResponse[0].name!.toString();
-    } 
-});
+                          // Check if options are defined and type is 'select'
+                          if (modelFields[field.value].route) {
+                            const fieldValue =
+                              data.data.additional[field.value];
+                            // Perform the service call with the appropriate route and accessToken
+                            this.settingService
+                              .createMarque(
+                                modelFields[field.value].route,
+                                accessToken!
+                              )
+                              .subscribe((response) => {
+                                // Extract the relevant categories
+                                const marquesPopulaires =
+                                  response.data['Marques populaires'];
+                                const autresMarques =
+                                  response.data['Autres marques'];
 
-                                                    }
-                          else if (
+                                // Convert objects to arrays
+                                const marquesPopulairesArray = Object.entries(
+                                  marquesPopulaires
+                                ).map(([key, value]) => ({
+                                  id: key,
+                                  name: value,
+                                }));
+                                const autresMarquesArray = Object.entries(
+                                  autresMarques
+                                ).map(([key, value]) => ({
+                                  id: key,
+                                  name: value,
+                                }));
+
+                                // Combine arrays if needed
+                                const allMarquesArray = [
+                                  ...marquesPopulairesArray,
+                                  ...autresMarquesArray,
+                                ];
+
+                                // Filter the array to find the item with the specified ID
+                                const filteredResponse = allMarquesArray.filter(
+                                  (item: { id: string }) =>
+                                    item.id === String(fieldValue)
+                                );
+
+                                // Handle the filtered response
+                                if (filteredResponse.length > 0) {
+                                  field.setting =
+                                    filteredResponse[0].name!.toString();
+                                }
+                              });
+                          } else if (
                             !modelFields[field.value].options &&
                             modelFields[field.value].type === 'select'
                           ) {
@@ -162,20 +180,16 @@ export class AdsDetailComponent implements OnInit {
                                 modelFields
                               );
                             }
-                           
                           } else if (
                             modelFields[field.value].type === 'number' ||
                             modelFields[field.value].type === 'text' ||
                             modelFields[field.value].type === 'date'
                           ) {
                             field.setting = data.data.additional[field.value];
-
-                           
                           } else if (
                             modelFields[field.value].options &&
                             modelFields[field.value].type !== 'bool'
                           ) {
-                            
                             field.setting =
                               modelFields[field.value].options[
                                 data.data.additional[field.value]
@@ -196,13 +210,12 @@ export class AdsDetailComponent implements OnInit {
                             } catch (error) {
                               console.error('Error parsing JSON:', error);
                             }
-                           
                           }
                         });
- 
-                        
-                        this.transformedField = transformedFields.filter(fild => fild.value !== 'need_cv');
 
+                        this.transformedField = transformedFields.filter(
+                          (fild) => fild.value !== 'need_cv'
+                        );
                       } else {
                         console.error('No data found in settings.');
                       }
@@ -213,7 +226,6 @@ export class AdsDetailComponent implements OnInit {
                   );
               });
 
-
             // Count ads where adDetail.user.id matches
             // Initialize count variable outside of the subscription
             let count = 0;
@@ -221,7 +233,7 @@ export class AdsDetailComponent implements OnInit {
             // Create an array to store all inner observables
             const innerObservables: Observable<any>[] = [];
 
-            this.annonceService.getAds('pending').subscribe((adsData) => {
+            this.annonceService.getAds().subscribe((adsData) => {
               let relatedAdsTemp: any[] = [];
               // Iterate over each ad
               adsData.data.forEach((ad: { id: any }) => {
@@ -243,7 +255,6 @@ export class AdsDetailComponent implements OnInit {
                     }
 
                     this.countsAds = count;
-
                   });
               });
               if (relatedAdsTemp.length > 0) {

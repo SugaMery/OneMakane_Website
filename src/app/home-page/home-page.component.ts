@@ -139,7 +139,7 @@ export class HomePageComponent implements OnInit {
     if (this.document.defaultView && this.document.defaultView.localStorage) {
       const accessToken =
         this.document.defaultView.localStorage.getItem('loggedInUserToken');
-      this.annonceService.getAds('pending').subscribe((data) => {
+      this.annonceService.getAds().subscribe((data) => {
         this.ads = data.data;
         const jobs = 'ad_jobs';
 
@@ -240,7 +240,6 @@ export class HomePageComponent implements OnInit {
   }
   allcategories: any[] = [];
   fetchCategories(): void {
-
     this.categoryService.getCategoriesFrom().subscribe(
       (categories) => {
         this.categories = categories.data.filter(

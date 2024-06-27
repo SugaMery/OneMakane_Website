@@ -212,7 +212,7 @@ export class AllAdsComponent implements OnInit {
     this.getCategories();
   }
   getAds(): void {
-    this.annonceService.getAds('pending').subscribe((ads) => {
+    this.annonceService.getAds().subscribe((ads) => {
       if (ads && ads.data) {
         const adsByCategory = ads.data.filter(
           (ad: { category: { id: number | undefined } }) =>
@@ -362,7 +362,7 @@ export class AllAdsComponent implements OnInit {
     event.stopPropagation(); // Prevent event bubbling
   }
   filterAds(categoryIds: number[]): void {
-    this.annonceService.getAds('pending').subscribe((ads) => {
+    this.annonceService.getAds().subscribe((ads) => {
       if (ads && ads.data) {
         const adsByCategory = ads.data.filter((ad: any) =>
           categoryIds.includes(ad.category.id)
@@ -423,7 +423,7 @@ export class AllAdsComponent implements OnInit {
   }
   filterByCategory(categoryId: number): void {
     this.filteredAds = []; // Clear previous filtered ads
-    this.annonceService.getAds('pending').subscribe((ads) => {
+    this.annonceService.getAds().subscribe((ads) => {
       if (ads && ads.data) {
         ads.data.forEach((ad: { category: { id: number }; id: string }) => {
           if (ad.category.id === categoryId) {
