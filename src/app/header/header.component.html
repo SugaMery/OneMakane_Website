@@ -486,15 +486,26 @@
                           {{ subcategory.name }}
                         </a>
                         <ul *ngIf="subcategory.subsubscategories?.length">
-                          <li *ngFor="let subsubcat of subcategory.subsubscategories">
-                            <a [href]="'/ads-category/' + subcategory.id + '?search=' + getValueFromObject(subsubcat)">
+                          <li
+                            *ngFor="
+                              let subsubcat of subcategory.subsubscategories.slice(
+                                0,
+                                4
+                              )
+                            "
+                          >
+                            <a
+                              [href]="
+                                '/ads-category/' +
+                                subcategory.id +
+                                '?search=' +
+                                getValueFromObject(subsubcat)
+                              "
+                            >
                               {{ getValueFromObject(subsubcat) }}
                             </a>
                           </li>
                         </ul>
-                        
-                        
-                        
                       </li>
                     </ul>
                     <li

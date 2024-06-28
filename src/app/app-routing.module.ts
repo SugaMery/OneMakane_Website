@@ -30,10 +30,8 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'chat/:ad_id', component: ChatComponent, canActivate: [AuthGuard] },
   { path: 'chat', component: ChatComponent, canActivate: [AuthGuard] },
-/*   { path: 'ads-category/:id', component: AllAdsComponent },
- */  { path: 'ads-category/:id', component: AdsGridComponent },
-  { path: ':slug1', component: ConditionsGeneralesComponent },
-  { path: ':slug2/', component: MentionsLegalesComponent },
+  /*   { path: 'ads-category/:id', component: AllAdsComponent },
+   */ { path: 'ads-category/:id', component: AdsGridComponent },
   { path: 'account-activation', component: ActivityAccountComponent },
   { path: 'reset-password', component: ForgetPasswordComponent },
   { path: 'reset-password/email', component: ForgetPasswordMessageComponent },
@@ -82,7 +80,6 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   { path: 'ads/:id', component: AdsDetailComponent },
-
 ];
 
 @NgModule({

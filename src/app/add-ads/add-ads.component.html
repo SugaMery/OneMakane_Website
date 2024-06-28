@@ -142,7 +142,6 @@
                                                       )
                                                     "
                                                     name="checkbox"
-
                                                   />
                                                   <label
                                                     class="form-check-label"
@@ -191,12 +190,10 @@
                                       </div>
                                       <div class="row">
                                         <div class="form-group col-md-12">
-<!--                                           <label
+                                          <!--                                           <label
                                             >Ou choisissez une autre Catégorie
                                           </label> -->
-                                                                                  <label
-                                            >Choisir une catégorie
-                                          </label>
+                                          <label>Choisir une catégorie </label>
                                           <div class="select-menu">
                                             <div
                                               class="select-btn"
@@ -221,21 +218,23 @@
                                                 >
                                                   <img
                                                     src="{{
-                                                      selectedOption.media
-                                                        ?.url
+                                                      selectedOption.media?.url
                                                     }}"
                                                     *ngIf="selectedOption.name"
                                                     alt=""
                                                     class="iconUrl"
-                                                    [ngStyle]="{ 'width': isPhone() ? '2rem' : '2.5rem', 'margin-right': '1rem' }"
-
+                                                    [ngStyle]="{
+                                                      width: isPhone()
+                                                        ? '2rem'
+                                                        : '2.5rem',
+                                                      'margin-right': '1rem'
+                                                    }"
                                                   />
                                                   <p style="margin: 0">
                                                     {{
                                                       selectedOption.name ||
                                                         "Choisissez"
                                                     }}
-
                                                   </p>
                                                 </div>
                                               </span>
@@ -264,107 +263,110 @@
                                                     }}"
                                                     alt=""
                                                     class="iconUrl"
-                                                    [ngStyle]="{ 'width': isPhone() ? '2rem' : '2.5rem', 'margin-right': '1rem' }"
+                                                    [ngStyle]="{
+                                                      width: isPhone()
+                                                        ? '2rem'
+                                                        : '2.5rem',
+                                                      'margin-right': '1rem'
+                                                    }"
                                                   />
-                                                  {{
-                                                    category?.name
-                                                  }}
-                          
+                                                  {{ category?.name }}
                                                 </span>
                                               </li>
                                             </ul>
                                           </div>
 
-                                          <div class="select-menu" *ngIf="openselect
-                                          ">
                                           <div
-                                          class="select-btn"
-                                          style="
-                                            margin-bottom: 1rem;
-                                            background: #fff;
-                                            border: 1px solid #ececec;
-                                            height: 64px;
-                                            box-shadow: none;
-                                            padding-left: 20px;
-                                            font-size: 16px;
-                                            width: 100%;
-                                          "
-                                          (click)="toggleSubcategoryOptions()"
-                                        >
-                                          <span class="sBtn-text">
+                                            class="select-menu"
+                                            *ngIf="openselect"
+                                          >
                                             <div
+                                              class="select-btn"
                                               style="
-                                                display: flex;
-                                                align-items: center;
+                                                margin-bottom: 1rem;
+                                                background: #fff;
+                                                border: 1px solid #ececec;
+                                                height: 64px;
+                                                box-shadow: none;
+                                                padding-left: 20px;
+                                                font-size: 16px;
+                                                width: 100%;
+                                              "
+                                              (click)="
+                                                toggleSubcategoryOptions()
                                               "
                                             >
-                                              <img
-                                                src="{{
-                                                  selectedOption.media
-                                                    ?.url
-                                                }}"
-                                                *ngIf="selectedSubcategory?.name"
-                                                alt=""
-                                                class="iconUrl"
-                                                [ngStyle]="{ 'width': isPhone() ? '2rem' : '2.5rem', 'margin-right': '1rem' }"
-
-                                              />
-                                              <p style="margin: 0">
-                                                {{
-                                                  selectedSubcategory?.name ||
-                                                    "Choisissez"
-                                                }}
-
-                                              </p>
+                                              <span class="sBtn-text">
+                                                <div
+                                                  style="
+                                                    display: flex;
+                                                    align-items: center;
+                                                  "
+                                                >
+                                                  <img
+                                                    src="{{
+                                                      selectedOption.media?.url
+                                                    }}"
+                                                    *ngIf="
+                                                      selectedSubcategory?.name
+                                                    "
+                                                    alt=""
+                                                    class="iconUrl"
+                                                    [ngStyle]="{
+                                                      width: isPhone()
+                                                        ? '2rem'
+                                                        : '2.5rem',
+                                                      'margin-right': '1rem'
+                                                    }"
+                                                  />
+                                                  <p style="margin: 0">
+                                                    {{
+                                                      selectedSubcategory?.name ||
+                                                        "Choisissez"
+                                                    }}
+                                                  </p>
+                                                </div>
+                                              </span>
+                                              <i class="bx bx-chevron-down"></i>
                                             </div>
-                                          </span>
-                                          <i class="bx bx-chevron-down"></i>
-                                        </div>
-                                        <ul
-                                          class="options"
-                                          [ngClass]="{
-                                            active: subcategoryOptionsVisible
-                                          }"
-                                          style="font-size: smaller"
-                                        >
-                                          <li
-                                            class="option"
-                                            *ngFor="
-                                              let subcategory of filteredSubcategories
-                                            "
-                                            (click)="selectSubcategory(subcategory)"
-                                          >
-                                            <span
-                                              class="d-inline-flex align-items-center"
+                                            <ul
+                                              class="options"
+                                              [ngClass]="{
+                                                active:
+                                                  subcategoryOptionsVisible
+                                              }"
+                                              style="font-size: smaller"
                                             >
-                                              <img
-                                                src="{{
-                                                  selectedOption.media?.url
-                                                }}"
-                                                alt=""
-                                                class="iconUrl"
-                                                [ngStyle]="{ 'width': isPhone() ? '2rem' : '3%', 'margin-right': '1rem' }"
-                                              />
-                                              {{
-                                                subcategory?.name
-                                              }}
-                      
-                                            </span>
-                                          </li>
-                                        </ul>
-
-
-
-
-
-
-
-
-
-
-
-
-                                        </div>
+                                              <li
+                                                class="option"
+                                                *ngFor="
+                                                  let subcategory of filteredSubcategories
+                                                "
+                                                (click)="
+                                                  selectSubcategory(subcategory)
+                                                "
+                                              >
+                                                <span
+                                                  class="d-inline-flex align-items-center"
+                                                >
+                                                  <img
+                                                    src="{{
+                                                      selectedOption.media?.url
+                                                    }}"
+                                                    alt=""
+                                                    class="iconUrl"
+                                                    [ngStyle]="{
+                                                      width: isPhone()
+                                                        ? '2rem'
+                                                        : '3%',
+                                                      'margin-right': '1rem'
+                                                    }"
+                                                  />
+                                                  {{ subcategory?.name }}
+                                                </span>
+                                              </li>
+                                            </ul>
+                                          </div>
                                           <div
                                             *ngIf="fieldErrors.category"
                                             class="text-danger requisDiv"
@@ -373,11 +375,6 @@
                                           </div>
                                         </div>
                                       </div>
-
-               
-
-
-
                                     </div>
                                   </div>
                                 </div>
@@ -536,49 +533,58 @@
                                               <i class="bx bx-chevron-down"></i>
                                             </div>
                                             <div
-                                            *ngIf="setting.type === 'bool'"
-                                            class="payment_option"
-                                          >
-                                            <div
-                                              class="custome-radio d-inline-flex align-items-center"
-                                              style="margin-right: 2rem"
+                                              *ngIf="setting.type === 'bool'"
+                                              class="payment_option"
                                             >
-                                              <input
-                                                class="form-check-input"
-                                                type="radio"
-                                                name="{{ setting.name }}"
-                                                id="{{ setting.name }}True"
-                                                value="true"
-                                                [checked]="setting.content === 'true'"
-                                                (change)="updateSetting(setting, true)"
-                                              />
-                                              <label
-                                                class="form-check-label"
-                                                for="{{ setting.name }}True"
-                                                >Oui</label
+                                              <div
+                                                class="custome-radio d-inline-flex align-items-center"
+                                                style="margin-right: 2rem"
                                               >
-                                            </div>
-                                            <div
-                                              class="custome-radio d-inline-flex align-items-center"
-                                            >
-                                              <input
-                                                class="form-check-input"
-                                                type="radio"
-                                                name="{{ setting.name }}"
-                                                id="{{ setting.name }}False"
-                                                value="false"
-                                                [checked]="setting.content === 'false'"
-                                                (change)="updateSetting(setting, false)"
-                                              />
-                                              <label
-                                                class="form-check-label"
-                                                for="{{ setting.name }}False"
-                                                >Non</label
+                                                <input
+                                                  class="form-check-input"
+                                                  type="radio"
+                                                  name="{{ setting.name }}"
+                                                  id="{{ setting.name }}True"
+                                                  value="true"
+                                                  [checked]="
+                                                    setting.content === 'true'
+                                                  "
+                                                  (change)="
+                                                    updateSetting(setting, true)
+                                                  "
+                                                />
+                                                <label
+                                                  class="form-check-label"
+                                                  for="{{ setting.name }}True"
+                                                  >Oui</label
+                                                >
+                                              </div>
+                                              <div
+                                                class="custome-radio d-inline-flex align-items-center"
                                               >
+                                                <input
+                                                  class="form-check-input"
+                                                  type="radio"
+                                                  name="{{ setting.name }}"
+                                                  id="{{ setting.name }}False"
+                                                  value="false"
+                                                  [checked]="
+                                                    setting.content === 'false'
+                                                  "
+                                                  (change)="
+                                                    updateSetting(
+                                                      setting,
+                                                      false
+                                                    )
+                                                  "
+                                                />
+                                                <label
+                                                  class="form-check-label"
+                                                  for="{{ setting.name }}False"
+                                                  >Non</label
+                                                >
+                                              </div>
                                             </div>
-                                          </div>
-                                          
-                                          
 
                                             <div
                                               *ngIf="setting.type === 'radio'"
@@ -635,67 +641,106 @@
                                                 >
                                               </li>
                                             </ul>
-                                            <div *ngIf="setting.type === 'table'" style="margin-bottom: 1rem">
+                                            <div
+                                              *ngIf="setting.type === 'table'"
+                                              style="margin-bottom: 1rem"
+                                            >
                                               <input
                                                 id="table"
                                                 name="table"
                                                 [(ngModel)]="selectedOptionName"
-                                                placeholder="{{ setting.label }}"
+                                                placeholder="{{
+                                                  setting.label
+                                                }}"
                                                 type="text"
                                                 required
                                                 maxlength="50"
-                                                (input)="onInput($event, setting)"
-                                                (focus)="onInput($event, setting)"
-                                                (blur)="onInput($event, setting)"
+                                                (input)="
+                                                  onInput($event, setting)
+                                                "
+                                                (focus)="
+                                                  onInput($event, setting)
+                                                "
+                                                (blur)="
+                                                  onInput($event, setting)
+                                                "
                                                 (click)="toggleOptionr(setting)"
                                               />
                                               <i class="bx bx-chevron-down"></i>
                                             </div>
-                                            
+
                                             <!-- Display Select Options -->
                                             <ul
-                                              *ngIf="setting.type === 'table' && (inputFocused || setting.optionsVisible)"
+                                              *ngIf="
+                                                setting.type === 'table' &&
+                                                (inputFocused ||
+                                                  setting.optionsVisible)
+                                              "
                                               class="options"
-                                              [class.active]="setting.optionsVisible"
-                                              style="font-size: smaller; margin-top: 5px;"
+                                              [class.active]="
+                                                setting.optionsVisible
+                                              "
+                                              style="
+                                                font-size: smaller;
+                                                margin-top: 5px;
+                                              "
                                             >
-                                              <ng-container *ngFor="let optioned of filteredOptions; trackBy: trackByOptioned">
-                                                <ng-container *ngIf="optioned.filteredContent.length > 0">
-                                                  <div>{{ optioned.label }}</div>
+                                              <ng-container
+                                                *ngFor="
+                                                  let optioned of filteredOptions;
+                                                  trackBy: trackByOptioned
+                                                "
+                                              >
+                                                <ng-container
+                                                  *ngIf="
+                                                    optioned.filteredContent
+                                                      .length > 0
+                                                  "
+                                                >
+                                                  <div>
+                                                    {{ optioned.label }}
+                                                  </div>
                                                   <li
                                                     class="option"
-                                                    *ngFor="let option of optioned.filteredContent; trackBy: trackByOption"
+                                                    *ngFor="
+                                                      let option of optioned.filteredContent;
+                                                      trackBy: trackByOption
+                                                    "
                                                     [value]="option.id"
-                                                    (click)="selectOptionr(option, setting)"
+                                                    (click)="
+                                                      selectOptionr(
+                                                        option,
+                                                        setting
+                                                      )
+                                                    "
                                                   >
-                                                    <span class="d-inline-flex align-items-center">{{ option.name }}</span>
+                                                    <span
+                                                      class="d-inline-flex align-items-center"
+                                                      >{{ option.name }}</span
+                                                    >
                                                   </li>
                                                 </ng-container>
                                               </ng-container>
-                                                                                          <!-- No Results Message -->
-                                            <div class="no-results-message" *ngIf="!hasFilteredOptions()">
-                                              Aucun résultat trouvé
-                                            </div>
+                                              <!-- No Results Message -->
+                                              <div
+                                                class="no-results-message"
+                                                *ngIf="!hasFilteredOptions()"
+                                              >
+                                                Aucun résultat trouvé
+                                              </div>
                                             </ul>
-                                            
 
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                          
                                             <!-- Display Date Input for 'date' type -->
                                             <div
                                               *ngIf="setting.type === 'date'"
                                               style="margin-bottom: 1rem"
                                             >
                                               <p-calendar
-                                              name="date"
+                                                name="date"
                                                 [(ngModel)]="setting.content"
                                                 [iconDisplay]="'input'"
                                                 [showIcon]="true"
+                                                [locale]="locale"
                                                 placeholder="{{
                                                   setting.label
                                                 }}"
@@ -703,7 +748,7 @@
                                                 class="full-width-calendar"
                                                 [style]="{ width: '100%' }"
                                               ></p-calendar>
-                                            </div> 
+                                            </div>
 
                                             <div
                                               *ngIf="setting.type === 'text'"
@@ -736,7 +781,7 @@
                                                 required
                                                 maxlength="50"
                                               />
-                                            </div> 
+                                            </div>
 
                                             <!-- Display Select Button -->
                                             <!-- Display Select Button -->
@@ -1016,6 +1061,7 @@
                                             >
                                               Glissez vos photos ici pour
                                               commencer le téléchargement.
+                                              Maximum 3 images.
                                             </p>
                                             <div class="hr-sect">ou</div>
                                             <button

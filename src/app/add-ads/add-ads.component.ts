@@ -11,6 +11,8 @@ import { CategoryService } from '../category.service';
 import { AnnonceService } from '../annonce.service';
 import { SettingService } from '../setting.service';
 import { Router } from '@angular/router';
+import { formatDate } from '@angular/common';
+import { PrimeNGConfig } from 'primeng/api';
 declare var $: any;
 
 interface Category {
@@ -39,6 +41,7 @@ interface ModelField {
   label: string;
   type: string;
   help: string;
+  ordre: number;
 }
 
 interface ModelFields {
@@ -60,7 +63,8 @@ interface Setting {
   label?: string;
   optionsVisible?: boolean;
   type: string;
-  selectedOptions: any[]; // Define selectedOptions array
+  selectedOptions: any[];
+  order: number;
 }
 
 interface SelectedOption {
@@ -172,7 +176,8 @@ export class AddAdsComponent implements OnInit {
     private userService: UserService,
     private categoryService: CategoryService,
     private settingsService: SettingService,
-    private router: Router
+    private router: Router,
+    private primengConfig: PrimeNGConfig
   ) {}
 
   // Liste de catégories avec leurs mots-clés associés
@@ -879,6 +884,63 @@ export class AddAdsComponent implements OnInit {
         })
         .catch((error) => {});
     });
+    this.primengConfig.setTranslation({
+      firstDayOfWeek: 1,
+      dayNames: [
+        'dimanche',
+        'lundi',
+        'mardi',
+        'mercredi',
+        'jeudi',
+        'vendredi',
+        'samedi',
+      ],
+      dayNamesShort: ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'],
+      dayNamesMin: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
+      monthNames: [
+        'janvier',
+        'février',
+        'mars',
+        'avril',
+        'mai',
+        'juin',
+        'juillet',
+        'août',
+        'septembre',
+        'octobre',
+        'novembre',
+        'décembre',
+      ],
+      monthNamesShort: [
+        'janv.',
+        'févr.',
+        'mars',
+        'avr.',
+        'mai',
+        'juin',
+        'juil.',
+        'août',
+        'sept.',
+        'oct.',
+        'nov.',
+        'déc.',
+      ],
+      today: "Aujourd'hui",
+      clear: 'Effacer',
+      dateFormat: 'dd/mm/yy',
+      weekHeader: 'Sm',
+    });
+  }
+  get locale() {
+    return this.primengConfig.translation;
+  }
+
+  formatDates(event: any) {
+    console.log('rrrrrrrrr', event);
+  }
+
+  formatDatess(event: any) {
+    console.log('tttrrrrrrrrr', event);
   }
 
   extractDate(dateTimeString: string): string {
@@ -954,7 +1016,7 @@ export class AddAdsComponent implements OnInit {
     this.selectedFiles = [];
   }
 
-  onFileSelected(event: any) {
+  onFileSelected(event: any): void {
     const maxImagesAllowed = 3;
     const files: FileList = event.target.files;
     if (files && files.length > 0) {
@@ -973,14 +1035,25 @@ export class AddAdsComponent implements OnInit {
         reader.readAsDataURL(file);
       }
     }
+    console.log('greeeeeeettttt', this.uploadedImages);
   }
+
+  count: number = 0;
 
   deleteImage(index: number) {
     if (index > -1 && index < this.uploadedImages.length) {
       const deletedImage = this.uploadedImages.splice(index, 1)[0];
+      this.selectedFiles.splice(index - this.count, 1)[0];
       if (!this.deletedImages.includes(deletedImage)) {
         this.deletedImages.push(deletedImage);
       }
+    }
+    if (this.uploadedImages.length == 3) {
+      this.maxImages = true;
+      return;
+    } else {
+      this.maxImages = false;
+      return;
     }
   }
 
@@ -1055,7 +1128,7 @@ export class AddAdsComponent implements OnInit {
         console.log('listtttttttttteee', list);
         settingADS[setting.key] = list;
       } else if (setting.type === 'date') {
-        const date = new Date(setting.content);
+        const date = new Date(this.date);
         setting.content = this.formatDate(date);
       }
     }
@@ -1217,20 +1290,25 @@ export class AddAdsComponent implements OnInit {
     this.optionsVisible = false;
     this.fieldErrors['category'] = false;
   }
+
+  boolSettings: any[] = [];
+
   fetchSettings(): void {
-    console.log('ooooo', this.selectedSubcategory);
-    const queryParams = { model: this.selectedSubcategory.model };
     const accessToken = localStorage.getItem('loggedInUserToken');
-    const settingsOption = this.selectedSubcategory.model_fields;
-    console.log('ooooo11', settingsOption);
+    const queryParams = { model: this.selectedSubcategory.model };
+    const modelFields = this.selectedSubcategory.model_fields;
 
-    for (const key in settingsOption) {
-      if (settingsOption.hasOwnProperty(key)) {
-        const field = settingsOption[key];
+    const settingsOption = Object.keys(modelFields).map((key, index) => ({
+      key,
+      value: modelFields[key],
+      order: index,
+    }));
 
-        if (field.route) {
+    settingsOption.forEach((field) => {
+      if (field.value && typeof field.value === 'object') {
+        if ('route' in field.value) {
           this.settingsService
-            .createMarque(field.route, accessToken!)
+            .createMarque(field.value.route, accessToken!)
             .subscribe((response) => {
               if (response.status === 'Success' && response.data) {
                 this.marquesPopulaires = this.transformData(
@@ -1240,8 +1318,7 @@ export class AddAdsComponent implements OnInit {
                   response.data['Autres marques']
                 );
 
-                // Update field.content to have the desired structure
-                field.content = [
+                field.value.content = [
                   {
                     label: 'Marques Populaires',
                     content: this.marquesPopulaires,
@@ -1249,117 +1326,125 @@ export class AddAdsComponent implements OnInit {
                   { label: 'Autres Marques', content: this.autresMarques },
                 ];
 
-                // Create a new setting object for table type
-                const newSetting: any = {
-                  name: field.label,
-                  label: field.label,
-                  content: field.content,
+                const newSetting = {
+                  name: field.value.label,
+                  label: field.value.label,
+                  content: field.value.content,
                   optionsVisible: false,
                   type: 'table',
-                  key: key,
+                  key: field.key,
+                  order: field.order,
                 };
 
-                // Push the new setting object to the settings array
-                this.settings.push(newSetting);
+                this.addSettingInOrder(newSetting);
               }
             });
-        } else if (field.type === 'select' && !field.options) {
+        } else if (field.value.type === 'select' && !field.value.options) {
           this.settingsService
             .getSettings(accessToken!, queryParams)
             .subscribe((setting) => {
               setting.data.forEach((data: { content: any; name: string }) => {
-                if (data.name === key) {
-                  field.content = data.content;
-
-                  const newSetting: any = {
-                    name: field.label,
-                    label: field.label,
+                if (data.name === field.key) {
+                  const newSetting = {
+                    name: field.value.label,
+                    label: field.value.label,
                     content: data.content,
                     optionsVisible: false,
                     type: 'select',
-                    key: key,
+                    key: field.key,
+                    order: field.order,
                   };
-
-                  this.settings.push(newSetting);
+                  this.addSettingInOrder(newSetting);
                 }
               });
             });
-        } else if (field.type === 'date') {
-          const newSetting: any = {
-            name: field.label,
-            label: field.label,
+        } else if (field.value.type === 'date') {
+          const newSetting = {
+            name: field.value.label,
+            label: field.value.label,
             content: this.date,
             optionsVisible: false,
             type: 'date',
-            key: key,
+            key: field.key,
+            order: field.order,
           };
-
-          this.settings.push(newSetting);
-        } else if (field.type === 'text' || field.type === 'number') {
-          const newSetting: any = {
-            name: field.label,
-            label: field.label,
-            content: field.content,
+          this.addSettingInOrder(newSetting);
+        } else if (
+          field.value.type === 'text' ||
+          field.value.type === 'number'
+        ) {
+          const newSetting = {
+            name: field.value.label,
+            label: field.value.label,
+            content: field.value.content,
             optionsVisible: false,
-            key: key,
-
-            type: field.type, // 'text' or 'number'
+            type: field.value.type,
+            key: field.key,
+            order: field.order,
           };
-
-          this.settings.push(newSetting);
-        } else if (field.type === 'multiple') {
-          // Handle multiple type
+          this.addSettingInOrder(newSetting);
+        } else if (field.value.type === 'multiple') {
           this.settingsService
             .getSettings(accessToken!, queryParams)
             .subscribe((setting) => {
               setting.data.forEach((data: { content: any; name: string }) => {
-                if (data.name === key) {
-                  field.content = data.content;
-
-                  const newSetting: any = {
-                    name: field.label,
-                    label: field.label,
-                    content: field.content, // Assuming field.content is an array of options
+                if (data.name === field.key) {
+                  const newSetting = {
+                    name: field.value.label,
+                    label: field.value.label,
+                    content: data.content,
                     optionsVisible: false,
-                    selectedOptions: [], // For tracking selected options
+                    selectedOptions: [],
                     type: 'multiple',
-                    key: key,
+                    key: field.key,
+                    order: field.order,
                   };
-
-                  this.settings.push(newSetting);
+                  this.addSettingInOrder(newSetting);
                 }
               });
             });
-        } else if (field.options) {
-          console.log('teeeeeeeeeeeessss', field.options);
-          const newSetting: any = {
-            name: field.label,
-            label: field.label,
-            content: field.options,
+        } else if (field.value.options) {
+          const newSetting = {
+            name: field.value.label,
+            label: field.value.label,
+            content: field.value.options,
             optionsVisible: false,
-            type: 'options', // 'text' or 'number'
-            key: key,
+            type: 'options',
+            key: field.key,
+            order: field.order,
           };
-          console.log('teeeeeeeeeeeessss hhhhhhhhhhhh', newSetting);
-
-          this.settings.push(newSetting);
-        } else if (field.type === 'bool') {
-          const newSetting: any = {
-            name: field.label,
-            label: field.label,
-            content: field.options,
+          this.addSettingInOrder(newSetting);
+        } else if (field.value.type === 'bool') {
+          const newSetting = {
+            name: field.value.label,
+            label: field.value.label,
+            content: field.value.options,
             optionsVisible: false,
-            type: field.type, // 'text' or 'number'
-            key: key,
+            type: field.value.type,
+            key: field.key,
+            order: field.order,
           };
-
-          this.settings.push(newSetting);
+          this.boolSettings.push(newSetting);
         }
       }
-    }
+    });
 
-    console.log('this.settings', this.settings);
+    // Add bool settings last to ensure correct order
+    this.boolSettings.forEach((setting) => this.addSettingInOrder(setting));
+
+    console.log('this.settings', this.settings, this.boolSettings);
   }
+
+  addSettingInOrder(newSetting: any): void {
+    // Find the correct position based on order
+    const index = this.settings.findIndex((s) => s.order > newSetting.order);
+    if (index === -1) {
+      this.settings.push(newSetting); // Append if no larger order is found
+    } else {
+      this.settings.splice(index, 0, newSetting); // Insert at the correct position
+    }
+  }
+
   // Inside your component class
   toggleOptionsGO(setting: any) {
     setting.optionsVisible = !setting.optionsVisible;

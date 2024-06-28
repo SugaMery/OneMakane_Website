@@ -58,7 +58,9 @@ export class AdsGridComponent {
   categories: Category[] = [];
   showMore: boolean = false;
   hiddenCategories: any[] = [];
+  hiddenCategoriesParent: any[] = [];
   displayedCategories: any[] = [];
+  displayedCategoriesParent: any[] = [];
   matchingFilters: any[] = [];
   ads: any[] = [];
   currentPage = 1;
@@ -66,6 +68,8 @@ export class AdsGridComponent {
   filteredAds: any[] = [];
   adsPerPage = 10;
   sortOption = 'featured';
+  searchTitle: string = '';
+  originalAds: any[] = [];
 
   constructor(
     private categoryService: CategoryService,
@@ -79,12 +83,11 @@ export class AdsGridComponent {
     if (id !== null) {
       this.categoryId = +id;
       this.getCategoriesFilters();
-      this.getCategories();  
+      this.getCategories();
       this.getAdsList();
     } else {
     }
   }
-
 
   getAdsList(): void {
     this.annonceService.getAds().subscribe((datas) => {
@@ -92,28 +95,65 @@ export class AdsGridComponent {
         (ad: { category_id: number }) => ad.category_id === this.categoryId
       );
       let adsProcessed = 0;
-  
+
+      this.originalAds = []; // Clear the originalAds array before populating
+
       ads.forEach((element: { id: string }) => {
         this.annonceService.getAdById(element.id).subscribe((data) => {
           adsProcessed++;
           const detailedAd = data.data;
-          this.ads.push(detailedAd)
-        }
 
-        )      
-        
-    })
-  })
-}
+          this.ads.push(detailedAd);
+          this.originalAds.push(detailedAd); // Add to originalAds as well
+        });
+      });
+    });
+  }
 
-
+  vissibleCategory: boolean = false;
+  allCategoriesSameParent: Category[] = [];
   getCategoriesFilters(): void {
     const category_id = this.categoryId?.toString();
     this.categoryService.getCategoryById(category_id!).subscribe((datas) => {
+      console.log('greeeet in ', datas);
       this.filters = datas.data.filters;
       this.category = datas.data;
+
       this.parentCategory();
-      //console.log('filters', this.filters, this.category);
+      console.log('greeeet in ', datas);
+      if (datas.data.parent_id == null) {
+        this.vissibleCategory = true;
+        console.log('filters', datas.data.id);
+        this.getCategoriesByParentId(datas.data.id);
+        console.log('rrrrrrrrrr', this.allCategoriesSameParent);
+      } else {
+        this.vissibleCategory = false;
+      }
+    });
+  }
+
+  filterAdsByTitle(event: any): void {
+    const searchTerm = event.target.value.toLowerCase();
+
+    // Reset ads to the original list before filtering
+    this.ads = [...this.originalAds];
+
+    // Apply the search filter
+    this.ads = this.ads.filter((conversation) => {
+      const title = conversation.title.toLowerCase();
+      return title.includes(searchTerm);
+    });
+
+    this.applyFilters();
+  }
+
+  getCategoriesByParentId(parentId: number): void {
+    this.categoryService.getCategoriesFrom().subscribe((datas) => {
+      this.allCategoriesSameParent = datas.data.filter(
+        (category: { parent_id: number }) => category.parent_id === parentId
+      );
+      this.displayedCategoriesParent = this.allCategoriesSameParent.slice(0, 4);
+      this.hiddenCategoriesParent = this.allCategoriesSameParent.slice(5);
     });
   }
 
@@ -185,10 +225,10 @@ export class AdsGridComponent {
         }
       }
     }
-    this.ads=[];
-    console.log("grrrrrrrrrrrrrrrrr",this.ads);
+    this.ads = [];
+    console.log('grrrrrrrrrrrrrrrrr', this.ads);
     this.getAds();
-    console.log("grrrrrrrrrrrrrrrrreet",this.ads);
+    console.log('grrrrrrrrrrrrrrrrreet', this.ads);
 
     if (this.matchingFilters.length > 0) {
       console.log(
@@ -201,24 +241,24 @@ export class AdsGridComponent {
   }
 
   getAds(): void {
-    console.log("Fetching ads...");
+    console.log('Fetching ads...');
     this.annonceService.getAds().subscribe((datas) => {
       let ads = datas.data.filter(
         (ad: { category_id: number }) => ad.category_id === this.categoryId
       );
-  
-      console.log("Filtered ads by category:", ads);
-  
+
+      console.log('Filtered ads by category:', ads);
+
       // Using a counter to check when all asynchronous calls are completed
       let adsProcessed = 0;
-  
+
       ads.forEach((element: { id: string }) => {
         this.annonceService.getAdById(element.id).subscribe((data) => {
           adsProcessed++;
           const detailedAd = data.data;
-  
+
           console.log(`Detailed ad fetched (id: ${element.id}):`, detailedAd);
-  
+
           // Apply filter logic to the detailed ad
           let shouldIncludeAd = true;
           for (const key of Object.keys(this.filters)) {
@@ -227,7 +267,10 @@ export class AdsGridComponent {
               console.log(
                 `Checking filter ${key} with selected option ${filter.selectedOption}`
               );
-              if (!detailedAd.additional || detailedAd.additional[key] !== filter.selectedOption) {
+              if (
+                !detailedAd.additional ||
+                detailedAd.additional[key] !== filter.selectedOption
+              ) {
                 console.log(
                   `Ad (id: ${element.id}) does not match filter ${key} with selected option ${filter.selectedOption}`
                 );
@@ -236,25 +279,26 @@ export class AdsGridComponent {
               }
             }
           }
-  
+
           // If the ad matches all selected filter options, keep it in the ads array
           if (shouldIncludeAd) {
             this.ads.push(detailedAd);
-            console.log(`Ad (id: ${element.id}) matches all filters and is included.`);
+            console.log(
+              `Ad (id: ${element.id}) matches all filters and is included.`
+            );
           }
-  
+
           // After processing all ads, log the results
           if (adsProcessed === ads.length) {
-            console.log("All ads processed. Final ads list:", this.ads);
+            console.log('All ads processed. Final ads list:', this.ads);
           }
         });
       });
-  
+
       // Clear ads array to start fresh for each getAds call
       this.ads = [];
     });
   }
-
 
   getRelativeTime(createdAt: string): string {
     const currentDate = new Date();
@@ -293,7 +337,7 @@ export class AdsGridComponent {
     this.currentPage = page;
     this.paginateAds();
   }
-  
+
   paginateAds(): void {
     this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
     const startIndex = (this.currentPage - 1) * this.adsPerPage;
@@ -310,7 +354,6 @@ export class AdsGridComponent {
     this.applyFilters();
   }
 
-
   applyFilters(): void {
     this.sortAds();
     this.paginateAds();
@@ -320,14 +363,10 @@ export class AdsGridComponent {
   sortAds(): void {
     switch (this.sortOption) {
       case 'priceLowToHigh':
-        this.ads.sort(
-          (a, b) => parseFloat(a.price) - parseFloat(b.price)
-        );
+        this.ads.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
         break;
       case 'priceHighToLow':
-        this.ads.sort(
-          (a, b) => parseFloat(b.price) - parseFloat(a.price)
-        );
+        this.ads.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
         break;
       case 'releaseDate':
         this.ads.sort(
@@ -355,7 +394,6 @@ export class AdsGridComponent {
   getSortOptionLabel(option: string): string {
     return this.sortOptionsTranslation[option] || option;
   }
-
 
   changeAdsPerPage(count: number): void {
     this.adsPerPage = count;
