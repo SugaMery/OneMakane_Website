@@ -98,374 +98,256 @@
         <div class="shop-product-fillter">
           <div class="totall-product">
             <p>
-              We found <strong class="text-brand">29</strong> items for you!
+              Nous avons trouvé
+              <strong class="text-brand">{{ ads.length }}</strong>
+              annonces pour vous !
             </p>
           </div>
           <div class="sort-by-product-area">
             <div class="sort-by-cover mr-10">
               <div class="sort-by-product-wrap">
                 <div class="sort-by">
-                  <span><i class="fi-rs-apps"></i>Show:</span>
+                  <span><i class="fi-rs-apps"></i>Afficher :</span>
                 </div>
                 <div class="sort-by-dropdown-wrap">
-                  <span> 50 <i class="fi-rs-angle-small-down"></i></span>
+                  <span
+                    >{{ adsPerPage }} <i class="fi-rs-angle-small-down"></i
+                  ></span>
                 </div>
               </div>
               <div class="sort-by-dropdown">
                 <ul>
-                  <li><a class="active" href="#">50</a></li>
-                  <li><a href="#">100</a></li>
-                  <li><a href="#">150</a></li>
-                  <li><a href="#">200</a></li>
-                  <li><a href="#">All</a></li>
+                  <li>
+                    <a
+                      [class.active]="adsPerPage === 10"
+                      (click)="changeAdsPerPage(10)"
+                      >10</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      [class.active]="adsPerPage === 20"
+                      (click)="changeAdsPerPage(20)"
+                      >20</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      [class.active]="adsPerPage === 50"
+                      (click)="changeAdsPerPage(50)"
+                      >50</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      [class.active]="adsPerPage === filteredAds.length"
+                      (click)="changeAdsPerPage(filteredAds.length)"
+                      >Tout</a
+                    >
+                  </li>
                 </ul>
               </div>
             </div>
             <div class="sort-by-cover">
               <div class="sort-by-product-wrap">
                 <div class="sort-by">
-                  <span><i class="fi-rs-apps-sort"></i>Sort by:</span>
+                  <span><i class="fi-rs-apps-sort"></i>Trier par :</span>
                 </div>
                 <div class="sort-by-dropdown-wrap">
-                  <span> Featured <i class="fi-rs-angle-small-down"></i></span>
+                  <span
+                    >{{ getSortOptionLabel(sortOption) }}
+                    <i class="fi-rs-angle-small-down"></i
+                  ></span>
                 </div>
               </div>
               <div class="sort-by-dropdown">
                 <ul>
-                  <li><a class="active" href="#">Featured</a></li>
-                  <li><a href="#">Price: Low to High</a></li>
-                  <li><a href="#">Price: High to Low</a></li>
-                  <li><a href="#">Release Date</a></li>
-                  <li><a href="#">Avg. Rating</a></li>
+                  <li>
+                    <a
+                      [class.active]="sortOption === 'featured'"
+                      (click)="changeSortOption('featured')"
+                      >Mis en avant</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      [class.active]="sortOption === 'priceLowToHigh'"
+                      (click)="changeSortOption('priceLowToHigh')"
+                      >Prix : croissant</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      [class.active]="sortOption === 'priceHighToLow'"
+                      (click)="changeSortOption('priceHighToLow')"
+                      >Prix : décroissant</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      [class.active]="sortOption === 'releaseDate'"
+                      (click)="changeSortOption('releaseDate')"
+                      >Date de sortie</a
+                    >
+                  </li>
                 </ul>
               </div>
             </div>
+
+            <!--             <div class="sort-by-cover" *ngFor="let key of getFilterKeys()">
+              <div class="sort-by-product-wrap">
+                <div class="sort-by">
+                  <span><i class="fi-rs-apps-sort"></i>{{ filters[key].label }} :</span>
+                </div>
+                <div class="sort-by-dropdown-wrap">
+                  <span
+                    >{{ getSortOptionLabel(sortOption) }}
+                    <i class="fi-rs-angle-small-down"></i
+                  ></span>
+                </div>
+              </div>
+              <div class="sort-by-dropdown">
+                <ul>
+                  <li *ngFor="let condition of filters[key].conditions">
+                    <a (click)="applyCondition(filters[key], condition)">
+                      {{ condition }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+
+            <div *ngFor="let key of getFilterKeys()">
+              <div class="filter-category">
+                <div class="filter-label">{{ filters[key].label }}</div>
+                <div class="filter-dropdown-wrap">
+                  <span>
+                    <i class="fi-rs-apps-sort"></i> Choisir une condition
+                    <i class="fi-rs-angle-small-down"></i>
+                  </span>
+                  <div class="filter-dropdown">
+                    <ul>
+                      <li *ngFor="let condition of filters[key].conditions">
+                        <a (click)="applyCondition(filters[key], condition)">
+                          {{ condition }}
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div> -->
           </div>
         </div>
+
         <div class="row product-grid">
-          <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
+          <div
+            *ngFor="let ad of ads"
+            class="col-lg-1-5 col-md-4 col-12 col-sm-6"
+          >
             <div class="product-cart-wrap mb-30">
               <div class="product-img-action-wrap">
-                <div class="product-img product-img-zoom">
-                  <a href="/shop-product-right">
+                <div class="product-img product-img-zoom" style="height: 240px">
+                  <a [href]="'/ads/' + ad.id" style="height: 100%">
                     <img
                       class="default-img"
-                      src="assets/imgs/shop/product-1-1.jpg"
-                      alt=""
+                      [src]="
+                        ad.medias[0]?.url || 'assets/imgs/shop/default-img.jpg'
+                      "
+                      alt="{{ ad.title }}"
                     />
                     <img
                       class="hover-img"
-                      src="assets/imgs/shop/product-1-2.jpg"
+                      [src]="ad.medias[1]?.url || ad.medias[0]?.url"
                       alt=""
+                      style="height: 100%"
                     />
                   </a>
                 </div>
                 <div class="product-action-1">
                   <a
-                    aria-label="Add To Wishlist"
+                    aria-label="Ajouter à la liste de souhaits"
                     class="action-btn"
-                    href="/shop-wishlist"
-                    ><i class="fi-rs-heart"></i
-                  ></a>
-                  <a
-                    aria-label="Compare"
-                    class="action-btn"
-                    href="/shop-compare"
-                    ><i class="fi-rs-shuffle"></i
-                  ></a>
-                  <a
-                    aria-label="Quick view"
-                    class="action-btn"
-                    data-bs-toggle="modal"
-                    data-bs-target="#quickViewModal"
-                    ><i class="fi-rs-eye"></i
-                  ></a>
+                    href="#"
+                  >
+                    <i class="fi-rs-heart"></i>
+                  </a>
                 </div>
                 <div
                   class="product-badges product-badges-position product-badges-mrg"
                 >
-                  <span class="hot">Hot</span>
+                  <span *ngIf="ad.urgent" class="hot">Urgent</span>
                 </div>
               </div>
               <div class="product-content-wrap">
                 <div class="product-category">
-                  <a href="/shop-grid-right">Snack</a>
+                  <a [href]="'/shop-grid-right/' + ad.category.id">{{
+                    ad.category.name
+                  }}</a>
                 </div>
                 <h2>
-                  <a href="/shop-product-right"
-                    >Seeds of Change Organic Quinoe</a
-                  >
+                  <a [href]="'/ads/' + ad.id">{{ ad.title }}</a>
                 </h2>
-                <div class="product-rate-cover">
-                  <div class="product-rate d-inline-block">
-                    <div class="product-rating" style="width: 90%"></div>
-                  </div>
-                  <span class="font-small ml-5 text-muted"> (4.0)</span>
+                <div class="product-price">
+                  <span>{{ ad.price }} DH</span>
                 </div>
                 <div>
-                  <span class="font-small text-muted"
-                    >By <a href="/vendor-details-1">NestFood</a></span
-                  >
-                </div>
-                <div class="product-card-bottom">
-                  <div class="product-price">
-                    <span>$28.85</span>
-                    <span class="old-price">$32.8</span>
-                  </div>
-                  <div class="add-cart">
-                    <a class="add" href="/shop-cart"
-                      ><i class="fi-rs-shopping-cart mr-5"></i>Add
-                    </a>
-                  </div>
+                  <span class="font-small text-muted">{{
+                    getRelativeTime(ad.created_at)
+                  }}</span>
                 </div>
               </div>
             </div>
           </div>
-          <!--end product card-->
         </div>
+
+        <ng-template #noAds>
+          <p>Aucune annonce trouvée pour cette catégorie.</p>
+        </ng-template>
+
         <!--product grid-->
-        <div class="pagination-area mt-20 mb-20">
+        <div
+          class="pagination-area mt-20 mb-20"
+          *ngIf="ads.length > 0"
+        >
           <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-start">
-              <li class="page-item">
-                <a class="page-link" href="#"
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" (click)="changePage(currentPage - 1)"
                   ><i class="fi-rs-arrow-small-left"></i
                 ></a>
               </li>
-              <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item active">
-                <a class="page-link" href="#">2</a>
+              <li
+                *ngFor="let page of getPagesArray()"
+                class="page-item"
+                [class.active]="page === currentPage"
+              >
+                <a class="page-link" (click)="changePage(page)">{{ page }}</a>
               </li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item">
-                <a class="page-link dot" href="#">...</a>
-              </li>
-              <li class="page-item"><a class="page-link" href="#">6</a></li>
-              <li class="page-item">
-                <a class="page-link" href="#"
+              <li
+                class="page-item"
+                [class.disabled]="currentPage === totalPages"
+              >
+                <a class="page-link" (click)="changePage(currentPage + 1)"
                   ><i class="fi-rs-arrow-small-right"></i
                 ></a>
               </li>
             </ul>
           </nav>
         </div>
-        <section class="section-padding pb-5">
-          <div class="section-title">
-            <h3 class="">Deals Of The Day</h3>
-            <a class="show-all" href="/shop-grid-right">
-              All Deals
-              <i class="fi-rs-angle-right"></i>
-            </a>
-          </div>
-          <div class="row">
-            <div class="col-xl-3 col-lg-4 col-md-6">
-              <div class="product-cart-wrap style-2">
-                <div class="product-img-action-wrap">
-                  <div class="product-img">
-                    <a href="/shop-product-right">
-                      <img src="assets/imgs/banner/banner-5.png" alt="" />
-                    </a>
-                  </div>
-                </div>
-                <div class="product-content-wrap">
-                  <div class="deals-countdown-wrap">
-                    <div
-                      class="deals-countdown"
-                      data-countdown="2025/03/25 00:00:00"
-                    ></div>
-                  </div>
-                  <div class="deals-content">
-                    <h2>
-                      <a href="/shop-product-right"
-                        >Seeds of Change Organic Quinoa, Brown</a
-                      >
-                    </h2>
-                    <div class="product-rate-cover">
-                      <div class="product-rate d-inline-block">
-                        <div class="product-rating" style="width: 90%"></div>
-                      </div>
-                      <span class="font-small ml-5 text-muted"> (4.0)</span>
-                    </div>
-                    <div>
-                      <span class="font-small text-muted"
-                        >By <a href="/vendor-details-1">NestFood</a></span
-                      >
-                    </div>
-                    <div class="product-card-bottom">
-                      <div class="product-price">
-                        <span>$32.85</span>
-                        <span class="old-price">$33.8</span>
-                      </div>
-                      <div class="add-cart">
-                        <a class="add" href="/shop-cart"
-                          ><i class="fi-rs-shopping-cart mr-5"></i>Add
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6">
-              <div class="product-cart-wrap style-2">
-                <div class="product-img-action-wrap">
-                  <div class="product-img">
-                    <a href="/shop-product-right">
-                      <img src="assets/imgs/banner/banner-6.png" alt="" />
-                    </a>
-                  </div>
-                </div>
-                <div class="product-content-wrap">
-                  <div class="deals-countdown-wrap">
-                    <div
-                      class="deals-countdown"
-                      data-countdown="2026/04/25 00:00:00"
-                    ></div>
-                  </div>
-                  <div class="deals-content">
-                    <h2>
-                      <a href="/shop-product-right"
-                        >Perdue Simply Smart Organics Gluten</a
-                      >
-                    </h2>
-                    <div class="product-rate-cover">
-                      <div class="product-rate d-inline-block">
-                        <div class="product-rating" style="width: 90%"></div>
-                      </div>
-                      <span class="font-small ml-5 text-muted"> (4.0)</span>
-                    </div>
-                    <div>
-                      <span class="font-small text-muted"
-                        >By <a href="/vendor-details-1">Old El Paso</a></span
-                      >
-                    </div>
-                    <div class="product-card-bottom">
-                      <div class="product-price">
-                        <span>$24.85</span>
-                        <span class="old-price">$26.8</span>
-                      </div>
-                      <div class="add-cart">
-                        <a class="add" href="/shop-cart"
-                          ><i class="fi-rs-shopping-cart mr-5"></i>Add
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 d-none d-lg-block">
-              <div class="product-cart-wrap style-2">
-                <div class="product-img-action-wrap">
-                  <div class="product-img">
-                    <a href="/shop-product-right">
-                      <img src="assets/imgs/banner/banner-7.png" alt="" />
-                    </a>
-                  </div>
-                </div>
-                <div class="product-content-wrap">
-                  <div class="deals-countdown-wrap">
-                    <div
-                      class="deals-countdown"
-                      data-countdown="2027/03/25 00:00:00"
-                    ></div>
-                  </div>
-                  <div class="deals-content">
-                    <h2>
-                      <a href="/shop-product-right"
-                        >Signature Wood-Fired Mushroom</a
-                      >
-                    </h2>
-                    <div class="product-rate-cover">
-                      <div class="product-rate d-inline-block">
-                        <div class="product-rating" style="width: 80%"></div>
-                      </div>
-                      <span class="font-small ml-5 text-muted"> (3.0)</span>
-                    </div>
-                    <div>
-                      <span class="font-small text-muted"
-                        >By <a href="/vendor-details-1">Progresso</a></span
-                      >
-                    </div>
-                    <div class="product-card-bottom">
-                      <div class="product-price">
-                        <span>$12.85</span>
-                        <span class="old-price">$13.8</span>
-                      </div>
-                      <div class="add-cart">
-                        <a class="add" href="/shop-cart"
-                          ><i class="fi-rs-shopping-cart mr-5"></i>Add
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 d-none d-xl-block">
-              <div class="product-cart-wrap style-2">
-                <div class="product-img-action-wrap">
-                  <div class="product-img">
-                    <a href="/shop-product-right">
-                      <img src="assets/imgs/banner/banner-8.png" alt="" />
-                    </a>
-                  </div>
-                </div>
-                <div class="product-content-wrap">
-                  <div class="deals-countdown-wrap">
-                    <div
-                      class="deals-countdown"
-                      data-countdown="2025/02/25 00:00:00"
-                    ></div>
-                  </div>
-                  <div class="deals-content">
-                    <h2>
-                      <a href="/shop-product-right"
-                        >Simply Lemonade with Raspberry Juice</a
-                      >
-                    </h2>
-                    <div class="product-rate-cover">
-                      <div class="product-rate d-inline-block">
-                        <div class="product-rating" style="width: 80%"></div>
-                      </div>
-                      <span class="font-small ml-5 text-muted"> (3.0)</span>
-                    </div>
-                    <div>
-                      <span class="font-small text-muted"
-                        >By <a href="/vendor-details-1">Yoplait</a></span
-                      >
-                    </div>
-                    <div class="product-card-bottom">
-                      <div class="product-price">
-                        <span>$15.85</span>
-                        <span class="old-price">$16.8</span>
-                      </div>
-                      <div class="add-cart">
-                        <a class="add" href="/shop-cart"
-                          ><i class="fi-rs-shopping-cart mr-5"></i>Add
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+
         <!--End Deals-->
       </div>
       <div class="col-lg-1-5 primary-sidebar sticky-sidebar">
         <!-- Fillter By Price -->
-        <div class="sidebar-widget price_range range mb-30">
-          <h5 class="section-title style-1 mb-30">Filter by price</h5>
-
-          <div class="list-group">
-            <!-- Example of dynamic filtering options -->
-            <ng-container *ngFor="let filter of matchingFilters">
-              <div
-                class="list-group-item mb-10 mt-10"
-                *ngIf="filter.type === 'multiple'"
-              >
+        <ng-container *ngFor="let filter of matchingFilters">
+          <div class="sidebar-widget price_range range mb-30" *ngIf="filter.type === 'multiple'">
+            <h5 class="section-title style-1 mb-30">Sélection</h5>
+        
+            <div class="list-group">
+              <!-- Example of dynamic filtering options -->
+              <div class="list-group-item mb-10 mt-10">
                 <label class="fw-900">{{ filter.label }}</label>
                 <div class="custome-checkbox">
                   <div *ngFor="let option of filter.options | keyvalue">
@@ -477,22 +359,20 @@
                       [value]="option.key"
                       [(ngModel)]="filter.selectedOptions"
                     />
-                    <label
-                      class="form-check-label"
-                      [for]="'exampleCheckbox_' + option.key"
-                    >
+                    <label class="form-check-label" [for]="'exampleCheckbox_' + option.key">
                       <span>{{ option.value }}</span>
                     </label>
                   </div>
                 </div>
               </div>
-            </ng-container>
+            </div>
+            <!-- 
+            <a class="btn btn-sm btn-default" href="/shop-grid-right">
+              <i class="fi-rs-filter mr-5"></i> Filtrer
+            </a> -->
           </div>
-          <!-- 
-          <a class="btn btn-sm btn-default" href="/shop-grid-right">
-            <i class="fi-rs-filter mr-5"></i> Filter
-          </a> -->
-        </div>
+        </ng-container>
+        
 
         <div class="sidebar-widget widget-category-2 mb-30">
           <h5 class="section-title style-1 mb-30">Catégorie</h5>
@@ -538,7 +418,7 @@
         </div>
 
         <!-- Product sidebar Widget -->
-        <div
+        <!-- <div
           class="sidebar-widget product-sidebar mb-30 p-30 bg-grey border-radius-10"
         >
           <h5 class="section-title style-1 mb-30">New products</h5>
@@ -589,7 +469,7 @@
               Juice
             </h4>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

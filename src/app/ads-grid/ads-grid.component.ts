@@ -61,6 +61,11 @@ export class AdsGridComponent {
   displayedCategories: any[] = [];
   matchingFilters: any[] = [];
   ads: any[] = [];
+  currentPage = 1;
+  totalPages = 1;
+  filteredAds: any[] = [];
+  adsPerPage = 10;
+  sortOption = 'featured';
 
   constructor(
     private categoryService: CategoryService,
@@ -74,11 +79,33 @@ export class AdsGridComponent {
     if (id !== null) {
       this.categoryId = +id;
       this.getCategoriesFilters();
-      this.getCategories();
-      this.getAds();
+      this.getCategories();  
+      this.getAdsList();
     } else {
     }
   }
+
+
+  getAdsList(): void {
+    this.annonceService.getAds().subscribe((datas) => {
+      let ads = datas.data.filter(
+        (ad: { category_id: number }) => ad.category_id === this.categoryId
+      );
+      let adsProcessed = 0;
+  
+      ads.forEach((element: { id: string }) => {
+        this.annonceService.getAdById(element.id).subscribe((data) => {
+          adsProcessed++;
+          const detailedAd = data.data;
+          this.ads.push(detailedAd)
+        }
+
+        )      
+        
+    })
+  })
+}
+
 
   getCategoriesFilters(): void {
     const category_id = this.categoryId?.toString();
@@ -158,6 +185,11 @@ export class AdsGridComponent {
         }
       }
     }
+    this.ads=[];
+    console.log("grrrrrrrrrrrrrrrrr",this.ads);
+    this.getAds();
+    console.log("grrrrrrrrrrrrrrrrreet",this.ads);
+
     if (this.matchingFilters.length > 0) {
       console.log(
         'Condition met in the following filters:',
@@ -169,26 +201,165 @@ export class AdsGridComponent {
   }
 
   getAds(): void {
+    console.log("Fetching ads...");
     this.annonceService.getAds().subscribe((datas) => {
       let ads = datas.data.filter(
         (ad: { category_id: number }) => ad.category_id === this.categoryId
       );
-
-      // Filter ads based on selected options in filters
-      for (const key of Object.keys(this.filters)) {
-        const filter = this.filters[key];
-        if (filter.selectedOption) {
-          ads = ads.filter((ad: any) => {
-            // Assuming 'additional' is where your filterable properties are stored in ad
-            return (
-              ad.additional && ad.additional[key] === filter.selectedOption
-            );
-          });
-        }
-      }
-
-      // Update the ads array with filtered results
-      this.ads = ads;
+  
+      console.log("Filtered ads by category:", ads);
+  
+      // Using a counter to check when all asynchronous calls are completed
+      let adsProcessed = 0;
+  
+      ads.forEach((element: { id: string }) => {
+        this.annonceService.getAdById(element.id).subscribe((data) => {
+          adsProcessed++;
+          const detailedAd = data.data;
+  
+          console.log(`Detailed ad fetched (id: ${element.id}):`, detailedAd);
+  
+          // Apply filter logic to the detailed ad
+          let shouldIncludeAd = true;
+          for (const key of Object.keys(this.filters)) {
+            const filter = this.filters[key];
+            if (filter.selectedOption) {
+              console.log(
+                `Checking filter ${key} with selected option ${filter.selectedOption}`
+              );
+              if (!detailedAd.additional || detailedAd.additional[key] !== filter.selectedOption) {
+                console.log(
+                  `Ad (id: ${element.id}) does not match filter ${key} with selected option ${filter.selectedOption}`
+                );
+                shouldIncludeAd = false;
+                break;
+              }
+            }
+          }
+  
+          // If the ad matches all selected filter options, keep it in the ads array
+          if (shouldIncludeAd) {
+            this.ads.push(detailedAd);
+            console.log(`Ad (id: ${element.id}) matches all filters and is included.`);
+          }
+  
+          // After processing all ads, log the results
+          if (adsProcessed === ads.length) {
+            console.log("All ads processed. Final ads list:", this.ads);
+          }
+        });
+      });
+  
+      // Clear ads array to start fresh for each getAds call
+      this.ads = [];
     });
+  }
+
+
+  getRelativeTime(createdAt: string): string {
+    const currentDate = new Date();
+    const adDate = new Date(createdAt);
+    const timeDiff = currentDate.getTime() - adDate.getTime();
+    const seconds = Math.floor(timeDiff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 1) {
+      return days + ' jours passés';
+    } else if (days === 1) {
+      return (
+        'hier à ' +
+        adDate.toLocaleTimeString('fr-FR', {
+          hour: '2-digit',
+          minute: '2-digit',
+        })
+      );
+    } else {
+      return (
+        "aujourd'hui à " +
+        adDate.toLocaleTimeString('fr-FR', {
+          hour: '2-digit',
+          minute: '2-digit',
+        })
+      );
+    }
+  }
+
+  changePage(page: number): void {
+    if (page < 1 || page > this.totalPages) {
+      return;
+    }
+    this.currentPage = page;
+    this.paginateAds();
+  }
+  
+  paginateAds(): void {
+    this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
+    const startIndex = (this.currentPage - 1) * this.adsPerPage;
+    const endIndex = startIndex + this.adsPerPage;
+    this.ads = this.ads.slice(startIndex, endIndex);
+  }
+
+  getPagesArray(): number[] {
+    return Array.from({ length: this.totalPages }, (v, k) => k + 1);
+  }
+
+  changeSortOption(option: string): void {
+    this.sortOption = option;
+    this.applyFilters();
+  }
+
+
+  applyFilters(): void {
+    this.sortAds();
+    this.paginateAds();
+    this.getCategories();
+  }
+
+  sortAds(): void {
+    switch (this.sortOption) {
+      case 'priceLowToHigh':
+        this.ads.sort(
+          (a, b) => parseFloat(a.price) - parseFloat(b.price)
+        );
+        break;
+      case 'priceHighToLow':
+        this.ads.sort(
+          (a, b) => parseFloat(b.price) - parseFloat(a.price)
+        );
+        break;
+      case 'releaseDate':
+        this.ads.sort(
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+        break;
+      case 'avgRating':
+        this.ads.sort((a, b) => b.rating - a.rating);
+        break;
+      default:
+        // Sort by featured or any default sorting logic
+        break;
+    }
+    this.paginateAds();
+  }
+
+  sortOptionsTranslation: { [key: string]: string } = {
+    featured: 'Mis en avant',
+    priceLowToHigh: 'Prix : croissant',
+    priceHighToLow: 'Prix : décroissant',
+    releaseDate: 'Date de sortie',
+    avgRating: 'Note moyenne',
+  };
+  getSortOptionLabel(option: string): string {
+    return this.sortOptionsTranslation[option] || option;
+  }
+
+
+  changeAdsPerPage(count: number): void {
+    this.adsPerPage = count;
+    this.currentPage = 1; // Reset to first page
+    this.paginateAds();
   }
 }
