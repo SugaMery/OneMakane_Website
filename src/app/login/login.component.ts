@@ -99,9 +99,15 @@ export class LoginComponent {
     if (this.validateForm()) {
       this.userService.login(this.userData).subscribe(
         (response) => {
+              // Clear local storage
+    localStorage.removeItem('loggedInUserToken');
+    localStorage.removeItem('loggedInUser');
+    localStorage.removeItem('loggedInUserRefreshToken');
+
           // Store user ID and token in local storage
           localStorage.setItem('loggedInUserId', response.data.id);
           localStorage.setItem('loggedInUserToken', response.data.token);
+          localStorage.setItem('loggedInUserRefreshToken', response.data.refresh_token);
 
           // Redirect to the dashboard
           window.location.href = '/';

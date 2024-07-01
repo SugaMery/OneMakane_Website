@@ -82,7 +82,7 @@ export class AdsDetailComponent implements OnInit {
               .subscribe((category) => {
                 const modelFields = category.data.model_fields;
                 const queryParams = { model: category.data.model };
-
+         console.log("modelfilds",modelFields);
                 this.settingService
                   .getSettings(accessToken!, queryParams)
                   .subscribe(
@@ -96,6 +96,7 @@ export class AdsDetailComponent implements OnInit {
                             setting: key, // Initialize setting with key, you'll update this later
                             type: modelFields[key].type,
                             options: modelFields[key].options,
+                            dependant : modelFields[key].dependant
                           })
                         );
                         transformedFields.forEach((field) => {
@@ -151,7 +152,8 @@ export class AdsDetailComponent implements OnInit {
                               });
                           } else if (
                             !modelFields[field.value].options &&
-                            modelFields[field.value].type === 'select'
+                            modelFields[field.value].type === 'select' &&
+                            !modelFields[field.value].dependant
                           ) {
                             // Apply the logic for 'get setting'
                             const matchedSetting = setting.data.find(
@@ -183,7 +185,8 @@ export class AdsDetailComponent implements OnInit {
                           } else if (
                             modelFields[field.value].type === 'number' ||
                             modelFields[field.value].type === 'text' ||
-                            modelFields[field.value].type === 'date'
+                            modelFields[field.value].type === 'date' ||
+                            modelFields[field.value].type === 'int'
                           ) {
                             field.setting = data.data.additional[field.value];
                           } else if (
@@ -210,6 +213,46 @@ export class AdsDetailComponent implements OnInit {
                             } catch (error) {
                               console.error('Error parsing JSON:', error);
                             }
+                          }else if (
+                            modelFields[field.value].type === 'bool' && modelFields[field.value].conditions
+                          ) {
+                            field.setting = data.data.additional[field.value]=== 1
+                            ? 'Oui'
+                            : 'Non';
+                          } else if (modelFields[field.value].dependant){
+                        const model = modelFields[field.value].dependant ;
+                            console.log("depent",modelFields[field.value],data.data.additional[model],modelFields[model],transformedFields)
+                            const matchedSetting = setting.data.find(
+                              (settingItem: { name: string }) =>
+                                settingItem.name === field.value
+                            );
+ console.log("matchi",matchedSetting, matchedSetting.content[data.data.additional[model]],)
+                            if (matchedSetting) {
+                              if (
+                                data.data.additional &&
+                                data.data.additional[field.value]
+                              ) {
+                                const test = matchedSetting.content[data.data.additional[model]];
+                                field.setting =
+                                  test[
+
+                                    data.data.additional[field.value]
+                                  ];
+                                  console.log("matchitttt",field.setting,test)
+ 
+                              } else {
+                                console.error(
+                                  `No additional data found for key '${model}'`
+                                );
+                              }
+                            } else {
+                              console.error(
+                                `No setting found for key '${field.value}'`,
+                                field,
+                                modelFields
+                              );
+                            }
+                          
                           }
                         });
 

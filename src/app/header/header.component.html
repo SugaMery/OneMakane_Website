@@ -256,7 +256,6 @@
           <div class="search-style-2">
             <form (ngSubmit)="onSubmit()">
               <select class="select-active">
-                <option value="" disabled selected>Les catégories</option>
                 <ng-container *ngFor="let category of categories">
                   <option [value]="category.id">{{ category.name }}</option>
                 </ng-container>
@@ -494,16 +493,19 @@
                               )
                             "
                           >
-                            <a
-                              [href]="
-                                '/ads-category/' +
-                                subcategory.id +
-                                '?search=' +
-                                getValueFromObject(subsubcat)
-                              "
-                            >
-                              {{ getValueFromObject(subsubcat) }}
-                            </a>
+                          <a
+                          [href]="
+                            '/ads-category/' +
+                            subcategory.id +
+                            '?' +
+                            subsubcat.type +
+                            '=' +
+                            subsubcat.key
+                          "
+                        >
+                          {{ subsubcat.value }}
+                        </a>
+                        
                           </li>
                         </ul>
                       </li>

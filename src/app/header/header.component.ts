@@ -57,25 +57,35 @@ export class HeaderComponent {
   }
 
   checkLoggedInUser(): void {
-    if (this.document.defaultView && this.document.defaultView.localStorage) {
-      const userId =
-        this.document.defaultView.localStorage.getItem('loggedInUserId');
-      const accessToken =
-        this.document.defaultView.localStorage.getItem('loggedInUserToken');
-      if (userId && accessToken) {
-        this.userService
-          .getUserInfoById(Number(userId), accessToken)
-          .subscribe((userInfo) => {
-            if (userInfo.data) {
-              this.status = true;
-              this.loggedInUserName = `${userInfo.data.first_name} ${userInfo.data.last_name}`;
-            } else {
-              this.status = false;
-            }
-          });
-      }
+    const localStorage = this.document?.defaultView?.localStorage;
+
+    if (localStorage) {
+        const userId = localStorage.getItem('loggedInUserId');
+        const accessToken = localStorage.getItem('loggedInUserToken');
+        const refrechToken = localStorage.getItem('loggedInUserRefreshToken');
+
+        if (userId && accessToken && refrechToken ) {
+            this.userService.refreshToken(refrechToken).subscribe(
+                (response) => {
+                  localStorage.setItem('loggedInUserRefreshToken', response.data.refresh_token);
+
+                    this.userService.getUserInfoById(Number(userId), accessToken).subscribe((userInfo) => {
+                        if (userInfo.data) {
+                            this.status = true;
+                            this.loggedInUserName = `${userInfo.data.first_name} ${userInfo.data.last_name}`;
+                        } else {
+                            this.status = false;
+                        }
+                    });
+                },
+                (error) => {
+                    console.error('Error refreshing token:', error);
+                    this.status = false;
+                }
+            );
+        }
     }
-  }
+}
 
   logout(): void {
     this.status = false;
@@ -188,29 +198,24 @@ export class HeaderComponent {
       // Collect values in the array
       for (const key in preFilter) {
         if (preFilter.hasOwnProperty(key)) {
-          //this.preFilterValues.push(preFilter[key]);
           const list = preFilter[key];
           for (const keys in list) {
-            if(list.hasOwnProperty(keys)){
-              //console.log('kkkkkkkkkkk',list[keys]);
+            if (list.hasOwnProperty(keys)) {
+             // console.log('kkkkkkkkkkk', list[keys], key);
               const alreadyExists = this.preFilterValues.some(item => item[keys] === list[keys]);
-
+      
               // If it doesn't exist, push it into this.preFilterValues
               if (!alreadyExists) {
                 this.preFilterValues.push({ [keys]: list[keys] });
-
+      
                 // Push this.preFilterValues into subcategory.subsubcategories
-                subcategory.subsubscategories.push({ [keys]: list[keys] });
-            
+                subcategory.subsubscategories.push({ key: keys, value: list[keys] ,type: key });
               }
-
             }
           }
-
-          
         }
       }
-
+      
 
 // Ensure subcategory.subsubcategories is initialized as an array
 
@@ -227,10 +232,9 @@ export class HeaderComponent {
       //console.log('Filter root categories', this.categories);
     });
   }
-  getValueFromObject(obj: any): string {
-    // obj is like { vtt: 'VTT' }
+  getValueFromObject(obj: any): { key: string; value: string } {
     const key = Object.keys(obj)[0]; // Get the key ('vtt' in this case)
-    return obj[key]; // Return the corresponding value ('VTT')
+    return { key: key, value: obj[key] }; // Return an object with the key and value
   }
   
   toggleMoreCategories(): void {
@@ -269,16 +273,16 @@ export class HeaderComponent {
     if (selectElement) {
       // Get the selected option's value
       const selectedOptionValue = selectElement.value;
+      this.selectedCategoryId = selectedOptionValue
 
       // Display the selected option's value in the console
-      //console.log('yyyyyyyyyyy', selectedOptionValue);
+      console.log('yyyyyyyyyyy', selectedOptionValue);
     } else {
       console.log('Select element not found');
     }
 
-    //console.log('zzzzz', this.selectedCategoryId);
-    if (this.selectedCategoryId) {
-      this.navigateToCategory1(this.selectedCategoryId, this.searchQuery);
-    }
+    console.log('zzzzz', this.selectedCategoryId,this.searchQuery);
+      window.location.href = `/ads-category/${this.selectedCategoryId}?search=${this.searchQuery}`;
+      //this.navigateToCategory1(this.selectedCategoryId, this.searchQuery);
   }
 }

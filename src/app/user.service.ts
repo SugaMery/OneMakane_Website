@@ -38,9 +38,11 @@ export class UserService {
 
     return this.http.get(`${this.baseUrl}/auth/logout`, { headers });
   }
+
   refreshToken(accessToken: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/auth/refresh-token`, { accessToken });
-  }
+    const body = { refresh_token: accessToken };
+    return this.http.post(`${this.baseUrl}/auth/refresh-token`, body);
+}
 
   getConversationsByUser(userId: number, accessToken: string): Observable<any> {
     const headers = new HttpHeaders({

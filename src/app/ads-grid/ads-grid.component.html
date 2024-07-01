@@ -10,9 +10,15 @@
             <h1 class="mb-15">{{ category.name }}</h1>
             <div class="breadcrumb">
               <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
-              <span></span> {{ categoryParent.name }} <span></span>
-              {{ category.name }}
+              <span *ngIf="categoryParent?.name; else noParent">
+                <span></span> {{ categoryParent.name }} <span></span> {{ category.name }}
+              </span>
+              <ng-template #noParent>
+                <span></span> {{ category.name }}
+              </ng-template>
             </div>
+            
+            
           </div>
           <div
             class="col-xl-12 text-end d-none d-xl-block"
@@ -39,14 +45,14 @@
                       >
                     </div>
                     <div class="sort-by-dropdown-wrap">
-                      {{ filters[key].selectedOption?.substring(0, 5) }}
+                      {{ filters[key].selectedOption?.substring(0, 7) }}
                       <span><i class="fi-rs-angle-small-down"></i></span>
                     </div>
                   </div>
                   <div class="sort-by-dropdown">
                     <ul style="max-height: 185px; overflow-y: auto">
                       <li (click)="selectOption(key, 'all')">
-                        <a [class.active]="isSelected(key, 'all')">Tous</a>
+                        <a [class.active]="!filters[key].selectedOption">Tous</a>
                       </li>
                       <li
                         *ngFor="let option of filters[key].options | keyvalue"
@@ -62,7 +68,7 @@
               </div>
             </div>
 
-            <div class="shop-product-fillter" *ngIf="matchingFilters !== null">
+            <div class="shop-product-fillter"[ngClass]="{'display-contents': matchingFilters === null}" *ngIf="matchingFilters !== null">
               <div class="totall-product"></div>
               <div class="sort-by-product-area">
                 <div
@@ -85,6 +91,7 @@
                         type="number"
                         class="form-control"
                         [(ngModel)]="filter.selectedOption"
+                        (input)="filterOption($event,filter)"
                         style="height: revert"
                       />
                     </div>
@@ -341,45 +348,8 @@
 
         <!--End Deals-->
       </div>
-      <div class="col-lg-1-5 primary-sidebar sticky-sidebar">
+      <div class="col-lg-1-5 primary-sidebar sticky-sidebar" > 
         <!-- Fillter By Price -->
-        <ng-container *ngFor="let filter of matchingFilters">
-          <div
-            class="sidebar-widget price_range range mb-30"
-            *ngIf="filter.type === 'multiple'"
-          >
-            <h5 class="section-title style-1 mb-30">Sélection</h5>
-
-            <div class="list-group">
-              <!-- Example of dynamic filtering options -->
-              <div class="list-group-item mb-10 mt-10">
-                <label class="fw-900">{{ filter.label }}</label>
-                <div class="custome-checkbox">
-                  <div *ngFor="let option of filter.options | keyvalue">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      name="checkbox"
-                      [id]="'exampleCheckbox_' + option.key"
-                      [value]="option.key"
-                      [(ngModel)]="filter.selectedOptions"
-                    />
-                    <label
-                      class="form-check-label"
-                      [for]="'exampleCheckbox_' + option.key"
-                    >
-                      <span>{{ option.value }}</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- 
-            <a class="btn btn-sm btn-default" href="/shop-grid-right">
-              <i class="fi-rs-filter mr-5"></i> Filtrer
-            </a> -->
-          </div>
-        </ng-container>
         <div class="sidebar-widget widget-category-2 mb-30">
           <h5 class="section-title style-1 mb-30">Rechercher :</h5>
           <div class="categories-dropdown-wrap1 style-2 font-heading mt-30">
@@ -387,12 +357,62 @@
               type="text"
               placeholder="Rechercher par titre"
               [(ngModel)]="searchTitle"
-              (input)="filterAdsByTitle($event)"
+              (input)="filterAdsByTitle(searchTitle)"
               class="form-control"
               style="width: 100%"
             />
           </div>
         </div>
+          <div class="sidebar-widget price_range range mb-30" *ngIf="openmatchingFilters" >
+            <h5 class="section-title style-1 mb-30">Sélection</h5>
+            <div class="list-group" *ngFor="let filter of matchingFilters" >
+              <!-- Example of dynamic filtering options -->
+              <div class="list-group-item mb-10 mt-10" *ngIf="filter.type === 'multiple'">
+                <label class="fw-900">{{ filter.label }}</label>
+                <div class="custome-checkbox">
+              
+                  <!-- Individual Option Checkboxes -->
+                  <div *ngFor="let key of getOptionKeys(filter.options)">
+                    <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="{{ key }}"
+                    name="{{ key }}"
+                    [checked]="isSelecteds(key)"                     
+                    (change)="toggleOption(key,filter)"
+
+                    
+                    />
+                    <label class="form-check-label" [for]="key">
+                    <span>{{ filter.options[key]  }}</span>
+                    </label>                  
+                  </div>
+                </div>
+              </div>
+              
+              
+              <div class="list-group-item mb-10 mt-10" *ngIf="filter.type === 'bool'">
+                <label class="fw-900">{{ filter.label }}</label>
+                <div class="custome-checkbox">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="checkbox"
+                    [id]="'boolCheckbox_' + filter.key"
+                    [(ngModel)]="filter.selectedOption"
+                    (change)="filterCheck($event,filter)"
+                  />
+                  <label class="form-check-label" [for]="'boolCheckbox_' + filter.key">
+                    <span>{{ filter.label }}</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+
+          
+
 
         <div
           class="sidebar-widget widget-category-2 mb-30"
