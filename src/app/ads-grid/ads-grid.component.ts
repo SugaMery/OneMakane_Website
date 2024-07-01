@@ -4,9 +4,9 @@ import { AnnonceService } from '../annonce.service';
 import { ActivatedRoute } from '@angular/router';
 
 interface Option {
-  key: string;       // Unique identifier for the option
-  value: string;     // Display value of the option
-  checked?: boolean;  // State of the checkbox
+  key: string; // Unique identifier for the option
+  value: string; // Display value of the option
+  checked?: boolean; // State of the checkbox
 }
 
 interface Filter {
@@ -17,12 +17,10 @@ interface Filter {
   conditions?: { [key: string]: any };
   selectedOption?: string;
   dropdownOpen?: boolean;
-  key? : string;
+  key?: string;
   selectedOptions: { [key: string]: Option };
+  route?: string;
 }
-
-
-
 
 interface Filters {
   [key: string]: Filter;
@@ -98,60 +96,60 @@ export class AdsGridComponent {
       this.getCategoriesFilters();
       this.getCategories();
       this.getAdsList();
-     this.categories.forEach((category)=>{
-      if(category.id == this.category){
-        console.log("rrrrr",category)
-      }
-     })
-      
-      console.log("eee",this.categories);
+      this.categories.forEach((category) => {
+        if (category.id == this.category) {
+          console.log('rrrrr', category);
+        }
+      });
+
+      console.log('eee', this.categories);
     } else {
     }
     // Fetch all query parameters as an object
-
   }
 
   getAdsList(): void {
-    console.log("adsff",this.allCategoriesSameParent);
+    console.log('adsff', this.allCategoriesSameParent);
 
-    if(this.allCategoriesSameParent.length==0){
+    if (this.allCategoriesSameParent.length == 0) {
       this.annonceService.getAds().subscribe((datas) => {
         let ads = datas.data.filter(
           (ad: { category_id: number }) => ad.category_id === this.categoryId
         );
         let adsProcessed = 0;
-  
-        this.originalAds = []; 
-  
+
+        this.originalAds = [];
+
         ads.forEach((element: { id: string }) => {
           this.annonceService.getAdById(element.id).subscribe((data) => {
             adsProcessed++;
             const detailedAd = data.data;
-  
+
             this.ads.push(detailedAd);
-            this.originalAds.push(detailedAd); 
+            this.originalAds.push(detailedAd);
           });
         });
       });
-    }else{
-      for(let i=0;i<this.allCategoriesSameParent.length;i++){
+    } else {
+      for (let i = 0; i < this.allCategoriesSameParent.length; i++) {
         this.annonceService.getAds().subscribe((datas) => {
           let ads = datas.data.filter(
-            (ad: { category_id: number }) => ad.category_id === this.allCategoriesSameParent[i].id
+            (ad: { category_id: number }) =>
+              ad.category_id === this.allCategoriesSameParent[i].id
           );
           let adsProcessed = 0;
-    
-          this.originalAds = []; 
-    
+
+          this.originalAds = [];
+
           ads.forEach((element: { id: string }) => {
             this.annonceService.getAdById(element.id).subscribe((data) => {
               adsProcessed++;
               const detailedAd = data.data;
-    
+
               this.ads.push(detailedAd);
-              this.originalAds.push(detailedAd); 
-              console.log('adssss',this.ads,this.originalAds);
-              if(this.searchTitle){
+              this.originalAds.push(detailedAd);
+              console.log('adssss', this.ads, this.originalAds);
+              if (this.searchTitle) {
                 this.filterAdsByTitle(this.searchTitle);
               }
             });
@@ -164,42 +162,38 @@ export class AdsGridComponent {
   getCategoriesFilters(): void {
     const category_id = this.categoryId?.toString();
     this.categoryService.getCategoryById(category_id!).subscribe((datas) => {
-     // console.log('greeeet in ', datas);
+      // console.log('greeeet in ', datas);
       this.filters = datas.data.filters;
       this.category = datas.data;
       const queryParams = this.route.snapshot.queryParams;
 
       // Log all query parameters
-     // console.log('All Query Parameters:', queryParams);
-  
+      // console.log('All Query Parameters:', queryParams);
+
       // Iterate through each query parameter
       for (const key in queryParams) {
-          if (queryParams.hasOwnProperty(key)) {
-              const value = queryParams[key];
-             // console.log(`Query Parameter ${key}: ${value}`);
-              if(key!=='search'){
-                this.selectOptioneds(key,value);
+        if (queryParams.hasOwnProperty(key)) {
+          const value = queryParams[key];
+          // console.log(`Query Parameter ${key}: ${value}`);
+          if (key !== 'search') {
+            this.selectOptioneds(key, value);
+          } else {
+            this.searchTitle = value;
 
-              }else{
-                this.searchTitle=value;
-                
-                console.log("goooofrrrr",this.ads)
- this.getAdsList();
- console.log("goooofrrrr",this.ads)
-
-  
-        
-              }
-              // Use 'key' and 'value' as needed
+            console.log('goooofrrrr', this.ads);
+            this.getAdsList();
+            console.log('goooofrrrr', this.ads);
           }
+          // Use 'key' and 'value' as needed
+        }
       }
       this.parentCategory();
-     // console.log('greeeet in ', datas);
+      // console.log('greeeet in ', datas);
       if (datas.data.parent_id == null) {
         this.vissibleCategory = true;
         //console.log('filters', datas.data.id);
         this.getCategoriesByParentId(datas.data.id);
-       // console.log('rrrrrrrrrr', this.allCategoriesSameParent);
+        // console.log('rrrrrrrrrr', this.allCategoriesSameParent);
       } else {
         this.vissibleCategory = false;
       }
@@ -210,18 +204,17 @@ export class AdsGridComponent {
     const searchTerm = event.toLowerCase();
 
     if (searchTerm === '') {
-        this.getAds();
+      this.getAds();
     } else {
-        this.ads = [...this.originalAds];
-        this.ads = this.ads.filter((conversation) => {
-            const title = conversation.title.toLowerCase();
-            return title.includes(searchTerm);
-        });
+      this.ads = [...this.originalAds];
+      this.ads = this.ads.filter((conversation) => {
+        const title = conversation.title.toLowerCase();
+        return title.includes(searchTerm);
+      });
 
-        this.applyFilters();
+      this.applyFilters();
     }
-}
-
+  }
 
   getCategoriesByParentId(parentId: number): void {
     this.categoryService.getCategoriesFrom().subscribe((datas) => {
@@ -242,10 +235,10 @@ export class AdsGridComponent {
   }
 
   selectOption(key: string, option: string) {
-    delete this.filters[key].selectedOption ;
+    delete this.filters[key].selectedOption;
     this.getAds();
     //console.log(`Selected option for ${this.filters[key].label}: ${option}`,key,option);
-    this.filters[key].dropdownOpen = false; 
+    this.filters[key].dropdownOpen = false;
   }
 
   toggleDropdown(key: string) {
@@ -259,8 +252,6 @@ export class AdsGridComponent {
           category.active === true && category.parent_id === null
       );
 
-      
-
       this.displayedCategories = this.categories.slice(0, 4);
       this.hiddenCategories = this.categories.slice(5);
     });
@@ -273,10 +264,20 @@ export class AdsGridComponent {
   getFilterKeys(): string[] {
     return Object.keys(this.filters);
   }
+  getNestedKeys(options: any): string[] {
+    return Object.keys(options);
+  }
+
+  getNestedOptions(options: any): { key: string; value: string }[] {
+    return Object.keys(options).map((key) => ({ key, value: options[key] }));
+  }
 
   getFiltersKeys(): string[] {
     return Object.keys(this.filters).filter((key) => {
       const filter = this.filters[key];
+      if (filter.route) {
+        console.log('this filter', filter.options);
+      }
       return filter.type === 'select' && !filter.dependant;
     });
   }
@@ -291,7 +292,7 @@ export class AdsGridComponent {
     return this.filters[filterKey].selectedOption === optionKey;
   }
 
-  openmatchingFilters : boolean = false;
+  openmatchingFilters: boolean = false;
 
   selectOptioneds(filterKey: string, optionKey: string): void {
     this.filters[filterKey].selectedOption = optionKey;
@@ -307,53 +308,49 @@ export class AdsGridComponent {
     }
     this.ads = [];
     this.getAds();
-  
-    if (this.matchingFilters.length > 0) {
-      this.matchingFilters.filter((filter)=>{
-        if(filter.type == 'bool' || filter.type == 'multiple'){
-          this.openmatchingFilters = true;
-         // console.log("tteee",filter.options);
-        }
-        else{
-          this.openmatchingFilters = false;
 
+    if (this.matchingFilters.length > 0) {
+      this.matchingFilters.filter((filter) => {
+        if (filter.type == 'bool' || filter.type == 'multiple') {
+          this.openmatchingFilters = true;
+          // console.log("tteee",filter.options);
+        } else {
+          this.openmatchingFilters = false;
         }
-      })  
-    //  console.log('Condition met in the following filters:', this.matchingFilters);
+      });
+      //  console.log('Condition met in the following filters:', this.matchingFilters);
     } else {
       console.log('No matching condition for optionKey:', optionKey);
     }
   }
-  
 
-// Inside your AdsGridComponent class
-selectedOptions: string[] = []; // Initialize with selected options if needed
+  // Inside your AdsGridComponent class
+  selectedOptions: string[] = []; // Initialize with selected options if needed
 
-getOptionKeys(options: any): string[] {
-  return Object.keys(options);
-}
-
-isSelecteds(key: string): boolean {
-
-  return this.selectedOptions.includes(key);
-}
-
-toggleOption(key: string , filter : any): void {
-  if (this.isSelecteds(key)) {
-    this.selectedOptions = this.selectedOptions.filter(option => option !== key);
-
-  } else {
-    this.selectedOptions.push(key);
+  getOptionKeys(options: any): string[] {
+    return Object.keys(options);
   }
-  filter.selectedOption = this.selectedOptions ; 
-  filter.selectedOptions = this.selectedOptions ;
-   this.getAdsSous();
-  // Log the current state of the checkbox to the console
- // console.log(`Checkbox ${key} checked:`, this.isSelecteds(key),filter,this.ads,this.filters);
 
-  // Optionally, perform any other logic related to selectedOptions
-}
+  isSelecteds(key: string): boolean {
+    return this.selectedOptions.includes(key);
+  }
 
+  toggleOption(key: string, filter: any): void {
+    if (this.isSelecteds(key)) {
+      this.selectedOptions = this.selectedOptions.filter(
+        (option) => option !== key
+      );
+    } else {
+      this.selectedOptions.push(key);
+    }
+    filter.selectedOption = this.selectedOptions;
+    filter.selectedOptions = this.selectedOptions;
+    this.getAdsSous();
+    // Log the current state of the checkbox to the console
+    // console.log(`Checkbox ${key} checked:`, this.isSelecteds(key),filter,this.ads,this.filters);
+
+    // Optionally, perform any other logic related to selectedOptions
+  }
 
   // Handle input changes for 'int' type filters
   filterOption(event: any, filter: any): void {
@@ -361,7 +358,7 @@ toggleOption(key: string , filter : any): void {
 
     const filterKey = filter.key;
     // console.log("rrrrtttyy",optionKey,optionKey == undefined);
-    if (!optionKey || optionKey== null || optionKey == undefined) {
+    if (!optionKey || optionKey == null || optionKey == undefined) {
       // Delete selectedOption when event is null
       delete this.filters[filterKey].selectedOption;
       this.getAds();
@@ -372,8 +369,7 @@ toggleOption(key: string , filter : any): void {
     }
   }
 
-
-  filterCheck(event: any , filter : any) {
+  filterCheck(event: any, filter: any) {
     // Assuming filter.selectedOption is a boolean property
     const filterKey = filter.key;
 
@@ -381,24 +377,22 @@ toggleOption(key: string , filter : any): void {
       filter.selectedOption = 1;
       this.filters[filterKey].selectedOption = '1';
       this.getAdsSous();
-
     } else {
       filter.selectedOption = 0;
       delete this.filters[filterKey].selectedOption;
       this.getAds();
     }
     //console.log("rrrrtttyy",filter.selectedOption,event.target);
-
   }
 
-  getAdsSous() : void {
+  getAdsSous(): void {
     console.log('Fetching ads...');
     this.annonceService.getAds().subscribe((datas) => {
       let ads = datas.data.filter(
         (ad: { category_id: number }) => ad.category_id === this.categoryId
       );
       let adsProcessed = 0;
-  
+
       ads.forEach((element: { id: string }) => {
         this.annonceService.getAdById(element.id).subscribe((data) => {
           adsProcessed++;
@@ -407,50 +401,50 @@ toggleOption(key: string , filter : any): void {
           for (const key of Object.keys(this.filters)) {
             const filter = this.filters[key];
             if (filter.selectedOption && detailedAd.additional && filter.key) {
-     //console.log('tt',filter.selectedOption,detailedAd.additional[key]);
-     if(filter.type == 'int'){
-      if(filter.selectedOption <= detailedAd.additional[key]){
-        //console.log('ffff',filter,key,detailedAd.additional[key])
-        this.ads.push(detailedAd);
-      } 
-     }else if(filter.selectedOption == detailedAd.additional[key]){
-     // console.log('ffff',filter,key,detailedAd)
-      this.ads.push(detailedAd);
-     }else if (filter.type == 'multiple') {
-      for (let i = 0; i < filter.selectedOption.length; i++) {
-        if (detailedAd.additional[key] && detailedAd.additional[key].includes(filter.selectedOption[i].toString())) {
-         // console.log("greattt", filter.selectedOption[i]);
-          if (!this.ads.some(ad => ad === detailedAd)) {
-            this.ads.push(detailedAd);
-          }
-        }
-      }
-      
-     // console.log('holaaaaaaaaaa',detailedAd.additional[key],filter.selectedOption)
+              //console.log('tt',filter.selectedOption,detailedAd.additional[key]);
+              if (filter.type == 'int') {
+                if (filter.selectedOption <= detailedAd.additional[key]) {
+                  //console.log('ffff',filter,key,detailedAd.additional[key])
+                  this.ads.push(detailedAd);
+                }
+              } else if (filter.selectedOption == detailedAd.additional[key]) {
+                // console.log('ffff',filter,key,detailedAd)
+                this.ads.push(detailedAd);
+              } else if (filter.type == 'multiple') {
+                for (let i = 0; i < filter.selectedOption.length; i++) {
+                  if (
+                    detailedAd.additional[key] &&
+                    detailedAd.additional[key].includes(
+                      filter.selectedOption[i].toString()
+                    )
+                  ) {
+                    // console.log("greattt", filter.selectedOption[i]);
+                    if (!this.ads.some((ad) => ad === detailedAd)) {
+                      this.ads.push(detailedAd);
+                    }
+                  }
+                }
 
-     }
+                // console.log('holaaaaaaaaaa',detailedAd.additional[key],filter.selectedOption)
+              }
             }
-
-
           }
-
         });
       });
       this.ads = [];
     });
   }
 
-
   getAds(): void {
     console.log('Fetching ads...');
 
-    if(this.allCategoriesSameParent.length==0){
+    if (this.allCategoriesSameParent.length == 0) {
       this.annonceService.getAds().subscribe((datas) => {
         let ads = datas.data.filter(
           (ad: { category_id: number }) => ad.category_id === this.categoryId
         );
         let adsProcessed = 0;
-    
+
         ads.forEach((element: { id: string }) => {
           this.annonceService.getAdById(element.id).subscribe((data) => {
             adsProcessed++;
@@ -478,13 +472,10 @@ toggleOption(key: string , filter : any): void {
         });
         this.ads = [];
       });
-    }else{
+    } else {
       this.ads = [];
       this.getAdsList();
     }
-
-
-
   }
 
   getRelativeTime(createdAt: string): string {
@@ -583,7 +574,7 @@ toggleOption(key: string , filter : any): void {
 
   changeAdsPerPage(count: number): void {
     this.adsPerPage = count;
-    this.currentPage = 1; 
+    this.currentPage = 1;
     this.paginateAds();
   }
 }

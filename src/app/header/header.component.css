@@ -288,7 +288,8 @@ nav>ul>li {
 }
 
 
-::ng-deep .burger-icon.burger-icon-white>span::before, .burger-icon.burger-icon-white>span::after {
+::ng-deep .burger-icon.burger-icon-white>span::before,
+.burger-icon.burger-icon-white>span::after {
   background-color: #253D4E;
   background: white !important;
 }
@@ -299,4 +300,18 @@ nav>ul>li {
   visibility: visible;
   top: calc(100% + 10px);
   margin-top: 1rem;
+}
+
+::ng-deep .mobile-header-wrapper-style .mobile-header-wrapper-inner .mobile-header-content-area .site-copyright {
+  font-size: 12px !important;
+  color: #B6B6B6;
+}
+
+::ng-deep i[class^="fi-rr-"]:before {
+  color: white !important;
+}
+
+::ng-deep i[class*=" fi-rr-"]:before {
+  color: white !important;
+
 }

@@ -1,6 +1,62 @@
 <app-header></app-header>
-<main class="main">
-  <section class="home-slider position-relative mb-30">
+<main [class.padding-left-right]="isScreenSmall">
+  <section
+    *ngIf="isScreenSmall == true"
+    class="home-slider position-relative mb-30"
+  >
+    <div class="container">
+      <div class="home-slide-cover mt-30">
+        <div class="hero-slider-1 style-5 dot-style-1 dot-style-1-position-2">
+          <div
+            class="single-hero-slider single-animation-wrap"
+            style="background-image: url(assets/imgs/slider/slider-1.png)"
+          >
+            <div class="slider-content">
+              <h1 class="display-2 mb-40">
+                Ne manquez pas <br />
+                cette occasion !
+              </h1>
+              <p class="mb-65">Déposer votre annonce maintenant</p>
+              <button
+                style="max-width: 450px; border-radius: 50px"
+                onclick="window.location.href='/deposer_une_annonce'"
+                class="btn"
+                type="submit"
+              >
+                Déposer votre annonce
+              </button>
+            </div>
+          </div>
+          <div
+            class="single-hero-slider single-animation-wrap"
+            style="background-image: url(assets/imgs/slider/slider-2.png)"
+          >
+            <div class="slider-content">
+              <h1 class="display-2 mb-40">
+                Ne manquez pas <br />
+                cette occasion !
+              </h1>
+              <p class="mb-65">Déposer votre annonce maintenant</p>
+              <button
+                style="max-width: 450px; border-radius: 50px"
+                onclick="window.location.href='/deposer_une_annonce'"
+                class="btn"
+                type="submit"
+              >
+                Déposer votre annonce
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="slider-arrow hero-slider-1-arrow"></div>
+      </div>
+    </div>
+  </section>
+
+  <section
+    *ngIf="isScreenSmall == false"
+    class="home-slider position-relative mb-30"
+  >
     <div class="container">
       <div class="row">
         <div class="col-lg-2 d-none d-lg-flex">
@@ -97,17 +153,17 @@
 
         <div class="col-lg-3">
           <div class="row">
-            <div class="col-md-6 col-lg-12">
+            <div class="col-md-6 col-lg-12" *ngIf="!isScreenphone">
               <div class="banner-img style-4 mt-30">
                 <img src="../../assets/imgs/banner/bannar-1.png" alt="" />
                 <div class="banner-text">
                   <h4 class="mb-30">
                     Le meilleur chez nous pour des annonces de qualité
                   </h4>
-                  <a class="btn btn-xs mb-50" href="/deposer_une_annonce"
-                    >Déposer votre annonce
-                    <i class="fi-rs-arrow-small-right"></i
-                  ></a>
+                  <a class="btn btn-xs mb-50" href="/deposer_une_annonce">
+                    Déposer votre annonce
+                    <i class="fi-rs-arrow-small-right"></i>
+                  </a>
                 </div>
               </div>
             </div>
@@ -121,10 +177,10 @@
                     avec nos annonces <br />
                     de qualité
                   </h5>
-                  <a class="btn btn-xs" href="/deposer_une_annonce"
-                    >Déposer votre annonce
-                    <i class="fi-rs-arrow-small-right"></i
-                  ></a>
+                  <a class="btn btn-xs" href="/deposer_une_annonce">
+                    Déposer votre annonce
+                    <i class="fi-rs-arrow-small-right"></i>
+                  </a>
                 </div>
               </div>
             </div>
@@ -140,12 +196,22 @@
       <div class="section-title">
         <div class="title">
           <h3>Catégories en Vedette</h3>
-          <ul class="list-inline nav nav-tabs links">
+          <ul class="list-inline nav nav-tabs links" *ngIf="isScreenSmall">
+            <li
+              class="list-inline-item nav-item"
+              *ngFor="let category of categories.slice(0, 6)"
+            >
+              <a class="nav-link" [href]="'/ads-category/' + category?.id">{{
+                category.name
+              }}</a>
+            </li>
+          </ul>
+          <ul class="list-inline nav nav-tabs links" *ngIf="!isScreenSmall">
             <li
               class="list-inline-item nav-item"
               *ngFor="let category of categories.slice(0, 4)"
             >
-              <a class="nav-link" [href]="'/ads/' + category.id">{{
+              <a class="nav-link" [href]="'/ads-category/' + category?.id">{{
                 category.name
               }}</a>
             </li>
@@ -290,7 +356,7 @@
                           class="action-btn"
                           href="#"
                         >
-                          <i class="fi-rs-heart"></i>
+                          <i class="fi fi-sr-heart"></i>
                         </a>
                         <!--                         <a
                           aria-label="Aperçu rapide"
@@ -367,11 +433,12 @@
               <a
                 style="
                   text-decoration-color: black;
-                  /* color: black; */
+                  color: gray;
                   font-weight: 500;
                   font-size: small;
                   margin-left: 0.5rem;
                 "
+                [href]="'/ads-category/' + 233"
               >
                 Allez voir ces annonces
                 <i class="fi fi-rr-angle-circle-right"></i>
@@ -392,11 +459,12 @@
               <a
                 style="
                   text-decoration-color: black;
-                  /* color: black; */
+                  color: gray;
                   font-weight: 500;
                   font-size: small;
                   margin-left: 0.5rem;
                 "
+                [href]="'/ads-category/' + 147"
               >
                 Allez voir ces annonces
                 <i class="fi fi-rr-angle-circle-right"></i>
@@ -417,11 +485,12 @@
               <a
                 style="
                   text-decoration-color: black;
-                  /* color: black; */
+                  color: gray;
                   font-weight: 500;
                   font-size: small;
                   margin-left: 0.5rem;
                 "
+                [href]="'/ads-category/' + 350"
               >
                 Allez voir ces annonces
                 <i class="fi fi-rr-angle-circle-right"></i>
@@ -443,11 +512,12 @@
               <a
                 style="
                   text-decoration-color: black;
-                  /* color: black; */
+                  color: gray;
                   font-weight: 500;
                   font-size: small;
                   margin-left: 0.5rem;
                 "
+                [href]="'/ads-category/' + 214"
               >
                 Allez voir ces annonces
                 <i class="fi fi-rr-angle-circle-right"></i>
@@ -590,8 +660,7 @@
   </div>
 </div> -->
                   <p-carousel
-                  *ngIf="ads.length > 5"
-
+                    *ngIf="ads.length > 5"
                     #carouseled
                     [value]="ads"
                     [numVisible]="5"
@@ -705,14 +774,14 @@
     </div>
   </section>
   <!--End Best Sales-->
-  <section class="section-padding pb-5" *ngIf="ads_jobs.length > 0">
+  <section class="section-padding pb-5">
     <div class="container">
       <div
         class="section-title wow animate__animated animate__fadeIn"
         data-wow-delay="0"
+        *ngIf="ads_jobs.length > 0"
       >
-        <h3 class=""  
-          >Offres d'emploi</h3>
+        <h3 class="">Offres d'emploi</h3>
         <a
           class="show-all"
           [href]="'/ads-category/' + ads_jobs[0]?.category?.id"

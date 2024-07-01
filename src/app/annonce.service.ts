@@ -139,4 +139,13 @@ export class AnnonceService {
       body: { uuid: uuid, deleted_reason_id: deleteReasonId },
     });
   }
+
+  addToFavorites(userId: number, adId: number): Observable<any> {
+    const body = {
+      user_id: userId,
+      ad_id: adId,
+    };
+
+    return this.http.post<any>(this.apiUrl, body);
+  }
 }

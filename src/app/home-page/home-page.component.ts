@@ -1,6 +1,12 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
 import { CategoryService } from '../category.service';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { AnnonceService } from '../annonce.service';
 import { Console } from 'console';
 import { SettingService } from '../setting.service';
@@ -51,7 +57,8 @@ export class HomePageComponent implements OnInit {
     private categoryService: CategoryService,
     private annonceService: AnnonceService,
     private settingService: SettingService,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: any
   ) {}
   transformedField:
     | { value: string; label: any; setting: string }[]
@@ -93,6 +100,9 @@ export class HomePageComponent implements OnInit {
     },
     // Add more products here if needed
   ];
+  isScreenSmall!: boolean;
+  isScreenphone!: boolean;
+
   navigateToCategory(categoryId: number) {
     window.location.href = `/ads-category/${categoryId}`;
   }
@@ -118,6 +128,11 @@ export class HomePageComponent implements OnInit {
         numScroll: 1,
       },
     ];
+    if (isPlatformBrowser(this.platformId)) {
+      this.checkScreenWidth();
+      // Listen to window resize event only in browser environment
+      window.addEventListener('resize', () => this.checkScreenWidth());
+    }
     this.responsiveOptions2 = [
       {
         breakpoint: '1024px',
@@ -237,6 +252,13 @@ export class HomePageComponent implements OnInit {
       });
     }
     this.convertAdsToArray();
+  }
+
+  checkScreenWidth() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isScreenSmall = window.innerWidth < 1600 && window.innerWidth > 992;
+      this.isScreenphone = window.innerWidth < 500;
+    }
   }
   allcategories: any[] = [];
   fetchCategories(): void {

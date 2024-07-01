@@ -5,3 +5,22 @@
 ::ng-deep footer .hotline {
     min-width: 300px !important;
 }
+
+.padding-left-right {
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
+
+::ng-deep .banner-left-icon .banner-text h3 {
+    color: #242424;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+@media only screen and (max-width: 480px) {
+    .newsletter .newsletter-inner h2 {
+        font-size: 1.3rem !important;
+    }
+}

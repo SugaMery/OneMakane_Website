@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { CategoryService } from '../category.service';
 import { PageService } from '../page.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-footer',
@@ -14,15 +15,21 @@ export class FooterComponent implements OnInit {
   titrePage1: string = '';
   slugPage2: string = '';
   titrePage2: string = '';
+  isScreenSmall: boolean = false;
 
   constructor(
     private pageService: PageService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    @Inject(PLATFORM_ID) private platformId: any
   ) {}
 
   ngOnInit(): void {
     this.getCategories();
-
+    if (isPlatformBrowser(this.platformId)) {
+      this.checkScreenWidth();
+      // Listen to window resize event only in browser environment
+      window.addEventListener('resize', () => this.checkScreenWidth());
+    }
     this.pageService.getPage('2', '1').subscribe((data) => {
       this.slugPage1 = data.data.page.slug; // Assuming 'slug' is the property in your data structure
       this.titrePage1 = data.data.title;
@@ -35,7 +42,11 @@ export class FooterComponent implements OnInit {
   navigateToCategory(categoryId: number) {
     window.location.href = `/ads-category/${categoryId}`;
   }
-
+  checkScreenWidth() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isScreenSmall = window.innerWidth < 1600 && window.innerWidth > 992;
+    }
+  }
   getCategories(): void {
     this.categoryService.getCategoriesFrom().subscribe((categories) => {
       // Filter root categories

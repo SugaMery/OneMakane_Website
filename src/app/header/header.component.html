@@ -493,19 +493,18 @@
                               )
                             "
                           >
-                          <a
-                          [href]="
-                            '/ads-category/' +
-                            subcategory.id +
-                            '?' +
-                            subsubcat.type +
-                            '=' +
-                            subsubcat.key
-                          "
-                        >
-                          {{ subsubcat.value }}
-                        </a>
-                        
+                            <a
+                              [href]="
+                                '/ads-category/' +
+                                subcategory.id +
+                                '?' +
+                                subsubcat.type +
+                                '=' +
+                                subsubcat.key
+                              "
+                            >
+                              {{ subsubcat.value }}
+                            </a>
                           </li>
                         </ul>
                       </li>
@@ -637,7 +636,7 @@
         <div class="header-action-right d-block d-lg-none">
           <div class="header-action-2">
             <div class="header-action-icon-2">
-              <a href="">
+              <a>
                 <i class="fi fi-rr-heart"></i>
               </a>
             </div>
@@ -646,9 +645,7 @@
               <a>
                 <i class="fi fi-rr-user"></i>
               </a>
-              <a
-                ><span class="lable ml-0">{{ loggedInUserName }}</span></a
-              >
+
               <div
                 class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown"
                 *ngIf="!status"
@@ -776,7 +773,7 @@
           <ul class="mobile-menu font-heading">
             <li
               class="menu-item-has-children"
-              *ngFor="let category of categories.slice(1)"
+              *ngFor="let category of categories.slice()"
             >
               <span class="menu-expand"
                 ><i class="fi-rs-angle-small-down"></i
@@ -795,11 +792,31 @@
                   <a (click)="navigateToCategory(subcategory.id)">{{
                     subcategory.name
                   }}</a>
-                  <ul class="dropdown" style="display: none">
-                    <li *ngFor="let subsubcat of subcategory.subsubcategories">
-                      <a (click)="navigateToCategory(subsubcat.id)">{{
-                        subsubcat.name
-                      }}</a>
+                  <ul
+                    class="dropdown"
+                    style="display: none"
+                    *ngIf="subcategory.subsubscategories?.length"
+                  >
+                    <li
+                      *ngFor="
+                        let subsubcat of subcategory.subsubscategories.slice(
+                          0,
+                          4
+                        )
+                      "
+                    >
+                      <a
+                        [href]="
+                          '/ads-category/' +
+                          subcategory.id +
+                          '?' +
+                          subsubcat.type +
+                          '=' +
+                          subsubcat.key
+                        "
+                      >
+                        {{ subsubcat.value }}
+                      </a>
                     </li>
                   </ul>
                 </li>
@@ -811,35 +828,50 @@
       </div>
       <div class="mobile-header-info-wrap">
         <div class="single-mobile-header-info">
-          <a href="/page-contact"><i class="fi-rs-marker"></i> Our location </a>
+          <a
+            ><i class="fi-rs-marker"></i> Avenue Yaacoub Almansour centre
+            d'affaire Sara Guéliz ,Marrakech
+          </a>
         </div>
         <div class="single-mobile-header-info">
-          <a href="/page-login"><i class="fi-rs-user"></i>Log In / Sign Up </a>
+          <a href="/login"
+            ><i class="fi-rs-user"></i>Connexion / Créer un compte</a
+          >
         </div>
         <div class="single-mobile-header-info">
-          <a href="#"><i class="fi-rs-headphones"></i>(+01) - 2345 - 6789 </a>
+          <a><i class="fi-rs-headphones"></i>(+212) - 699050501 </a>
         </div>
       </div>
-      <div class="mobile-social-icon mb-50">
-        <h6 class="mb-15">Follow Us</h6>
-        <a href="#"
-          ><img src="assets/imgs/theme/icons/icon-facebook-white.svg" alt=""
+      <div class="mobile-social-icon mb-50" style="text-align: center">
+        <h6>Suivez-nous</h6>
+        <a href="https://web.facebook.com/Onemakan.ma"
+          ><img
+            src="../../assets/imgs/theme/icons/icon-facebook-white.svg"
+            alt=""
         /></a>
-        <a href="#"
-          ><img src="assets/imgs/theme/icons/icon-twitter-white.svg" alt=""
+        <!--           <a href="#"
+            ><img
+              src="../../assets/imgs/theme/icons/icon-twitter-white.svg"
+              alt=""
+          /></a> -->
+        <a href="https://www.instagram.com/onemakan.ma/"
+          ><img
+            src="../../assets/imgs/theme/icons/icon-instagram-white.svg"
+            alt=""
         /></a>
-        <a href="#"
-          ><img src="assets/imgs/theme/icons/icon-instagram-white.svg" alt=""
-        /></a>
-        <a href="#"
-          ><img src="assets/imgs/theme/icons/icon-pinterest-white.svg" alt=""
-        /></a>
-        <a href="#"
-          ><img src="assets/imgs/theme/icons/icon-youtube-white.svg" alt=""
-        /></a>
+        <!--           <a href="#"
+            ><img
+              src="../../assets/imgs/theme/icons/icon-pinterest-white.svg"
+              alt=""
+          /></a> -->
+        <!--           <a href="#"
+            ><img
+              src="../../assets/imgs/theme/icons/icon-youtube-white.svg"
+              alt=""
+          /></a> -->
       </div>
       <div class="site-copyright">
-        Copyright 2024 © Nest. All rights reserved. Powered by AliThemes.
+        © 2024, Site d'annonces OneMakan Tous droits réservés .
       </div>
     </div>
   </div>
