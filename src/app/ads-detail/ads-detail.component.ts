@@ -1,7 +1,7 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AnnonceService } from '../annonce.service';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CategoryService } from '../category.service';
 import { SettingService } from '../setting.service';
@@ -50,6 +50,9 @@ export class AdsDetailComponent implements OnInit {
     | undefined;
   relatedAds: any[] = [];
   router: any;
+  responsiveOptions:
+    | { breakpoint: string; numVisible: number; numScroll: number }[]
+    | undefined;
   constructor(
     private route: ActivatedRoute,
     private annonceService: AnnonceService,
@@ -58,10 +61,56 @@ export class AdsDetailComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private settingService: SettingService,
     private categoryService: CategoryService,
-    private routers: Router
+    private routers: Router,
+    @Inject(PLATFORM_ID) private platformId: any
   ) {}
+  isScreenSmall!: boolean;
+  isScreenphone: boolean = false;
+
   countsAds = 0;
+  checkScreenWidth() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isScreenSmall = window.innerWidth < 1600 && window.innerWidth > 992;
+      this.isScreenphone = window.innerWidth < 500;
+    }
+  }
+  sortByCreatedAtDescending(category: any): any[] {
+    return category.value.sort((a: any, b: any) => {
+      return (
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+    });
+  }
+  getFormattedDate(datetime: string | undefined): string {
+    if (!datetime) {
+      return ''; // or handle the case when datetime is undefined
+    }
+    return datetime.split('T')[0];
+  }
+
   ngOnInit() {
+    this.responsiveOptions = [
+      {
+        breakpoint: '1024px',
+        numVisible: 3,
+        numScroll: 3,
+      },
+      {
+        breakpoint: '768px',
+        numVisible: 2,
+        numScroll: 2,
+      },
+      {
+        breakpoint: '560px',
+        numVisible: 2,
+        numScroll: 1,
+      },
+    ];
+    if (isPlatformBrowser(this.platformId)) {
+      this.checkScreenWidth();
+      // Listen to window resize event only in browser environment
+      window.addEventListener('resize', () => this.checkScreenWidth());
+    }
     this.fetchCategories();
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
@@ -82,7 +131,7 @@ export class AdsDetailComponent implements OnInit {
               .subscribe((category) => {
                 const modelFields = category.data.model_fields;
                 const queryParams = { model: category.data.model };
-         console.log("modelfilds",modelFields);
+                console.log('modelfilds', modelFields);
                 this.settingService
                   .getSettings(accessToken!, queryParams)
                   .subscribe(
@@ -96,7 +145,7 @@ export class AdsDetailComponent implements OnInit {
                             setting: key, // Initialize setting with key, you'll update this later
                             type: modelFields[key].type,
                             options: modelFields[key].options,
-                            dependant : modelFields[key].dependant
+                            dependant: modelFields[key].dependant,
                           })
                         );
                         transformedFields.forEach((field) => {
@@ -213,33 +262,46 @@ export class AdsDetailComponent implements OnInit {
                             } catch (error) {
                               console.error('Error parsing JSON:', error);
                             }
-                          }else if (
-                            modelFields[field.value].type === 'bool' && modelFields[field.value].conditions
+                          } else if (
+                            modelFields[field.value].type === 'bool' &&
+                            modelFields[field.value].conditions
                           ) {
-                            field.setting = data.data.additional[field.value]=== 1
-                            ? 'Oui'
-                            : 'Non';
-                          } else if (modelFields[field.value].dependant){
-                        const model = modelFields[field.value].dependant ;
-                            console.log("depent",modelFields[field.value],data.data.additional[model],modelFields[model],transformedFields)
+                            field.setting =
+                              data.data.additional[field.value] === 1
+                                ? 'Oui'
+                                : 'Non';
+                          } else if (modelFields[field.value].dependant) {
+                            const model = modelFields[field.value].dependant;
+                            console.log(
+                              'depent',
+                              modelFields[field.value],
+                              data.data.additional[model],
+                              modelFields[model],
+                              transformedFields
+                            );
                             const matchedSetting = setting.data.find(
                               (settingItem: { name: string }) =>
                                 settingItem.name === field.value
                             );
- console.log("matchi",matchedSetting, matchedSetting.content[data.data.additional[model]],)
+                            console.log(
+                              'matchi',
+                              matchedSetting,
+                              matchedSetting.content[
+                                data.data.additional[model]
+                              ]
+                            );
                             if (matchedSetting) {
                               if (
                                 data.data.additional &&
                                 data.data.additional[field.value]
                               ) {
-                                const test = matchedSetting.content[data.data.additional[model]];
-                                field.setting =
-                                  test[
-
-                                    data.data.additional[field.value]
+                                const test =
+                                  matchedSetting.content[
+                                    data.data.additional[model]
                                   ];
-                                  console.log("matchitttt",field.setting,test)
- 
+                                field.setting =
+                                  test[data.data.additional[field.value]];
+                                console.log('matchitttt', field.setting, test);
                               } else {
                                 console.error(
                                   `No additional data found for key '${model}'`
@@ -252,7 +314,6 @@ export class AdsDetailComponent implements OnInit {
                                 modelFields
                               );
                             }
-                          
                           }
                         });
 

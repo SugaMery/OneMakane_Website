@@ -196,7 +196,10 @@
       <div class="section-title">
         <div class="title">
           <h3>Catégories en Vedette</h3>
-          <ul class="list-inline nav nav-tabs links" *ngIf="isScreenSmall==false && isScreenphone==false">
+          <ul
+            class="list-inline nav nav-tabs links"
+            *ngIf="isScreenSmall == false && isScreenphone == false"
+          >
             <li
               class="list-inline-item nav-item"
               *ngFor="let category of categories.slice(0, 6)"
@@ -206,11 +209,14 @@
               }}</a>
             </li>
           </ul>
-          
-          <ul class="list-inline nav nav-tabs links" *ngIf="isScreenSmall==true || isScreenphone==true ">
+
+          <ul
+            class="list-inline nav nav-tabs links"
+            *ngIf="isScreenSmall == true || isScreenphone == true"
+          >
             <li
               class="list-inline-item nav-item"
-              *ngFor="let category of categories.slice(0, 4)"
+              *ngFor="let category of categories.slice(0, 3)"
             >
               <a class="nav-link" [href]="'/ads-category/' + category?.id">{{
                 category.name
@@ -231,7 +237,7 @@
         [circular]="false"
         [responsiveOptions]="responsiveOptions"
         [showIndicators]="false"
-        class="custom-carousel"
+        class="custom-carousel first"
         [autoplayInterval]="3000"
       >
         <ng-template let-category pTemplate="item">
@@ -303,7 +309,6 @@
       </div>
 
       <div class="tab-content" id="myTabContent">
-        <!-- Loop through each category -->
         <div
           class="tab-pane fade show active"
           id="tab-one"
@@ -311,41 +316,153 @@
           aria-labelledby="tab-one"
           *ngFor="let category of categorizedAds | keyvalue"
         >
-          <ng-container *ngIf="category.value.length > 5">
+          <ng-container>
             <h4 class="mb-20">{{ category.key }}</h4>
             <!-- Display category name as title -->
-            <p-carousel
-              #carousel
-              [value]="sortByCreatedAtDescending(category) | slice : 0 : 8"
-              [numVisible]="6"
-              [numScroll]="1"
-              [circular]="false"
-              [responsiveOptions]="responsiveOptions"
-              [showIndicators]="false"
-              class="custom-carousels carouseled"
+
+            <!-- Check if it's a screenphone or if the category has more than 6 ads -->
+            <ng-container
+              *ngIf="
+                isScreenphone || category.value.length > 6;
+                else lessThanSixAds
+              "
             >
-              <ng-template let-adsfirst pTemplate="item">
-                <div class="row product-grid-4" style="margin: 0.5rem">
-                  <div
-                    class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
-                    data-wow-delay=".1s"
-                  >
+              <p-carousel
+                #carousel
+                [value]="sortByCreatedAtDescending(category) | slice : 0 : 8"
+                [numVisible]="6"
+                [numScroll]="1"
+                [circular]="false"
+                [responsiveOptions]="responsiveOptions"
+                [showIndicators]="false"
+                class="custom-carousels carouseled second"
+              >
+                <ng-template let-adsfirst pTemplate="item">
+                  <div class="row product-grid-4" style="margin: 0.5rem">
+                    <div
+                      class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
+                      data-wow-delay=".1s"
+                    >
+                      <div class="product-img-action-wrap">
+                        <div
+                          class="product-img product-img-zoom"
+                          style="height: 240px"
+                        >
+                          <a
+                            [href]="'/ads/' + adsfirst.id"
+                            style="height: 100%"
+                          >
+                            <img
+                              class="default-img"
+                              [src]="adsfirst.medias[0]?.url"
+                              alt=""
+                            />
+                            <img
+                              class="hover-img"
+                              [src]="
+                                adsfirst.medias[1]?.url ||
+                                adsfirst.medias[0]?.url
+                              "
+                              alt=""
+                              style="height: 100%"
+                            />
+                          </a>
+                        </div>
+                        <div class="product-action-1">
+                          <a
+                            aria-label="Ajouter à la liste de souhaits"
+                            class="action-btn"
+                            href="#"
+                          >
+                            <i class="fi fi-rs-heart"></i>
+                          </a>
+                          <!--                         <a
+                        aria-label="Aperçu rapide"
+                        class="action-btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#quickViewModal"
+                      >
+                        <i class="fi-rs-eye"></i>
+                      </a> -->
+                        </div>
+                      </div>
+                      <div class="product-content-wrap">
+                        <div class="product-category" style="margin-top: 1rem">
+                          <a
+                            [href]="'/ads-category/' + adsfirst.category?.id"
+                            >{{ adsfirst.category.name }}</a
+                          >
+                        </div>
+                        <h2>
+                          <a [href]="'/ads/' + adsfirst.id"
+                            >{{ adsfirst.title | slice : 0 : 17
+                            }}{{ adsfirst.title.length > 17 ? "..." : "" }}</a
+                          >
+                        </h2>
+                        <div class="product-rate-cover">
+                          <div
+                            class=""
+                            style="
+                              width: 100%;
+                              font-weight: 800;
+                              font-size: medium;
+                              color: black;
+                            "
+                            *ngIf="isScreenphone"
+                          >
+                            {{ adsfirst.price | slice : 0 : 6
+                            }}{{ adsfirst.price.length > 7 ? "..." : "" }} DH
+                          </div>
+                          <div
+                            class=""
+                            style="
+                              width: 100%;
+                              font-weight: 800;
+                              font-size: medium;
+                              color: black;
+                            "
+                            *ngIf="!isScreenphone"
+                          >
+                            {{ adsfirst.price }} DH
+                          </div>
+                        </div>
+                        <div>
+                          <span class="font-small text-muted">{{
+                            getRelativeTime(adsfirst.created_at)
+                          }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </p-carousel>
+            </ng-container>
+
+            <!-- Fallback for less than or equal to 6 ads and not screenphone -->
+            <ng-template #lessThanSixAds>
+              <div class="row product-grid">
+                <div
+                  *ngFor="let ad of category.value"
+                  class="col-lg-2 col-md-4 col-12 col-sm-6"
+                >
+                  <div class="product-cart-wrap mb-30">
                     <div class="product-img-action-wrap">
                       <div
                         class="product-img product-img-zoom"
                         style="height: 240px"
                       >
-                        <a [href]="'/ads/' + adsfirst.id" style="height: 100%">
+                        <a [href]="'/ads/' + ad.id" style="height: 100%">
                           <img
                             class="default-img"
-                            [src]="adsfirst.medias[0]?.url"
-                            alt=""
+                            [src]="
+                              ad.medias[0]?.url ||
+                              'assets/imgs/shop/default-img.jpg'
+                            "
+                            alt="{{ ad.title }}"
                           />
                           <img
                             class="hover-img"
-                            [src]="
-                              adsfirst.medias[1]?.url || adsfirst.medias[0]?.url
-                            "
+                            [src]="ad.medias[1]?.url || ad.medias[0]?.url"
                             alt=""
                             style="height: 100%"
                           />
@@ -357,54 +474,46 @@
                           class="action-btn"
                           href="#"
                         >
-                          <i class="fi fi-sr-heart"></i>
+                          <i class="fi-rs-heart"></i>
                         </a>
-                        <!--                         <a
-                          aria-label="Aperçu rapide"
-                          class="action-btn"
-                          data-bs-toggle="modal"
-                          data-bs-target="#quickViewModal"
-                        >
-                          <i class="fi-rs-eye"></i>
-                        </a> -->
+                      </div>
+                      <div
+                        class="product-badges product-badges-position product-badges-mrg"
+                      >
+                        <span *ngIf="ad.urgent" class="hot">Urgent</span>
                       </div>
                     </div>
                     <div class="product-content-wrap">
-                      <div class="product-category" style="margin-top: 1rem">
-                        <a href="">{{ adsfirst.category.name }}</a>
+                      <div class="product-category">
+                        <a [href]="'/ads-category/' + ad.category?.id">{{
+                          ad.category.name
+                        }}</a>
                       </div>
                       <h2>
-                        <a href=""
-                          >{{ adsfirst.title | slice : 0 : 17
-                          }}{{ adsfirst.title.length > 17 ? "..." : "" }}</a
+                        <a [href]="'/ads/' + ad.id"
+                          >{{ ad.title | slice : 0 : 17
+                          }}{{ ad.title.length > 17 ? "..." : "" }}</a
                         >
                       </h2>
-                      <div class="product-rate-cover">
-                        <div
-                          class=""
-                          style="
-                            width: 100%;
-                            font-weight: 800;
-                            font-size: medium;
-                            color: black;
-                          "
+                      <div class="product-price">
+                        <span
+                          >{{ ad.price | slice : 0 : 10
+                          }}{{ ad.price.length > 10 ? "..." : "" }} DH</span
                         >
-                          {{ adsfirst.price }} DH
-                        </div>
                       </div>
                       <div>
                         <span class="font-small text-muted">{{
-                          getRelativeTime(adsfirst.created_at)
+                          getRelativeTime(ad.created_at)
                         }}</span>
                       </div>
                     </div>
                   </div>
                 </div>
-              </ng-template>
-            </p-carousel>
+              </div>
+            </ng-template>
           </ng-container>
-          <!-- End of carousel -->
         </div>
+
         <!-- End of category loop -->
       </div>
 
@@ -670,7 +779,7 @@
                     [responsiveOptions]="responsiveOptions"
                     [showIndicators]="false"
                     class="custom-carouselys"
-                
+                    [autoplayInterval]="3000"
                   >
                     <ng-template let-adsfirst pTemplate="item">
                       <div class="row product-grid-4" style="margin: 0.5rem">
@@ -725,8 +834,23 @@
                             <div
                               class="product-category"
                               style="margin-top: 1rem"
+                              *ngIf="!isScreenphone"
                             >
                               <a href="">{{ adsfirst.category.name }}</a>
+                            </div>
+                            <div
+                              class="product-category"
+                              style="margin-top: 1rem"
+                              *ngIf="isScreenphone"
+                            >
+                              <a href="">
+                                {{ adsfirst.category.name | slice : 0 : 17
+                                }}{{
+                                  adsfirst.category.name.length > 17
+                                    ? "..."
+                                    : ""
+                                }}
+                              </a>
                             </div>
                             <h2>
                               <a href=""
@@ -745,6 +869,21 @@
                                   font-size: medium;
                                   color: black;
                                 "
+                                *ngIf="isScreenphone"
+                              >
+                                {{ adsfirst.price | slice : 0 : 6
+                                }}{{ adsfirst.price.length > 7 ? "..." : "" }}
+                                DH
+                              </div>
+                              <div
+                                class=""
+                                style="
+                                  width: 100%;
+                                  font-weight: 800;
+                                  font-size: medium;
+                                  color: black;
+                                "
+                                *ngIf="!isScreenphone"
                               >
                                 {{ adsfirst.price }} DH
                               </div>

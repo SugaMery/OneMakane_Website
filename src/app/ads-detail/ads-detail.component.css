@@ -1,3 +1,325 @@
+/* Style pour l'image du vendeur */
+.seller-image img {
+    width: 50px;
+    /* Ajustez la largeur selon vos besoins */
+    height: auto;
+    border-radius: 50%;
+    /* Pour une forme de cercle */
+}
+
+/* Style pour la couverture de notation du produit */
+.product-rate-cover {
+    justify-content: flex-end;
+    /* Alignement à droite */
+    flex-grow: 1;
+    /* Pour occuper tout l'espace disponible */
+}
+
+/* Style pour la notation du produit */
+.product-rate {
+    margin-right: 5px;
+    /* Espace entre la notation et le texte */
+}
+
+/* Style pour le texte de notation */
+.font-small {
+    font-size: 12px;
+    /* Taille du texte de notation */
+}
+
+.seller-name {
+    font-size: 14px;
+    /* Taille de la police du nom du vendeur */
+    font-weight: bold;
+    /* Style de police en gras, si nécessaire */
+}
+
+.font-small {
+    font-size: 14px;
+}
+
+.product-cart-wrap .product-img-action-wrap .product-img-zoom a img {
+    /* height: 300px; */
+    object-fit: cover;
+}
+
+
+
+.product-rate {
+    background-image: url("../../assets/imgs/theme/rating-stars.png");
+    background-position: 0 -12px;
+    background-repeat: repeat-x;
+    height: 12px;
+    width: 60px;
+    transition: all 0.5s ease-out 0s;
+    -webkit-transition: all 0.5s ease-out 0s;
+}
+
+.product-rating {
+    height: 12px;
+    background-repeat: repeat-x;
+    background-image: url("../../assets/imgs/theme/rating-stars.png");
+    background-position: 0 0;
+}
+
+::ng-deep .p-carousel-item {
+    width: 150px;
+}
+
+::ng-deep .p-carousel .p-carousel-content .p-carousel-prev,
+.p-carousel .p-carousel-content .p-carousel-next {
+    color: white;
+    background-color: #8c979b;
+    border-radius: 100%;
+    margin-right: 0.8rem;
+}
+
+
+::ng-deep .p-carousel .p-carousel-content .p-carousel-next {
+    color: white;
+    background-color: #8c979b;
+    border-radius: 100%;
+}
+
+::ng-deep .custom-carousel .p-carousel-header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: unset;
+    margin: 10px;
+}
+
+
+::ng-deep .p-carousel-next {}
+
+::ng-deep .p-carousel-prev {
+    /*     display: contents !important;
+ */
+}
+
+
+::ng-deep .p-carousel .p-carousel-content .p-carousel-next {
+    /*     width: 0rem; 
+    height: 2rem;
+    color: #000000 !important;
+    border: 0 none;
+    background: transparent !important; 
+    border-radius: 50%;
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+    margin: 0.5rem; */
+}
+
+::ng-deep .p-carousel .p-carousel-content .p-carousel-prev {
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(26, 26, 26, 0.12) 0px 4px 8px;
+    color: #3bb77e;
+    z-index: 2;
+    left: 0.5rem;
+    margin-right: -3rem;
+    bottom: 1rem;
+    width: 3rem;
+    height: 3rem;
+}
+
+::ng-deep .p-carousel .p-carousel-content .p-carousel-next {
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(26, 26, 26, 0.12) 0px 4px 8px;
+    color: #3bb77e;
+    z-index: 2;
+    right: 0.5rem;
+    margin-left: -4rem;
+    bottom: 1rem;
+    width: 3rem;
+    height: 3rem;
+}
+
+::ng-deep .p-disabled,
+.p-component:disabled {
+    display: none;
+}
+
+::ng-deep .rowi>* {
+    width: 105% !important;
+
+}
+
+/* ::ng-deep .row>* {
+    padding-right: 0rem;
+    padding-left: 0rem;
+
+}
+ */
+::ng-deep .custom-carousels .p-carousel .p-carousel-content .p-carousel-prev {
+    left: 2rem;
+}
+
+::ng-deep .product-cart-wrap .product-img-action-wrap {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+::ng-deep #carouseled .slick-slider .slick-track {
+    width: 0% !important;
+}
+
+::ng-deep p-carousel.p-element.custom-carouselys.slick-slide.slick-current.slick-active {
+    display: block;
+    width: 100% !important;
+}
+
+/* ::ng-deep .slick-slider .slick-track, .slick-slider .slick-list {
+width: 100% !important;
+}  */
+
+::ng-deep .ads .slick-list .slick-track,
+.ads .slick-slider .slick-list {
+    /* background-color: blue; */
+    width: 100% !important;
+}
+
+::ng-deep .p-carousel-items-content {
+    margin-left: -1rem !important;
+}
+
+::ng-deep .carausel-4-columns-cover .carausel-4-columns .product-cart-wrap {
+    margin-left: 8px;
+}
+
+::ng-deep .product-cart-wrap .product-img-action-wrap .product-img {
+    height: 280px !important;
+}
+
+::ng-deep .btn.see {
+    padding: 0 !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+    margin-top: 1rem;
+}
+
+::ng-deep .product-cart-wrap .product-img-action-wrap .adsemploi a img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border: 1px solid #ececec;
+
+}
+
+::ng-deep .carouseled .p-carousel-container {
+    margin-left: 1rem;
+}
+
+::ng-deep .p-carousel-items-content {
+    margin-left: 0rem !important;
+}
+
+
+@media only screen and (max-width: 1024px) {
+    ::ng-deep .section-title.style-2 h3 {
+        margin-bottom: 25px;
+        font-size: 25px !important;
+    }
+
+    ::ng-deep .product-cart-wrap .product-img-action-wrap {
+        padding-left: 0rem !important;
+        padding-right: 0rem !important;
+    }
+
+    ::ng-deep .carouseled .p-carousel-container {
+        margin-left: 0rem !important;
+    }
+
+    ::ng-deep .carausel-4-columns-cover .carausel-4-columns {
+        margin: 0px;
+    }
+
+
+}
+
+@media only screen and (max-width: 480px) {
+
+    ::ng-deep.carausel-6-columns,
+    ::ng-deep .carausel-4-columns {
+        max-width: max-content !important;
+    }
+
+}
+
+::ng-deep .p-carousel-items-container {
+    margin-left: 1rem !important;
+}
+
+
+.padding-left-right {
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
+
+@media only screen and (max-width: 1024px) {
+    ::ng-deep .product-cart-wrap .product-img-action-wrap {
+        padding-left: 0.1rem !important;
+        padding-top: 1rem !important;
+        padding-right: 0.1rem !important;
+    }
+
+    ::ng-deep .product-cart-wrap .product-img-action-wrap .product-img {
+        height: 180px !important;
+    }
+
+    ::ng-deep .section-title.style-2 h3 {
+        /* margin-bottom: 25px; */
+        font-size: 1.5rem !important;
+        font-weight: 800;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    ::ng-deep .p-carousel-items-container {
+        margin-left: -1rem !important;
+    }
+
+    ::ng-deep .custom-carousel.first .p-carousel-items-container {
+        margin-left: 1rem !important;
+
+    }
+
+    ::ng-deep .custom-carousels.second .p-carousel-items-container {
+        margin-left: -0.5rem !important;
+
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    ::ng-deep .product-cart-wrap .product-img-action-wrap {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    ::ng-deep .product-cart-wrap .product-img-action-wrap .product-action-1 {
+        min-width: auto;
+    }
+
+    ::ng-deep .product-cart-wrap .product-content-wrap {
+        padding: 0 10px 10px 10px;
+    }
+}
+
+::ng-deep .product-cart-wrap .product-img-action-wrap {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-bottom: 0rem;
+}
+
+
+::ng-deep .product-cart-wrap .product-content-wrap h2 {
+    font-size: 15px;
+    font-weight: 900;
+    margin-bottom: 0rem;
+    height: 2rem;
+}
+
 ::ng-deep .slider-nav-thumbnails div.slick-slide {
     width: 200px !important;
 }
@@ -174,4 +496,192 @@
 ::ng-deep ul.mylist {
     list-style: disc;
     margin-left: 1rem;
+}
+
+
+::ng-deep .detail-gallery {
+    display: flex;
+    /* Use flexbox for container */
+    justify-content: center;
+    /* Center items horizontally */
+    align-items: center;
+    /* Center items vertically */
+    height: 100%;
+    /* Ensure the container takes full height */
+    background-color: #f0f0f0;
+}
+
+::ng-deep .detail-gallery .row1 {
+    display: flex;
+    /* Use flexbox for row */
+    justify-content: center;
+    /* Center items horizontally */
+    align-items: center;
+    /* Center items vertically */
+    width: 100%;
+    /* Ensure full width */
+}
+
+::ng-deep .column1 {
+    text-align: center;
+    margin-right: 0 !important;
+    margin-bottom: 0 !important;
+    /* Center content horizontally */
+
+}
+
+::ng-deep .column1 img {
+    max-width: 100%;
+    /* Ensure image does not exceed container width */
+    max-height: 100%;
+    /* Ensure image does not exceed container height */
+    display: block;
+    /* Remove default inline spacing */
+    margin: 0 auto;
+    /* Center image horizontally */
+}
+
+.image-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* Two columns */
+    grid-template-rows: auto auto;
+    /* Two rows of automatic height */
+    gap: 10px;
+    /* Gap between grid items */
+    height: 350px;
+    /* Overall height of the grid */
+}
+
+.image-item {
+    height: 100%;
+    /* Each item takes up full height of its container */
+    overflow: hidden;
+    /* Ensure images do not overflow */
+}
+
+.image-item img {
+    width: 100%;
+    /* Image takes full width of its container */
+    height: 100%;
+    /* Image takes full height of its container */
+    object-fit: cover;
+    /* Ensure images cover the entire container */
+    border: 1px solid #7e7e7e4f;
+    /* Optional border styling */
+}
+
+.full-height {
+    grid-column: 1 / span 1;
+    /* Full width in the first column */
+    grid-row: 1 / span 2;
+    /* Spans both rows */
+    /* border-top-left-radius: 10px;
+
+    border-bottom-left-radius: 10px; */
+}
+
+.half-height {
+    grid-column: 2 / span 1;
+    /* Half width in the second column */
+}
+
+.right-border-radius {
+    border-bottom-right-radius: 10px;
+    /* Bottom right border radius for second image in right column */
+}
+
+.image-item .image-grid span.p-image img {
+    width: 100% !important;
+    height: 100% !important;
+
+}
+
+::ng-deep p-image.p-element.img-fluid span {
+    width: 100% !important;
+    height: 100% !important;
+
+}
+
+::ng-deep p-image.p-element.img-fluid span img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+    border: 1px solid #7e7e7e4f;
+    border-radius: 10px;
+
+}
+
+
+::ng-deep p-image.p-element.img-fluid.first span img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+    border: 0;
+    border-radius: 0;
+    margin-bottom: -0.4rem;
+}
+
+
+@media only screen and (max-width: 768px) {
+    ::ng-deep .product-cart-wrap .product-img-action-wrap .product-action-1 {
+        min-width: auto;
+    }
+
+    ::ng-deep p-image.p-element.img-fluid span img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover;
+        border: 0;
+        border-radius: 0;
+        margin-bottom: -0.4rem;
+    }
+}
+
+::ng-deep .primary-sidebar.bottom {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #fff;
+    /* Set the background color you want */
+    padding: 3px;
+    padding-bottom: 10px;
+    /* Adjust padding as needed */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    /* Optional: Add shadow for better visibility */
+    z-index: 1000;
+    /* Adjust z-index if necessary */
+}
+
+.social-links .name-initials {
+    text-align: center;
+    float: left;
+    width: 50px;
+    height: 50px;
+    border: 2px solid #57e68e;
+    border-radius: 100%;
+    margin-right: 7px;
+    display: flex;
+    align-items: flex-start;
+    transition: all 0.4s;
+    -webkit-transition: all 0.4s;
+}
+
+.linksS .name-initials {
+    text-align: center;
+    float: left;
+    width: 100px;
+    height: 100px;
+    border: 2px solid #57e68e;
+    border-radius: 100%;
+    margin-right: 7px;
+    display: flex;
+    align-items: flex-start;
+    transition: all 0.4s;
+    -webkit-transition: all 0.4s;
+    font-size: x-large;
+}
+
+.linksS {
+    margin-right: 1rem;
 }

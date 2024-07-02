@@ -10,6 +10,7 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { AnnonceService } from '../annonce.service';
 import { Console } from 'console';
 import { SettingService } from '../setting.service';
+import { Carousel } from 'primeng/carousel';
 interface Product {
   id: number;
   category: { id: number; name: string; route: string | null };
@@ -59,7 +60,9 @@ export class HomePageComponent implements OnInit {
     private settingService: SettingService,
     @Inject(DOCUMENT) private document: Document,
     @Inject(PLATFORM_ID) private platformId: any
-  ) {}
+  ) {
+    Carousel.prototype.onTouchMove = () => {};
+  }
   transformedField:
     | { value: string; label: any; setting: string }[]
     | undefined;
@@ -101,7 +104,7 @@ export class HomePageComponent implements OnInit {
     // Add more products here if needed
   ];
   isScreenSmall!: boolean;
-  isScreenphone!: boolean;
+  isScreenphone: boolean = false;
 
   navigateToCategory(categoryId: number) {
     window.location.href = `/ads-category/${categoryId}`;
@@ -340,23 +343,22 @@ export class HomePageComponent implements OnInit {
     const days = Math.floor(hours / 24);
 
     if (days > 1) {
-      return days + ' jours passés';
+      return `${days} jours passés`;
     } else if (days === 1) {
-      return (
-        'hier à ' +
-        adDate.toLocaleTimeString('fr-FR', {
-          hour: '2-digit',
-          minute: '2-digit',
-        })
-      );
+      return `hier à ${adDate.toLocaleTimeString('fr-FR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      })}`;
     } else {
-      return (
-        "aujourd'hui à " +
-        adDate.toLocaleTimeString('fr-FR', {
-          hour: '2-digit',
-          minute: '2-digit',
-        })
-      );
+      const timeString = adDate.toLocaleTimeString('fr-FR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      if (!this.isScreenphone) {
+        return `aujourd'hui à ${timeString}`;
+      } else {
+        return `auj. à ${timeString}`;
+      }
     }
   }
 

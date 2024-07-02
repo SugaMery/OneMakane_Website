@@ -17,29 +17,119 @@
           <div class="col-xl-8">
             <div class="product-detail accordion-detail">
               <div class="row mb-30 mt-30">
-                <div class="col-sm-12 col-xs-12 mb-md-0 mb-sm-5">
+                <div
+                  class="col-sm-12 col-xs-12 mb-md-0 mb-sm-5"
+                  [ngClass]="{ 'single-image': adDetail.medias?.length === 1 }"
+                  *ngIf="!isScreenphone && adDetail.medias?.length == 1"
+                >
                   <div class="detail-gallery">
                     <!-- MAIN SLIDES -->
+
                     <!-- Photo Grid -->
                     <div class="row1">
                       <div
                         class="column1"
                         *ngFor="let media of adDetail.medias"
                       >
-                        <img
+                        <p-image
                           *ngIf="media.url"
                           [src]="media.url"
                           alt="product image"
-                          class="grid-image"
-                          style="width: 100%"
-                        />
+                          class="img-fluid first"
+                          width="100%"
+                          [preview]="true"
+                        ></p-image>
                       </div>
                     </div>
                   </div>
 
                   <!-- End Gallery -->
                 </div>
+                <div
+                  class="col-sm-12 col-xs-12 mb-md-0 mb-sm-5"
+                  [ngClass]="{ 'single-image': adDetail.medias?.length === 1 }"
+                  *ngIf="!isScreenphone && adDetail.medias?.length == 2"
+                >
+                  <div class="image-grid">
+                    <ng-container
+                      *ngFor="let media of adDetail.medias; let i = index"
+                    >
+                      <div class="image-item" *ngIf="media.url">
+                        <p-image
+                          [src]="media.url"
+                          alt="product image"
+                          class="img-fluid"
+                          [class.left-border-radius]="i % 2 === 0"
+                          [class.right-border-radius]="i % 2 !== 0"
+                          [preview]="true"
+                        ></p-image>
+                      </div>
+                    </ng-container>
+                  </div>
+
+                  <!-- End Gallery -->
+                </div>
+                <div
+                  class="col-sm-12 col-xs-12 mb-md-0 mb-sm-5"
+                  [ngClass]="{ 'single-image': adDetail.medias?.length === 1 }"
+                  *ngIf="!isScreenphone && adDetail.medias?.length == 3"
+                >
+                  <div class="image-grid">
+                    <div class="image-item full-height">
+                      <ng-container *ngIf="adDetail.medias.length > 0">
+                        <p-image
+                          [src]="adDetail.medias[0].url"
+                          alt="product image"
+                          class="img-fluid"
+                          [preview]="true"
+                        ></p-image>
+                      </ng-container>
+                    </div>
+                    <ng-container
+                      *ngFor="
+                        let media of adDetail.medias.slice(1, 3);
+                        let i = index
+                      "
+                    >
+                      <div
+                        class="image-item half-height"
+                        [ngClass]="{ 'right-border-radius': i === 1 }"
+                      >
+                        <p-image
+                          [src]="media.url"
+                          alt="product image"
+                          class="img-fluid"
+                          [preview]="true"
+                        ></p-image>
+                      </div>
+                    </ng-container>
+                  </div>
+
+                  <!-- End Gallery -->
+                </div>
+                <div
+                  class="col-sm-12 col-xs-12 mb-md-0 mb-sm-5"
+                  [ngClass]="{ 'single-image': adDetail.medias?.length === 1 }"
+                  *ngIf="isScreenphone && adDetail.medias?.length == 1"
+                >
+                  <div
+                    class="detail-gallery"
+                    *ngFor="let media of adDetail.medias"
+                  >
+                    <!-- MAIN SLIDES -->
+                    <p-image
+                      *ngIf="media.url"
+                      [src]="media.url"
+                      alt="product image"
+                      class="img-fluid"
+                      width="100%"
+                      [preview]="true"
+                    ></p-image>
+                  </div>
+                  <!-- End Gallery -->
+                </div>
               </div>
+
               <h4 class="style-1 mb-10">
                 {{ adDetail.title }}
               </h4>
@@ -117,13 +207,14 @@
                               <p *ngIf="field.type !== 'multiple'">
                                 {{ field.setting }}
                               </p>
-                                <ul *ngIf="field.type === 'multiple'"  class="mylist">
-                                  <li *ngFor="let item of field.setting">
-                                    {{ item }}
-                                  </li>
-                                </ul>
-               
-
+                              <ul
+                                *ngIf="field.type === 'multiple'"
+                                class="mylist"
+                              >
+                                <li *ngFor="let item of field.setting">
+                                  {{ item }}
+                                </li>
+                              </ul>
                             </td>
                           </tr>
                         </tbody>
@@ -142,13 +233,22 @@
                                   class="user justify-content-between d-flex"
                                 >
                                   <div class="linksS">
-                                    <a href="#">
-                                      <img
-                                        style="width: 30px"
-                                        src="assets/imgs/theme/icons/category-1.svg"
-                                        alt=""
-                                        style="width: 35px"
-                                    /></a>
+                                    <div
+                                      class="name-initials"
+                                      style="
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        background-color: #f0f0f0;
+                                        border-radius: 50%;
+                                        color: #3bb77e;
+                                      "
+                                    >
+                                      {{ adDetail.user?.first_name?.slice(0, 1)
+                                      }}{{
+                                        adDetail.user?.last_name?.slice(0, 1)
+                                      }}
+                                    </div>
                                   </div>
 
                                   <div class="desc">
@@ -156,9 +256,13 @@
                                       class="d-flex justify-content-between mb-10"
                                     >
                                       <div class="d-flex align-items-center">
-                                        <span class="font-xs text-muted">{{
-                                          formatDate(adDetail.created_at)
-                                        }}</span>
+                                        <span class="font-xs text-muted">
+                                          {{
+                                            getFormattedDate(
+                                              adDetail.created_at
+                                            )
+                                          }}
+                                        </span>
                                       </div>
                                       <div class="product-rate d-inline-block">
                                         <div
@@ -203,94 +307,177 @@
                 <div class="col-12">
                   <h2 class="section-title style-1 mb-30">Annonces liées</h2>
                 </div>
+
                 <div class="col-12">
-                  <div class="row">
-                    <div
-                      class="col-lg-3 col-md-4 col-12 col-sm-6"
-                      *ngFor="let ad of relatedAds | slice : 0 : 4"
-                    >
-                      <div
-                        class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
-                      >
-                        <div class="product-img-action-wrap">
-                          <div
-                            class="product-img product-img-zoom"
-                            style="height: 240px"
-                          >
-                            <a [href]="'/ads/' + ad.id" style="height: 100%">
-                              <img
-                                class="default-img"
-                                [src]="ad.medias[0]?.url"
-                                alt=""
-                              />
-                              <img
-                                class="hover-img"
-                                [src]="ad.medias[1]?.url || ad.medias[0]?.url"
-                                alt=""
-                                style="height: 100%"
-                              />
-                            </a>
-                          </div>
-                          <div class="product-action-1">
-                            <a
-                              aria-label="Ajouter à la liste de souhaits"
-                              class="action-btn"
-                              href="#"
-                            >
-                              <i class="fi-rs-heart"></i>
-                            </a>
-                            <!--                         <a
-                              aria-label="Aperçu rapide"
-                              class="action-btn"
-                              data-bs-toggle="modal"
-                              data-bs-target="#quickViewModal"
-                            >
-                              <i class="fi-rs-eye"></i>
-                            </a> -->
-                          </div>
-                        </div>
-                        <div class="product-content-wrap">
-                          <div
-                            class="product-category"
-                            style="margin-top: 1rem"
-                          >
-                            <a href="">{{ ad.category.name }}</a>
-                          </div>
-                          <h2>
-                            <a href="">
-                              {{ ad.title | slice : 0 : 17
-                              }}{{ ad.title.length > 17 ? "..." : "" }}
-                            </a>
-                          </h2>
-                          <div class="product-rate-cover">
+                  <p-carousel
+                    *ngIf="relatedAds"
+                    #carouseled
+                    [value]="relatedAds"
+                    [numVisible]="5"
+                    [numScroll]="1"
+                    [circular]="false"
+                    [responsiveOptions]="responsiveOptions"
+                    [showIndicators]="false"
+                    class="custom-carouselys"
+                    [autoplayInterval]="3000"
+                  >
+                    <ng-template let-adsfirst pTemplate="item">
+                      <div class="row product-grid-4" style="margin: 0.5rem">
+                        <div
+                          class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
+                          data-wow-delay=".1s"
+                        >
+                          <div class="product-img-action-wrap">
                             <div
-                              class=""
-                              style="
-                                width: 100%;
-                                font-weight: 800;
-                                font-size: medium;
-                                color: black;
-                              "
+                              class="product-img product-img-zoom"
+                              style="height: 240px"
                             >
-                              {{ ad.price }} DH
+                              <a
+                                [href]="'/ads/' + adsfirst.id"
+                                style="height: 100%"
+                              >
+                                <img
+                                  class="default-img"
+                                  [src]="adsfirst.medias[0]?.url"
+                                  alt=""
+                                />
+                                <img
+                                  class="hover-img"
+                                  [src]="
+                                    adsfirst.medias[1]?.url ||
+                                    adsfirst.medias[0]?.url
+                                  "
+                                  alt=""
+                                  style="height: 100%"
+                                />
+                              </a>
+                            </div>
+                            <div class="product-action-1">
+                              <a
+                                aria-label="Ajouter à la liste de souhaits"
+                                class="action-btn"
+                                href="#"
+                              >
+                                <i class="fi-rs-heart"></i>
+                              </a>
+                              <!--                               <a
+                            aria-label="Aperçu rapide"
+                            class="action-btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#quickViewModal"
+                          >
+                            <i class="fi-rs-eye"></i>
+                          </a> -->
                             </div>
                           </div>
-                          <div>
-                            <span class="font-small text-muted">
-                              {{ getRelativeTime(ad.created_at) }}
-                            </span>
+                          <div class="product-content-wrap">
+                            <div
+                              class="product-category"
+                              style="margin-top: 1rem"
+                              *ngIf="!isScreenphone"
+                            >
+                              <a href="">{{ adsfirst.category.name }}</a>
+                            </div>
+                            <div
+                              class="product-category"
+                              style="margin-top: 1rem"
+                              *ngIf="isScreenphone"
+                            >
+                              <a href="">
+                                {{ adsfirst.category.name | slice : 0 : 12
+                                }}{{
+                                  adsfirst.category.name.length > 12
+                                    ? "..."
+                                    : ""
+                                }}
+                              </a>
+                            </div>
+                            <h2>
+                              <a href=""
+                                >{{ adsfirst.title | slice : 0 : 15
+                                }}{{
+                                  adsfirst.title.length > 17 ? "..." : ""
+                                }}</a
+                              >
+                            </h2>
+                            <div class="product-rate-cover">
+                              <div
+                                class=""
+                                style="
+                                  width: 100%;
+                                  font-weight: 800;
+                                  font-size: medium;
+                                  color: black;
+                                "
+                                *ngIf="isScreenphone"
+                              >
+                                {{ adsfirst.price | slice : 0 : 6
+                                }}{{ adsfirst.price.length > 7 ? "..." : "" }}
+                                DH
+                              </div>
+                              <div
+                                class=""
+                                style="
+                                  width: 100%;
+                                  font-weight: 800;
+                                  font-size: medium;
+                                  color: black;
+                                "
+                                *ngIf="!isScreenphone"
+                              >
+                                {{ adsfirst.price }} DH
+                              </div>
+                            </div>
+                            <!--         <div>
+      <span class="font-small text-muted">{{
+        getRelativeTime(adsfirst.created_at)
+      }}</span>
+    </div> -->
+                            <a
+                              class="btn see w-100 hover-up"
+                              [href]="'/ads/' + adsfirst.id"
+                              ><i class="fi-rr-info mr-5"></i>Voir plus
+                            </a>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
+                    </ng-template>
+                  </p-carousel>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-xl-4 primary-sidebar sticky-sidebar mt-30">
+          <div
+            class="col-xl-4 primary-sidebar bottom mt-30"
+            *ngIf="isScreenphone == true"
+          >
+            <!-- Acheter Button -->
+            <!-- <a class="btn" href="/reserver" style="width: 100%; border-radius: 2rem">
+                  <i class="fi fi-rr-cart-arrow-down"></i>
+                  Acheter
+                </a> -->
+
+            <!-- Message Button -->
+            <a
+              class="btn"
+              href="/chat/{{ adDetail.id }}"
+              style="
+                width: 100%;
+                border-radius: 2rem;
+                margin-top: 1rem;
+                background: linear-gradient(45deg, #5ed0f2, #1d4ed8) !important;
+              "
+            >
+              <i class="fi fi-rr-messages"></i>
+              Message
+            </a>
+          </div>
+          <div
+            class="col-xl-4 primary-sidebar mt-30"
+            *ngIf="isScreenphone == false"
+          >
             <div class="sidebar-widget widget-category-2 mb-30">
-              <div class="social-links">
+              <!--               <div class="social-links">
                 <a href="#">
                   <img
                     style="width: 30px"
@@ -298,6 +485,23 @@
                     alt=""
                     style="width: 35px"
                 /></a>
+              </div> -->
+
+              <div class="social-links">
+                <div
+                  class="name-initials"
+                  style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    background-color: #f0f0f0;
+                    border-radius: 50%;
+                    color: #3bb77e;
+                  "
+                >
+                  {{ adDetail.user?.first_name?.slice(0, 1)
+                  }}{{ adDetail.user?.last_name?.slice(0, 1) }}
+                </div>
               </div>
 
               <h5 class="section-title style-1 mb-30">
@@ -316,13 +520,6 @@
               </h5>
 
               <ul>
-<!--                 <a
-                  class="btn"
-                  href="/reserver"
-                  style="width: 100%; border-radius: 2rem"
-                  ><i class="fi fi-rr-cart-arrow-down"></i>
-                  Acheter
-                </a> -->
                 <a
                   class="btn"
                   href=""
@@ -342,6 +539,7 @@
                 </a>
               </ul>
             </div>
+
             <!-- Fillter By Price -->
 
             <!-- Product sidebar Widget -->
