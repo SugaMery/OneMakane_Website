@@ -2,3 +2,14 @@
     background-image: url(../../assets/imgs/theme/wave.png);
 
 }
+
+@media only screen and (min-width: 992px) and (max-width: 1600px) {
+  ::ng-deep .container.blog {
+    padding-left: 5rem;
+    padding-right: 5rem;
+  }
+  ::ng-deep .about-count h4 {
+    color: #fff;
+    font-size: 1.3rem;
+}
+}

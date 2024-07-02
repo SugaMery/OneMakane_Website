@@ -249,3 +249,14 @@ width: 100% !important;
     padding-left: 3rem;
     padding-right: 3rem;
 }
+
+
+@media only screen and (max-width: 1024px){
+   ::ng-deep .product-cart-wrap .product-img-action-wrap {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+    ::ng-deep .product-cart-wrap .product-img-action-wrap .product-img {
+        height: 200px !important;
+    }
+}

@@ -315,3 +315,13 @@ nav>ul>li {
   color: white !important;
 
 }
+
+@media only screen and (min-width: 992px) and (max-width: 1600px) {
+    ::ng-deep .header-style-1 .header-middle-ptb-1 {
+       padding-left: 2rem !important;
+       padding-right: 2rem !important;
+   }
+   ::ng-deep .search-style-2 {
+    width: 50%;
+}
+}

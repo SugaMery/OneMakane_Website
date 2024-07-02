@@ -196,7 +196,7 @@
       <div class="section-title">
         <div class="title">
           <h3>Catégories en Vedette</h3>
-          <ul class="list-inline nav nav-tabs links" *ngIf="isScreenSmall">
+          <ul class="list-inline nav nav-tabs links" *ngIf="isScreenSmall==false && isScreenphone==false">
             <li
               class="list-inline-item nav-item"
               *ngFor="let category of categories.slice(0, 6)"
@@ -206,7 +206,8 @@
               }}</a>
             </li>
           </ul>
-          <ul class="list-inline nav nav-tabs links" *ngIf="!isScreenSmall">
+          
+          <ul class="list-inline nav nav-tabs links" *ngIf="isScreenSmall==true || isScreenphone==true ">
             <li
               class="list-inline-item nav-item"
               *ngFor="let category of categories.slice(0, 4)"
@@ -669,7 +670,7 @@
                     [responsiveOptions]="responsiveOptions"
                     [showIndicators]="false"
                     class="custom-carouselys"
-                    [autoplayInterval]="3000"
+                
                   >
                     <ng-template let-adsfirst pTemplate="item">
                       <div class="row product-grid-4" style="margin: 0.5rem">
