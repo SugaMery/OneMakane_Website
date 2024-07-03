@@ -1,7 +1,14 @@
-import { Component, Renderer2 } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Inject,
+  PLATFORM_ID,
+  Renderer2,
+} from '@angular/core';
 import { CategoryService } from '../category.service';
 import { AnnonceService } from '../annonce.service';
 import { ActivatedRoute } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 
 interface Option {
   key: string; // Unique identifier for the option
@@ -81,13 +88,99 @@ export class AdsGridComponent {
   originalAds: any[] = [];
   vissibleCategory: boolean = false;
   allCategoriesSameParent: Category[] = [];
-
+  isScreenSmall!: boolean;
+  isScreenphone: boolean = false;
+  dropdownOpen: string | null = null; // Define dropdownOpen property
   constructor(
     private categoryService: CategoryService,
     private annonceService: AnnonceService,
     private route: ActivatedRoute,
-    private renderer: Renderer2
-  ) {}
+    private renderer: Renderer2,
+    @Inject(PLATFORM_ID) private platformId: any
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.checkScreenWidth();
+      // Listen to window resize event only in browser environment
+      window.addEventListener('resize', () => this.checkScreenWidth());
+    }
+  }
+  checkScreenWidth() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isScreenSmall = window.innerWidth < 1600 && window.innerWidth > 992;
+      this.isScreenphone = window.innerWidth < 500;
+    }
+  }
+
+  toggleDropdowns(event: Event, dropdown: string) {
+    event.stopPropagation(); // Prevent event from bubbling up
+    if (this.dropdownOpen === dropdown) {
+      this.dropdownOpen = null;
+    } else {
+      this.dropdownOpen = dropdown;
+      this.positionDropdowns(event.target as HTMLElement, dropdown);
+    }
+  }
+
+  positionDropdowns(target: HTMLElement, dropdown: string) {
+    const rect = target.getBoundingClientRect();
+    const dropdownEl = document.querySelector(
+      `.dropdown-container[ng-reflect-ng-if="${dropdown}"]`
+    );
+    if (dropdownEl) {
+      dropdownEl.setAttribute(
+        'style',
+        `top: ${rect.bottom}px; left: ${rect.left}px;`
+      );
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeDropdown(event: Event) {
+    this.dropdownOpen = null;
+  }
+  // Method to close dropdown on outside click
+  @HostListener('document:click', ['$event'])
+  onClick(event: Event) {
+    // Check if the click event was outside the dropdown
+    const clickedInside = this.isDescendantOf(
+      event.target as Node,
+      document.querySelector('.sort-by-dropdown')
+    );
+    if (!clickedInside) {
+      // Close all dropdowns
+      Object.keys(this.filters).forEach((key) => {
+        this.filters[key].dropdownOpen = false;
+      });
+    }
+  }
+
+  // Helper function to check if an element is a descendant of a given parent
+  private isDescendantOf(child: Node, parent: Node | null): boolean {
+    if (!parent) return false;
+    let node = child.parentNode;
+    while (node != null) {
+      if (node == parent) {
+        return true;
+      }
+      node = node.parentNode;
+    }
+    return false;
+  }
+
+  dropdownOpene: { [key: string]: boolean } = {};
+
+  // Function to toggle dropdown open/close
+  toggleDropdowne(key: string) {
+    this.dropdownOpene[key] = !this.dropdownOpene[key];
+  }
+
+  // Function to select an option and close the dropdown
+  selectOptionAndClose(key: string, optionKey: string) {
+    this.selectOption(key, optionKey); // Implement this function as per your requirement
+
+    // Close the dropdown after selecting an option
+    this.dropdownOpene[key] = false;
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -98,18 +191,44 @@ export class AdsGridComponent {
       this.getAdsList();
       this.categories.forEach((category) => {
         if (category.id == this.category) {
-          console.log('rrrrr', category);
+          // console.log('rrrrr', category);
         }
       });
 
-      console.log('eee', this.categories);
+      // console.log('eee', this.categories);
     } else {
     }
     // Fetch all query parameters as an object
+    if (isPlatformBrowser(this.platformId)) {
+      this.checkScreenWidth();
+      // Listen to window resize event only in browser environment
+      window.addEventListener('resize', () => this.checkScreenWidth());
+    }
+  }
+  isFilterDrawerOpen = false;
+  isDropdownOpen = false;
+
+  toggleFilterDrawer() {
+    this.isFilterDrawerOpen = !this.isFilterDrawerOpen;
   }
 
+  toggleDropdownt() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  changeAdsPerPaget(count: number) {
+    this.adsPerPage = count;
+    // Close the dropdown when an option is selected
+    this.isDropdownOpen = false;
+  }
+
+  // Existing methods...
+
+  closeFilterDrawer() {
+    this.isFilterDrawerOpen = false;
+  }
   getAdsList(): void {
-    console.log('adsff', this.allCategoriesSameParent);
+    //console.log('adsff', this.allCategoriesSameParent);
 
     if (this.allCategoriesSameParent.length == 0) {
       this.annonceService.getAds().subscribe((datas) => {
@@ -148,7 +267,7 @@ export class AdsGridComponent {
 
               this.ads.push(detailedAd);
               this.originalAds.push(detailedAd);
-              console.log('adssss', this.ads, this.originalAds);
+              // console.log('adssss', this.ads, this.originalAds);
               if (this.searchTitle) {
                 this.filterAdsByTitle(this.searchTitle);
               }
@@ -180,9 +299,9 @@ export class AdsGridComponent {
           } else {
             this.searchTitle = value;
 
-            console.log('goooofrrrr', this.ads);
+            // console.log('goooofrrrr', this.ads);
             this.getAdsList();
-            console.log('goooofrrrr', this.ads);
+            //console.log('goooofrrrr', this.ads);
           }
           // Use 'key' and 'value' as needed
         }
@@ -276,7 +395,7 @@ export class AdsGridComponent {
     return Object.keys(this.filters).filter((key) => {
       const filter = this.filters[key];
       if (filter.route) {
-        console.log('this filter', filter.options);
+        //console.log('this filter', filter.options);
       }
       return filter.type === 'select' && !filter.dependant;
     });

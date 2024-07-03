@@ -63,7 +63,13 @@ export class AdsDetailComponent implements OnInit {
     private categoryService: CategoryService,
     private routers: Router,
     @Inject(PLATFORM_ID) private platformId: any
-  ) {}
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.checkScreenWidth();
+      // Listen to window resize event only in browser environment
+      window.addEventListener('resize', () => this.checkScreenWidth());
+    }
+  }
   isScreenSmall!: boolean;
   isScreenphone: boolean = false;
 
@@ -74,13 +80,7 @@ export class AdsDetailComponent implements OnInit {
       this.isScreenphone = window.innerWidth < 500;
     }
   }
-  sortByCreatedAtDescending(category: any): any[] {
-    return category.value.sort((a: any, b: any) => {
-      return (
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      );
-    });
-  }
+
   getFormattedDate(datetime: string | undefined): string {
     if (!datetime) {
       return ''; // or handle the case when datetime is undefined

@@ -685,3 +685,53 @@ width: 100% !important;
 .linksS {
     margin-right: 1rem;
 }
+
+
+::ng-deep .img-fluid.slider {
+    width: 100%;
+    height: 100%;
+}
+
+
+::ng-deep #Description {
+    overflow: auto;
+}
+
+::ng-deep #Description p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    width: 100%;
+}
+
+@media only screen and (max-width: 1024px) {
+    ::ng-deep .product-cart-wrap .product-img-action-wrap {
+        padding-left: 1rem !important;
+        padding-top: 1rem !important;
+        padding-right: 1rem !important;
+    }
+}
+
+
+::ng-deep table th {
+    padding: 10px 0px;
+    border: 1px solid #ececec;
+    vertical-align: middle;
+}
+
+::ng-deep button.p-ripple.p-element.p-galleria-item-next.p-galleria-item-nav.p-link.ng-star-inserted {
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(26, 26, 26, 0.12) 0px 4px 8px;
+    color: #3bb77e;
+    z-index: 2;
+    right: 0.5rem;
+    margin-left: -4rem;
+    bottom: 1rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 100%;
+}
+
+::ng-deep .p-galleria-item {
+
+    height: 350px;
+}

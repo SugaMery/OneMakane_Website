@@ -77,3 +77,129 @@ ul li.mylist:first-child {
     padding: 70px 80px;
     background-size: cover;
 }
+
+@media only screen and (max-width: 500px) {
+
+    ::ng-deep .archive-header {
+        padding: 30px;
+        font-size: small;
+        text-align: center;
+
+    }
+
+    ::ng-deep .mb-15 {
+        font-size: x-large;
+
+    }
+
+}
+
+::ng-deep .filter-drawer {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100%;
+    width: 300px;
+    /* Adjust width as needed */
+    background: white;
+    transition: right 0.3s ease-in-out;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+::ng-deep .filter-drawer.open {
+    right: 0;
+}
+
+::ng-deep .filter-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f8f8f8;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+::ng-deep .filter-drawer-header h2 {
+    margin: 0;
+}
+
+::ng-deep .filter-drawer-header .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+::ng-deep .filter-drawer-content {
+    flex-grow: 1;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+::ng-deep .sort-by-cover {
+    padding: 10px 0;
+}
+
+::ng-deep .sort-by {
+    display: flex;
+    align-items: center;
+}
+
+::ng-deep .sort-by-dropdown-wrap {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+
+::ng-deep .sort-by-dropdown ul {
+    max-height: 185px;
+    overflow-y: auto;
+}
+
+::ng-deep .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+::ng-deep .apply-filters-btn {
+    margin: 1rem;
+    padding: 0.5rem 1rem;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+::ng-deep .apply-filters-btn:hover {
+    background: #0056b3;
+}
+
+::ng-deep .filter-drawer-header h2 {
+    margin: 0;
+    font-size: large;
+}
+
+::ng-deep .filter-drawer-header .close-btn {
+    background: none;
+    border: none;
+    font-size: small;
+    cursor: pointer;
+}
+
+::ng-deep .shop-product-fillter .sort-by-product-area .sort-by-product-wrap,
+::ng-deep .shop-product-fillter .sort-by-product-area .sort-by-cover {
+    width: 100% !important;
+}
+
+::ng-deep .sort-by-cover {
+    padding: 0;
+}
+
+::ng-deep .button i[class*=" fi-rr-"]:before {
+    color: gray !important;
+}

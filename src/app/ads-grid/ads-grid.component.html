@@ -11,7 +11,7 @@
             <div class="breadcrumb">
               <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
               <span *ngIf="categoryParent?.name; else noParent">
-                {{ categoryParent.name }} <span></span> {{ category.name }}
+                {{ categoryParent.name }} <span></span>
               </span>
               <ng-template #noParent>
                 <span></span> {{ category.name }}
@@ -32,6 +32,7 @@
                 >
                   <div
                     class="sort-by-product-wrap"
+                    style="width: max-content"
                     *ngIf="
                       filters[key].type === 'select' && !filters[key].dependant
                     "
@@ -144,7 +145,7 @@
               annonces pour vous !
             </p>
           </div>
-          <div class="sort-by-product-area">
+          <div class="sort-by-product-area" *ngIf="!isScreenphone">
             <div class="sort-by-cover mr-10">
               <div class="sort-by-product-wrap">
                 <div class="sort-by">
@@ -279,6 +280,87 @@
                 </div>
               </div>
             </div> -->
+          </div>
+          <div class="sort-by-product-area" style="" *ngIf="isScreenphone">
+            <div class="sort-by-cover" class="width:max-content">
+              <div class="sort-by-product-wrap">
+                <div class="sort-by">
+                  <span><i class="fi-rs-apps-sort"></i>Trier par :</span>
+                </div>
+                <div class="sort-by-dropdown-wrap">
+                  <span
+                    >{{ getSortOptionLabel(sortOption) }}
+                    <i class="fi-rs-angle-small-down"></i
+                  ></span>
+                </div>
+              </div>
+              <div class="sort-by-dropdown">
+                <ul>
+                  <li>
+                    <a
+                      [class.active]="sortOption === 'featured'"
+                      (click)="changeSortOption('featured')"
+                      >Mis en avant</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      [class.active]="sortOption === 'priceLowToHigh'"
+                      (click)="changeSortOption('priceLowToHigh')"
+                      >Prix : croissant</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      [class.active]="sortOption === 'priceHighToLow'"
+                      (click)="changeSortOption('priceHighToLow')"
+                      >Prix : décroissant</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      [class.active]="sortOption === 'releaseDate'"
+                      (click)="changeSortOption('releaseDate')"
+                      >Date de sortie</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="sort-by-cover" class="width:max-content">
+              <div class="sort-by-product-wrap">
+                <div class="sort-by">
+                  <span><i class="fi-rs-apps-sort"></i>Trier par :</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Filter Button -->
+            <button
+              (click)="toggleFilterDrawer()"
+              style="
+                max-width: 36px;
+                width: 100%;
+                height: 36px;
+                padding: 8px;
+                border-radius: 50%;
+                background-color: rgb(46, 107, 255);
+                display: flex;
+                align-items: center;
+                background: #fff;
+                border: 1px solid #f7f8f9;
+                color: #777;
+                padding: 9px 16px;
+                border-radius: 10px;
+                transition: all 0.3s ease 0s;
+                cursor: pointer;
+                border: 1px solid #ececec;
+              "
+              class="button"
+            >
+              <i style="color: #777" class="fi fi-rr-settings-sliders"></i>
+            </button>
           </div>
         </div>
 
@@ -603,3 +685,134 @@
 <app-footer></app-footer>
 
 <app-preloader></app-preloader>
+
+<div class="filter-drawer" [class.open]="isFilterDrawerOpen">
+  <div class="filter-drawer-header">
+    <h2>Filtrer les produits</h2>
+    <button class="close-btn" (click)="closeFilterDrawer()">
+      <i class="fi-rs-cross"></i>
+    </button>
+  </div>
+
+  <div class="filter-drawer-content">
+    <div *ngIf="filters !== null">
+      <div class="shop-product-fillter">
+        <div class="totall-product"></div>
+        <div class="sort-by-product-area">
+          <div class="row">
+            <ng-container *ngFor="let key of getFiltersKeys()">
+              <ng-container
+                *ngIf="
+                  filters[key].type === 'select' && !filters[key].dependant
+                "
+              >
+                <div class="col-md-6 mb-4">
+                  <div class="sort-by-cover">
+                    <div class="mb-2">{{ filters[key].label }} :</div>
+                    <div
+                      class="sort-by-product-wrap"
+                      style="width: max-content"
+                    >
+                      <div
+                        class="sort-by-dropdown-wrap"
+                        (click)="toggleDropdown(key)"
+                      >
+                        {{ filters[key].selectedOption }}
+                        <span><i class="fi-rs-angle-small-down"></i></span>
+                      </div>
+                    </div>
+                    <div
+                      class="sort-by-dropdown"
+                      *ngIf="filters[key].dropdownOpen"
+                    >
+                      <ul style="max-height: 185px; overflow-y: auto">
+                        <li (click)="selectOption(key, 'all')">
+                          <a [class.active]="!filters[key].selectedOption"
+                            >Tous</a
+                          >
+                        </li>
+                        <ng-container *ngIf="!filters[key].route">
+                          <li
+                            *ngFor="
+                              let option of filters[key].options | keyvalue
+                            "
+                            (click)="selectOptioneds(key, option.key)"
+                          >
+                            <a [class.active]="isSelected(key, option.key)">{{
+                              option.value
+                            }}</a>
+                          </li>
+                        </ng-container>
+                        <ng-container *ngIf="filters[key].route">
+                          <ng-container
+                            *ngFor="
+                              let optionKey of getNestedKeys(
+                                filters[key].options
+                              )
+                            "
+                          >
+                            <li>
+                              <strong>{{ optionKey }}</strong>
+                            </li>
+                            <li
+                              *ngFor="
+                                let option of getNestedOptions(
+                                  filters[key].options[optionKey]
+                                )
+                              "
+                              (click)="selectOption(key, option.key)"
+                            >
+                              <a [class.active]="isSelected(key, option.key)">{{
+                                option.value
+                              }}</a>
+                            </li>
+                          </ng-container>
+                        </ng-container>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="shop-product-fillter"
+        [ngClass]="{ 'display-contents': matchingFilters === null }"
+        *ngIf="matchingFilters !== null"
+      >
+        <div class="totall-product"></div>
+        <div class="sort-by-product-area">
+          <div
+            class="sort-by-cover mr-10"
+            *ngFor="let filter of getFiltersWitoutCheck()"
+          >
+            <div class="sort-by-product-wrap" *ngIf="filter.type === 'int'">
+              <div class="form-group">
+                <label style="float: left">
+                  <i
+                    class="fi fi-rr-settings-sliders"
+                    style="margin-right: 1rem"
+                  ></i>
+                  {{ filter.label }}</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="filter.selectedOption"
+                  (input)="filterOption($event, filter)"
+                  style="height: revert"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="apply-filters-btn" (click)="applyFilters()">
+      Tous les filtres
+    </button>
+  </div>
+</div>

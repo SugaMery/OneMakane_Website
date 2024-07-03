@@ -47,6 +47,7 @@ import { ConditionsGeneralesComponent } from './conditions-generales/conditions-
 import { MentionsLegalesComponent } from './mentions-legales/mentions-legales.component';
 import { AdsGridComponent } from './ads-grid/ads-grid.component';
 import { ImageModule } from 'primeng/image';
+import { GalleriaModule } from 'primeng/galleria';
 @NgModule({
   declarations: [
     AppComponent,
@@ -95,6 +96,7 @@ import { ImageModule } from 'primeng/image';
     AvatarGroupModule,
     CalendarModule,
     ImageModule,
+    GalleriaModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: () => {
