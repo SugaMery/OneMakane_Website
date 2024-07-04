@@ -27,6 +27,7 @@ interface Filter {
   key?: string;
   selectedOptions: { [key: string]: Option };
   route?: string;
+  selectedLabel : string;
 }
 
 interface Filters {
@@ -352,10 +353,29 @@ export class AdsGridComponent {
         this.categoryParent = datas.data;
       });
   }
+  applyFilter(): void {
+    // Filter keys where selectedOption is defined
+    const filteredKeys = Object.keys(this.filters).filter(key => !!this.filters[key].selectedOption);
 
+    // Log filtered keys and their selected options to console
+    filteredKeys.forEach(key => {
+      console.log(`${key}: ${this.filters[key].selectedOption}`);
+    });
+  }
   selectOption(key: string, option: string) {
     delete this.filters[key].selectedOption;
+    this.filters[key].selectedLabel = "Tous"
     this.getAds();
+    this.matchingFilters=[];
+    const element = document.querySelector(`.sort-by-cover[data-key="${key}"]`);
+    if (element) {
+        element.classList.remove('show');
+    }
+
+    const element1 = document.querySelector(`.sort-by-dropdown[data-key="${key}"]`);
+    if (element1) {
+        element1.classList.remove('show');
+    }
     //console.log(`Selected option for ${this.filters[key].label}: ${option}`,key,option);
     this.filters[key].dropdownOpen = false;
   }
@@ -414,7 +434,60 @@ export class AdsGridComponent {
   openmatchingFilters: boolean = false;
 
   selectOptioneds(filterKey: string, optionKey: string): void {
+    // Update selected option for the filter
     this.filters[filterKey].selectedOption = optionKey;
+  
+    // Reset matchingFilters array
+    this.matchingFilters = [];
+  
+    // Populate matchingFilters based on conditions
+    for (const key of this.getFilterKeys()) {
+      const filter = this.filters[key];
+      if (filter.conditions && Array.isArray(filter.conditions)) {
+        if (filter.conditions.includes(optionKey.toString())) {
+          filter.key = key;
+          this.matchingFilters.push(filter);
+        }
+      }
+    }
+  
+    // Clear previously selected options in matchingFilters
+    this.matchingFilters.forEach(filter => {
+      delete filter.selectedOption ; // or set to appropriate default value
+    });
+  
+    // Refresh ads and apply other necessary updates
+    this.ads = [];
+    this.getAds();
+  
+    // Remove 'show' class from the dropdown
+    const element = document.querySelector(`.sort-by-cover[data-key="${filterKey}"]`);
+    if (element) {
+      element.classList.remove('show');
+    }
+  
+    const element1 = document.querySelector(`.sort-by-dropdown[data-key="${filterKey}"]`);
+    if (element1) {
+      element1.classList.remove('show');
+    }
+  
+    // Check if there are any matching filters
+    if (this.matchingFilters.length > 0) {
+      // Determine visibility based on filter type
+      this.openmatchingFilters = this.matchingFilters.some(filter =>
+        filter.type === 'bool' || filter.type === 'multiple'
+      );
+    } else {
+      console.log('No matching filters for optionKey:', optionKey);
+      this.openmatchingFilters = false;
+    }
+  }
+  
+
+  selectOptioned(filterKey: string, optionKey: string, option : any): void {
+    this.filters[filterKey].selectedOption = optionKey;
+    this.filters[filterKey].selectedLabel = option.value;
+    console.log("eeeeeeeehh",option)
     this.matchingFilters = [];
     for (const key of this.getFilterKeys()) {
       const filter = this.filters[key];
@@ -427,6 +500,16 @@ export class AdsGridComponent {
     }
     this.ads = [];
     this.getAds();
+      // Remove 'show' class from the dropdown
+      const element = document.querySelector(`.sort-by-cover[data-key="${filterKey}"]`);
+      if (element) {
+          element.classList.remove('show');
+      }
+
+      const element1 = document.querySelector(`.sort-by-dropdown[data-key="${filterKey}"]`);
+      if (element1) {
+          element1.classList.remove('show');
+      }
 
     if (this.matchingFilters.length > 0) {
       this.matchingFilters.filter((filter) => {
@@ -442,7 +525,6 @@ export class AdsGridComponent {
       console.log('No matching condition for optionKey:', optionKey);
     }
   }
-
   // Inside your AdsGridComponent class
   selectedOptions: string[] = []; // Initialize with selected options if needed
 

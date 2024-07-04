@@ -19,7 +19,25 @@ export class CategoryService {
     return this.headers.set('Authorization', `Bearer ${accessToken}`);
   }
 
+  getAdsByCategory(categoryId: number, params: any): Observable<any> {
+    // Construct the URL with categoryId and additional params
+    let url = `${this.devApiUrl}/categories/${categoryId}/ads`;
+    
+    // Append query parameters if there are any
+    if (params) {
+      url += '?' + this.serializeParams(params);
+    }
 
+    // Make the HTTP GET request
+    return this.http.get(url);
+  }
+
+  // Helper function to serialize parameters
+  private serializeParams(params: any): string {
+    return Object.keys(params)
+      .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+      .join('&');
+  }
 
   getCategoriesFrom(): Observable<any> {
     const headers = new HttpHeaders({

@@ -117,7 +117,8 @@ ul li.mylist:first-child {
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background: #f8f8f8;
+    color: white;
+    background: linear-gradient(45deg, #5EF292, #3BB77E);
     border-bottom: 1px solid #e5e5e5;
 }
 
@@ -166,13 +167,25 @@ ul li.mylist:first-child {
 }
 
 ::ng-deep .apply-filters-btn {
-    margin: 1rem;
     padding: 0.5rem 1rem;
-    background: #007bff;
+    background: linear-gradient(45deg, #5EF292, #3BB77E);
     color: white;
     border: none;
     cursor: pointer;
     border-radius: 4px;
+    width: 80%;
+
+
+    position: absolute;
+    bottom: 10px; /* Adjust as needed */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Center horizontally */
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 ::ng-deep .apply-filters-btn:hover {
@@ -202,4 +215,25 @@ ul li.mylist:first-child {
 
 ::ng-deep .button i[class*=" fi-rr-"]:before {
     color: gray !important;
+}
+
+::ng-deep .sort-by-dropdown {
+    display: none;
+  }
+  
+ ::ng-deep .sort-by-dropdown.show {
+    display: block;
+  }
+  
+
+
+  ::ng-deep .row {
+     --bs-gutter-x: 0rem;
+
+
+  }
+
+  ::ng-deep .shop-product-fillter {
+
+    margin: 0; 
 }
