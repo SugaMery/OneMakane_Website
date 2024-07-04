@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   HostListener,
   Inject,
   PLATFORM_ID,
@@ -27,7 +28,7 @@ interface Filter {
   key?: string;
   selectedOptions: { [key: string]: Option };
   route?: string;
-  selectedLabel : string;
+  selectedLabel: string;
 }
 
 interface Filters {
@@ -79,6 +80,8 @@ export class AdsGridComponent {
   displayedCategories: any[] = [];
   displayedCategoriesParent: any[] = [];
   matchingFilters: Filter[] = [];
+  matchingFiltered: Filter[] = [];
+
   ads: any[] = [];
   currentPage = 1;
   totalPages = 1;
@@ -97,7 +100,8 @@ export class AdsGridComponent {
     private annonceService: AnnonceService,
     private route: ActivatedRoute,
     private renderer: Renderer2,
-    @Inject(PLATFORM_ID) private platformId: any
+    @Inject(PLATFORM_ID) private platformId: any,
+    private el: ElementRef
   ) {
     if (isPlatformBrowser(this.platformId)) {
       this.checkScreenWidth();
@@ -205,6 +209,7 @@ export class AdsGridComponent {
       // Listen to window resize event only in browser environment
       window.addEventListener('resize', () => this.checkScreenWidth());
     }
+    this.mobileHeaderActive();
   }
   isFilterDrawerOpen = false;
   isDropdownOpen = false;
@@ -353,28 +358,76 @@ export class AdsGridComponent {
         this.categoryParent = datas.data;
       });
   }
-  applyFilter(): void {
-    // Filter keys where selectedOption is defined
-    const filteredKeys = Object.keys(this.filters).filter(key => !!this.filters[key].selectedOption);
 
-    // Log filtered keys and their selected options to console
-    filteredKeys.forEach(key => {
-      console.log(`${key}: ${this.filters[key].selectedOption}`);
+  resetFilters(): void {
+    Object.keys(this.filters).forEach((key) => {
+      delete this.filters[key].selectedOption;
+      this.filters[key].selectedLabel = ''; // Assign an empty string instead of undefined
     });
+    this.matchingFilters = [];
+    console.log('Filters after reset:', this.filters);
+    this.applyFilter(); // Assuming this method applies the filters
   }
+
+  applyFilter(): void {
+    // Filter keys where selectedOption is defined and construct params object
+    const params: { [key: string]: any } = {};
+
+    Object.keys(this.filters).forEach((key) => {
+      const filter = this.filters[key];
+      if (filter.selectedOption) {
+        if (
+          filter.type === 'multiple' &&
+          Array.isArray(filter.selectedOption)
+        ) {
+          // Join the selected options into a comma-separated string
+          const joinedOptions = filter.selectedOption.join(',');
+          if (joinedOptions) {
+            params[key] = joinedOptions;
+          }
+        } else if (filter.selectedOption !== '') {
+          // Handle other types of filters
+          params[key] = filter.selectedOption;
+        }
+      }
+    });
+
+    // Log the params object to console
+    console.log('Params:', params);
+
+    // Example categoryId, replace with actual categoryId as needed
+    const categoryId = Number(this.categoryId); // Replace with actual category ID
+    this.ads = [];
+
+    // Call getAdsByCategory with categoryId and params
+    this.categoryService.getAdsByCategory(categoryId, params).subscribe(
+      (response) => {
+        // Handle the response here
+        console.log('Ads:', response);
+        this.ads = response.data;
+      },
+      (error) => {
+        // Handle the error here
+        console.error('Error fetching ads:', error);
+      }
+    );
+  }
+
   selectOption(key: string, option: string) {
     delete this.filters[key].selectedOption;
-    this.filters[key].selectedLabel = "Tous"
+    this.filters[key].selectedLabel = 'Tous';
     this.getAds();
-    this.matchingFilters=[];
+    this.matchingFilters = [];
     const element = document.querySelector(`.sort-by-cover[data-key="${key}"]`);
     if (element) {
-        element.classList.remove('show');
+      element.classList.remove('show');
     }
 
-    const element1 = document.querySelector(`.sort-by-dropdown[data-key="${key}"]`);
+    const element1 = document.querySelector(
+      `.sort-by-dropdown[data-key="${key}"]`
+    );
     if (element1) {
-        element1.classList.remove('show');
+      element1.classList.remove('show');
     }
     //console.log(`Selected option for ${this.filters[key].label}: ${option}`,key,option);
     this.filters[key].dropdownOpen = false;
@@ -436,10 +489,10 @@ export class AdsGridComponent {
   selectOptioneds(filterKey: string, optionKey: string): void {
     // Update selected option for the filter
     this.filters[filterKey].selectedOption = optionKey;
-  
+
     // Reset matchingFilters array
     this.matchingFilters = [];
-  
+
     // Populate matchingFilters based on conditions
     for (const key of this.getFilterKeys()) {
       const filter = this.filters[key];
@@ -450,45 +503,99 @@ export class AdsGridComponent {
         }
       }
     }
-  
+
     // Clear previously selected options in matchingFilters
-    this.matchingFilters.forEach(filter => {
-      delete filter.selectedOption ; // or set to appropriate default value
+    this.matchingFilters.forEach((filter) => {
+      delete filter.selectedOption; // or set to appropriate default value
     });
-  
+
     // Refresh ads and apply other necessary updates
-    this.ads = [];
-    this.getAds();
-  
+    //this.ads = [];
+    //this.getAds();
+
     // Remove 'show' class from the dropdown
-    const element = document.querySelector(`.sort-by-cover[data-key="${filterKey}"]`);
+    const element = document.querySelector(
+      `.sort-by-cover[data-key="${filterKey}"]`
+    );
     if (element) {
       element.classList.remove('show');
     }
-  
-    const element1 = document.querySelector(`.sort-by-dropdown[data-key="${filterKey}"]`);
+
+    const element1 = document.querySelector(
+      `.sort-by-dropdown[data-key="${filterKey}"]`
+    );
     if (element1) {
       element1.classList.remove('show');
     }
-  
     // Check if there are any matching filters
     if (this.matchingFilters.length > 0) {
       // Determine visibility based on filter type
-      this.openmatchingFilters = this.matchingFilters.some(filter =>
-        filter.type === 'bool' || filter.type === 'multiple'
+      this.openmatchingFilters = this.matchingFilters.some(
+        (filter) => filter.type === 'bool' || filter.type === 'multiple'
       );
     } else {
       console.log('No matching filters for optionKey:', optionKey);
       this.openmatchingFilters = false;
     }
   }
-  
+  ngAfterViewInit(): void {
+    this.mobileHeaderActive();
+  }
 
-  selectOptioned(filterKey: string, optionKey: string, option : any): void {
+  mobileHeaderActive(): void {
+    console.log('rrrrrrtttttt');
+    const navbarTrigger2 = this.el.nativeElement.querySelector(
+      '.filter-drawer-button'
+    );
+    const endTrigger2 = this.el.nativeElement.querySelector(
+      '.new-mobile-menu-close'
+    );
+    const container2 = this.el.nativeElement.querySelector(
+      '.new-mobile-header-active'
+    );
+    const wrapper2 = document.querySelector('body');
+
+    if (!navbarTrigger2 || !endTrigger2 || !container2 || !wrapper2) {
+      console.error(
+        'One or more elements not found for mobile header functionality.'
+      );
+      return;
+    }
+
+    this.renderer.appendChild(wrapper2, this.createOverlay());
+
+    this.renderer.listen(navbarTrigger2, 'click', (e: Event) => {
+      e.preventDefault();
+      this.renderer.addClass(container2, 'sidebar-visible');
+      this.renderer.addClass(wrapper2, 'mobile-menu-active-2');
+    });
+
+    this.renderer.listen(endTrigger2, 'click', () => {
+      this.renderer.removeClass(container2, 'sidebar-visible');
+      this.renderer.removeClass(wrapper2, 'mobile-menu-active-2');
+    });
+
+    const bodyOverlay2 = wrapper2.querySelector('.body-overlay-2');
+    if (bodyOverlay2) {
+      this.renderer.listen(bodyOverlay2, 'click', () => {
+        this.renderer.removeClass(container2, 'sidebar-visible');
+        this.renderer.removeClass(wrapper2, 'mobile-menu-active-2');
+      });
+    }
+  }
+
+  private createOverlay(): HTMLElement {
+    const overlay = this.renderer.createElement('div');
+    this.renderer.addClass(overlay, 'body-overlay-2');
+    return overlay;
+  }
+
+  selectOptioned(filterKey: string, optionKey: string, option: any): void {
     this.filters[filterKey].selectedOption = optionKey;
     this.filters[filterKey].selectedLabel = option.value;
-    console.log("eeeeeeeehh",option)
+    console.log('eeeeeeeehh', option);
     this.matchingFilters = [];
+    this.matchingFiltered = [];
     for (const key of this.getFilterKeys()) {
       const filter = this.filters[key];
       if (filter.conditions && Array.isArray(filter.conditions)) {
@@ -498,22 +605,34 @@ export class AdsGridComponent {
         }
       }
     }
-    this.ads = [];
-    this.getAds();
-      // Remove 'show' class from the dropdown
-      const element = document.querySelector(`.sort-by-cover[data-key="${filterKey}"]`);
-      if (element) {
-          element.classList.remove('show');
-      }
 
-      const element1 = document.querySelector(`.sort-by-dropdown[data-key="${filterKey}"]`);
-      if (element1) {
-          element1.classList.remove('show');
-      }
+    // Clear previously selected options in matchingFilters
+    this.matchingFilters.forEach((filter) => {
+      delete filter.selectedOption; // or set to appropriate default value
+    });
+
+    // this.ads = [];
+    //this.getAds();
+    // Remove 'show' class from the dropdown
+    const element = document.querySelector(
+      `.sort-by-cover[data-key="${filterKey}"]`
+    );
+    if (element) {
+      element.classList.remove('show');
+    }
+
+    const element1 = document.querySelector(
+      `.sort-by-dropdown[data-key="${filterKey}"]`
+    );
+    if (element1) {
+      element1.classList.remove('show');
+    }
+    console.log('listttt', this.matchingFilters, this.filters);
 
     if (this.matchingFilters.length > 0) {
       this.matchingFilters.filter((filter) => {
         if (filter.type == 'bool' || filter.type == 'multiple') {
+          this.matchingFiltered.push(filter);
           this.openmatchingFilters = true;
           // console.log("tteee",filter.options);
         } else {
@@ -537,6 +656,8 @@ export class AdsGridComponent {
   }
 
   toggleOption(key: string, filter: any): void {
+    console.log('rrerereerer', key);
+
     if (this.isSelecteds(key)) {
       this.selectedOptions = this.selectedOptions.filter(
         (option) => option !== key
@@ -544,6 +665,8 @@ export class AdsGridComponent {
     } else {
       this.selectedOptions.push(key);
     }
+    console.log('rrerereerer', filter);
+
     filter.selectedOption = this.selectedOptions;
     filter.selectedOptions = this.selectedOptions;
     this.getAdsSous();
@@ -562,11 +685,11 @@ export class AdsGridComponent {
     if (!optionKey || optionKey == null || optionKey == undefined) {
       // Delete selectedOption when event is null
       delete this.filters[filterKey].selectedOption;
-      this.getAds();
+      //this.getAds();
     } else {
       //console.log('tttuuuuuuu',this.filters,filterKey,optionKey);
       this.filters[filterKey].selectedOption = optionKey;
-      this.getAdsSous();
+      //this.getAdsSous();
     }
   }
 

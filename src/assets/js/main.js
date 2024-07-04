@@ -653,7 +653,36 @@
             wrapper4.removeClass("mobile-menu-active");
         });
     }
+
+    function mobileHeaderActive1() {
+        var navbarTrigger2 = $(".filter-drawer-button"),
+            endTrigger2 = $(".new-mobile-menu-close"),
+            container2 = $(".new-mobile-header-active"),
+            wrapper2 = $("body");
+
+        wrapper2.prepend('<div class="body-overlay-2"></div>');
+
+        navbarTrigger2.on("click", function (e) {
+            e.preventDefault();
+            container2.addClass("sidebar-visible");
+            wrapper2.addClass("mobile-menu-active-2");
+        });
+
+        endTrigger2.on("click", function () {
+            container2.removeClass("sidebar-visible");
+            wrapper2.removeClass("mobile-menu-active-2");
+        });
+
+        $(".body-overlay-2").on("click", function () {
+            container2.removeClass("sidebar-visible");
+            wrapper2.removeClass("mobile-menu-active-2");
+        });
+    }
+
+
+
     mobileHeaderActive();
+    mobileHeaderActive1();
 
     /*---------------------
         Mobile menu active

@@ -177,11 +177,13 @@ ul li.mylist:first-child {
 
 
     position: absolute;
-    bottom: 10px; /* Adjust as needed */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Center horizontally */
+    bottom: 10px;
+    /* Adjust as needed */
+    left: 50%;
+    /* Center horizontally */
+    transform: translateX(-50%);
+    /* Center horizontally */
     padding: 10px 20px;
-    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
@@ -219,21 +221,160 @@ ul li.mylist:first-child {
 
 ::ng-deep .sort-by-dropdown {
     display: none;
-  }
-  
- ::ng-deep .sort-by-dropdown.show {
+}
+
+::ng-deep .sort-by-dropdown.show {
     display: block;
-  }
-  
+}
 
 
-  ::ng-deep .row {
-     --bs-gutter-x: 0rem;
+
+::ng-deep .row {
+    --bs-gutter-x: 0rem;
 
 
-  }
+}
 
-  ::ng-deep .shop-product-fillter {
+::ng-deep .shop-product-fillter {
 
-    margin: 0; 
+    margin: 0;
+}
+
+::ng-deep .apply-filters-btn:hover {
+    background: linear-gradient(45deg, #5EF292, #3BB77E);
+}
+
+@media only screen and (min-width: 768px) {
+    ::ng-deep .mobile-header-wrapper-style {
+        width: 380px;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .mobile-header-wrapper-style .mobile-header-wrapper-inner .mobile-header-top {
+        padding: 15px 30px 13px 30px;
+        border-bottom: 1px solid #ececec;
+    }
+}
+
+::ng-deep .mobile-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    /* Optional: Add padding as needed */
+}
+
+::ng-deep .mobile-header-logo {
+    flex-grow: 1;
+}
+
+::ng-deep .new-mobile-menu-close {
+    display: flex;
+    align-items: center;
+}
+
+
+::ng-deep .filter-buttons-container {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+::ng-deep .apply-filters-btn {
+    padding: 0.5rem 1rem;
+    background: linear-gradient(45deg, #5ef292, #3bb77e);
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 80%;
+    text-align: center;
+}
+
+::ng-deep .col-6 {
+    width: 50%;
+    text-align: center;
+}
+
+::ng-deep .archive-header {
+    background: url("../../assets/imgs/slider/header-bg-detail.png") no-repeat center center !important;
+    border-radius: 20px;
+    background-size: cover;
+}
+
+
+::ng-deep .buttons-container {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    width: 100%;
+}
+
+::ng-deep .apply-effacer-btn,
+::ng-deep .apply-filters-btn {
+    padding: 10px 20px;
+    background: linear-gradient(45deg, #5ef292, #3bb77e);
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 0 5px;
+    font-size: medium;
+    font-weight: 600;
+}
+
+::ng-deep .shop-product-fillter.filter .sort-by-product-area .sort-by-product-wrap,
+.shop-product-fillter.filter .sort-by-product-area .sort-by-cover {
+    width: max-content !important;
+}
+
+::ng-deep .shop-product-fillter.filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 0 30px !important;
+}
+
+::ng-deep .row {
+    --bs-gutter-x: 1.5rem;
+}
+
+@media only screen and (max-width: 480px) {
+    ::ng-deep .shop-product-fillter.filter {
+        display: block;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .archive-heade {
+        padding: 30px !important;
+    }
+}
+
+
+
+::ng-deep .custome-checkbox .form-check-label {
+    position: static;
+}
+
+::ng-deep .list-group-item {
+    position: static;
+}
+
+::ng-deep .row.filter {
+    --bs-gutter-x: 0rem;
+}
+
+::ng-deep .filter-drawer-content {
+    flex-grow: 1;
+    padding-top: 0rem;
+    overflow-y: initial;
 }

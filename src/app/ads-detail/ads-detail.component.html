@@ -375,10 +375,12 @@
                             class="product-category"
                             style="margin-top: 1rem"
                           >
-                            <a href="">{{ ad.category.name }}</a>
+                            <a [href]="'/ads-category/' + ad.category?.id">{{
+                              ad.category.name
+                            }}</a>
                           </div>
                           <h2>
-                            <a href="">
+                            <a [href]="'/ads/' + ad.id">
                               {{ ad.title | slice : 0 : 17
                               }}{{ ad.title.length > 17 ? "..." : "" }}
                             </a>

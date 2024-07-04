@@ -18,7 +18,7 @@
               </ng-template>
             </div>
           </div>
-          <div
+          <!--           <div
             class="col-xl-12 text-end d-none d-xl-block"
             style="margin-top: 2rem"
             *ngIf="filters !== null"
@@ -129,15 +129,21 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
   </div>
   <div class="container mb-30">
     <div class="row">
-      <div class="col-lg-4-5">
-        <div class="shop-product-fillter">
+      <div
+        class="col-lg-4-5"
+        style="
+          padding-right: calc(var(--bs-gutter-x) * 0.5);
+          padding-left: calc(var(--bs-gutter-x) * 0.5);
+        "
+      >
+        <div class="shop-product-fillter filter">
           <div class="totall-product">
             <p>
               Nous avons trouvé
@@ -146,31 +152,6 @@
             </p>
           </div>
           <div class="sort-by-product-area" *ngIf="!isScreenphone">
-            <button
-            (click)="toggleFilterDrawer()"
-            style="
-              max-width: 44px;
-              width: 100%;
-              height: 44px;
-              padding: 8px;
-              border-radius: 50%;
-              background-color: rgb(46, 107, 255);
-              display: flex;
-              align-items: center;
-              background: #fff;
-              border: 1px solid #f7f8f9;
-              color: #777;
-              padding: 8px 13px;
-              border-radius: 10px;
-              transition: all 0.3s ease 0s;
-              cursor: pointer;
-              border: 1px solid #ececec;
-              margin-left: 1rem;
-            "
-            class="button"
-          >
-            <i style="color: #777" class="fi fi-rr-settings-sliders"></i>
-          </button>
             <div class="sort-by-cover mr-10">
               <div class="sort-by-product-wrap">
                 <div class="sort-by">
@@ -215,7 +196,7 @@
                 </ul>
               </div>
             </div>
-            <div class="sort-by-cover">
+            <div class="sort-by-cover mr-10">
               <div class="sort-by-product-wrap">
                 <div class="sort-by">
                   <span><i class="fi-rs-apps-sort"></i>Trier par :</span>
@@ -260,7 +241,31 @@
                 </ul>
               </div>
             </div>
-
+            <button
+              (click)="toggleFilterDrawer()"
+              style="
+                max-width: 44px;
+                width: 100%;
+                height: 44px;
+                padding: 8px;
+                border-radius: 50%;
+                background-color: rgb(46, 107, 255);
+                display: flex;
+                align-items: center;
+                background: #fff;
+                border: 1px solid #f7f8f9;
+                color: #777;
+                padding: 8px 13px;
+                border-radius: 10px;
+                transition: all 0.3s ease 0s;
+                cursor: pointer;
+                border: 1px solid #ececec;
+                margin-left: 1rem;
+              "
+              class="filter-drawer-button"
+            >
+              <i style="color: #777" class="fi fi-rs-settings-sliders"></i>
+            </button>
           </div>
           <div class="sort-by-product-area" style="" *ngIf="isScreenphone">
             <div class="sort-by-cover" class="width:max-content">
@@ -309,10 +314,8 @@
               </div>
             </div>
 
-
             <!-- Filter Button -->
             <button
-              (click)="toggleFilterDrawer()"
               style="
                 max-width: 44px;
                 width: 100%;
@@ -332,68 +335,85 @@
                 border: 1px solid #ececec;
                 margin-left: 1rem;
               "
-              class="button"
+              class="filter-drawer-button"
+              (click)="mobileHeaderActive()"
             >
-              <i style="color: #777" class="fi fi-rr-settings-sliders"></i>
+              <i style="color: #777" class="fi fi-rs-settings-sliders"></i>
             </button>
           </div>
         </div>
 
-        <div class="row product-grid">
-          <div
-            *ngFor="let ad of ads"
-            class="col-lg-1-5 col-md-4 col-12 col-sm-6"
-          >
-            <div class="product-cart-wrap mb-30">
-              <div class="product-img-action-wrap">
-                <div class="product-img product-img-zoom" style="height: 240px">
-                  <a [href]="'/ads/' + ad.id" style="height: 100%">
-                    <img
-                      class="default-img"
-                      [src]="
-                        ad.medias[0]?.url || 'assets/imgs/shop/default-img.jpg'
-                      "
-                      alt="{{ ad.title }}"
-                    />
-                    <img
-                      class="hover-img"
-                      [src]="ad.medias[1]?.url || ad.medias[0]?.url"
-                      alt=""
-                      style="height: 100%"
-                    />
-                  </a>
-                </div>
-                <div class="product-action-1">
-                  <a
-                    aria-label="Ajouter à la liste de souhaits"
-                    class="action-btn"
-                    href="#"
+        <div class="col-12">
+          <div class="row">
+            <div
+              [ngClass]="{
+                'col-lg-2 col-md-6 col-12': !isScreenphone,
+                'col-6': isScreenphone
+              }"
+              *ngFor="let ad of ads | slice : 0 : 4"
+            >
+              <div
+                class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
+              >
+                <div class="product-img-action-wrap">
+                  <div
+                    class="product-img product-img-zoom"
+                    style="height: 240px"
                   >
-                    <i class="fi-rs-heart"></i>
-                  </a>
+                    <a [href]="'/ads/' + ad.id" style="height: 100%">
+                      <img
+                        class="default-img"
+                        [src]="ad.medias[0]?.url"
+                        alt=""
+                      />
+                      <img
+                        class="hover-img"
+                        [src]="ad.medias[1]?.url || ad.medias[0]?.url"
+                        alt=""
+                        style="height: 100%"
+                      />
+                    </a>
+                  </div>
+                  <div class="product-action-1">
+                    <a
+                      aria-label="Ajouter à la liste de souhaits"
+                      class="action-btn"
+                      href="#"
+                    >
+                      <i class="fi-rs-heart"></i>
+                    </a>
+                  </div>
                 </div>
-                <div
-                  class="product-badges product-badges-position product-badges-mrg"
-                >
-                  <span *ngIf="ad.urgent" class="hot">Urgent</span>
-                </div>
-              </div>
-              <div class="product-content-wrap">
-                <div class="product-category">
-                  <a [href]="'/shop-grid-right/' + ad.category.id">{{
-                    ad.category.name
-                  }}</a>
-                </div>
-                <h2>
-                  <a [href]="'/ads/' + ad.id">{{ ad.title }}</a>
-                </h2>
-                <div class="product-price">
-                  <span>{{ ad.price }} DH</span>
-                </div>
-                <div>
-                  <span class="font-small text-muted">{{
-                    getRelativeTime(ad.created_at)
-                  }}</span>
+                <div class="product-content-wrap">
+                  <div class="product-category" style="margin-top: 1rem">
+                    <a [href]="'/ads-category/' + ad.category?.id">{{
+                      ad.category.name
+                    }}</a>
+                  </div>
+                  <h2>
+                    <a [href]="'/ads/' + ad.id">
+                      {{ ad.title | slice : 0 : 17
+                      }}{{ ad.title.length > 17 ? "..." : "" }}
+                    </a>
+                  </h2>
+                  <div class="product-rate-cover">
+                    <div
+                      class=""
+                      style="
+                        width: 100%;
+                        font-weight: 800;
+                        font-size: medium;
+                        color: black;
+                      "
+                    >
+                      {{ ad.price }} DH
+                    </div>
+                  </div>
+                  <div>
+                    <span class="font-small text-muted">
+                      {{ getRelativeTime(ad.created_at) }}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -449,20 +469,18 @@
             />
           </div>
         </div>
-        <div
+        <!--         <div
           class="sidebar-widget price_range range mb-30"
           *ngIf="openmatchingFilters"
         >
           <h5 class="section-title style-1 mb-30">Sélection</h5>
           <div class="list-group" *ngFor="let filter of matchingFilters">
-            <!-- Example of dynamic filtering options -->
             <div
               class="list-group-item mb-10 mt-10"
               *ngIf="filter.type === 'multiple'"
             >
               <label class="fw-900">{{ filter.label }}</label>
               <div class="custome-checkbox">
-                <!-- Individual Option Checkboxes -->
                 <div *ngFor="let key of getOptionKeys(filter.options)">
                   <input
                     class="form-check-input"
@@ -502,7 +520,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <div
           class="sidebar-widget widget-category-2 mb-30"
@@ -661,129 +679,263 @@
 
 <app-preloader></app-preloader>
 
-<div class="filter-drawer" [class.open]="isFilterDrawerOpen" >
-  <div class="filter-drawer-header">
-    <h2 style="color: white;">Filtrer les produits</h2>
-    <button class="close-btn " style="color: white;" (click)="closeFilterDrawer()">
-      <i class="fi-rs-cross"></i>
-    </button>
-  </div>
+<div class="new-mobile-header-active mobile-header-wrapper-style">
+  <div class="mobile-header-wrapper-inner">
+    <div class="mobile-header-top">
+      <div class="mobile-header-logo">
+        <h2 style="font-size: 1.5rem">Filtrer les annonces</h2>
+      </div>
+      <div
+        class="new-mobile-menu-close close-style-wrap close-style-position-inherit"
+      >
+        <button class="close-style search-close">
+          <i class="icon-top"></i>
+          <i class="icon-bottom"></i>
+        </button>
+      </div>
+    </div>
 
-  <div class="filter-drawer-content">
-    <div *ngIf="filters !== null">
-      <div class="shop-product-fillter">
-        <div class="totall-product"></div>
-        <div class="sort-by-product-area">
-          <div class="row" style="width:100%">
-            <ng-container *ngFor="let key of getFiltersKeys()">
-              <ng-container
-                *ngIf="
-                  filters[key].type === 'select' && !filters[key].dependant
-                "
-              >
-                <div class="col-md-6 ">
-                  <div class="sort-by-cover" [class.show]="filters[key].dropdownOpen" [attr.data-key]="key">
-                    <div class="mb-2"><i class="fi-rs-apps mr-9"></i> {{ filters[key].label }} :</div>
-                    <div
-                      class="sort-by-product-wrap"
-                      style="width: max-content"
+    <div class="mobile-header-content-area">
+      <div class="mobile-search search-style-3 mobile-header-border">
+        <form action="#">
+          <input type="text" placeholder="Search something..." />
+          <button type="submit"><i class="fi-rs-search"></i></button>
+        </form>
+      </div>
+      <div class="mobile-menu-wrap mobile-header-border">
+        <div class="filter-drawer-content test">
+          <div *ngIf="filters !== null">
+            <div class="shop-product-fillter">
+              <div class="sort-by-product-area" style="width: 100%">
+                <div class="row filter" style="width: 100%">
+                  <ng-container *ngFor="let key of getFiltersKeys()">
+                    <ng-container
+                      *ngIf="
+                        filters[key].type === 'select' &&
+                        !filters[key].dependant
+                      "
                     >
-                    <div class="sort-by-dropdown-wrap">
-                      {{ filters[key].selectedLabel || 'Choissisez' }}
-                      <span><i class="fi-rs-angle-small-down"></i></span>
-                    </div>
-                    
-                    </div>
-                    <div class="sort-by-dropdown" [class.show]="filters[key].dropdownOpen" [attr.data-key]="key">
-                      <ul style="max-height: 185px; overflow-y: auto">
-                        <li (click)="selectOption(key, 'all')">
-                          <a [class.active]="!filters[key].selectedOption"
-                            >Tous</a
+                      <div class="col-md-12">
+                        <div
+                          class="sort-by-cover mb-20"
+                          [class.show]="filters[key].dropdownOpen"
+                          [attr.data-key]="key"
+                        >
+                          <label class="fw-900">{{ filters[key].label }}</label>
+                          <div
+                            class="sort-by-product-wrap"
+                            style="width: max-content"
                           >
-                        </li>
-                        <ng-container *ngIf="!filters[key].route">
-                          <li
-                            *ngFor="
-                              let option of filters[key].options | keyvalue
+                            <div class="sort-by-dropdown-wrap">
+                              {{ filters[key].selectedLabel || "Choissisez" }}
+                              <span
+                                ><i class="fi-rs-angle-small-down"></i
+                              ></span>
+                            </div>
+                          </div>
+                          <div
+                            class="sort-by-dropdown"
+                            [class.show]="filters[key].dropdownOpen"
+                            [attr.data-key]="key"
+                            style="position: absolute"
+                          >
+                            <ul style="max-height: 185px; overflow-y: auto">
+                              <li (click)="selectOption(key, 'all')">
+                                <a [class.active]="!filters[key].selectedOption"
+                                  >Tous</a
+                                >
+                              </li>
+                              <ng-container *ngIf="!filters[key].route">
+                                <li
+                                  *ngFor="
+                                    let option of filters[key].options
+                                      | keyvalue
+                                  "
+                                  (click)="
+                                    selectOptioned(key, option.key, option)
+                                  "
+                                >
+                                  <a
+                                    [class.active]="isSelected(key, option.key)"
+                                    >{{ option.value }}</a
+                                  >
+                                </li>
+                              </ng-container>
+                              <ng-container *ngIf="filters[key].route">
+                                <ng-container
+                                  *ngFor="
+                                    let optionKey of getNestedKeys(
+                                      filters[key].options
+                                    )
+                                  "
+                                >
+                                  <li>
+                                    <strong>{{ optionKey }}</strong>
+                                  </li>
+                                  <li
+                                    *ngFor="
+                                      let option of getNestedOptions(
+                                        filters[key].options[optionKey]
+                                      )
+                                    "
+                                    (click)="selectOption(key, option.key)"
+                                  >
+                                    <a
+                                      [class.active]="
+                                        isSelected(key, option.key)
+                                      "
+                                      >{{ option.value }}</a
+                                    >
+                                  </li>
+                                </ng-container>
+                              </ng-container>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+            <div
+              class="shop-product-fillter"
+              [ngClass]="{ 'display-contents': matchingFilters === null }"
+              *ngIf="matchingFilters !== null"
+            >
+              <div class="row sort-by-product-area">
+                <div *ngFor="let filter of getFiltersWitoutCheck()">
+                  <div class="sort-by-cover col-12">
+                    <div class="" *ngIf="filter.type === 'int'">
+                      <div class="form-group">
+                        <label class="fw-900">{{ filter.label }}</label>
+
+                        <div class="col-12 mb-2">
+                          <input
+                            type="number"
+                            class="form-control"
+                            [(ngModel)]="filter.selectedOption"
+                            (input)="filterOption($event, filter)"
+                            style="
+                              height: revert;
+                              font-size: 14px;
+                              padding: 9px 16px;
                             "
-                            (click)="selectOptioned(key, option.key,option)"
-                          >
-                            <a [class.active]="isSelected(key, option.key)">{{
-                              option.value
-                            }}</a>
-                          </li>
-                        </ng-container>
-                        <ng-container *ngIf="filters[key].route">
-                          <ng-container
-                            *ngFor="
-                              let optionKey of getNestedKeys(
-                                filters[key].options
-                              )
-                            "
-                          >
-                            <li>
-                              <strong>{{ optionKey }}</strong>
-                            </li>
-                            <li
-                              *ngFor="
-                                let option of getNestedOptions(
-                                  filters[key].options[optionKey]
-                                )
-                              "
-                              (click)="selectOption(key, option.key)"
-                            >
-                              <a [class.active]="isSelected(key, option.key)">{{
-                                option.value
-                              }}</a>
-                            </li>
-                          </ng-container>
-                        </ng-container>
-                      </ul>
+                            placeholder="Entrez un nombre"
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </ng-container>
-            </ng-container>
+              </div>
+            </div>
+          </div>
+
+          <!-- Effacer and Rechercher buttons in two columns -->
+          <div
+            class="row justify-content-center"
+            style="
+              padding: 0.5rem 1rem;
+              color: white;
+              border: none;
+              cursor: pointer;
+              border-radius: 4px;
+              width: 95%;
+
+              position: absolute;
+              bottom: 10px;
+              /* Adjust as needed */
+              left: 50%;
+              /* Center horizontally */
+              transform: translateX(-50%);
+              /* Center horizontally */
+              padding: 10px 20px;
+              color: white;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+              background-color: white;
+            "
+          >
+            <div class="col-6 text-center">
+              <button
+                class="apply-effacer-btn mr-10"
+                style="width: 95%; background: #fdc040 !important"
+                (click)="resetFilters()"
+              >
+                Effacer
+              </button>
+            </div>
+            <div class="col-6 text-center">
+              <button
+                class="apply-effacer-btn"
+                style="width: 95%"
+                (click)="applyFilter()"
+              >
+                Rechercher
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <div
-      class="shop-product-fillter"
-      [ngClass]="{ 'display-contents': matchingFilters === null }"
-      *ngIf="matchingFilters !== null"
-    >
-      <div class="totall-product"></div>
-      <div class="row sort-by-product-area" >
         <div
-         
-          *ngFor="let filter of getFiltersWitoutCheck()"
+          class="filter-drawer-content list-group"
+          *ngFor="let filter of matchingFiltered"
         >
-          <div class="sort-by-cover col-12 ">
-            <div class="" *ngIf="filter.type === 'int'">
-              <div class="form-group">
-             <div class="mb-2"><i class="fi-rs-apps mr-9"></i> {{ filter.label }} :</div>
-                <div class="col-12 mb-2">
-                  <input
-                    type="number"
-                    class="form-control"
-                    [(ngModel)]="filter.selectedOption"
-                    (input)="filterOption($event, filter)"
-                    style="height: revert;font-size: 14px;padding: 9px 16px;"
-                    placeholder="Entrez un nombre"
-                  />
-                </div>
+          <!-- Example of dynamic filtering options -->
+          <label class="fw-900" *ngIf="filter.type === 'multiple'">{{
+            filter.label
+          }}</label>
+          <div
+            class="list-group-item mb-10 mt-10"
+            *ngIf="filter.type === 'multiple'"
+            style="border-radius: 0.5rem"
+          >
+            <div class="custome-checkbox">
+              <!-- Individual Option Checkboxes -->
+              <div *ngFor="let key of getOptionKeys(filter.options)">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="{{ key }}"
+                  name="{{ key }}"
+                  [checked]="isSelecteds(key)"
+                  (change)="toggleOption(key, filter)"
+                />
+                <label class="form-check-label" [for]="key">
+                  <span>{{ filter.options[key] }}</span>
+                </label>
               </div>
+            </div>
+          </div>
+          <label class="fw-900" *ngIf="filter.type === 'bool'">{{
+            filter.label
+          }}</label>
+
+          <div
+            class="list-group-item mb-10 mt-10"
+            *ngIf="filter.type === 'bool'"
+            style="border-radius: 0.5rem"
+          >
+            <div class="custome-checkbox">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="checkbox"
+                [id]="'boolCheckbox_' + filter.key"
+                [(ngModel)]="filter.selectedOption"
+                (change)="filterCheck($event, filter)"
+              />
+              <label
+                class="form-check-label"
+                [for]="'boolCheckbox_' + filter.key"
+              >
+                <span>{{ filter.label }}</span>
+              </label>
             </div>
           </div>
         </div>
       </div>
     </div>
-    
-    
-    
-    </div>
-    <button class="apply-filters-btn" (click)="applyFilter()">
-     Rechercher
-    </button>
   </div>
 </div>
