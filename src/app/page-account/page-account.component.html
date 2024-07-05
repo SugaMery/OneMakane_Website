@@ -8,7 +8,7 @@
       </div>
     </div>
   </div>
-  <div class="page-content pt-50 pb-150">
+  <div class="page-content pt-50 pb-50">
     <div class="container">
       <div class="row">
         <div class="col-lg-10 m-auto">
@@ -172,8 +172,8 @@
                                     for="exampleCheckbox1"
                                   ></label>
                                 </td>
-                                <td class="image product-thumbnail pt-40">
-                                  <img src="{{ ad.medias[0].url }}" alt="#" />
+                                <td class="image product-thumbnail pt-40 image">
+                                  <img src="{{ ad.medias[0]?.url }}" alt="#" />
                                 </td>
                                 <td class="product-des product-name">
                                   <h6>
@@ -185,12 +185,12 @@
                                     ad.created_at
                                   }}</span>
                                 </td>
-                                <td class="price" data-title="Price">
+                                <td class="price" data-title="Prix">
                                   <h3 class="text-brand">{{ ad.price }} DH</h3>
                                 </td>
                                 <td
                                   class="text-center detail-info"
-                                  data-title="Stock"
+                                  data-title="Status"
                                 >
                                   <span
                                     class="stock-status in-stock mb-0"
@@ -198,21 +198,23 @@
                                       getStatusClass(ad.validation_status)
                                     "
                                   >
-                                    {{ ad.validation_status }}
+                                    {{
+                                      getStatusInFrench(ad.validation_status)
+                                    }}
                                   </span>
                                 </td>
-                                <td class="text-right" data-title="Cart">
+                                <td
+                                  class="action text-right"
+                                  data-title="Action"
+                                >
                                   <a [href]="'/modifier-annonce/' + ad.id">
                                     <button class="btn btn-sm">
                                       Plus infos
                                     </button>
                                   </a>
                                 </td>
-                                <td
-                                  class="action text-center"
-                                  data-title="Remove"
-                                >
-                                  <a  class="text-body" (click)="showDialog(ad)"
+                                <td class="text-center" data-title="Supprimer">
+                                  <a class="text-body" (click)="showDialog(ad)"
                                     ><i class="fi-rs-trash"></i
                                   ></a>
                                 </td>
@@ -220,54 +222,91 @@
                             </tbody>
                           </table>
                           <p-dialog
-                          [(visible)]="adDialog"
-                          [style]="{ width: '500px' }"
-                          header="Confirmer la suppression"
-                          [modal]="true"
-                          styleClass="p-fluid"
-                        >
-                          <ng-template pTemplate="content">
-                            <div>
-                              <p>Êtes-vous sûr de vouloir supprimer cette annonce ?</p>
-                              <div class="payment_option">
-                                <div class="custome-radio">
-                                  <input class="form-check-input" type="radio" name="reason" id="option1" value="1" required>
-                                  <label class="form-check-label" for="option1">J'ai vendu mon bien sur Onemakan</label>
-                                </div>
-                                <div class="custome-radio">
-                                  <input class="form-check-input" type="radio" name="reason" id="option2" value="2" required>
-                                  <label class="form-check-label" for="option2">J'ai vendu mon bien par un autre moyen</label>
-                                </div>
-                                <div class="custome-radio">
-                                  <input class="form-check-input" type="radio" name="reason" id="option3" value="3" required>
-                                  <label class="form-check-label" for="option3">Je ne souhaite plus vendre mon bien</label>
+                            [(visible)]="adDialog"
+                            [style]="{ width: '20rem' }"
+                            header="Confirmer la suppression"
+                            [modal]="true"
+                            styleClass="p-fluid"
+                          >
+                            <ng-template pTemplate="content">
+                              <div>
+                                <p>
+                                  Êtes-vous sûr de vouloir supprimer cette
+                                  annonce ?
+                                </p>
+                                <div class="payment_option">
+                                  <div class="custome-radio">
+                                    <input
+                                      class="form-check-input"
+                                      type="radio"
+                                      name="reason"
+                                      id="option1"
+                                      value="1"
+                                      required
+                                    />
+                                    <label
+                                      class="form-check-label"
+                                      for="option1"
+                                      >J'ai vendu mon bien sur Onemakan</label
+                                    >
+                                  </div>
+                                  <div class="custome-radio">
+                                    <input
+                                      class="form-check-input"
+                                      type="radio"
+                                      name="reason"
+                                      id="option2"
+                                      value="2"
+                                      required
+                                    />
+                                    <label
+                                      class="form-check-label"
+                                      for="option2"
+                                      >J'ai vendu mon bien par un autre
+                                      moyen</label
+                                    >
+                                  </div>
+                                  <div class="custome-radio">
+                                    <input
+                                      class="form-check-input"
+                                      type="radio"
+                                      name="reason"
+                                      id="option3"
+                                      value="3"
+                                      required
+                                    />
+                                    <label
+                                      class="form-check-label"
+                                      for="option3"
+                                      >Je ne souhaite plus vendre mon
+                                      bien</label
+                                    >
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </ng-template>
-                        
-                          <ng-template pTemplate="footer">
-                            <div style="padding: 1rem !important;">
-                              <button
-                                pButton
-                                pRipple
-                                label="Annuler"
-                                icon="pi pi-times"
-                                class="p-button-text"
-                                (click)="adDialog = false"
-                              ></button>
-                              <button
-                                pButton
-                                pRipple
-                                label="Confirmer"
-                                icon="pi pi-check"
-                                class="p-button-danger"
-                                (click)="confirmDeletion(selectedAd)"
-                              ></button>
-                            </div>
-                          </ng-template>
-                        </p-dialog>
-                        
+                            </ng-template>
+
+                            <ng-template pTemplate="footer">
+                              <div style="padding: 1rem !important">
+                                <button
+                                  pButton
+                                  pRipple
+                                  label="Annuler"
+                                  icon="pi pi-times"
+                                  class="p-button-text"
+                                  (click)="adDialog = false"
+                                ></button>
+                                <button
+                                  pButton
+                                  pRipple
+                                  label="Confirmer"
+                                  icon="pi pi-check"
+                                  class="p-button-danger"
+                                  (click)="confirmDeletion(selectedAd)"
+                                ></button>
+                              </div>
+                            </ng-template>
+                          </p-dialog>
                         </div>
                       </div>
                     </div>

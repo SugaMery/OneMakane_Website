@@ -43,7 +43,6 @@ export class AppComponent {
         'assets/libs/jquery/jquery.min.js',
         'assets/libs/bootstrap/js/bootstrap.bundle.min.js',
         'assets/libs/simplebar/simplebar.min.js',
-        'assets/js/main.js',
       ]);
     }
   }

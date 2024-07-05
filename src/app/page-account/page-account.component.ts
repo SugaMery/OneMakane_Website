@@ -11,6 +11,7 @@ import { UserService } from '../user.service';
 import { CategoryService } from '../category.service';
 import { AnnonceService } from '../annonce.service';
 import { SettingService } from '../setting.service';
+type Status = 'approved' | 'pending' | 'draft' | 'rejected';
 
 @Component({
   selector: 'app-page-account',
@@ -98,45 +99,8 @@ export class PageAccountComponent implements OnInit {
   ngOnInit(): void {
     this.userId = localStorage.getItem('loggedInUserId');
     this.accessToken = localStorage.getItem('loggedInUserToken');
-    this.annonceService.getAds().subscribe((data) => {
-      const adIds = data.data.map((ad: any) => ad.id);
-      //console.log('data ads', data.data);
-
-      data.data.forEach((element: any) => {
-        // console.log('data element', element);
-
-        this.annonceService.getAdById(element.id).subscribe((annonce) => {
-          //console.log('data annonce', annonce.data);
-
-          if (annonce.data.user_id === this.userId) {
-            //console.log('data', element);
-          }
-        });
-      });
-      const adPromises = adIds.map((adId: any) => {
-        return this.annonceService.getAdById(adId).toPromise();
-      });
-
-      Promise.all(adPromises)
-        .then((adsData) => {
-          this.ads = adsData
-            .filter((ad: any) => ad.data.user_id === Number(this.userId))
-            .map((ad: any) => {
-              console.log('data ads111', ad);
-
-              const createdAt =
-                ad.data.medias && ad.data.medias.length > 0
-                  ? ad.data.medias[0].created_at
-                  : ad.data.created_at;
-              // ad.data.created_at = this.extractDate(createdAt);
-              //  console.log('Ad date : ', ad.data.created_at);
-              return ad.data;
-            });
-        })
-        .catch((error) => {
-          // Handle error
-        });
-    });
+    this.loadAds('pending');
+    this.loadAds('approved');
     this.userService
       .getUserInfoById(Number(this.userId!), this.accessToken!)
       .subscribe((data) => {
@@ -190,6 +154,52 @@ export class PageAccountComponent implements OnInit {
         }
       });
   }
+
+  loadAds(validationStatus: string): void {
+    this.annonceService.getAdsValidator(validationStatus).subscribe((data) => {
+      const adIds = data.data.map((ad: any) => ad.id);
+
+      const adPromises = adIds.map((adId: any) => {
+        return this.annonceService.getAdById(adId).toPromise();
+      });
+
+      Promise.all(adPromises)
+        .then((adsData) => {
+          this.ads = this.ads.concat(
+            adsData
+              .filter((ad: any) => ad.data.user_id === Number(this.userId))
+              .map((ad: any) => {
+                const createdAt =
+                  ad.data.medias && ad.data.medias.length > 0
+                    ? ad.data.medias[0].created_at
+                    : ad.data.created_at;
+                ad.data.created_at = this.extractDate(createdAt);
+                return ad.data;
+              })
+          );
+        })
+        .catch((error) => {
+          console.error('Error loading ads:', error);
+        });
+    });
+  }
+
+  extractDate(dateString: string): string {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    };
+    return new Intl.DateTimeFormat('fr-FR', options)
+      .format(date)
+      .replace(',', ' à');
+  }
+
   logout(): void {
     this.authService.logout();
   }
@@ -216,6 +226,18 @@ export class PageAccountComponent implements OnInit {
     this.productDialog = false;
     this.submitted = false;
   }
+
+  statusMapping = {
+    approved: 'Approuvé',
+    pending: 'En attente',
+    draft: 'Brouillon',
+    rejected: 'Rejeté',
+  };
+
+  getStatusInFrench(status: Status): string {
+    return this.statusMapping[status];
+  }
+
   getStatusClass(status: string): string {
     switch (status) {
       case 'draft':

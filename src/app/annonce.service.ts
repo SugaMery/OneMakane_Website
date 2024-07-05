@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -81,6 +81,13 @@ export class AnnonceService {
   getAds(): Observable<any> {
     const url = `${this.apiUrl}/ads`;
     return this.http.get<any>(url);
+  }
+
+  getAdsValidator(validationStatus: string): Observable<any> {
+    const url = `${this.apiUrl}/ads`;
+    let params = new HttpParams().set('validation_status', validationStatus);
+
+    return this.http.get<any>(url, { params });
   }
 
   getAdById(adId: string): Observable<any> {

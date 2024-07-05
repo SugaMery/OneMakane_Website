@@ -137,6 +137,145 @@
   <div class="container mb-30">
     <div class="row">
       <div
+        class="col-lg-1-5 primary-sidebar sticky-sidebar"
+        *ngIf="isScreenphone"
+      >
+        <div class="row">
+          <div class="col">
+            <!-- shop-filter-toogle -->
+            <a class="shop-filter-toogle">
+              <span class="fi-rs-filter mr-5"></span>
+              Filters
+              <i class="fi-rs-angle-small-down angle-down"></i>
+              <i class="fi-rs-angle-small-up angle-up"></i>
+            </a>
+          </div>
+          <div class="col">
+            <!-- shop-filter-toogle -->
+            <a
+              class="shop-filter-toogled filter-drawer-button"
+              (click)="mobileHeaderActive()"
+            >
+              <span class="fi-rs-filter mr-5"></span>
+              Plus Filters
+            </a>
+          </div>
+        </div>
+        <div class="shop-product-fillter-header" style="display: none">
+          <!-- Fillter By Price -->
+          <div class="sidebar-widget widget-category-2 mb-30">
+            <h5 class="section-title style-1 mb-30">Rechercher :</h5>
+            <div class="categories-dropdown-wrap1 style-2 font-heading mt-30">
+              <input
+                type="text"
+                placeholder="Rechercher......."
+                [(ngModel)]="searchTitle"
+                (input)="filterAdsByTitle(searchTitle)"
+                class="form-control"
+                style="width: 100%"
+              />
+            </div>
+          </div>
+          <div
+            class="sidebar-widget widget-category-2 mb-30"
+            *ngIf="!vissibleCategory"
+          >
+            <h5 class="section-title style-1 mb-30">Catégorie :</h5>
+            <div class="categories-dropdown-wrap1 style-2 font-heading mt-30">
+              <div>
+                <ul>
+                  <li *ngFor="let category of displayedCategoriesMobile">
+                    <a [href]="'/ads-category/' + category.id">
+                      <img
+                        [src]="category.media?.url"
+                        alt="{{ category.name }}"
+                      />
+                      {{ category.name }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div
+                class="more_slide_open"
+                [style.display]="showMore ? 'block' : 'none'"
+              >
+                <div class="d-flex categori-dropdown-inner">
+                  <ul>
+                    <li
+                      class="mylist"
+                      *ngFor="let category of hiddenCategoriesMobile"
+                    >
+                      <a [href]="'/ads-category/' + category.id">
+                        <img
+                          [src]="category.icon_path"
+                          alt="{{ category.name }}"
+                        />
+                        {{ category.name }}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="more_categories" (click)="toggleShowMore()">
+                <span class="icon"></span>
+                <span class="heading-sm-1">{{
+                  showMore ? "Voir moins..." : "Voir plus..."
+                }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="sidebar-widget widget-category-2 mb-30"
+            *ngIf="vissibleCategory"
+          >
+            <h5 class="section-title style-1 mb-30">Catégorie</h5>
+            <div class="categories-dropdown-wrap1 style-2 font-heading mt-30">
+              <div>
+                <ul>
+                  <li *ngFor="let categorys of displayedCategoriesParentMobile">
+                    <a [href]="'/ads-category/' + categorys.id">
+                      <img
+                        [src]="category.media?.url"
+                        alt="{{ categorys.name }}"
+                      />
+                      {{ categorys.name }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div
+                class="more_slide_open"
+                [style.display]="showMore ? 'block' : 'none'"
+              >
+                <div class="d-flex categori-dropdown-inner">
+                  <ul>
+                    <li
+                      class="mylist"
+                      *ngFor="let categorys of hiddenCategoriesParentMobile"
+                    >
+                      <a [href]="'/ads-category/' + category.id">
+                        <img
+                          [src]="category.media?.url"
+                          alt="{{ categorys.name }}"
+                        />
+                        {{ categorys.name }}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="more_categories" (click)="toggleShowMore()">
+                <span class="icon"></span>
+                <span class="heading-sm-1">{{
+                  showMore ? "Voir moins..." : "Voir plus..."
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
         class="col-lg-4-5"
         style="
           padding-right: calc(var(--bs-gutter-x) * 0.5);
@@ -241,7 +380,7 @@
                 </ul>
               </div>
             </div>
-            <button
+            <!--             <button
               (click)="toggleFilterDrawer()"
               style="
                 max-width: 44px;
@@ -265,7 +404,7 @@
               class="filter-drawer-button"
             >
               <i style="color: #777" class="fi fi-rs-settings-sliders"></i>
-            </button>
+            </button> -->
           </div>
           <div class="sort-by-product-area" style="" *ngIf="isScreenphone">
             <div class="sort-by-cover" class="width:max-content">
@@ -314,7 +453,7 @@
               </div>
             </div>
 
-            <!-- Filter Button -->
+            <!--             
             <button
               style="
                 max-width: 44px;
@@ -339,7 +478,7 @@
               (click)="mobileHeaderActive()"
             >
               <i style="color: #777" class="fi fi-rs-settings-sliders"></i>
-            </button>
+            </button> -->
           </div>
         </div>
 
@@ -355,7 +494,10 @@
               <div
                 class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
               >
-                <div class="product-img-action-wrap">
+                <div
+                  class="product-img-action-wrap"
+                  style="padding: 25px 25px 0 25px !important"
+                >
                   <div
                     class="product-img product-img-zoom"
                     style="height: 240px"
@@ -454,14 +596,25 @@
 
         <!--End Deals-->
       </div>
-      <div class="col-lg-1-5 primary-sidebar sticky-sidebar">
+      <div
+        class="col-lg-1-5 primary-sidebar sticky-sidebar"
+        *ngIf="!isScreenphone"
+      >
+        <a
+          *ngIf="filters"
+          class="shop-filter-toogled filter-drawer-button"
+          (click)="mobileHeaderActive()"
+        >
+          <span class="fi-rs-filter mr-5"></span>
+          Plus Filters
+        </a>
         <!-- Fillter By Price -->
         <div class="sidebar-widget widget-category-2 mb-30">
           <h5 class="section-title style-1 mb-30">Rechercher :</h5>
           <div class="categories-dropdown-wrap1 style-2 font-heading mt-30">
             <input
               type="text"
-              placeholder="Rechercher par titre"
+              placeholder="Rechercher......."
               [(ngModel)]="searchTitle"
               (input)="filterAdsByTitle(searchTitle)"
               class="form-control"
@@ -698,8 +851,13 @@
     <div class="mobile-header-content-area">
       <div class="mobile-search search-style-3 mobile-header-border">
         <form action="#">
-          <input type="text" placeholder="Search something..." />
-          <button type="submit"><i class="fi-rs-search"></i></button>
+          <!-- Search Input -->
+          <input type="text" id="keywords" placeholder="Rechercher..." />
+
+          <!-- Search Button -->
+          <button type="submit" style="color: white">
+            <i class="fi-rs-search"></i>
+          </button>
         </form>
       </div>
       <div class="mobile-menu-wrap mobile-header-border">
@@ -803,7 +961,10 @@
               [ngClass]="{ 'display-contents': matchingFilters === null }"
               *ngIf="matchingFilters !== null"
             >
-              <div class="row sort-by-product-area">
+              <div
+                class="row sort-by-product-area"
+                style="--bs-gutter-x: 0rem; width: 100%"
+              >
                 <div *ngFor="let filter of getFiltersWitoutCheck()">
                   <div class="sort-by-cover col-12">
                     <div class="" *ngIf="filter.type === 'int'">
@@ -833,48 +994,46 @@
           </div>
 
           <!-- Effacer and Rechercher buttons in two columns -->
-          <div
-            class="row justify-content-center"
-            style="
-              padding: 0.5rem 1rem;
-              color: white;
-              border: none;
-              cursor: pointer;
-              border-radius: 4px;
-              width: 95%;
-
-              position: absolute;
-              bottom: 10px;
-              /* Adjust as needed */
-              left: 50%;
-              /* Center horizontally */
-              transform: translateX(-50%);
-              /* Center horizontally */
-              padding: 10px 20px;
-              color: white;
-              border: none;
-              border-radius: 5px;
-              cursor: pointer;
-              background-color: white;
-            "
-          >
-            <div class="col-6 text-center">
-              <button
-                class="apply-effacer-btn mr-10"
-                style="width: 95%; background: #fdc040 !important"
-                (click)="resetFilters()"
-              >
-                Effacer
-              </button>
-            </div>
-            <div class="col-6 text-center">
-              <button
-                class="apply-effacer-btn"
-                style="width: 95%"
-                (click)="applyFilter()"
-              >
-                Rechercher
-              </button>
+          <div>
+            <div
+              class="row justify-content-center"
+              style="
+                padding: 0.5rem 1rem;
+                color: white;
+                border: none;
+                cursor: pointer;
+                border-radius: 4px;
+                width: 100%;
+                position: absolute;
+                bottom: 0rem;
+                left: 52%;
+                transform: translateX(-50%);
+                padding: 30px 0px 10px 10px;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                background-color: white;
+              "
+            >
+              <div class="col-6 text-center">
+                <button
+                  class="apply-effacer-btn mr-10"
+                  style="width: 95%; background: #fdc040 !important"
+                  (click)="resetFilters()"
+                >
+                  Effacer
+                </button>
+              </div>
+              <div class="col-6 text-center">
+                <button
+                  class="apply-effacer-btn"
+                  style="width: 95%"
+                  (click)="applyFilter()"
+                >
+                  Rechercher
+                </button>
+              </div>
             </div>
           </div>
         </div>

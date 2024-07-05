@@ -378,3 +378,7 @@ ul li.mylist:first-child {
     padding-top: 0rem;
     overflow-y: initial;
 }
+
+::ng-deep a.shop-filter-toogle:hover {
+    color: #3bb77e !important;
+}

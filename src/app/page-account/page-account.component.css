@@ -31793,3 +31793,115 @@ table th {
   object-fit: cover;
   border-radius: 1rem;
 }
+
+::ng-deep h3 {
+  font-size: 1.25rem;
+  font-family: "Quicksand", sans-serif;
+  font-weight: 700;
+}
+
+@media only screen and (max-width: 480px) {
+  ::ng-deep .shopping-summery table tbody tr img {
+
+    width: 100% !important;
+    margin-right: 0 !important;
+    height: 15rem !important;
+    max-width: 20rem !important;
+  }
+
+  h6 {
+    font-size: larger !important;
+  }
+
+  a.product-name {
+    font-size: medium !important;
+
+  }
+}
+
+@media only screen and (max-width: 480px) {
+
+  ::ng-deep .pt-60,
+  ::ng-deep .pt-40 {
+    padding-top: 0px !important;
+  }
+
+  ::ng-deep .p-dialog .p-dialog-header .p-dialog-title {
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  ::ng-deep .shopping-summery table> :not(caption)>*>* {
+    padding: .5rem .5rem !important;
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    float: right;
+  }
+
+  .stock-status {
+    float: right;
+  }
+
+  .shopping-summery button.btn {
+    width: 80px !important;
+    margin-left: 15px;
+  }
+
+  .btn,
+  .button {
+    padding: 6px !important;
+  }
+
+  * {
+    font-family: "Quicksand", sans-serif;
+  }
+
+  ::ng-deep td.image.product-thumbnail.pt-40.image {
+    padding-bottom: 0rem !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+    padding-top: -1rem !important;
+  }
+
+  td.action.text-right {
+    padding-bottom: 0rem !important;
+
+  }
+
+  a.text-body {
+    float: right !important;
+    padding-bottom: 1rem !important;
+
+  }
+
+  .card-header h3 {
+    float: left;
+  }
+
+  .invoice-1 .invoice-info-buttom .table .invoice-1 .invoice-info-buttom .table tr,
+  .table tr {
+    border: 1px solid #d1d5db;
+    border-radius: 1rem;
+  }
+}
+
+label {
+  font-family: "Quicksand", sans-serif;
+  font-weight: 600;
+}
+
+.invoice-1 .invoice-info-buttom .table .invoice-1 .invoice-info-buttom .table tr,
+.table tr {
+  border: 1px solid #d1d5db;
+}
+
+
+.p-element.ng-trigger.ng-trigger-animation.p-fluid.p-dialog.p-component.p-dialog-draggable.p-dialog-resizable.ng-star-inserted {
+  width: 20rem !important;
+
+}

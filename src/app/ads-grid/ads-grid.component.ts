@@ -76,9 +76,17 @@ export class AdsGridComponent {
   categories: Category[] = [];
   showMore: boolean = false;
   hiddenCategories: any[] = [];
+  hiddenCategoriesMobile: any[] = [];
+
   hiddenCategoriesParent: any[] = [];
+  hiddenCategoriesParentMobile: any[] = [];
+
   displayedCategories: any[] = [];
+  displayedCategoriesMobile: any[] = [];
+
   displayedCategoriesParent: any[] = [];
+  displayedCategoriesParentMobile: any[] = [];
+
   matchingFilters: Filter[] = [];
   matchingFiltered: Filter[] = [];
 
@@ -146,16 +154,22 @@ export class AdsGridComponent {
   // Method to close dropdown on outside click
   @HostListener('document:click', ['$event'])
   onClick(event: Event) {
-    // Check if the click event was outside the dropdown
-    const clickedInside = this.isDescendantOf(
-      event.target as Node,
-      document.querySelector('.sort-by-dropdown')
-    );
-    if (!clickedInside) {
-      // Close all dropdowns
-      Object.keys(this.filters).forEach((key) => {
-        this.filters[key].dropdownOpen = false;
-      });
+    // Check if this.filters is initialized and not null or undefined
+    if (this.filters) {
+      // Check if the click event was outside the dropdown
+      const clickedInside = this.isDescendantOf(
+        event.target as Node,
+        document.querySelector('.sort-by-dropdown')
+      );
+      if (!clickedInside) {
+        // Close all dropdowns
+        Object.keys(this.filters).forEach((key) => {
+          if (this.filters[key]) {
+            // Ensure this.filters[key] is not null or undefined
+            this.filters[key].dropdownOpen = false;
+          }
+        });
+      }
     }
   }
 
@@ -326,18 +340,31 @@ export class AdsGridComponent {
   }
 
   filterAdsByTitle(event: any): void {
-    const searchTerm = event.toLowerCase();
+    // Remove extra spaces and split search term
+    const searchTerm = event.trim().toLowerCase().split(/\s+/).join(' ');
 
+    // Reset ads to originalAds if searchTerm is empty
     if (searchTerm === '') {
-      this.getAds();
-    } else {
       this.ads = [...this.originalAds];
-      this.ads = this.ads.filter((conversation) => {
-        const title = conversation.title.toLowerCase();
-        return title.includes(searchTerm);
-      });
+      this.applyFilters(); // Apply any existing filters
+    } else {
+      // Filter ads based on searchTerm
+      this.categoryService
+        .getAdsByCategory(Number(this.categoryId), { keywords: searchTerm })
+        .subscribe(
+          (response) => {
+            // Handle the response here
+            console.log('Filtered Ads:', response);
+            this.ads = response.data;
 
-      this.applyFilters();
+            // Apply additional filters if any
+            this.applyFilters();
+          },
+          (error) => {
+            // Handle the error here
+            console.error('Error fetching filtered ads:', error);
+          }
+        );
     }
   }
 
@@ -348,6 +375,12 @@ export class AdsGridComponent {
       );
       this.displayedCategoriesParent = this.allCategoriesSameParent.slice(0, 4);
       this.hiddenCategoriesParent = this.allCategoriesSameParent.slice(5);
+
+      this.displayedCategoriesParentMobile = this.allCategoriesSameParent.slice(
+        0,
+        2
+      );
+      this.hiddenCategoriesParentMobile = this.allCategoriesSameParent.slice(3);
     });
   }
 
@@ -365,52 +398,10 @@ export class AdsGridComponent {
       this.filters[key].selectedLabel = ''; // Assign an empty string instead of undefined
     });
     this.matchingFilters = [];
+    this.matchingFiltered = [];
+    this.closeSidebar();
     console.log('Filters after reset:', this.filters);
     this.applyFilter(); // Assuming this method applies the filters
-  }
-
-  applyFilter(): void {
-    // Filter keys where selectedOption is defined and construct params object
-    const params: { [key: string]: any } = {};
-
-    Object.keys(this.filters).forEach((key) => {
-      const filter = this.filters[key];
-      if (filter.selectedOption) {
-        if (
-          filter.type === 'multiple' &&
-          Array.isArray(filter.selectedOption)
-        ) {
-          // Join the selected options into a comma-separated string
-          const joinedOptions = filter.selectedOption.join(',');
-          if (joinedOptions) {
-            params[key] = joinedOptions;
-          }
-        } else if (filter.selectedOption !== '') {
-          // Handle other types of filters
-          params[key] = filter.selectedOption;
-        }
-      }
-    });
-
-    // Log the params object to console
-    console.log('Params:', params);
-
-    // Example categoryId, replace with actual categoryId as needed
-    const categoryId = Number(this.categoryId); // Replace with actual category ID
-    this.ads = [];
-
-    // Call getAdsByCategory with categoryId and params
-    this.categoryService.getAdsByCategory(categoryId, params).subscribe(
-      (response) => {
-        // Handle the response here
-        console.log('Ads:', response);
-        this.ads = response.data;
-      },
-      (error) => {
-        // Handle the error here
-        console.error('Error fetching ads:', error);
-      }
-    );
   }
 
   selectOption(key: string, option: string) {
@@ -418,6 +409,7 @@ export class AdsGridComponent {
     this.filters[key].selectedLabel = 'Tous';
     this.getAds();
     this.matchingFilters = [];
+    this.matchingFiltered = [];
     const element = document.querySelector(`.sort-by-cover[data-key="${key}"]`);
     if (element) {
       element.classList.remove('show');
@@ -446,6 +438,9 @@ export class AdsGridComponent {
 
       this.displayedCategories = this.categories.slice(0, 4);
       this.hiddenCategories = this.categories.slice(5);
+
+      this.displayedCategoriesMobile = this.categories.slice(0, 2);
+      this.hiddenCategoriesMobile = this.categories.slice(3);
     });
   }
 
@@ -539,7 +534,83 @@ export class AdsGridComponent {
     }
   }
   ngAfterViewInit(): void {
-    this.mobileHeaderActive();
+    if (isPlatformBrowser(this.platformId)) {
+      this.mobileHeaderActive();
+    }
+  }
+
+  applyFilter(): void {
+    // Filter keys where selectedOption is defined and construct params object
+    const params: { [key: string]: any } = {};
+
+    Object.keys(this.filters).forEach((key) => {
+      const filter = this.filters[key];
+      if (filter.selectedOption) {
+        if (
+          filter.type === 'multiple' &&
+          Array.isArray(filter.selectedOption)
+        ) {
+          // Join the selected options into a comma-separated string
+          const joinedOptions = filter.selectedOption.join(',');
+          if (joinedOptions) {
+            params[key] = joinedOptions;
+          }
+        } else if (filter.selectedOption !== '') {
+          // Handle other types of filters
+          params[key] = filter.selectedOption;
+        }
+      }
+    });
+
+    // Get keywords input value and handle spaces
+    const keywordsInput = (
+      document.getElementById('keywords') as HTMLInputElement
+    )?.value
+      .trim()
+      .toLowerCase()
+      .split(/\s+/)
+      .join(' ');
+
+    if (keywordsInput) {
+      params['keywords'] = keywordsInput;
+    }
+
+    // Log the params object to console
+    console.log('Params:', params);
+
+    // Example categoryId, replace with actual categoryId as needed
+    const categoryId = Number(this.categoryId); // Replace with actual category ID
+    this.ads = [];
+
+    // Call getAdsByCategory with categoryId and params
+    this.categoryService.getAdsByCategory(categoryId, params).subscribe(
+      (response) => {
+        // Handle the response here
+        console.log('Ads:', response);
+        this.ads = response.data;
+
+        // Close the sidebar after applying the filter
+        this.closeSidebar();
+      },
+      (error) => {
+        // Handle the error here
+        console.error('Error fetching ads:', error);
+      }
+    );
+  }
+
+  closeSidebar(): void {
+    const container2 = this.el.nativeElement.querySelector(
+      '.new-mobile-header-active'
+    );
+    const wrapper2 = document.querySelector('body');
+
+    if (container2 && wrapper2) {
+      this.renderer.removeClass(container2, 'sidebar-visible');
+      this.renderer.removeClass(wrapper2, 'mobile-menu-active-2');
+    } else {
+      console.error('Elements not found for closing the sidebar.');
+    }
   }
 
   mobileHeaderActive(): void {
@@ -553,7 +624,7 @@ export class AdsGridComponent {
     const container2 = this.el.nativeElement.querySelector(
       '.new-mobile-header-active'
     );
-    const wrapper2 = document.querySelector('body');
+    const wrapper2 = document!.querySelector('body');
 
     if (!navbarTrigger2 || !endTrigger2 || !container2 || !wrapper2) {
       console.error(
@@ -583,7 +654,6 @@ export class AdsGridComponent {
       });
     }
   }
-
   private createOverlay(): HTMLElement {
     const overlay = this.renderer.createElement('div');
     this.renderer.addClass(overlay, 'body-overlay-2');

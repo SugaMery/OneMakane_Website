@@ -5091,43 +5091,49 @@ table .product-thumbnail img {
   background: linear-gradient(45deg, #5EF292, #3BB77E);
 }
 
-.shop-filter-toogle {
+.shop-filter-toogle,
+.shop-filter-toogled {
   margin-bottom: 20px;
   display: inline-flex;
   align-items: center;
   position: relative;
   border-radius: 30px;
   border: 1px solid #ececec;
-  font-size: 17px;
+  font-size: 0.8rem;
   font-weight: 700;
   font-family: "Quicksand", sans-serif;
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.05);
-  padding: 10px 20px;
+  padding: 10px 40px;
 }
 
-.shop-filter-toogle i {
+.shop-filter-toogle i,
+.shop-filter-toogled i {
   margin-left: 5px;
   color: #B6B6B6;
 }
 
-.shop-filter-toogle i.angle-down {
+.shop-filter-toogle i.angle-down,
+.shop-filter-toogled i.angle-down {
   opacity: 0;
   visibility: hidden;
   display: none;
 }
 
-.shop-filter-toogle .fi-rs-filter {
+.shop-filter-toogle .fi-rs-filter,
+.shop-filter-toogled .fi-rs-filter {
   font-size: 14px;
   color: #B6B6B6;
 }
 
-.shop-filter-toogle.active i.angle-down {
+.shop-filter-toogle.active i.angle-down,
+.shop-filter-toogled.active i.angle-down {
   opacity: 1;
   visibility: visible;
   display: inline-block;
 }
 
-.shop-filter-toogle.active i.angle-up {
+.shop-filter-toogle.active i.angle-up,
+.shop-filter-toogled.active i.angle-up {
   opacity: 0;
   visibility: hidden;
   display: none;
