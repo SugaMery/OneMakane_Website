@@ -147,12 +147,19 @@ export class AnnonceService {
     });
   }
 
-  addToFavorites(userId: number, adId: number): Observable<any> {
+  addToFavorites(userId: number, adId: number , accessToken: string): Observable<any> {
     const body = {
       user_id: userId,
       ad_id: adId,
     };
+    const headers = this.getHeaders(accessToken);
+    return this.http.post<any>(`${this.apiUrl}/favorites`, body,{ headers });
+  }
 
-    return this.http.post<any>(this.apiUrl, body);
+  removeFromFavorites(favoriteId: number,accessToken: string): Observable<any> {
+
+    const headers = this.getHeaders(accessToken);
+
+    return this.http.post<any>(`${this.apiUrl}/favorites/${favoriteId}`, { headers }); // Adjust endpoint as needed
   }
 }

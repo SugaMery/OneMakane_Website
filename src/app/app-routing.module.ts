@@ -23,6 +23,9 @@ import { MentionsLegalesComponent } from './mentions-legales/mentions-legales.co
 import { PageService } from './page.service';
 import { CategoryService } from './category.service';
 import { AdsGridComponent } from './ads-grid/ads-grid.component';
+import { FavoisComponent } from './favois/favois.component';
+import { CompteVendorComponent } from './compte-vendor/compte-vendor.component';
+import { MessageComponent } from './message/message.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -41,8 +44,21 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'compte/:userId',
+    component: CompteVendorComponent,
+  },
+  {path: 'messages',
+  component : MessageComponent
+
+  },  
+  {
     path: 'conditions_generales_de_ventes',
     component: ConditionsGeneralesComponent,
+  },
+  {
+    path: 'favoris',
+    canActivate: [AuthGuard],
+    component: FavoisComponent,
   },
   {
     path: 'mentions_legales',

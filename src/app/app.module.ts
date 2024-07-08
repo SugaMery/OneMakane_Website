@@ -48,6 +48,9 @@ import { MentionsLegalesComponent } from './mentions-legales/mentions-legales.co
 import { AdsGridComponent } from './ads-grid/ads-grid.component';
 import { ImageModule } from 'primeng/image';
 import { GalleriaModule } from 'primeng/galleria';
+import { FavoisComponent } from './favois/favois.component';
+import { CompteVendorComponent } from './compte-vendor/compte-vendor.component';
+import { MessageComponent } from './message/message.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -75,6 +78,9 @@ import { GalleriaModule } from 'primeng/galleria';
     ConditionsGeneralesComponent,
     MentionsLegalesComponent,
     AdsGridComponent,
+    FavoisComponent,
+    CompteVendorComponent,
+    MessageComponent,
   ],
   imports: [
     BrowserModule,

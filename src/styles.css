@@ -36,3 +36,9 @@ span[class*="fi-rr-"]:before {
 ::ng-deep i[class^=fi-rr-]:before {
 	color: #6b7280 !important;
 }
+
+
+.btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active {
+color: white !important;
+
+}

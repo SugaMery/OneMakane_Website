@@ -283,13 +283,14 @@
         "
       >
         <div class="shop-product-fillter filter">
-          <div class="totall-product">
+          <div class="totall-product" *ngIf="!isScreenphone">
             <p>
               Nous avons trouvé
               <strong class="text-brand">{{ ads.length }}</strong>
               annonces pour vous !
             </p>
           </div>
+
           <div class="sort-by-product-area" *ngIf="!isScreenphone">
             <div class="sort-by-cover mr-10">
               <div class="sort-by-product-wrap">
@@ -480,6 +481,14 @@
               <i style="color: #777" class="fi fi-rs-settings-sliders"></i>
             </button> -->
           </div>
+
+          <div class="totall-product mt-20" *ngIf="isScreenphone">
+            <p>
+              Nous avons trouvé
+              <strong class="text-brand">{{ ads.length }}</strong>
+              annonces pour vous !
+            </p>
+          </div>
         </div>
 
         <div class="col-12">
@@ -489,7 +498,7 @@
                 'col-lg-2 col-md-6 col-12': !isScreenphone,
                 'col-6': isScreenphone
               }"
-              *ngFor="let ad of ads | slice : 0 : 4"
+              *ngFor="let ad of ads "
             >
               <div
                 class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
@@ -520,7 +529,7 @@
                     <a
                       aria-label="Ajouter à la liste de souhaits"
                       class="action-btn"
-                      href="#"
+                      (click)="addToFavorites(ad.id)"
                     >
                       <i class="fi-rs-heart"></i>
                     </a>
@@ -885,7 +894,7 @@
                             style="width: max-content"
                           >
                             <div class="sort-by-dropdown-wrap">
-                              {{ filters[key].selectedLabel || "Choissisez" }}
+                              {{ filters[key].selectedLabel  || "Choissisez" }}
                               <span
                                 ><i class="fi-rs-angle-small-down"></i
                               ></span>
@@ -936,7 +945,7 @@
                                         filters[key].options[optionKey]
                                       )
                                     "
-                                    (click)="selectOption(key, option.key)"
+                                    (click)="selectOptioned(key, option.key,option)"
                                   >
                                     <a
                                       [class.active]="

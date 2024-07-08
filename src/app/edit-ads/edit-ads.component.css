@@ -31856,3 +31856,18 @@ table th {
 ::ng-deep .display-contents {
     display: none !important;
 }
+
+
+@media only screen and (max-width: 480px){
+    ::ng-deep .cart-totals.ml-30 {
+        margin-left: 0 !important;
+        text-align: center;
+        margin-top: 2rem;
+    }
+}
+
+
+::ng-deep .select-menu .select-btn{
+    font-size: 15px !important;
+    color: black !important;
+}

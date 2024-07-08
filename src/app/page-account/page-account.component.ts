@@ -42,13 +42,25 @@ export class PageAccountComponent implements OnInit {
   ) {}
   settings: any;
   ads: any[] = [];
-
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages!: number;
   ngAfterViewInit() {
     this.route.fragment.subscribe((fragment) => {
       if (fragment === 'orders') {
         this.activateTab('orders-tab', 'orders');
       }
     });
+  }
+  get paginatedAds() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.ads.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  changePage(page: number) {
+    if (page > 0 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
   }
 
   activateTab(tabId: string, contentId: string) {
@@ -177,11 +189,16 @@ export class PageAccountComponent implements OnInit {
                 return ad.data;
               })
           );
+          console.log("adssssssthis",this.ads)
+          this.totalPages = Math.ceil(this.ads.length / this.itemsPerPage);
+      
         })
         .catch((error) => {
           console.error('Error loading ads:', error);
         });
     });
+
+
   }
 
   extractDate(dateString: string): string {

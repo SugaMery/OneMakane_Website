@@ -1,27 +1,62 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-google-map',
-  templateUrl: './google-map.component.html',
-  styleUrls: ['./google-map.component.css'],
+  template: `
+    <div #mapElement class="google-map"></div>
+  `,
+  styleUrls: ['./google-map.component.css']
 })
 export class GoogleMapComponent implements OnInit {
-  @Input() city: string | undefined;
-  mapUrl: SafeResourceUrl | undefined;
+  @Input() postal_code!: string;
 
-  constructor(private sanitizer: DomSanitizer) {}
+  map!: google.maps.Map;
+  rectangle!: google.maps.Rectangle;
+
+  constructor() { }
 
   ngOnInit(): void {
-    this.updateMapUrl();
+    this.initMap();
   }
 
-  ngOnChanges(): void {
-    this.updateMapUrl();
-  }
+  initMap(): void {
+    const geocoder = new google.maps.Geocoder();
+    const mapElement = document.getElementById('mapElement') as HTMLDivElement;
 
-  updateMapUrl(): void {
-    const mapUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6944536.185077172!2d-7.150687899999999!3d31.800834649999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd0b88619651c58d%3A0xd9d39381c42cffc3!2s${this.city}!5e0!3m2!1sfr!2sma!4v1714471864538!5m2!1sfr!2sma`;
-    this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(mapUrl);
+    const mapOptions: google.maps.MapOptions = {
+      center: { lat: 31.6295, lng: -7.9811 }, // Default center on Marrakech, Morocco
+      zoom: 12,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+    this.map = new google.maps.Map(mapElement, mapOptions);
+
+    if (this.postal_code) {
+      geocoder.geocode({ address: this.postal_code + ', Morocco' }, (results, status) => {
+        if (status === 'OK' && results[0]) {
+          const location = results[0].geometry.location;
+          const bounds = results[0].geometry.bounds || results[0].geometry.viewport;
+
+          if (this.rectangle) {
+            this.rectangle.setMap(null); // Remove previous rectangle
+          }
+
+          this.rectangle = new google.maps.Rectangle({
+            bounds: bounds,
+            map: this.map,
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#00FF00', // Green fill color
+            fillOpacity: 0.35
+          });
+
+          this.map.fitBounds(bounds); // Fit map to postal code bounds
+          this.map.setCenter(location); // Center map on the new location
+        } else {
+          console.error('Geocode was not successful for the following reason: ' + status);
+        }
+      });
+    }
   }
 }

@@ -21,14 +21,14 @@ export class AuthGuard implements CanActivate {
         this.userService.refreshToken(token).subscribe(
             response => {
                 // Handle the response from refreshToken if re
-                console.log("goood refrech")
+                //console.log("goood refrech")
                 localStorage.setItem('loggedInUserRefreshToken', response.data.refresh_token);
 
                 return true
             },
             error => {
                 // Handle any error that occurs during the token refresh
-                console.error('Error refreshing token:', error);
+                //console.error('Error refreshing token:', error);
                 this.logout();
               
                 return false;

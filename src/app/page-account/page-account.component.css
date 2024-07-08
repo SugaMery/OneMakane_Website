@@ -31905,3 +31905,13 @@ label {
   width: 20rem !important;
 
 }
+
+.custom-dialog {
+  width: 30rem !important;
+}
+
+@media only screen and (max-width: 500px) {
+  ::ng-deep .custom-dialog {
+    width: 20rem !important;
+  }
+}

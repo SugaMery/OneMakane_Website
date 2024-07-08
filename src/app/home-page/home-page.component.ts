@@ -109,7 +109,34 @@ export class HomePageComponent implements OnInit {
   navigateToCategory(categoryId: number) {
     window.location.href = `/ads-category/${categoryId}`;
   }
+  addToFavorites(adId: number): void {
+    const userId = localStorage.getItem('loggedInUserId');
+    const accessToken = localStorage.getItem('loggedInUserToken');
+  
+    // Vérifiez si l'utilisateur est connecté
+    if (!userId || !accessToken) {
+      // Rediriger vers la page de connexion
+      window.location.href = '/login';
+      return;
+    }
+  
+    this.annonceService.addToFavorites(Number(userId), adId, accessToken)
+      .subscribe(
+        (response) => {
+          // Traiter l'ajout réussi aux favoris ici
+          console.log('Added to favorites successfully:', response, this.categorizedAds);
+          window.location.href = '/favoris';
 
+          // Optionnellement, mettre à jour l'UI pour refléter le statut favori
+        },
+        (error) => {
+          // Traiter l'erreur si l'ajout aux favoris échoue
+          console.error('Failed to add to favorites:', error);
+          // Optionnellement, afficher un message d'erreur ou une logique de réessai
+        }
+      );
+  }
+  
   ngOnInit(): void {
     this.getAdsForCarousel();
     this.fetchCategories();

@@ -117,6 +117,35 @@ export class AdsGridComponent {
       window.addEventListener('resize', () => this.checkScreenWidth());
     }
   }
+
+  addToFavorites(adId: number): void {
+    const userId = localStorage.getItem('loggedInUserId');
+    const accessToken = localStorage.getItem('loggedInUserToken');
+  
+    // Vérifiez si l'utilisateur est connecté
+    if (!userId || !accessToken) {
+      // Rediriger vers la page de connexion
+      window.location.href = '/login';
+      return;
+    }
+  
+    this.annonceService.addToFavorites(Number(userId), adId, accessToken)
+      .subscribe(
+        (response) => {
+          // Traiter l'ajout réussi aux favoris ici
+          console.log('Added to favorites successfully:', response);
+          window.location.href = '/favoris';
+
+          // Optionnellement, mettre à jour l'UI pour refléter le statut favori
+        },
+        (error) => {
+          // Traiter l'erreur si l'ajout aux favoris échoue
+          console.error('Failed to add to favorites:', error);
+          // Optionnellement, afficher un message d'erreur ou une logique de réessai
+        }
+      );
+  }
+
   checkScreenWidth() {
     if (isPlatformBrowser(this.platformId)) {
       this.isScreenSmall = window.innerWidth < 1600 && window.innerWidth > 992;
@@ -313,18 +342,28 @@ export class AdsGridComponent {
       for (const key in queryParams) {
         if (queryParams.hasOwnProperty(key)) {
           const value = queryParams[key];
-          // console.log(`Query Parameter ${key}: ${value}`);
+          console.log(`Query Parameter ${key}: ${value}`);
+         
           if (key !== 'search') {
-            this.selectOptioneds(key, value);
+            this.filters
+  console.log('goooofrrrr', this.filters[key].options[value] ,key,value);
+   const option = {key:key,value:this.filters[key].options[value]};
+            this.selectOptioned(key, value,option);
+            //this.applyFilter()
+            this.applyFilter();
+
           } else {
             this.searchTitle = value;
 
             // console.log('goooofrrrr', this.ads);
-            this.getAdsList();
+            //this.getAdsList();
             //console.log('goooofrrrr', this.ads);
+            this.filterAdsByTitle(value);
           }
           // Use 'key' and 'value' as needed
         }
+        //this.applyFilter();
+
       }
       this.parentCategory();
       // console.log('greeeet in ', datas);
@@ -663,7 +702,7 @@ export class AdsGridComponent {
   selectOptioned(filterKey: string, optionKey: string, option: any): void {
     this.filters[filterKey].selectedOption = optionKey;
     this.filters[filterKey].selectedLabel = option.value;
-    console.log('eeeeeeeehh', option);
+    console.log('eeeeeeeehh', filterKey, optionKey, option);
     this.matchingFilters = [];
     this.matchingFiltered = [];
     for (const key of this.getFilterKeys()) {

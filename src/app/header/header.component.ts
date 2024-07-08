@@ -79,7 +79,7 @@ export class HeaderComponent {
                     });
                 },
                 (error) => {
-                    console.error('Error refreshing token:', error);
+                   // console.error('Error refreshing token:', error);
                     this.status = false;
                 }
             );

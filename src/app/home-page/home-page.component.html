@@ -472,7 +472,7 @@
                         <a
                           aria-label="Ajouter à la liste de souhaits"
                           class="action-btn"
-                          href="#"
+                          (click)="addToFavorites(ad.id)"
                         >
                           <i class="fi-rs-heart"></i>
                         </a>
@@ -770,7 +770,6 @@
   </div>
 </div> -->
                   <p-carousel
-                    *ngIf="ads.length > 5"
                     #carouseled
                     [value]="ads"
                     [numVisible]="5"
@@ -816,7 +815,7 @@
                               <a
                                 aria-label="Ajouter à la liste de souhaits"
                                 class="action-btn"
-                                href="#"
+                                (click)="addToFavorites(adsfirst.id)"
                               >
                                 <i class="fi-rs-heart"></i>
                               </a>

@@ -735,3 +735,8 @@ width: 100% !important;
 
     height: 350px;
 }
+
+
+::ng-deep table th {
+    padding: 10px 20px;
+}

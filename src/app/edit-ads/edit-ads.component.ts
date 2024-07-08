@@ -4,6 +4,7 @@ import {
   Inject,
   OnInit,
   PLATFORM_ID,
+  SimpleChanges,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AnnonceService } from '../annonce.service';
@@ -11,7 +12,7 @@ import { CategoryService } from '../category.service';
 import { SettingService } from '../setting.service';
 import { Observable } from 'rxjs/internal/Observable';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-
+import { PrimeNGConfig } from 'primeng/api';
 interface Category {
   active: boolean;
   created_at: string;
@@ -31,9 +32,15 @@ interface Category {
 }
 
 interface ModelField {
+  conditions: any[];
+  options: any;
+  route: any;
+  table: any;
+  content: any;
   label: string;
   type: string;
   help: string;
+  ordre: number;
 }
 
 interface ModelFields {
@@ -45,6 +52,7 @@ interface StringIndexed {
 }
 
 interface Setting {
+  key: any;
   id: number;
   name: string;
   model: string;
@@ -53,11 +61,40 @@ interface Setting {
   selectedOption?: SelectedOption;
   label?: string;
   optionsVisible?: boolean;
+  type: string;
+  selectedOptions: any[];
+  order: number;
+  dependant?: string;
+  contentDepend?: {
+    [key: string]: {
+      [key: string]: string;
+    };
+  };
+  depend: boolean;
+  dependValue: string | undefined;
+  conditions: [];
 }
 
 interface SelectedOption {
   value: string;
   label: string;
+  name?: string;
+  id?: number;
+}
+
+interface CustomCategory {
+  name: string;
+  keywords: string[];
+  icon_path: string;
+  subcategories?: SubCategory[];
+}
+
+interface SubCategory {
+  id?: number;
+  name: string;
+  keywords: string[];
+  isChecked?: boolean;
+  model?: string;
 }
 
 type Status = 'approved' | 'pending' | 'draft' | 'rejected';
@@ -102,6 +139,7 @@ export class EditAdsComponent implements OnInit {
     | undefined;
   relatedAds: any[] = [];
   settings: any;
+  settingcontent: any[] = [];
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -110,7 +148,8 @@ export class EditAdsComponent implements OnInit {
     private annonceService: AnnonceService,
     private settingsService: SettingService,
     @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private primengConfig: PrimeNGConfig
   ) {}
   adId: string = '';
   uploadedImages: string[] = [];
@@ -127,17 +166,103 @@ export class EditAdsComponent implements OnInit {
   optionsVisible: boolean = false;
 
   ngOnInit(): void {
-    this.initializeAd();
+   // this.initializeAd();
+   this.settings = [];
+   const adId = this.route.snapshot.paramMap.get('id');
+     this.adService.getAdById(adId!).subscribe((data) => {
+       this.ad = data.data;
+       this.uploadedImages = this.ad.medias;
+    const modelFields = this.ad.category.model_fields;
+   const queryParams = { model: this.ad.category.model };
+
+   this.categoryService.getCategoriesFrom().subscribe(
+    (categories) => {
+      this.categories = categories.data.filter(
+        (category: Category) =>
+          category.active === true && category.parent_id !== null
+      );
+      this.categories.forEach((category) => {
+        this.enrichCategoryWithParentAndModelFields(category);
+      });
+
+      if (this.ad?.category) {
+        this.selectedOption = this.categories.find(
+          (category) => this.ad.category.id === category.id
+        );
+      } else {
+        console.error('Ad category is undefined');
+      }
+    },
+    (error) => {
+      console.error('Error fetching categories: ', error);
+    }
+  );
+
+   const accessToken = localStorage.getItem('loggedInUserToken');
+ console.log('rrrerere',this.selectedOption,modelFields,queryParams,accessToken,this.ad)
+   this.fetchSetting(accessToken!, queryParams, modelFields);
+     });
     this.subscribeToRouteParams();
     this.categories.forEach((categorie) => {
       if (this.ad.category.id == categorie.id) {
-        console.log('greeeeeeeeeeeeeeeeeetttttttt');
-        this.selectedOption = categorie;
+        console.log('greeeeeeeeeeeeeeeeeetttttttt',this.ad);
+        //this.selectedOption = categorie;
       }
     });
+
+
     this.fetchCategories();
-    this.fetchSettings();
-    console.log('settingsss', this.settings);
+    //this.fetchSettings();
+    console.log("adddd",this.ad);
+
+
+ 
+    this.primengConfig.setTranslation({
+      firstDayOfWeek: 1,
+      dayNames: [
+        'dimanche',
+        'lundi',
+        'mardi',
+        'mercredi',
+        'jeudi',
+        'vendredi',
+        'samedi',
+      ],
+      dayNamesShort: ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'],
+      dayNamesMin: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
+      monthNames: [
+        'janvier',
+        'février',
+        'mars',
+        'avril',
+        'mai',
+        'juin',
+        'juillet',
+        'août',
+        'septembre',
+        'octobre',
+        'novembre',
+        'décembre',
+      ],
+      monthNamesShort: [
+        'janv.',
+        'févr.',
+        'mars',
+        'avr.',
+        'mai',
+        'juin',
+        'juil.',
+        'août',
+        'sept.',
+        'oct.',
+        'nov.',
+        'déc.',
+      ],
+      today: "Aujourd'hui",
+      clear: 'Effacer',
+      dateFormat: 'dd/mm/yy',
+      weekHeader: 'Sm',
+    });
   }
 
   initializeAd(): void {
@@ -146,6 +271,11 @@ export class EditAdsComponent implements OnInit {
       this.adService.getAdById(adId).subscribe((data) => {
         this.ad = data.data;
         this.uploadedImages = this.ad.medias;
+     const modelFields = this.ad.category.model_fields;
+    const queryParams = { model: this.ad.category.model };
+    const accessToken = localStorage.getItem('loggedInUserToken');
+  //console.log('rrrerere',modelFields,queryParams,accessToken)
+    this.fetchSetting(accessToken!, queryParams, modelFields);
       });
     }
   }
@@ -176,6 +306,366 @@ export class EditAdsComponent implements OnInit {
       }
     }
   }
+  boolSettings: any[] = [];
+  marquesPopulaires: Array<{ id: number; name: string }> = [];
+  autresMarques: Array<{ id: number; name: string }> = [];
+
+  transformData(data: any): Array<{ id: number; name: string }> {
+    return Object.entries(data).map(([key, value]) => ({
+      id: +key,
+      name: value as string,
+    }));
+  }
+  date!: string;
+
+  populateSettingsWithAdData() {
+    this.settings.forEach((setting: Setting) => {
+      const adValue = this.ad.additional[setting.key];
+      if (adValue !== undefined) {
+        switch (setting.type) {
+          case 'select':
+            if(setting.dependant){
+              const value = this.ad.additional[setting.dependant];
+              const content = setting.content[value];
+              setting.depend = true;
+              setting.dependValue = value;
+              setting.selectedOption = {
+                label: content[adValue],
+                value: adValue
+              }
+              //console.log('jaberaphane',setting)
+
+            }else{
+              //console.log("selelelelelel" ,adValue ,this.ad.additional[adValue])
+              setting.selectedOption = {
+                label: setting.content[adValue],
+                value: adValue
+              };
+
+            }
+
+
+            break;
+          case 'text':
+          case 'number':
+          case 'int':
+            setting.content = adValue;
+            setting.depend = true;
+            break;
+          case 'bool':
+            setting.depend=true;
+            setting.content = adValue.toString();
+            break;
+          case 'multiple':
+            //console.log("multiplekkkkkk",adValue,setting)
+            try {
+              const adArray = JSON.parse(adValue);
+              const list: { label: string; value: any; }[]=[]
+              if (Array.isArray(adArray)) {
+                  adArray.forEach((ff: any) => {
+                      //console.log("ggggttyuiyuyiuyiyu", ff);
+                      // Additional logic here
+                    
+                      list.push({
+                        label: setting.content[ff],
+                        value: ff
+                      })
+                      setting.selectedOptions = list;
+
+           /*            console.log("multii",setting,{
+                        label: setting.content[ff],
+                        value: ff
+                      },list); */
+                
+                  });
+              } else {
+                  console.error("Parsed adValue is not an array:", adArray);
+                  // Handle the case where parsed adValue is not an array, if needed
+              }
+          } catch (error) {
+              console.error("Error parsing adValue:", error);
+              // Handle parsing error, if necessary
+          }
+          
+            //setting.selectedOptions = this.parseMultipleOptions(setting.content, adValue);
+            break;
+        }
+      }
+    });
+  }
+  
+  parseOptionLabel(content: any, value: any): string {
+    if (Array.isArray(content)) {
+      const option = content.find((opt: any) => opt.value === value);
+      return option ? option.label : 'Choisissez';
+    }
+    return 'Choisissez';
+  }
+  
+  parseMultipleOptions(content: any, value: string): any[] {
+    if (Array.isArray(content)) {
+      const values = value.split(',');
+      return values.map(val => content.find((opt: any) => opt.value === val)).filter(opt => opt);
+    }
+    return [];
+  }
+  fetchSetting(
+    accessToken: string,
+    queryParams: any,
+    modelFields: { [x: string]: any }
+  ): void {
+    const settingsOption = Object.keys(modelFields).map((key, index) => ({
+      key,
+      value: modelFields[key],
+      order: index,
+    }));
+
+    settingsOption.forEach((field) => {
+      if (field.value && typeof field.value === 'object') {
+        if ('route' in field.value) {
+          this.settingsService
+            .createMarque(field.value.route, accessToken!)
+            .subscribe((response) => {
+              if (response.status === 'Success' && response.data) {
+                this.marquesPopulaires = this.transformData(
+                  response.data['Marques populaires']
+                );
+                this.autresMarques = this.transformData(
+                  response.data['Autres marques']
+                );
+
+                field.value.content = [
+                  {
+                    label: 'Marques Populaires',
+                    content: this.marquesPopulaires,
+                  },
+                  { label: 'Autres Marques', content: this.autresMarques },
+                ];
+
+                const newSetting = {
+                  name: field.value.label,
+                  label: field.value.label,
+                  content: field.value.content,
+                  optionsVisible: false,
+                  type: 'table',
+                  key: field.key,
+                  order: field.order,
+                  depend: null,
+                };
+
+                this.addSettingInOrder(newSetting);
+              }
+            });
+        } else if (field.value.type === 'select' && !field.value.options) {
+          this.settingsService
+            .getSettings(accessToken!, queryParams)
+            .subscribe((setting) => {
+              setting.data.forEach((data: { content: any; name: string }) => {
+                if (data.name === field.key) {
+                  if (field.value.dependant) {
+                    const newSetting = {
+                      name: field.value.label,
+                      label: field.value.label,
+                      content: data.content,
+                      optionsVisible: false,
+                      type: 'select',
+                      key: field.key,
+                      order: field.order,
+                      contentDepend: data.content,
+                      dependant: field.value.dependant,
+                      depend: false,
+                    };
+                    this.addSettingInOrder(newSetting);
+                  } else {
+                    const newSetting = {
+                      name: field.value.label,
+                      label: field.value.label,
+                      content: data.content,
+                      optionsVisible: false,
+                      type: 'select',
+                      key: field.key,
+                      order: field.order,
+                      dependant: field.value.dependant,
+                      depend: null,
+                    };
+                    this.addSettingInOrder(newSetting);
+                  }
+                }
+              });
+            });
+        } else if (field.value.type === 'date') {
+          if (field.value.conditions) {
+            const newSetting = {
+              name: field.value.label,
+              label: field.value.label,
+              content: this.date,
+              optionsVisible: false,
+              type: 'date',
+              key: field.key,
+              order: field.order,
+              depend: false,
+              conditions: field.value.conditions,
+            };
+            this.addSettingInOrder(newSetting);
+          } else {
+            const newSetting = {
+              name: field.value.label,
+              label: field.value.label,
+              content: this.date,
+              optionsVisible: false,
+              type: 'date',
+              key: field.key,
+              order: field.order,
+              depend: null,
+            };
+            this.addSettingInOrder(newSetting);
+          }
+        } else if (
+          field.value.type === 'text' ||
+          field.value.type === 'number'
+        ) {
+          if (field.value.conditions) {
+            const newSetting = {
+              name: field.value.label,
+              label: field.value.label,
+              content: field.value.content,
+              optionsVisible: false,
+              type: field.value.type,
+              key: field.key,
+              order: field.order,
+              depend: false,
+              conditions: field.value.conditions,
+            };
+            this.addSettingInOrder(newSetting);
+          } else {
+            const newSetting = {
+              name: field.value.label,
+              label: field.value.label,
+              content: field.value.content,
+              optionsVisible: false,
+              type: field.value.type,
+              key: field.key,
+              order: field.order,
+              depend: null,
+            };
+            this.addSettingInOrder(newSetting);
+          }
+        } else if (field.value.type === 'multiple') {
+          this.settingsService
+            .getSettings(accessToken!, queryParams)
+            .subscribe((setting) => {
+              setting.data.forEach((data: { content: any; name: string }) => {
+                if (data.name === field.key) {
+                  const newSetting = {
+                    name: field.value.label,
+                    label: field.value.label,
+                    content: data.content,
+                    optionsVisible: false,
+                    selectedOptions: [],
+                    type: 'multiple',
+                    key: field.key,
+                    order: field.order,
+                    depend: null,
+                  };
+                  this.addSettingInOrder(newSetting);
+                }
+              });
+            });
+        } else if (field.value.options) {
+          const newSetting = {
+            name: field.value.label,
+            label: field.value.label,
+            content: field.value.options,
+            optionsVisible: false,
+            type: 'options',
+            key: field.key,
+            order: field.order,
+            depend: null,
+          };
+          this.addSettingInOrder(newSetting);
+        } else if (field.value.type === 'bool') {
+          if (field.value.conditions) {
+            const newSetting = {
+              name: field.value.label,
+              label: field.value.label,
+              content: field.value.options,
+              optionsVisible: false,
+              type: field.value.type,
+              key: field.key,
+              order: field.order,
+              depend: false,
+              conditions: field.value.conditions,
+            };
+            this.boolSettings.push(newSetting);
+          } else {
+            const newSetting = {
+              name: field.value.label,
+              label: field.value.label,
+              content: field.value.options,
+              optionsVisible: false,
+              type: field.value.type,
+              key: field.key,
+              order: field.order,
+              depend: null,
+            };
+            this.boolSettings.push(newSetting);
+          }
+        } else if (field.value.type === 'int') {
+          const newSetting = {
+            name: field.value.label,
+            label: field.value.label,
+            content: field.value.content,
+            optionsVisible: false,
+            type: field.value.type,
+            key: field.key,
+            order: field.order,
+            depend: false,
+            conditions: field.value.conditions,
+          };
+          this.addSettingInOrder(newSetting);
+        }
+                if(this.ad.additional[field.key]){
+  if(field.value.type  === 'int' ){
+  field.value.content = this.ad.additional[field.key]
+  field.value.depend = true ;
+  }
+  }
+      }
+
+    });
+
+    // Add bool settings last to ensure correct order
+    this.boolSettings.forEach((setting: any) =>
+      this.addSettingInOrder(setting)
+    );
+// Log each setting with its key
+settingsOption.forEach((setting, index) => {
+  //console.log(`Setting ${index}:`, setting);
+
+});
+
+    //console.log('this.settings', this.settings,settingsOption, this.boolSettings);
+  }
+
+  addSettingInOrder(newSetting: any): void {
+    // Find the correct position based on order
+    //console.log("gooo1",this.settings)
+
+    const index = this.settings.findIndex(
+      (s: { order: number }) => s.order > newSetting.order
+    );
+    if (index === -1) {
+      this.settings.push(newSetting); // Append if no larger order is found
+    } else {
+      this.settings.splice(index, 0, newSetting); // Insert at the correct position
+          //this.settingcontent.splice(index, 0, newSetting); 
+
+    }
+    this.populateSettingsWithAdData();
+
+
+
+  }
 
   fetchCategoryAndSettings(
     categoryId: string,
@@ -186,18 +676,7 @@ export class EditAdsComponent implements OnInit {
       const modelFields = category.data.model_fields;
       const queryParams = { model: category.data.model };
 
-      this.settingsService.getSettings(accessToken, queryParams).subscribe(
-        (setting) => {
-          if (setting.data) {
-            this.transformFields(modelFields, setting.data, additionalData);
-          } else {
-            console.error('No data found in settings.');
-          }
-        },
-        (error) => {
-          console.error('Error fetching settings:', error);
-        }
-      );
+      //this.fetchSetting(accessToken, queryParams, modelFields);
     });
   }
 
@@ -229,7 +708,140 @@ export class EditAdsComponent implements OnInit {
 
     this.transformedField = transformedFields;
   }
+  toggledOptionsDepend(setting: Setting): void {
+    this.settings.forEach((s: any) => {
+      if (s !== setting) {
+        s.optionsVisible = false;
+      }
+      if (s.key === setting.dependant) {
+        // Assuming `content` is properly typed in Setting
+        console.log('Content of selected option:', setting.content);
+        //setting.contentDepend = setting.content;
+        if (s.selectedOption?.value) {
+          var selectedOptionValue =
+            setting.contentDepend![s.selectedOption?.value];
+          //setting.content
+          console.log(
+            `Value of key '}':`,
+            selectedOptionValue,
+            s.key,
+            setting.dependant
+          );
+        }
+      }
+    });
 
+    setting.optionsVisible = !setting.optionsVisible;
+  }
+
+  depend!: string | undefined;
+  selectedOptionName: any;
+
+  selectdOptiondDepend(option: any, setting: Setting): void {
+    setting.selectedOption = option;
+    this.settings.forEach((s: any) => {
+      if (setting.key === s.dependant) {
+        this.depend = setting.selectedOption?.value;
+        s.depend = true;
+        s.dependValue = setting.selectedOption?.value.toString();
+
+      }
+      const val = setting.selectedOption?.value.toString();
+
+    });
+
+
+    //this.selectedOptionName = option.name
+    setting.optionsVisible = false;
+  }
+  updateSetting(setting: any, value: boolean) {
+    setting.content = value;
+    // Any additional logic to handle the updated setting
+  }
+
+  inputFocused: boolean = false;
+  filteredOptions: {
+    label: number;
+    filteredContent: { id: number; name: string }[];
+  }[] = [];
+  parseOptions1(
+    content: string | StringIndexed
+  ): { id: number; name: string }[] {
+    if (Array.isArray(content)) {
+      return content.map((item) => ({
+        id: item.id,
+        name: item.name,
+      }));
+    } else {
+      return [];
+    }
+  }
+
+  parseOptions2(
+    content: string | StringIndexed
+  ): { label: number; content: string }[] {
+    if (Array.isArray(content)) {
+      return content.map((item) => ({
+        label: item.label,
+        content: item.content,
+      }));
+    } else {
+      return [];
+    }
+  }
+
+  toggleOptionr(setting: any) {
+    setting.optionsVisible = !setting.optionsVisible;
+    if (!setting.optionsVisible) {
+      this.inputFocused = false; // Reset inputFocused when closing options
+    }
+  }
+
+  trackByOptioned(index: number, item: any): any {
+    return item.label;
+  }
+
+
+  selectOptionr(option: any, setting: any) {
+    this.selectedOptionName = option.name;
+    setting.selectedOption = option;
+    setting.optionsVisible = false;
+    this.inputFocused = false; // Reset inputFocused when an option is selected
+  }
+  hasFilteredOptions(): boolean {
+    return this.filteredOptions.some(
+      (optioned) => optioned.filteredContent.length > 0
+    );
+  }
+  trackByOption(index: number, item: any): any {
+    return item.id;
+  }
+
+  get locale() {
+    return this.primengConfig.translation;
+  }
+  // Method to handle input events and filter options
+  onInput(event: Event, setting: any): void {
+    const inputElement = event.target as HTMLInputElement;
+
+    // Check if the input element ID is "table"
+    if (inputElement.id === 'table') {
+      const input = inputElement.value.trim().toLowerCase();
+      setting.inputValue = input;
+
+      // Filter options based on input value
+      this.filteredOptions = this.parseOptions2(setting.content).map(
+        (optioned) => ({
+          label: optioned.label,
+          filteredContent: this.parseOptions1(optioned.content).filter(
+            (option) => option.name.toLowerCase().includes(input)
+          ),
+        })
+      );
+
+      this.inputFocused = input.length > 0; // Set inputFocused based on input value
+    }
+  }
   fetchRelatedAds(userId: string, categoryId: string): void {
     let count = 0;
     const innerObservables: Observable<any>[] = [];
@@ -250,6 +862,7 @@ export class EditAdsComponent implements OnInit {
         });
       });
     });
+
   }
 
   fetchSettings(): void {
@@ -300,6 +913,8 @@ export class EditAdsComponent implements OnInit {
               }
             );
           });
+
+
         },
         (error) => {
           console.error('Error fetching settings:', error);
@@ -339,7 +954,6 @@ export class EditAdsComponent implements OnInit {
         return;
       }
       this.uploadFilesAndUpdateAnnonce(accessToken);
-      console.log('catttttteg', this.selectedOption.id, this.ad.category);
     }
   }
 
@@ -349,7 +963,6 @@ export class EditAdsComponent implements OnInit {
       .subscribe(
         () => {
           //this.uploadFilesAndUpdateAnnonce(accessToken);
-          console.log('create');
         },
         (error) => {
           console.error('Error creating setting:', error);
@@ -379,28 +992,59 @@ export class EditAdsComponent implements OnInit {
             const settingADS: { [key: string]: any } = {};
             for (let i = 0; i < this.settings.length; i++) {
               const setting = this.settings[i];
-              if (setting.selectedOption) {
-                settingADS[setting.name] = setting.selectedOption.value;
+              if (
+                setting.type === 'text' ||
+                setting.type === 'number' ||
+                setting.type === 'select' ||
+                setting.type === 'options' || 
+                setting.type === 'int'
+              ) {
+                if (setting.selectedOption) {
+                  settingADS[setting.key] = setting.selectedOption.value;
+                } else {
+                  settingADS[setting.key] = setting.content;
+                }
+              } else if (setting.type === 'table') {
+                settingADS[setting.key] = setting.selectedOption?.id;
+              }else if (setting.type === 'bool') {
+                settingADS[setting.key] = (setting.content === true || setting.content === 'true') ? 1 : 
+                (setting.content === false || setting.content === 'false') ? 0 : setting.content;
+
+              }
+              else if (setting.type === 'multiple') {
+/*                 const list: any[] = [];
+                setting.selectedOptions.forEach((element:any) => {
+                  list.push(element.value);
+                });
+                console.log('listtttttttttteee', list);
+                settingADS[setting.key] = list;
+ */
+                
+              } else if (setting.type === 'date') {
+                const date = new Date(this.date);
+                setting.content = this.formatDate(date);
+                settingADS[setting.key] = setting.content ;
               }
             }
+
             this.annonceService
               .UpdateSetting(this.adId, settingADS, accessToken)
               .subscribe(
                 () => {
                   //this.uploadFilesAndUpdateAnnonce(accessToken);
-                  console.log('update');
                 },
                 (error) => {
                   console.error(
                     'Error inserting state and genre:',
-                    error.error.message
+                    error
                   );
                   if (error.error.message === "This AdBook doesn't exists") {
                     this.createSetting(settingADS, accessToken);
                   }
                 }
               );
-            window.location.reload();
+              window.location.href = '/page-account#orders';
+
           });
       })
       .catch((error) => {
@@ -411,18 +1055,24 @@ export class EditAdsComponent implements OnInit {
   createAnnonceData(mediaIds: string[]): any {
     return {
       user_id: this.ad.user.id,
-      category_id: this.selectedOption.id,
+      category_id: this.ad.category.id,
       title: this.ad.title,
       description: this.ad.description,
       state: this.ad.state,
       urgent: this.ad.urgent,
       highlighted: this.ad.highlighted,
       price: parseFloat(this.ad.price),
-      city: this.ad.ville,
-      postal_code: this.ad.code_postal,
+      city: this.ad.city,
+      postal_code: this.ad.postal_code,
       medias: { _ids: mediaIds },
       validation_status: 'pending',
     };
+  }
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-based
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
   }
 
   parseOptions(
@@ -487,37 +1137,158 @@ export class EditAdsComponent implements OnInit {
         );
     }
   }
-
-  selectdOptiond(option: any, setting: Setting): void {
+  selectdOptionds(option: any, setting: Setting): void {
     setting.selectedOption = option;
+
+    this.settings.forEach((s: any) => {
+      if (setting.key === s.dependant) {
+        this.depend = setting.selectedOption?.value;
+        s.depend = true;
+        s.dependValue = setting.selectedOption?.value.toString();
+      }
+
+      const val = setting.selectedOption?.value.toString();
+
+      if (Array.isArray(s.conditions)) {
+        s.depend = false; // Initialize s.depend to false
+
+        for (let i = 0; i < s.conditions.length; i++) {
+          if (s.conditions[i] === val) {
+            s.depend = true;
+            break; // Exit the loop early if condition is met
+          } else {
+            // Option to remove the entire element from settings array
+            //this.settings.splice(this.settings.indexOf(s), 1);
+            //s.depend=false;
+            //break; // Exit the loop after removing the element
+          }
+        }
+      }
+    });
+
+    // Uncomment if needed
+    // this.selectedOptionName = option.name;
     setting.optionsVisible = false;
   }
+  selectdOptiond(option: any, setting: Setting): void {
+    setting.selectedOption = option;
+
+    this.settings.forEach((s:any) => {
+      
+        if (setting.key === s.dependant) {
+            delete s.selectedOption ;
+            this.depend = setting.selectedOption?.value;
+            s.depend = true;
+            s.dependValue = setting.selectedOption?.value.toString();
+        }
+
+        const val = setting.selectedOption?.value.toString();
+
+        if (Array.isArray(s.conditions)) {
+            s.depend = false; // Initialize s.depend to false
+
+            for (let i = 0; i < s.conditions.length; i++) {
+                if (s.conditions[i] === val) {
+                    s.depend = true;
+                    break; // Exit the loop early if condition is met
+                } else {
+                    // Option to remove the entire element from settings array
+                    //this.settings.splice(this.settings.indexOf(s), 1);
+                    //s.depend=false;
+                    //break; // Exit the loop after removing the element
+                }
+            }
+        }
+
+    });
+    
+
+    // Uncomment if needed
+    // this.selectedOptionName = option.name;
+    setting.optionsVisible = false;
+}
   toggleOptions(): void {
     this.optionsVisible = !this.optionsVisible;
   }
+
   toggledOptions(setting: Setting): void {
-    this.settings.forEach((s: Setting) => {
+    this.settings.forEach((s:any) => {
       if (s !== setting) {
         s.optionsVisible = false;
       }
+
     });
     setting.optionsVisible = !setting.optionsVisible;
+  }
+  showButton: boolean = false;
+
+  checkAdCreationDate() {
+    const adCreationDate = new Date(this.ad.created_at);
+    const currentDate = new Date();
+    const timeDifference = currentDate.getTime() - adCreationDate.getTime();
+    const hoursDifference = timeDifference / (1000 * 3600);
+   
+    this.showButton = hoursDifference < 24;
   }
   selectOption(category: any): void {
     this.selectedOption = category;
     if (this.selectedOption) {
       this.formData.category_id = category.id;
       this.settings = [];
+      this.boolSettings=[];
       this.fetchCategories();
-      this.fetchSettings();
+      //console.log("gooopppp",category,this.settings)
+
+      const modelFields = category.model_fields;
+      const queryParams = { model: category.model };
+      const accessToken = localStorage.getItem('loggedInUserToken');
+
+      this.fetchSetting(accessToken!, queryParams, modelFields);
+      //this.fetchSettings();
+      //this.handleLocalStorage(this.a);
+
     } else {
       if (this.selectedSubCategory!.id) {
         this.formData.category_id = this.selectedSubCategory!.id;
       }
     }
     this.optionsVisible = false;
+    console.log("gooo15",this.settings)
+
+  }
+  // Inside your component class
+  toggleOptionsGO(setting: any) {
+    setting.optionsVisible = !setting.optionsVisible;
   }
 
+  getSelectedLabels(setting: any): string {
+    return setting.selectedOptions
+      .map((option: { label: any }) => option.label)
+      .join(', ');
+  }
+
+  isOptionSelected(option: any, setting: any): boolean {
+    return setting.selectedOptions.some(
+      (selected: { value: any }) => selected.value === option.value
+    );
+  }
+
+  selectOptionGO(option: any, setting: any) {
+    const index = setting.selectedOptions.findIndex(
+      (selected: { value: any }) => selected.value === option.value
+    );
+    if (index !== -1) {
+      setting.selectedOptions.splice(index, 1); // Deselect option
+    } else {
+      setting.selectedOptions.push(option); // Select option
+    }
+  }
+  toggleOption(option: any, setting: any) {
+    // Implement your toggle logic here
+    // For example, toggle the selected state of the option
+    option.selected = !option.selected;
+    // Add any additional logic you need
+  }
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const targetElement = event.target as HTMLElement;
@@ -589,7 +1360,18 @@ export class EditAdsComponent implements OnInit {
   }
 
   formatPublishedAt(dateString: string): string {
+    if (!dateString) {
+      return ''; // Handle case where dateString is empty or undefined
+    }
+
     const date = new Date(dateString);
+
+    // Check if date is invalid
+    if (isNaN(date.getTime())) {
+      console.error('Invalid date string:', dateString);
+      return ''; // Handle invalid date string
+    }
+
     const options: Intl.DateTimeFormatOptions = {
       day: '2-digit',
       month: 'long',
@@ -599,9 +1381,11 @@ export class EditAdsComponent implements OnInit {
       second: '2-digit',
       hour12: false,
     };
+
     return new Intl.DateTimeFormat('fr-FR', options)
       .format(date)
       .replace(',', ' à');
   }
+
   onSubmit() {}
 }
