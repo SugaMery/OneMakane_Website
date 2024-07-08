@@ -83,15 +83,16 @@ export class AdsDetailComponent implements OnInit {
   addToFavorites(adId: number): void {
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
-  
+
     // Vérifiez si l'utilisateur est connecté
     if (!userId || !accessToken) {
       // Rediriger vers la page de connexion
       window.location.href = '/login';
       return;
     }
-  
-    this.annonceService.addToFavorites(Number(userId), adId, accessToken)
+
+    this.annonceService
+      .addToFavorites(Number(userId), adId, accessToken)
       .subscribe(
         (response) => {
           // Traiter l'ajout réussi aux favoris ici
@@ -107,7 +108,7 @@ export class AdsDetailComponent implements OnInit {
         }
       );
   }
-  
+
   getFormattedDate(datetime: string | undefined): string {
     if (!datetime) {
       return ''; // or handle the case when datetime is undefined
@@ -115,7 +116,7 @@ export class AdsDetailComponent implements OnInit {
     return datetime.split('T')[0];
   }
   polygon: google.maps.Polygon | undefined; // Declare a variable for polyline
-  map: google.maps.Map | undefined; 
+  map: google.maps.Map | undefined;
   initMap(): void {
     const geocoder = new google.maps.Geocoder();
     const mapElement = document.getElementById('map') as HTMLElement; // Assertion de type
@@ -127,52 +128,57 @@ export class AdsDetailComponent implements OnInit {
 
     const map = new google.maps.Map(mapElement, {
       center: { lat: 31.6295, lng: -7.9811 }, // Centre par défaut (Marrakech, Maroc)
-      zoom: 12
+      zoom: 12,
     });
 
     // Remplacez par votre adDetail.postal_code
     const postalCode = this.adDetail.postal_code;
 
     // Géocodez le code postal
-    geocoder.geocode({ address: postalCode + ', Morocco' }, (results, status) => {
-      if (status === 'OK' && results[0]) {
-        const location = results[0].geometry.location;
-        const bounds = results[0].geometry.bounds || results[0].geometry.viewport;
+    geocoder.geocode(
+      { address: postalCode + ', Morocco' },
+      (results, status) => {
+        if (status === 'OK' && results![0]) {
+          const location = results![0].geometry.location;
+          const bounds =
+            results![0].geometry.bounds || results![0].geometry.viewport;
 
-        // Crée et affiche le rectangle
-        const rectangle = new google.maps.Rectangle({
-          bounds: bounds,
-          map: map,
-          strokeColor: '#3BB77E',
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: '#5EF292', // Couleur de remplissage verte
-          fillOpacity: 0.35
-        });
+          // Crée et affiche le rectangle
+          const rectangle = new google.maps.Rectangle({
+            bounds: bounds,
+            map: map,
+            strokeColor: '#3BB77E',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#5ef29252', // Couleur de remplissage verte
+            fillOpacity: 0.35,
+          });
 
-        // Centre la carte sur la localisation du code postal
-        map.fitBounds(bounds);
+          // Centre la carte sur la localisation du code postal
+          map.fitBounds(bounds);
 
-        // Positionne l'icône personnalisée au centre du rectangle
-        const center = bounds.getCenter();
-        const icon = {
-          url: '../../assets/imgs/icone.png', // Path to your custom icon
-          scaledSize: new google.maps.Size(100, 100), // Adjust size if necessary
-          origin: new google.maps.Point(0, 0),
-          anchor: new google.maps.Point(50, 50) 
-                };
-        const marker = new google.maps.Marker({
-          position: center,
-          map: map,
-          icon: icon,
-          draggable: false,
-          animation: google.maps.Animation.DROP
-        });
-
-      } else {
-        console.error('Le géocodage a échoué pour la raison suivante : ' + status);
+          // Positionne l'icône personnalisée au centre du rectangle
+          const center = bounds.getCenter();
+          const icon = {
+            url: '../../assets/imgs/icone.png', // Path to your custom icon
+            scaledSize: new google.maps.Size(100, 100), // Adjust size if necessary
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(50, 50),
+          };
+          const marker = new google.maps.Marker({
+            position: center,
+            map: map,
+            icon: icon,
+            draggable: false,
+            animation: google.maps.Animation.DROP,
+          });
+        } else {
+          console.error(
+            'Le géocodage a échoué pour la raison suivante : ' + status
+          );
+        }
       }
-    });
+    );
   }
   ngOnInit() {
     this.responsiveOptions = [
@@ -192,7 +198,7 @@ export class AdsDetailComponent implements OnInit {
         numScroll: 1,
       },
     ];
-        if (isPlatformBrowser(this.platformId)) {
+    if (isPlatformBrowser(this.platformId)) {
       this.checkScreenWidth();
       // Listen to window resize event only in browser environment
       window.addEventListener('resize', () => this.checkScreenWidth());
@@ -213,7 +219,7 @@ export class AdsDetailComponent implements OnInit {
           this.annonceService.getAdById(this.adId).subscribe((data) => {
             this.adDetail = data.data;
             this.initMap();
-            console.log('modelfilds',data);
+            console.log('modelfilds', data);
 
             this.categoryService
               .getCategoryById(data.data.category_id)
@@ -475,7 +481,8 @@ export class AdsDetailComponent implements OnInit {
         // Utilisez maintenant this.adId pour obtenir l'ID de l'annonce
       }
     });
-    this.initMap();  }
+    this.initMap();
+  }
   goToChat(): void {
     this.routers.navigate(['/chat', this.adDetail.id]);
   }

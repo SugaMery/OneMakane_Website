@@ -31,6 +31,20 @@ export class UserService {
     return this.http.get(`${this.baseUrl}/users/${userId}`, { headers });
   }
 
+  getUserInfoByIdVendor(
+    userId: number,
+    uuid: string,
+    accessToken: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`,
+    });
+
+    return this.http.get(`${this.baseUrl}/users/profile/${userId}/${uuid}`, {
+      headers,
+    });
+  }
+
   logout(accessToken: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${accessToken}`,
@@ -42,7 +56,7 @@ export class UserService {
   refreshToken(accessToken: string): Observable<any> {
     const body = { refresh_token: accessToken };
     return this.http.post(`${this.baseUrl}/auth/refresh-token`, body);
-}
+  }
 
   getConversationsByUser(userId: number, accessToken: string): Observable<any> {
     const headers = new HttpHeaders({

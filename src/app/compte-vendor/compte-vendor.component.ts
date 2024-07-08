@@ -66,7 +66,7 @@ interface ModelFields {
 @Component({
   selector: 'app-compte-vendor',
   templateUrl: './compte-vendor.component.html',
-  styleUrl: './compte-vendor.component.css'
+  styleUrl: './compte-vendor.component.css',
 })
 export class CompteVendorComponent {
   currentPage = 1;
@@ -83,7 +83,7 @@ export class CompteVendorComponent {
   constructor(
     private categoryService: CategoryService,
     private annonceService: AnnonceService,
-    private userService : UserService,
+    private userService: UserService,
     private route: ActivatedRoute,
     private renderer: Renderer2,
     @Inject(PLATFORM_ID) private platformId: any,
@@ -198,15 +198,13 @@ export class CompteVendorComponent {
     this.paginateAds();
   }
 
-
-
   getAdsList(): void {
     this.annonceService.getAds().subscribe((datas) => {
       let ads = datas.data;
       let adsProcessed = 0;
-  
+
       this.originalAds = [];
-  
+
       ads.forEach((element: { id: string }) => {
         this.annonceService.getAdById(element.id).subscribe((data) => {
           adsProcessed++;
@@ -215,30 +213,35 @@ export class CompteVendorComponent {
             this.ads.push(detailedAd);
             this.originalAds.push(detailedAd);
           }
-  
+
           // Check if all ads have been processed
           if (adsProcessed === ads.length) {
             // Now this.ads and this.originalAds should contain filtered ads
-            console.log("Filtered ads:", this.ads);
+            console.log('Filtered ads:', this.ads);
           }
         });
       });
     });
   }
-  
-  userId!: string;
-  ngOnInit(): void {
-    const accessToken = localStorage.getItem('loggedInUserToken');
 
-    this.userId = this.route.snapshot.params['userId'];
-    console.log('User ID:', this.userId);
-this.getAdsList();
-this.userService.getUserInfoById(Number(this.userId),accessToken!).subscribe(
-( userInfo:any)=>{
-  this.userInfo = userInfo.data
-  console.log('userrrrrr info',userInfo)
-}
-)
+  userId!: string;
+  uuId!: string;
+
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const accessToken = localStorage.getItem('loggedInUserToken');
+
+      this.userId = this.route.snapshot.params['userId'];
+      this.uuId = this.route.snapshot.params['uuId'];
+
+      console.log('User ID:', this.userId);
+      this.getAdsList();
+      this.userService
+        .getUserInfoByIdVendor(Number(this.userId), this.uuId, accessToken!)
+        .subscribe((userInfo: any) => {
+          this.userInfo = userInfo.data;
+          console.log('user info', userInfo);
+        });
+    }
   }
 }
-

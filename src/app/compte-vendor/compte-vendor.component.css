@@ -1,0 +1,18 @@
+@media (min-width: 992px) {
+    ::ng-deep .col-lg-2 {
+        flex: 0 0 auto;
+        width: 20%;
+    }
+}
+
+::ng-deep .product-cart-wrap .product-img-action-wrap {
+    padding: 20px 15px 0 15px !important;
+    margin: 0;
+}
+
+@media only screen and (min-width: 1024px) {
+    ::ng-deep .product-cart-wrap .product-img-action-wrap {
+        padding: 20px 15px 0 15px !important;
+        margin: 0;
+    }
+}

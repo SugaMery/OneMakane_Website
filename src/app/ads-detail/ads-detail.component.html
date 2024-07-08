@@ -210,9 +210,8 @@
                           {{ adDetail.city }}
                         </h5>
                         <div class="google-maps-container mt-30">
-                          <div id="map" style="height: 400px;"></div>
+                          <div id="map" style="height: 400px"></div>
                         </div>
-                                               
                       </div>
                     </div>
 
@@ -254,30 +253,74 @@
                           <div class="col-lg-12">
                             <div class="comment-list">
                               <!-- Wrap this div with Angular router link -->
-                              <a [routerLink]="['/compte', adDetail.user?.id]">
-                                <div class="single-comment justify-content-between d-flex mb-30">
-                                  <div class="user justify-content-between d-flex">
+                              <a
+                                [routerLink]="[
+                                  '/compte',
+                                  adDetail.user?.id,
+                                  adDetail.user?.uuid
+                                ]"
+                              >
+                                <div
+                                  class="single-comment justify-content-between d-flex mb-30"
+                                >
+                                  <div
+                                    class="user justify-content-between d-flex"
+                                  >
                                     <div class="linksS">
-                                      <div class="name-initials"
-                                           style="display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; border-radius: 50%; color: #3bb77e;">
-                                        {{ adDetail.user?.first_name?.slice(0, 1) }}{{ adDetail.user?.last_name?.slice(0, 1) }}
+                                      <div
+                                        class="name-initials"
+                                        style="
+                                          display: flex;
+                                          justify-content: center;
+                                          align-items: center;
+                                          background-color: #f0f0f0;
+                                          border-radius: 50%;
+                                          color: #3bb77e;
+                                        "
+                                      >
+                                        {{
+                                          adDetail.user?.first_name?.slice(
+                                            0,
+                                            1
+                                          )
+                                        }}{{
+                                          adDetail.user?.last_name?.slice(0, 1)
+                                        }}
                                       </div>
                                     </div>
                                     <div class="desc">
-                                      <div class="d-flex justify-content-between mb-10">
+                                      <div
+                                        class="d-flex justify-content-between mb-10"
+                                      >
                                         <div class="d-flex align-items-center">
                                           <span class="font-xs text-muted">
-                                            {{ getFormattedDate(adDetail.created_at) }}
+                                            {{
+                                              getFormattedDate(
+                                                adDetail.created_at
+                                              )
+                                            }}
                                           </span>
                                         </div>
                                       </div>
                                       <h4 class="mb-10">
-                                        {{ adDetail.user?.first_name }} {{ adDetail.user?.last_name }}
+                                        {{ adDetail.user?.first_name }}
+                                        {{ adDetail.user?.last_name }}
                                       </h4>
-                                      <p class="mb-10" *ngIf="countsAds !== null && (countsAds === 0 || countsAds === 1)">
+                                      <p
+                                        class="mb-10"
+                                        *ngIf="
+                                          countsAds !== null &&
+                                          (countsAds === 0 || countsAds === 1)
+                                        "
+                                      >
                                         {{ countsAds }} annonce
                                       </p>
-                                      <p class="mb-10" *ngIf="countsAds !== null && countsAds > 1">
+                                      <p
+                                        class="mb-10"
+                                        *ngIf="
+                                          countsAds !== null && countsAds > 1
+                                        "
+                                      >
                                         {{ countsAds }} annonces
                                       </p>
                                     </div>
@@ -289,7 +332,6 @@
                           </div>
                         </div>
                       </div>
-                      
                     </div>
                   </div>
                 </div>

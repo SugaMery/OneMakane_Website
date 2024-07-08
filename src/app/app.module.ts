@@ -51,6 +51,7 @@ import { GalleriaModule } from 'primeng/galleria';
 import { FavoisComponent } from './favois/favois.component';
 import { CompteVendorComponent } from './compte-vendor/compte-vendor.component';
 import { MessageComponent } from './message/message.component';
+import { MatSliderModule } from '@angular/material/slider';
 @NgModule({
   declarations: [
     AppComponent,
@@ -103,6 +104,8 @@ import { MessageComponent } from './message/message.component';
     CalendarModule,
     ImageModule,
     GalleriaModule,
+    FormsModule,
+    MatSliderModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: () => {

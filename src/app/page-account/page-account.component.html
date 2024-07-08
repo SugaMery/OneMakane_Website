@@ -108,10 +108,15 @@
                     </div>
                     <div class="card-body">
                       <p>
-                        Depuis votre tableau de bord, vous pouvez facilement gérer  <a href="/page-account#orders"> vos annonces </a> , 
-                        <a href="/deposer_une_annonce"> ajouter une annonce </a>, consulter <a href="/page-account#account-detail"> les détails de votre compte </a>, 
-                        <a href="/page-account#address">modifier votre mot de passe </a>  et vous <a (click)="logout()" >déconnecter</a>
-
+                        À partir de votre tableau de bord, vous pouvez
+                        facilement vérifier et afficher vos
+                        <a href="#">commandes récentes</a>, gérer vos
+                        <a href="#">adresses de livraison et de facturation</a>
+                        et
+                        <a href="#"
+                          >modifier votre mot de passe et vos informations de
+                          compte.</a
+                        >
                       </p>
                     </div>
                   </div>
@@ -122,189 +127,190 @@
                   role="tabpanel"
                   aria-labelledby="orders-tab"
                 >
-                <div class="card">
-                  <div class="card-header">
-                    <h3 class="mb-0">Ma liste des annonces</h3>
-                  </div>
-                  <div class="card-body">
-                    <div class="table-responsive">
-                      <div class="table-responsive shopping-summery">
-                        <table class="table table-wishlist">
-                          <thead>
-                            <tr class="main-heading">
-                              <th class="custome-checkbox start pl-30">
-                                <input
-                                  class="form-check-input"
-                                  type="checkbox"
-                                  name="checkbox"
-                                  id="exampleCheckbox11"
-                                  value=""
-                                />
-                                <label class="form-check-label" for="exampleCheckbox11"></label>
-                              </th>
-                              <th scope="col" colspan="2">Annonce</th>
-                              <th scope="col">Prix</th>
-                              <th scope="col">Status</th>
-                              <th scope="col">Action</th>
-                              <th scope="col" class="end">Supprimé</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr class="pt-30" *ngFor="let ad of paginatedAds">
-                              <td class="custome-checkbox pl-30">
-                                <input
-                                  class="form-check-input"
-                                  type="checkbox"
-                                  name="checkbox"
-                                  id="exampleCheckbox1"
-                                  value=""
-                                />
-                                <label class="form-check-label" for="exampleCheckbox1"></label>
-                              </td>
-                              <td class="image product-thumbnail pt-40 image">
-                                <img src="{{ ad.medias[0]?.url }}" alt="#" />
-                              </td>
-                              <td class="product-des product-name">
-                                <h6>
-                                  <a class="product-name mb-10">{{ ad.title }}</a>
-                                </h6>
-                                <span class="font-small text-muted">{{ ad.created_at }}</span>
-                              </td>
-                              <td class="price" data-title="Prix">
-                                <h3 class="text-brand">{{ ad.price }} DH</h3>
-                              </td>
-                              <td class="text-center detail-info" data-title="Status">
-                                <span
-                                  class="stock-status in-stock mb-0"
-                                  [ngClass]="getStatusClass(ad.validation_status)"
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="mb-0">Ma liste des annonces</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <div class="table-responsive shopping-summery">
+                          <table class="table table-wishlist">
+                            <thead>
+                              <tr class="main-heading">
+                                <th class="custome-checkbox start pl-30">
+                                  <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    name="checkbox"
+                                    id="exampleCheckbox11"
+                                    value=""
+                                  />
+                                  <label
+                                    class="form-check-label"
+                                    for="exampleCheckbox11"
+                                  ></label>
+                                </th>
+                                <th scope="col" colspan="2">Annonce</th>
+                                <th scope="col">Prix</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Action</th>
+                                <th scope="col" class="end">Supprimé</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr class="pt-30" *ngFor="let ad of ads">
+                                <td class="custome-checkbox pl-30">
+                                  <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    name="checkbox"
+                                    id="exampleCheckbox1"
+                                    value=""
+                                  />
+                                  <label
+                                    class="form-check-label"
+                                    for="exampleCheckbox1"
+                                  ></label>
+                                </td>
+                                <td class="image product-thumbnail pt-40 image">
+                                  <img src="{{ ad.medias[0]?.url }}" alt="#" />
+                                </td>
+                                <td class="product-des product-name">
+                                  <h6>
+                                    <a
+                                      class="product-name mb-10"
+                                      [href]="'/modifier-annonce/' + ad.id"
+                                      >{{ ad.title }}</a
+                                    >
+                                  </h6>
+                                  <span class="font-small text-muted">{{
+                                    ad.created_at
+                                  }}</span>
+                                </td>
+                                <td class="price" data-title="Prix">
+                                  <h3 class="text-brand">{{ ad.price }} DH</h3>
+                                </td>
+                                <td
+                                  class="text-center detail-info"
+                                  data-title="Status"
                                 >
-                                  {{ getStatusInFrench(ad.validation_status) }}
-                                </span>
-                              </td>
-                              <td class="action text-right" data-title="Action">
-                                <a [href]="'/modifier-annonce/' + ad.id">
-                                  <button class="btn btn-sm">Plus infos</button>
-                                </a>
-                              </td>
-                              <td class="text-center" data-title="Supprimer">
-                                <a class="text-body" (click)="showDialog(ad)">
-                                  <i class="fi-rs-trash"></i>
-                                </a>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                        <p-dialog
-                        [(visible)]="adDialog"
-                        header="Confirmer la suppression"
-                        [modal]="true"
-                        styleClass="p-fluid custom-dialog"
-                      >
-         
-                          <ng-template pTemplate="content">
-                            <div>
-                              <p>Êtes-vous sûr de vouloir supprimer cette annonce ?</p>
-                              <div class="payment_option">
-                                <div class="custome-radio">
-                                  <input
-                                    class="form-check-input"
-                                    type="radio"
-                                    name="reason"
-                                    id="option1"
-                                    value="1"
-                                    required
-                                  />
-                                  <label class="form-check-label" for="option1"
-                                    >J'ai vendu mon bien sur Onemakan</label
+                                  <span
+                                    class="stock-status in-stock mb-0"
+                                    [ngClass]="
+                                      getStatusClass(ad.validation_status)
+                                    "
                                   >
-                                </div>
-                                <div class="custome-radio">
-                                  <input
-                                    class="form-check-input"
-                                    type="radio"
-                                    name="reason"
-                                    id="option2"
-                                    value="2"
-                                    required
-                                  />
-                                  <label class="form-check-label" for="option2"
-                                    >J'ai vendu mon bien par un autre moyen</label
-                                  >
-                                </div>
-                                <div class="custome-radio">
-                                  <input
-                                    class="form-check-input"
-                                    type="radio"
-                                    name="reason"
-                                    id="option3"
-                                    value="3"
-                                    required
-                                  />
-                                  <label class="form-check-label" for="option3"
-                                    >Je ne souhaite plus vendre mon bien</label
-                                  >
+                                    {{
+                                      getStatusInFrench(ad.validation_status)
+                                    }}
+                                  </span>
+                                </td>
+                                <td
+                                  class="action text-right"
+                                  data-title="Action"
+                                >
+                                  <a [href]="'/modifier-annonce/' + ad.id">
+                                    <button class="btn btn-sm">Modifier</button>
+                                  </a>
+                                </td>
+                                <td class="text-center" data-title="Supprimer">
+                                  <a class="text-body" (click)="showDialog(ad)"
+                                    ><i class="fi-rs-trash"></i
+                                  ></a>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <p-dialog
+                            [(visible)]="adDialog"
+                            [style]="{ width: '20rem' }"
+                            header="Confirmer la suppression"
+                            [modal]="true"
+                            styleClass="p-fluid"
+                          >
+                            <ng-template pTemplate="content">
+                              <div>
+                                <p>
+                                  Êtes-vous sûr de vouloir supprimer cette
+                                  annonce ?
+                                </p>
+                                <div class="payment_option">
+                                  <div class="custome-radio">
+                                    <input
+                                      class="form-check-input"
+                                      type="radio"
+                                      name="reason"
+                                      id="option1"
+                                      value="1"
+                                      required
+                                    />
+                                    <label
+                                      class="form-check-label"
+                                      for="option1"
+                                      >J'ai vendu mon bien sur Onemakan</label
+                                    >
+                                  </div>
+                                  <div class="custome-radio">
+                                    <input
+                                      class="form-check-input"
+                                      type="radio"
+                                      name="reason"
+                                      id="option2"
+                                      value="2"
+                                      required
+                                    />
+                                    <label
+                                      class="form-check-label"
+                                      for="option2"
+                                      >J'ai vendu mon bien par un autre
+                                      moyen</label
+                                    >
+                                  </div>
+                                  <div class="custome-radio">
+                                    <input
+                                      class="form-check-input"
+                                      type="radio"
+                                      name="reason"
+                                      id="option3"
+                                      value="3"
+                                      required
+                                    />
+                                    <label
+                                      class="form-check-label"
+                                      for="option3"
+                                      >Je ne souhaite plus vendre mon
+                                      bien</label
+                                    >
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </ng-template>
-                
-                          <ng-template pTemplate="footer">
-                            <div style="padding: 1rem !important">
-                              <button
-                                pButton
-                                pRipple
-                                label="Annuler"
-                                icon="pi pi-times"
-                                class="p-button-text"
-                                (click)="adDialog = false"
-                              ></button>
-                              <button
-                                pButton
-                                pRipple
-                                label="Confirmer"
-                                icon="pi pi-check"
-                                class="p-button-danger"
-                                (click)="confirmDeletion(selectedAd)"
-                              ></button>
-                            </div>
-                          </ng-template>
-                        </p-dialog>
+                            </ng-template>
+
+                            <ng-template pTemplate="footer">
+                              <div style="padding: 1rem !important">
+                                <button
+                                  pButton
+                                  pRipple
+                                  label="Annuler"
+                                  icon="pi pi-times"
+                                  class="p-button-text"
+                                  (click)="adDialog = false"
+                                ></button>
+                                <button
+                                  pButton
+                                  pRipple
+                                  label="Confirmer"
+                                  icon="pi pi-check"
+                                  class="p-button-danger"
+                                  (click)="confirmDeletion(selectedAd)"
+                                ></button>
+                              </div>
+                            </ng-template>
+                          </p-dialog>
+                        </div>
                       </div>
                     </div>
-                
-                    <div class="pagination-area mt-20 mb-20" style="
-                    float: inline-end;
-                ">
-                      <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-start">
-                          <li
-                            class="page-item"
-                            [class.disabled]="currentPage === 1"
-                            (click)="changePage(currentPage - 1)"
-                          >
-                            <a class="page-link" ><i class="fi-rs-arrow-small-left"></i></a>
-                          </li>
-                          <li
-                            class="page-item"
-                            *ngFor="let page of [].constructor(totalPages); let i = index"
-                            [class.active]="currentPage === i + 1"
-                            (click)="changePage(i + 1)"
-                          >
-                            <a class="page-link">{{ i + 1 }}</a>
-                          </li>
-                          <li
-                            class="page-item"
-                            [class.disabled]="currentPage === totalPages"
-                            (click)="changePage(currentPage + 1)"
-                          >
-                            <a class="page-link" ><i class="fi-rs-arrow-small-right"></i></a>
-                          </li>
-                        </ul>
-                      </nav>
-                    </div>
                   </div>
-                </div>
-                
                 </div>
                 <!-- <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">
                                     <div class="card">
@@ -1304,4 +1310,3 @@
 </main>
 
 <app-footer></app-footer>
-<app-preloader></app-preloader>

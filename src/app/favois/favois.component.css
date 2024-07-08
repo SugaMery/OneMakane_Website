@@ -384,21 +384,7 @@ ul li.mylist:first-child {
 }
 
 
-::ng-deep .shop-filter-toogled  {
-  margin-bottom: 20px;
-  display: inline-flex;
-  align-items: center;
-  position: relative;
-  border-radius: 30px;
-  border: 1px solid #ececec;
-  font-size: 0.8rem;
-  font-weight: 700;
-  font-family: "Quicksand", sans-serif;
-  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.05);
-  padding: 0.625rem 2.5rem; /* Converted to rem units */
-}
-
-::ng-deep .shop-filter-toogle  {
+::ng-deep .shop-filter-toogled {
     margin-bottom: 20px;
     display: inline-flex;
     align-items: center;
@@ -409,32 +395,68 @@ ul li.mylist:first-child {
     font-weight: 700;
     font-family: "Quicksand", sans-serif;
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.05);
-    padding: 0.625rem 2.5rem; /* Converted to rem units */
-  }
+    padding: 0.625rem 2.5rem;
+    /* Converted to rem units */
+}
+
+::ng-deep .shop-filter-toogle {
+    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    border-radius: 30px;
+    border: 1px solid #ececec;
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-family: "Quicksand", sans-serif;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.05);
+    padding: 0.625rem 2.5rem;
+    /* Converted to rem units */
+}
 
 ::ng-deep .shop-filter-toogled i {
-  margin-left: 5px;
-  color: #B6B6B6;
+    margin-left: 5px;
+    color: #B6B6B6;
 }
 
 ::ng-deep .shop-filter-toogled i.angle-down {
-  opacity: 0;
-  visibility: hidden;
-  display: none;
+    opacity: 0;
+    visibility: hidden;
+    display: none;
 }
+
 ::ng-deep .shop-filter-toogled .fi-rs-filter {
-  font-size: 14px;
-  color: #B6B6B6;
+    font-size: 14px;
+    color: #B6B6B6;
 }
 
 ::ng-deep .shop-filter-toogled.active i.angle-down {
-  opacity: 1;
-  visibility: visible;
-  display: inline-block;
+    opacity: 1;
+    visibility: visible;
+    display: inline-block;
 }
 
 ::ng-deep .shop-filter-toogled.active i.angle-up {
-  opacity: 0;
-  visibility: hidden;
-  display: none;
+    opacity: 0;
+    visibility: hidden;
+    display: none;
+}
+
+@media (min-width: 992px) {
+    ::ng-deep .col-lg-2 {
+        flex: 0 0 auto;
+        width: 20%;
+    }
+}
+
+::ng-deep .product-cart-wrap .product-img-action-wrap {
+    padding: 20px 15px 0 15px !important;
+    margin: 0;
+}
+
+@media only screen and (min-width: 1024px) {
+    ::ng-deep .product-cart-wrap .product-img-action-wrap {
+        padding: 20px 15px 0 15px !important;
+        margin: 0;
+    }
 }

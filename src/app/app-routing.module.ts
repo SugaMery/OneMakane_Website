@@ -44,13 +44,10 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'compte/:userId',
+    path: 'compte/:userId/:uuId',
     component: CompteVendorComponent,
   },
-  {path: 'messages',
-  component : MessageComponent
-
-  },  
+  { path: 'messages', component: MessageComponent },
   {
     path: 'conditions_generales_de_ventes',
     component: ConditionsGeneralesComponent,

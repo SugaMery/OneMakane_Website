@@ -10,7 +10,6 @@ import { CategoryService } from '../category.service';
 import { AnnonceService } from '../annonce.service';
 import { ActivatedRoute } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
-
 interface Option {
   key: string; // Unique identifier for the option
   value: string; // Display value of the option
@@ -118,18 +117,94 @@ export class AdsGridComponent {
     }
   }
 
+  mobileHeaderActive(): void {
+    console.log('rrrrrrtttttt');
+    const navbarTrigger2 = this.el.nativeElement.querySelector(
+      '.filter-drawer-button'
+    );
+    const endTrigger2 = this.el.nativeElement.querySelector(
+      '.new-mobile-menu-close'
+    );
+    const container2 = this.el.nativeElement.querySelector(
+      '.new-mobile-header-active'
+    );
+
+    if (!navbarTrigger2 || !endTrigger2 || !container2) {
+      console.error(
+        'One or more elements not found for mobile header functionality.'
+      );
+      return;
+    }
+
+    const wrapper2 = document.body; // Use document.body directly for wrapper
+
+    this.renderer.appendChild(wrapper2, this.createOverlay());
+
+    this.renderer.listen(navbarTrigger2, 'click', (e: Event) => {
+      e.preventDefault();
+      this.renderer.addClass(container2, 'sidebar-visible');
+      this.renderer.addClass(wrapper2, 'mobile-menu-active-2');
+    });
+
+    this.renderer.listen(endTrigger2, 'click', () => {
+      this.renderer.removeClass(container2, 'sidebar-visible');
+      this.renderer.removeClass(wrapper2, 'mobile-menu-active-2');
+    });
+
+    const bodyOverlay2 = wrapper2.querySelector('.body-overlay-2');
+    if (bodyOverlay2) {
+      this.renderer.listen(bodyOverlay2, 'click', () => {
+        this.renderer.removeClass(container2, 'sidebar-visible');
+        this.renderer.removeClass(wrapper2, 'mobile-menu-active-2');
+      });
+    }
+  }
+
+  price1: number = 500;
+  price2: number = 1000000;
+  displayValue: string = '';
+
+  getVals(): void {
+    let slide1 = this.price1;
+    let slide2 = this.price2;
+
+    if (slide1 > slide2) {
+      [slide1, slide2] = [slide2, slide1];
+    }
+
+    this.displayValue = `DH${slide1} - DH${slide2}`;
+
+    // Call the method to get ads by category with the price range
+    this.categoryService
+      .getAdsByCategory(Number(this.categoryId), {
+        'price-min': slide1,
+        'price-max': slide2,
+      })
+      .subscribe(
+        (data) => {
+          console.log('Ads data helllo:', data);
+          this.ads = [];
+          this.ads = data.data;
+          // Handle the received ads data here
+        },
+        (error) => {
+          console.error('Error fetching ads:', error);
+        }
+      );
+  }
   addToFavorites(adId: number): void {
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
-  
+
     // Vérifiez si l'utilisateur est connecté
     if (!userId || !accessToken) {
       // Rediriger vers la page de connexion
       window.location.href = '/login';
       return;
     }
-  
-    this.annonceService.addToFavorites(Number(userId), adId, accessToken)
+
+    this.annonceService
+      .addToFavorites(Number(userId), adId, accessToken)
       .subscribe(
         (response) => {
           // Traiter l'ajout réussi aux favoris ici
@@ -253,6 +328,7 @@ export class AdsGridComponent {
       window.addEventListener('resize', () => this.checkScreenWidth());
     }
     this.mobileHeaderActive();
+    //this.getVals();
   }
   isFilterDrawerOpen = false;
   isDropdownOpen = false;
@@ -328,6 +404,7 @@ export class AdsGridComponent {
   }
 
   getCategoriesFilters(): void {
+    this.ads = [];
     const category_id = this.categoryId?.toString();
     this.categoryService.getCategoryById(category_id!).subscribe((datas) => {
       // console.log('greeeet in ', datas);
@@ -343,15 +420,22 @@ export class AdsGridComponent {
         if (queryParams.hasOwnProperty(key)) {
           const value = queryParams[key];
           console.log(`Query Parameter ${key}: ${value}`);
-         
-          if (key !== 'search') {
-            this.filters
-  console.log('goooofrrrr', this.filters[key].options[value] ,key,value);
-   const option = {key:key,value:this.filters[key].options[value]};
-            this.selectOptioned(key, value,option);
-            //this.applyFilter()
-            this.applyFilter();
 
+          if (key !== 'search') {
+            this.filters;
+            console.log(
+              'goooofrrrr',
+              this.filters[key].options[value],
+              key,
+              value
+            );
+            const option = {
+              key: key,
+              value: this.filters[key].options[value],
+            };
+            this.selectOptioned(key, value, option);
+            //this.applyFilter()
+            // this.applyFilter();
           } else {
             this.searchTitle = value;
 
@@ -363,7 +447,6 @@ export class AdsGridComponent {
           // Use 'key' and 'value' as needed
         }
         //this.applyFilter();
-
       }
       this.parentCategory();
       // console.log('greeeet in ', datas);
@@ -377,6 +460,8 @@ export class AdsGridComponent {
       }
     });
   }
+  minPrice: number = 0;
+  maxPrice: number = 1000;
 
   filterAdsByTitle(event: any): void {
     // Remove extra spaces and split search term
@@ -652,47 +737,6 @@ export class AdsGridComponent {
     }
   }
 
-  mobileHeaderActive(): void {
-    console.log('rrrrrrtttttt');
-    const navbarTrigger2 = this.el.nativeElement.querySelector(
-      '.filter-drawer-button'
-    );
-    const endTrigger2 = this.el.nativeElement.querySelector(
-      '.new-mobile-menu-close'
-    );
-    const container2 = this.el.nativeElement.querySelector(
-      '.new-mobile-header-active'
-    );
-    const wrapper2 = document!.querySelector('body');
-
-    if (!navbarTrigger2 || !endTrigger2 || !container2 || !wrapper2) {
-      console.error(
-        'One or more elements not found for mobile header functionality.'
-      );
-      return;
-    }
-
-    this.renderer.appendChild(wrapper2, this.createOverlay());
-
-    this.renderer.listen(navbarTrigger2, 'click', (e: Event) => {
-      e.preventDefault();
-      this.renderer.addClass(container2, 'sidebar-visible');
-      this.renderer.addClass(wrapper2, 'mobile-menu-active-2');
-    });
-
-    this.renderer.listen(endTrigger2, 'click', () => {
-      this.renderer.removeClass(container2, 'sidebar-visible');
-      this.renderer.removeClass(wrapper2, 'mobile-menu-active-2');
-    });
-
-    const bodyOverlay2 = wrapper2.querySelector('.body-overlay-2');
-    if (bodyOverlay2) {
-      this.renderer.listen(bodyOverlay2, 'click', () => {
-        this.renderer.removeClass(container2, 'sidebar-visible');
-        this.renderer.removeClass(wrapper2, 'mobile-menu-active-2');
-      });
-    }
-  }
   private createOverlay(): HTMLElement {
     const overlay = this.renderer.createElement('div');
     this.renderer.addClass(overlay, 'body-overlay-2');

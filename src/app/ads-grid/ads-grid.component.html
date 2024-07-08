@@ -176,6 +176,7 @@
               />
             </div>
           </div>
+
           <div
             class="sidebar-widget widget-category-2 mb-30"
             *ngIf="!vissibleCategory"
@@ -283,14 +284,13 @@
         "
       >
         <div class="shop-product-fillter filter">
-          <div class="totall-product" *ngIf="!isScreenphone">
+          <div class="totall-product">
             <p>
               Nous avons trouvé
               <strong class="text-brand">{{ ads.length }}</strong>
               annonces pour vous !
             </p>
           </div>
-
           <div class="sort-by-product-area" *ngIf="!isScreenphone">
             <div class="sort-by-cover mr-10">
               <div class="sort-by-product-wrap">
@@ -481,14 +481,6 @@
               <i style="color: #777" class="fi fi-rs-settings-sliders"></i>
             </button> -->
           </div>
-
-          <div class="totall-product mt-20" *ngIf="isScreenphone">
-            <p>
-              Nous avons trouvé
-              <strong class="text-brand">{{ ads.length }}</strong>
-              annonces pour vous !
-            </p>
-          </div>
         </div>
 
         <div class="col-12">
@@ -498,15 +490,12 @@
                 'col-lg-2 col-md-6 col-12': !isScreenphone,
                 'col-6': isScreenphone
               }"
-              *ngFor="let ad of ads "
+              *ngFor="let ad of ads | slice : 0 : 4"
             >
               <div
                 class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
               >
-                <div
-                  class="product-img-action-wrap"
-                  style="padding: 25px 25px 0 25px !important"
-                >
+                <div class="product-img-action-wrap">
                   <div
                     class="product-img product-img-zoom"
                     style="height: 240px"
@@ -529,7 +518,7 @@
                     <a
                       aria-label="Ajouter à la liste de souhaits"
                       class="action-btn"
-                      (click)="addToFavorites(ad.id)"
+                      href="#"
                     >
                       <i class="fi-rs-heart"></i>
                     </a>
@@ -570,7 +559,72 @@
             </div>
           </div>
         </div>
-
+        <div class="row product-grid">
+          <div
+            *ngFor="let ad of category.value"
+            class="col-lg-2 col-md-4 col-12 col-sm-6"
+          >
+            <div class="product-cart-wrap mb-30">
+              <div class="product-img-action-wrap">
+                <div class="product-img product-img-zoom" style="height: 240px">
+                  <a [href]="'/ads/' + ad.id" style="height: 100%">
+                    <img
+                      class="default-img"
+                      [src]="
+                        ad.medias[0]?.url || 'assets/imgs/shop/default-img.jpg'
+                      "
+                      alt="{{ ad.title }}"
+                    />
+                    <img
+                      class="hover-img"
+                      [src]="ad.medias[1]?.url || ad.medias[0]?.url"
+                      alt=""
+                      style="height: 100%"
+                    />
+                  </a>
+                </div>
+                <div class="product-action-1">
+                  <a
+                    aria-label="Ajouter à la liste de souhaits"
+                    class="action-btn"
+                    (click)="addToFavorites(ad.id)"
+                  >
+                    <i class="fi-rs-heart"></i>
+                  </a>
+                </div>
+                <div
+                  class="product-badges product-badges-position product-badges-mrg"
+                >
+                  <span *ngIf="ad.urgent" class="hot">Urgent</span>
+                </div>
+              </div>
+              <div class="product-content-wrap">
+                <div class="product-category">
+                  <a [href]="'/ads-category/' + ad.category?.id">{{
+                    ad.category.name
+                  }}</a>
+                </div>
+                <h2>
+                  <a [href]="'/ads/' + ad.id"
+                    >{{ ad.title | slice : 0 : 17
+                    }}{{ ad.title.length > 17 ? "..." : "" }}</a
+                  >
+                </h2>
+                <div class="product-price">
+                  <span
+                    >{{ ad.price | slice : 0 : 10
+                    }}{{ ad.price.length > 10 ? "..." : "" }} DH</span
+                  >
+                </div>
+                <div>
+                  <span class="font-small text-muted">{{
+                    getRelativeTime(ad.created_at)
+                  }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <ng-template #noAds>
           <p>Aucune annonce trouvée pour cette catégorie.</p>
         </ng-template>
@@ -631,6 +685,31 @@
             />
           </div>
         </div>
+        <div class="sidebar-widget price_range range mb-30">
+          <h5 class="section-title style-1 mb-30">Filter by price</h5>
+          <div class="slider">
+            <div class="range-slider">
+              <span class="rangeValues">{{ displayValue }}</span>
+              <input
+                [(ngModel)]="price1"
+                (input)="getVals()"
+                min="500"
+                max="1000000"
+                step="500"
+                type="range"
+              />
+              <input
+                [(ngModel)]="price2"
+                (input)="getVals()"
+                min="500"
+                max="1000000"
+                step="500"
+                type="range"
+              />
+            </div>
+          </div>
+        </div>
+
         <!--         <div
           class="sidebar-widget price_range range mb-30"
           *ngIf="openmatchingFilters"
@@ -894,7 +973,7 @@
                             style="width: max-content"
                           >
                             <div class="sort-by-dropdown-wrap">
-                              {{ filters[key].selectedLabel  || "Choissisez" }}
+                              {{ filters[key].selectedLabel || "Choissisez" }}
                               <span
                                 ><i class="fi-rs-angle-small-down"></i
                               ></span>
@@ -945,7 +1024,7 @@
                                         filters[key].options[optionKey]
                                       )
                                     "
-                                    (click)="selectOptioned(key, option.key,option)"
+                                    (click)="selectOption(key, option.key)"
                                   >
                                     <a
                                       [class.active]="
