@@ -166,57 +166,61 @@ export class EditAdsComponent implements OnInit {
   optionsVisible: boolean = false;
 
   ngOnInit(): void {
-   // this.initializeAd();
-   this.settings = [];
-   const adId = this.route.snapshot.paramMap.get('id');
-     this.adService.getAdById(adId!).subscribe((data) => {
-       this.ad = data.data;
-       this.uploadedImages = this.ad.medias;
-    const modelFields = this.ad.category.model_fields;
-   const queryParams = { model: this.ad.category.model };
+    // this.initializeAd();
+    this.settings = [];
+    const adId = this.route.snapshot.paramMap.get('id');
+    this.adService.getAdById(adId!).subscribe((data) => {
+      this.ad = data.data;
+      this.uploadedImages = this.ad.medias;
+      const modelFields = this.ad.category.model_fields;
+      const queryParams = { model: this.ad.category.model };
 
-   this.categoryService.getCategoriesFrom().subscribe(
-    (categories) => {
-      this.categories = categories.data.filter(
-        (category: Category) =>
-          category.active === true && category.parent_id !== null
+      this.categoryService.getCategoriesFrom().subscribe(
+        (categories) => {
+          this.categories = categories.data.filter(
+            (category: Category) =>
+              category.active === true && category.parent_id !== null
+          );
+          this.categories.forEach((category) => {
+            this.enrichCategoryWithParentAndModelFields(category);
+          });
+
+          if (this.ad?.category) {
+            this.selectedOption = this.categories.find(
+              (category) => this.ad.category.id === category.id
+            );
+          } else {
+            console.error('Ad category is undefined');
+          }
+        },
+        (error) => {
+          console.error('Error fetching categories: ', error);
+        }
       );
-      this.categories.forEach((category) => {
-        this.enrichCategoryWithParentAndModelFields(category);
-      });
 
-      if (this.ad?.category) {
-        this.selectedOption = this.categories.find(
-          (category) => this.ad.category.id === category.id
-        );
-      } else {
-        console.error('Ad category is undefined');
-      }
-    },
-    (error) => {
-      console.error('Error fetching categories: ', error);
-    }
-  );
-
-   const accessToken = localStorage.getItem('loggedInUserToken');
- console.log('rrrerere',this.selectedOption,modelFields,queryParams,accessToken,this.ad)
-   this.fetchSetting(accessToken!, queryParams, modelFields);
-     });
+      const accessToken = localStorage.getItem('loggedInUserToken');
+      console.log(
+        'rrrerere',
+        this.selectedOption,
+        modelFields,
+        queryParams,
+        accessToken,
+        this.ad
+      );
+      this.fetchSetting(accessToken!, queryParams, modelFields);
+    });
     this.subscribeToRouteParams();
     this.categories.forEach((categorie) => {
       if (this.ad.category.id == categorie.id) {
-        console.log('greeeeeeeeeeeeeeeeeetttttttt',this.ad);
+        console.log('greeeeeeeeeeeeeeeeeetttttttt', this.ad);
         //this.selectedOption = categorie;
       }
     });
 
-
     this.fetchCategories();
     //this.fetchSettings();
-    console.log("adddd",this.ad);
+    console.log('adddd', this.ad);
 
-
- 
     this.primengConfig.setTranslation({
       firstDayOfWeek: 1,
       dayNames: [
@@ -264,6 +268,32 @@ export class EditAdsComponent implements OnInit {
       weekHeader: 'Sm',
     });
   }
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const targetElement = event.target as HTMLElement;
+    const isCategoryOpen = !!targetElement.closest('.select-btn');
+    const isStateOpen = !!targetElement.closest('.select-menu .select-btn');
+
+    if (!isCategoryOpen && !isStateOpen) {
+      this.optionsVisible = false;
+    }
+    if (!this.isDescendant(targetElement, 'select-menu')) {
+      // Close all select menus
+      this.settings.forEach((setting: any) => {
+        setting.optionsVisible = false;
+      });
+    }
+  }
+  private isDescendant(element: HTMLElement, className: string): boolean {
+    let currentElement: HTMLElement | null = element;
+    while (currentElement) {
+      if (currentElement.classList.contains(className)) {
+        return true;
+      }
+      currentElement = currentElement.parentElement;
+    }
+    return false;
+  }
 
   initializeAd(): void {
     const adId = this.route.snapshot.paramMap.get('id');
@@ -271,11 +301,11 @@ export class EditAdsComponent implements OnInit {
       this.adService.getAdById(adId).subscribe((data) => {
         this.ad = data.data;
         this.uploadedImages = this.ad.medias;
-     const modelFields = this.ad.category.model_fields;
-    const queryParams = { model: this.ad.category.model };
-    const accessToken = localStorage.getItem('loggedInUserToken');
-  //console.log('rrrerere',modelFields,queryParams,accessToken)
-    this.fetchSetting(accessToken!, queryParams, modelFields);
+        const modelFields = this.ad.category.model_fields;
+        const queryParams = { model: this.ad.category.model };
+        const accessToken = localStorage.getItem('loggedInUserToken');
+        //console.log('rrrerere',modelFields,queryParams,accessToken)
+        this.fetchSetting(accessToken!, queryParams, modelFields);
       });
     }
   }
@@ -324,26 +354,23 @@ export class EditAdsComponent implements OnInit {
       if (adValue !== undefined) {
         switch (setting.type) {
           case 'select':
-            if(setting.dependant){
+            if (setting.dependant) {
               const value = this.ad.additional[setting.dependant];
               const content = setting.content[value];
               setting.depend = true;
               setting.dependValue = value;
               setting.selectedOption = {
                 label: content[adValue],
-                value: adValue
-              }
+                value: adValue,
+              };
               //console.log('jaberaphane',setting)
-
-            }else{
+            } else {
               //console.log("selelelelelel" ,adValue ,this.ad.additional[adValue])
               setting.selectedOption = {
                 label: setting.content[adValue],
-                value: adValue
+                value: adValue,
               };
-
             }
-
 
             break;
           case 'text':
@@ -353,47 +380,46 @@ export class EditAdsComponent implements OnInit {
             setting.depend = true;
             break;
           case 'bool':
-            setting.depend=true;
+            setting.depend = true;
             setting.content = adValue.toString();
             break;
           case 'multiple':
             //console.log("multiplekkkkkk",adValue,setting)
             try {
               const adArray = JSON.parse(adValue);
-              const list: { label: string; value: any; }[]=[]
+              const list: { label: string; value: any }[] = [];
               if (Array.isArray(adArray)) {
-                  adArray.forEach((ff: any) => {
-                      //console.log("ggggttyuiyuyiuyiyu", ff);
-                      // Additional logic here
-                    
-                      list.push({
-                        label: setting.content[ff],
-                        value: ff
-                      })
-                      setting.selectedOptions = list;
+                adArray.forEach((ff: any) => {
+                  //console.log("ggggttyuiyuyiuyiyu", ff);
+                  // Additional logic here
 
-           /*            console.log("multii",setting,{
+                  list.push({
+                    label: setting.content[ff],
+                    value: ff,
+                  });
+                  setting.selectedOptions = list;
+
+                  /*            console.log("multii",setting,{
                         label: setting.content[ff],
                         value: ff
                       },list); */
-                
-                  });
+                });
               } else {
-                  console.error("Parsed adValue is not an array:", adArray);
-                  // Handle the case where parsed adValue is not an array, if needed
+                console.error('Parsed adValue is not an array:', adArray);
+                // Handle the case where parsed adValue is not an array, if needed
               }
-          } catch (error) {
-              console.error("Error parsing adValue:", error);
+            } catch (error) {
+              console.error('Error parsing adValue:', error);
               // Handle parsing error, if necessary
-          }
-          
+            }
+
             //setting.selectedOptions = this.parseMultipleOptions(setting.content, adValue);
             break;
         }
       }
     });
   }
-  
+
   parseOptionLabel(content: any, value: any): string {
     if (Array.isArray(content)) {
       const option = content.find((opt: any) => opt.value === value);
@@ -401,11 +427,13 @@ export class EditAdsComponent implements OnInit {
     }
     return 'Choisissez';
   }
-  
+
   parseMultipleOptions(content: any, value: string): any[] {
     if (Array.isArray(content)) {
       const values = value.split(',');
-      return values.map(val => content.find((opt: any) => opt.value === val)).filter(opt => opt);
+      return values
+        .map((val) => content.find((opt: any) => opt.value === val))
+        .filter((opt) => opt);
     }
     return [];
   }
@@ -624,25 +652,23 @@ export class EditAdsComponent implements OnInit {
           };
           this.addSettingInOrder(newSetting);
         }
-                if(this.ad.additional[field.key]){
-  if(field.value.type  === 'int' ){
-  field.value.content = this.ad.additional[field.key]
-  field.value.depend = true ;
-  }
-  }
+        if (this.ad.additional[field.key]) {
+          if (field.value.type === 'int') {
+            field.value.content = this.ad.additional[field.key];
+            field.value.depend = true;
+          }
+        }
       }
-
     });
 
     // Add bool settings last to ensure correct order
     this.boolSettings.forEach((setting: any) =>
       this.addSettingInOrder(setting)
     );
-// Log each setting with its key
-settingsOption.forEach((setting, index) => {
-  //console.log(`Setting ${index}:`, setting);
-
-});
+    // Log each setting with its key
+    settingsOption.forEach((setting, index) => {
+      //console.log(`Setting ${index}:`, setting);
+    });
 
     //console.log('this.settings', this.settings,settingsOption, this.boolSettings);
   }
@@ -658,13 +684,9 @@ settingsOption.forEach((setting, index) => {
       this.settings.push(newSetting); // Append if no larger order is found
     } else {
       this.settings.splice(index, 0, newSetting); // Insert at the correct position
-          //this.settingcontent.splice(index, 0, newSetting); 
-
+      //this.settingcontent.splice(index, 0, newSetting);
     }
     this.populateSettingsWithAdData();
-
-
-
   }
 
   fetchCategoryAndSettings(
@@ -744,12 +766,9 @@ settingsOption.forEach((setting, index) => {
         this.depend = setting.selectedOption?.value;
         s.depend = true;
         s.dependValue = setting.selectedOption?.value.toString();
-
       }
       const val = setting.selectedOption?.value.toString();
-
     });
-
 
     //this.selectedOptionName = option.name
     setting.optionsVisible = false;
@@ -800,7 +819,6 @@ settingsOption.forEach((setting, index) => {
   trackByOptioned(index: number, item: any): any {
     return item.label;
   }
-
 
   selectOptionr(option: any, setting: any) {
     this.selectedOptionName = option.name;
@@ -862,7 +880,6 @@ settingsOption.forEach((setting, index) => {
         });
       });
     });
-
   }
 
   fetchSettings(): void {
@@ -913,8 +930,6 @@ settingsOption.forEach((setting, index) => {
               }
             );
           });
-
-
         },
         (error) => {
           console.error('Error fetching settings:', error);
@@ -976,80 +991,81 @@ settingsOption.forEach((setting, index) => {
       .map((image: any) => image.id);
 
     Promise.all(
-      this.selectedFiles.map((file) => {
-        return this.annonceService
-          .uploadFile(file, accessToken)
-          .then((response) => {
-            mediaIds.push(response.data.id);
-          });
-      })
+      this.selectedFiles.map((file) =>
+        this.annonceService.uploadFile(file, accessToken).then((response) => {
+          mediaIds.push(response.data.id);
+        })
+      )
     )
       .then(() => {
         const annonceData = this.createAnnonceData(mediaIds);
         this.annonceService
           .updateAnnonce(this.adId, this.ad.uuid, annonceData, accessToken)
-          .subscribe(() => {
-            const settingADS: { [key: string]: any } = {};
-            for (let i = 0; i < this.settings.length; i++) {
-              const setting = this.settings[i];
-              if (
-                setting.type === 'text' ||
-                setting.type === 'number' ||
-                setting.type === 'select' ||
-                setting.type === 'options' || 
-                setting.type === 'int'
-              ) {
-                if (setting.selectedOption) {
-                  settingADS[setting.key] = setting.selectedOption.value;
-                } else {
-                  settingADS[setting.key] = setting.content;
-                }
-              } else if (setting.type === 'table') {
-                settingADS[setting.key] = setting.selectedOption?.id;
-              }else if (setting.type === 'bool') {
-                settingADS[setting.key] = (setting.content === true || setting.content === 'true') ? 1 : 
-                (setting.content === false || setting.content === 'false') ? 0 : setting.content;
+          .subscribe(
+            () => {
+              const settingADS: { [key: string]: any } =
+                this.buildSettingsData();
 
-              }
-              else if (setting.type === 'multiple') {
-/*                 const list: any[] = [];
-                setting.selectedOptions.forEach((element:any) => {
-                  list.push(element.value);
-                });
-                console.log('listtttttttttteee', list);
-                settingADS[setting.key] = list;
- */
-                
-              } else if (setting.type === 'date') {
-                const date = new Date(this.date);
-                setting.content = this.formatDate(date);
-                settingADS[setting.key] = setting.content ;
-              }
-            }
-
-            this.annonceService
-              .UpdateSetting(this.adId, settingADS, accessToken)
-              .subscribe(
-                () => {
-                  //this.uploadFilesAndUpdateAnnonce(accessToken);
-                },
-                (error) => {
-                  console.error(
-                    'Error inserting state and genre:',
-                    error
-                  );
-                  if (error.error.message === "This AdBook doesn't exists") {
-                    this.createSetting(settingADS, accessToken);
+              this.annonceService
+                .UpdateSetting(this.adId, settingADS, accessToken)
+                .subscribe(
+                  () => {
+                    // Handle successful settings update
+                    window.location.href = '/page-account#orders';
+                  },
+                  (error) => {
+                    console.error('Error updating settings:', error);
+                    if (error.error.message === "This AdBook doesn't exist") {
+                      this.createSetting(settingADS, accessToken);
+                    }
                   }
-                }
-              );
-              window.location.href = '/page-account#orders';
-
-          });
+                );
+            },
+            (error) => {
+              console.error('Error updating annonce:', error);
+            }
+          );
       })
       .catch((error) => {
         console.error('Error uploading files:', error);
       });
+  }
+
+  private buildSettingsData(): { [key: string]: any } {
+    const settingADS: { [key: string]: any } = {};
+
+    for (const setting of this.settings) {
+      switch (setting.type) {
+        case 'text':
+        case 'number':
+        case 'select':
+        case 'options':
+        case 'int':
+          settingADS[setting.key] = setting.selectedOption
+            ? setting.selectedOption.value
+            : setting.content;
+          break;
+        case 'table':
+          settingADS[setting.key] = setting.selectedOption?.id;
+          break;
+        case 'bool':
+          settingADS[setting.key] =
+            setting.content === true || setting.content === 'true' ? 1 : 0;
+          break;
+        case 'multiple':
+          settingADS[setting.key] = setting.selectedOptions.map(
+            (option: any) => option.value
+          );
+          break;
+        case 'date':
+          const date = new Date(this.date);
+          setting.content = this.formatDate(date);
+          settingADS[setting.key] = setting.content;
+          break;
+      }
+    }
+
+    return settingADS;
   }
 
   createAnnonceData(mediaIds: string[]): any {
@@ -1173,50 +1189,46 @@ settingsOption.forEach((setting, index) => {
   selectdOptiond(option: any, setting: Setting): void {
     setting.selectedOption = option;
 
-    this.settings.forEach((s:any) => {
-      
-        if (setting.key === s.dependant) {
-            delete s.selectedOption ;
-            this.depend = setting.selectedOption?.value;
+    this.settings.forEach((s: any) => {
+      if (setting.key === s.dependant) {
+        delete s.selectedOption;
+        this.depend = setting.selectedOption?.value;
+        s.depend = true;
+        s.dependValue = setting.selectedOption?.value.toString();
+      }
+
+      const val = setting.selectedOption?.value.toString();
+
+      if (Array.isArray(s.conditions)) {
+        s.depend = false; // Initialize s.depend to false
+
+        for (let i = 0; i < s.conditions.length; i++) {
+          if (s.conditions[i] === val) {
             s.depend = true;
-            s.dependValue = setting.selectedOption?.value.toString();
+            break; // Exit the loop early if condition is met
+          } else {
+            // Option to remove the entire element from settings array
+            //this.settings.splice(this.settings.indexOf(s), 1);
+            //s.depend=false;
+            //break; // Exit the loop after removing the element
+          }
         }
-
-        const val = setting.selectedOption?.value.toString();
-
-        if (Array.isArray(s.conditions)) {
-            s.depend = false; // Initialize s.depend to false
-
-            for (let i = 0; i < s.conditions.length; i++) {
-                if (s.conditions[i] === val) {
-                    s.depend = true;
-                    break; // Exit the loop early if condition is met
-                } else {
-                    // Option to remove the entire element from settings array
-                    //this.settings.splice(this.settings.indexOf(s), 1);
-                    //s.depend=false;
-                    //break; // Exit the loop after removing the element
-                }
-            }
-        }
-
+      }
     });
-    
 
     // Uncomment if needed
     // this.selectedOptionName = option.name;
     setting.optionsVisible = false;
-}
+  }
   toggleOptions(): void {
     this.optionsVisible = !this.optionsVisible;
   }
 
   toggledOptions(setting: Setting): void {
-    this.settings.forEach((s:any) => {
+    this.settings.forEach((s: any) => {
       if (s !== setting) {
         s.optionsVisible = false;
       }
-
     });
     setting.optionsVisible = !setting.optionsVisible;
   }
@@ -1227,7 +1239,7 @@ settingsOption.forEach((setting, index) => {
     const currentDate = new Date();
     const timeDifference = currentDate.getTime() - adCreationDate.getTime();
     const hoursDifference = timeDifference / (1000 * 3600);
-   
+
     this.showButton = hoursDifference < 24;
   }
   selectOption(category: any): void {
@@ -1235,7 +1247,7 @@ settingsOption.forEach((setting, index) => {
     if (this.selectedOption) {
       this.formData.category_id = category.id;
       this.settings = [];
-      this.boolSettings=[];
+      this.boolSettings = [];
       this.fetchCategories();
       //console.log("gooopppp",category,this.settings)
 
@@ -1246,15 +1258,13 @@ settingsOption.forEach((setting, index) => {
       this.fetchSetting(accessToken!, queryParams, modelFields);
       //this.fetchSettings();
       //this.handleLocalStorage(this.a);
-
     } else {
       if (this.selectedSubCategory!.id) {
         this.formData.category_id = this.selectedSubCategory!.id;
       }
     }
     this.optionsVisible = false;
-    console.log("gooo15",this.settings)
-
+    console.log('gooo15', this.settings);
   }
   // Inside your component class
   toggleOptionsGO(setting: any) {
@@ -1288,16 +1298,6 @@ settingsOption.forEach((setting, index) => {
     // For example, toggle the selected state of the option
     option.selected = !option.selected;
     // Add any additional logic you need
-  }
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    const targetElement = event.target as HTMLElement;
-    const isCategoryOpen = !!targetElement.closest('.select-btn');
-    const isStateOpen = !!targetElement.closest('.select-menu .select-btn');
-
-    if (!isCategoryOpen && !isStateOpen) {
-      this.optionsVisible = false;
-    }
   }
 
   deleteImage(index: number) {

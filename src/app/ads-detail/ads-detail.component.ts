@@ -80,7 +80,7 @@ export class AdsDetailComponent implements OnInit {
       this.isScreenphone = window.innerWidth < 500;
     }
   }
-  addToFavorites(adId: number): void {
+  addToFavorites(ad: any): void {
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
 
@@ -91,24 +91,46 @@ export class AdsDetailComponent implements OnInit {
       return;
     }
 
-    this.annonceService
-      .addToFavorites(Number(userId), adId, accessToken)
-      .subscribe(
-        (response) => {
-          // Traiter l'ajout réussi aux favoris ici
-          console.log('Added to favorites successfully:', response);
-          window.location.href = '/favoris';
+    // Check if the ad is already in favorites
+    const isFavorited = ad.favorites.length > 0;
 
-          // Optionnellement, mettre à jour l'UI pour refléter le statut favori
-        },
-        (error) => {
-          // Traiter l'erreur si l'ajout aux favoris échoue
-          console.error('Failed to add to favorites:', error);
-          // Optionnellement, afficher un message d'erreur ou une logique de réessai
-        }
-      );
+    if (isFavorited) {
+      // Remove from favorites
+      const favoriteId = ad.favorites[0].id; // Assuming `id` is the identifier for the favorite
+      this.annonceService
+        .removeFromFavorites(favoriteId, accessToken)
+        .subscribe(
+          (response) => {
+            // Remove favorite locally
+            ad.favorites = [];
+            console.log('Removed from favorites successfully:', response);
+          },
+          (error) => {
+            console.error('Failed to remove from favorites:', error);
+          }
+        );
+    } else {
+      // Add to favorites
+      this.annonceService
+        .addToFavorites(Number(userId), ad.id, accessToken)
+        .subscribe(
+          (response) => {
+            // Add favorite locally
+            ad.favorites = [
+              {
+                ad_id: response.data.ad_id,
+                id: response.data.id,
+                created_at: response.data.created_at,
+              },
+            ];
+            console.log('Added to favorites successfully:', response);
+          },
+          (error) => {
+            console.error('Failed to add to favorites:', error);
+          }
+        );
+    }
   }
-
   getFormattedDate(datetime: string | undefined): string {
     if (!datetime) {
       return ''; // or handle the case when datetime is undefined
@@ -431,51 +453,53 @@ export class AdsDetailComponent implements OnInit {
 
             // Create an array to store all inner observables
             const innerObservables: Observable<any>[] = [];
+            const userId = localStorage.getItem('loggedInUserId');
 
-            this.annonceService.getAds().subscribe((adsData) => {
-              let relatedAdsTemp: any[] = [];
-              // Iterate over each ad
-              adsData.data.forEach((ad: { id: any }) => {
-                // Push each inner observable to the array
-                innerObservables.push(this.annonceService.getAdById(ad.id));
-              });
-              adsData.data.forEach((adDetail: { id: string }) => {
-                this.annonceService
-                  .getAdById(adDetail.id)
-                  .subscribe((adDetails) => {
-                    if (adDetails.data.user_id == this.adDetail.user_id) {
+            this.annonceService
+              .getAdsWithFavoris(Number(userId))
+              .subscribe((adsData) => {
+                let relatedAdsTemp: any[] = [];
+                let count = 0;
+
+                // Parcourt chaque annonce
+                adsData.data.forEach((ad: { id: any; favorites: any }) => {
+                  // Ajoute chaque observable interne au tableau
+                  innerObservables.push(this.annonceService.getAdById(ad.id));
+                });
+
+                // Utilisation de forkJoin pour attendre que tous les observables internes soient complétés
+                forkJoin(innerObservables).subscribe((adDetails) => {
+                  adDetails.forEach((adDetail: any) => {
+                    // Ajoute les favoris à l'annonce
+                    adDetail.data.favorites = adsData.data.find(
+                      (ad: { id: any }) => ad.id === adDetail.data.id
+                    ).favorites;
+
+                    // Incrémente le compteur si l'ID de l'utilisateur de l'annonce correspond
+                    if (adDetail.data.user_id == this.adDetail.user_id) {
                       count++;
                     }
 
+                    // Ajoute les annonces à relatedAds si la catégorie correspond
                     if (
-                      adDetails.data.category.id == this.adDetail.category.id
+                      adDetail.data.category.id == this.adDetail.category.id
                     ) {
-                      this.relatedAds.push(adDetails.data);
-                    }
-
-                    this.countsAds = count;
-                  });
-              });
-              if (relatedAdsTemp.length > 0) {
-                this.relatedAds = this.shuffleArray(relatedAdsTemp).slice(0, 4);
-              }
-              // Use forkJoin to wait for all inner observables to complete
-              /*                 forkJoin(innerObservables).subscribe((adDetails) => {
-                  // Iterate over each ad detail
-                  adDetails.forEach((adDetail) => {
-                    // Check if the user ID of the current ad matches the user ID of adDetail
-                    if (adDetail.data.user.id === this.adDetail.user.id) {
-                      // Increment count if user IDs match
-                      count++;
-
+                      relatedAdsTemp.push(adDetail.data);
                     }
                   });
 
-                  // Log the count after all inner observables have completed
+                  // Mise à jour du compteur des annonces
                   this.countsAds = count;
 
-                }); */
-            });
+                  // Mélange et sélectionne jusqu'à 4 annonces reliées
+                  if (relatedAdsTemp.length > 0) {
+                    this.relatedAds = this.shuffleArray(relatedAdsTemp).slice(
+                      0,
+                      4
+                    );
+                  }
+                });
+              });
           });
         }
         // Utilisez maintenant this.adId pour obtenir l'ID de l'annonce

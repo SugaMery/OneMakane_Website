@@ -50,6 +50,7 @@
                                     </h5>
 
                                     <!-- Champ de titre -->
+                                    <!-- Champ de titre -->
                                     <div class="input-style mb-20">
                                       <label
                                         >Quel est le titre de l'annonce ?
@@ -414,8 +415,6 @@
                                       Dites-nous en plus
                                     </h5>
 
-                                    <!-- Champ de titre -->
-
                                     <!-- Liste des catégories suggérées -->
 
                                     <div
@@ -431,14 +430,26 @@
                                         <div
                                           class="form-group col-md-12"
                                           *ngFor="let setting of settings"
-                                          [ngClass]="{'display-contents': setting.depend===false  }"
+                                          [ngClass]="{
+                                            'display-contents':
+                                              setting.depend === false
+                                          }"
                                         >
-                                          <div class="select-menu" >
-                                            <label *ngIf="setting.depend === null || setting.depend === true">{{ setting.label }}</label>
+                                          <div class="select-menu">
+                                            <label
+                                              *ngIf="
+                                                setting.depend === null ||
+                                                setting.depend === true
+                                              "
+                                              >{{ setting.label }}</label
+                                            >
 
                                             <!-- Display Select Button -->
                                             <div
-                                              *ngIf="setting.type === 'select' && setting.dependant === undefined"
+                                              *ngIf="
+                                                setting.type === 'select' &&
+                                                setting.dependant === undefined
+                                              "
                                               class="select-btn"
                                               style="
                                                 margin-bottom: 1rem;
@@ -472,7 +483,10 @@
 
                                             <!-- Display Select Options -->
                                             <ul
-                                              *ngIf="setting.type === 'select' && setting.dependant === undefined"
+                                              *ngIf="
+                                                setting.type === 'select' &&
+                                                setting.dependant === undefined
+                                              "
                                               class="options"
                                               [class.active]="
                                                 setting.optionsVisible
@@ -502,68 +516,82 @@
                                             </ul>
 
                                             <div
-                                            *ngIf="setting.type === 'select' && setting.dependant != undefined && setting.depend ===true"
-                                            class="select-btn"
-                                            style="
-                                              margin-bottom: 1rem;
-                                              background: #fff;
-                                              border: 1px solid #ececec;
-                                              height: 55px;
-                                              box-shadow: none;
-                                              padding-left: 20px;
-                                              font-size: 15px;
-                                              width: 100%;
-                                            "
-                                            (click)="toggledOptionsDepend(setting)"
-                                          >
-                                            <span class="sBtn-text">
-                                              <div
-                                                style="
-                                                  display: flex;
-                                                  align-items: center;
-                                                "
-                                              >
-                                                {{
-                                                  setting.selectedOption
-                                                    ? setting.selectedOption
-                                                        .label
-                                                    : "Choisissez "
-                                                }}
-                                              </div>
-                                            </span>
-                                            <i class="bx bx-chevron-down"></i>
-                                          </div>
-
-                                          <!-- Display Select Options -->
-                                          <ul
-                                            *ngIf="setting.type === 'select' && setting.dependant != undefined && setting.depend === true"
-                                            class="options"
-                                            [class.active]="
-                                              setting.optionsVisible
-                                            "
-                                            style="font-size: smaller"
-                                          >
-                                            <li
-                                              class="option"
-                                              *ngFor="
-                                                let option of parseOptions(
-                                                  setting.contentDepend![setting.dependValue!]
-                                                )
+                                              *ngIf="
+                                                setting.type === 'select' &&
+                                                setting.dependant !=
+                                                  undefined &&
+                                                setting.depend === true
                                               "
-                                              [value]="option.value"
+                                              class="select-btn"
+                                              style="
+                                                margin-bottom: 1rem;
+                                                background: #fff;
+                                                border: 1px solid #ececec;
+                                                height: 55px;
+                                                box-shadow: none;
+                                                padding-left: 20px;
+                                                font-size: 15px;
+                                                width: 100%;
+                                              "
                                               (click)="
-                                              selectdOptiondDepend(
-                                                  option,
-                                                  setting
-                                                )
+                                                toggledOptionsDepend(setting)
                                               "
                                             >
-                                              <span
-                                                class="d-inline-flex align-items-center"
-                                                >{{ option.label }}</span
+                                              <span class="sBtn-text">
+                                                <div
+                                                  style="
+                                                    display: flex;
+                                                    align-items: center;
+                                                  "
+                                                >
+                                                  {{
+                                                    setting.selectedOption
+                                                      ? setting.selectedOption
+                                                          .label
+                                                      : "Choisissez "
+                                                  }}
+                                                </div>
+                                              </span>
+                                              <i class="bx bx-chevron-down"></i>
+                                            </div>
+
+                                            <!-- Display Select Options -->
+                                            <ul
+                                              *ngIf="
+                                                setting.type === 'select' &&
+                                                setting.dependant !=
+                                                  undefined &&
+                                                setting.depend === true
+                                              "
+                                              class="options"
+                                              [class.active]="
+                                                setting.optionsVisible
+                                              "
+                                              style="font-size: smaller"
+                                            >
+                                              <li
+                                                class="option"
+                                                *ngFor="
+                                                  let option of parseOptions(
+                                                    setting.contentDepend![
+                                                      setting.dependValue!
+                                                    ]
+                                                  )
+                                                "
+                                                [value]="option.value"
+                                                (click)="
+                                                  selectdOptiondDepend(
+                                                    option,
+                                                    setting
+                                                  )
+                                                "
                                               >
-                                            </li>
-                                          </ul>
+                                                <span
+                                                  class="d-inline-flex align-items-center"
+                                                  >{{ option.label }}</span
+                                                >
+                                              </li>
+                                            </ul>
 
                                             <div
                                               *ngIf="setting.type === 'options'"
@@ -800,20 +828,25 @@
                                               *ngIf="setting.type === 'date'"
                                               style="margin-bottom: 1rem"
                                             >
+                                              <div
+                                                id="calendarContainer"
+                                                class="calendar-container"
+                                              ></div>
                                               <p-calendar
                                                 name="date"
                                                 [(ngModel)]="date"
                                                 [iconDisplay]="'input'"
                                                 [showIcon]="true"
                                                 [locale]="locale"
-
                                                 placeholder="{{
                                                   setting.label
                                                 }}"
                                                 inputId="icondisplay"
                                                 class="full-width-calendar"
                                                 [style]="{ width: '100%' }"
-                                              ></p-calendar>
+                                              >
+                                                ></p-calendar
+                                              >
                                             </div>
 
                                             <div
@@ -833,7 +866,7 @@
                                               />
                                             </div>
                                             <div
-                                              *ngIf="setting.type === 'number' "
+                                              *ngIf="setting.type === 'number'"
                                               style="margin-bottom: 1rem"
                                             >
                                               <input
@@ -849,10 +882,11 @@
                                               />
                                             </div>
                                             <div
-                                              *ngIf="setting.type === 'int' && setting.depend === true"
+                                              *ngIf="
+                                                setting.type === 'int' &&
+                                                setting.depend === true
+                                              "
                                               style="margin-bottom: 1rem"
-                                         
-
                                             >
                                               <input
                                                 id="titre"

@@ -31705,6 +31705,11 @@ table th {
     /* width: 50%; */
     width: 90% !important;
   }
+
+  :host ::ng-deep .p-datepicker {
+    transform: scale(0.7);
+    /* Adjust the scale to your desired value */
+  }
 }
 
 .ui-carousel-dots-container {
@@ -31829,7 +31834,7 @@ table th {
 }
 
 
-::ng-deep .options .option{
+::ng-deep .options .option {
   height: 35px !important;
 
 }

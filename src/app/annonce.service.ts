@@ -86,7 +86,6 @@ export class AnnonceService {
     const url = `${this.apiUrl}/ads?user_id=${user_id}`;
     return this.http.get<any>(url);
   }
-  
 
   getAdsValidator(validationStatus: string): Observable<any> {
     const url = `${this.apiUrl}/ads`;
@@ -152,19 +151,27 @@ export class AnnonceService {
     });
   }
 
-  addToFavorites(userId: number, adId: number , accessToken: string): Observable<any> {
+  addToFavorites(
+    userId: number,
+    adId: number,
+    accessToken: string
+  ): Observable<any> {
     const body = {
       user_id: userId,
       ad_id: adId,
     };
     const headers = this.getHeaders(accessToken);
-    return this.http.post<any>(`${this.apiUrl}/favorites`, body,{ headers });
+    return this.http.post<any>(`${this.apiUrl}/favorites`, body, { headers });
   }
 
-  removeFromFavorites(favoriteId: number,accessToken: string): Observable<any> {
-
+  removeFromFavorites(
+    favoriteId: number,
+    accessToken: string
+  ): Observable<any> {
     const headers = this.getHeaders(accessToken);
 
-    return this.http.post<any>(`${this.apiUrl}/favorites/${favoriteId}`, { headers }); // Adjust endpoint as needed
+    return this.http.delete<any>(`${this.apiUrl}/favorites/${favoriteId}`, {
+      headers,
+    }); // Adjust endpoint as needed
   }
 }

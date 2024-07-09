@@ -31,11 +31,10 @@ interface Category {
   content?: string;
   label?: string;
   media?: { url: string };
-  
 }
 
 interface ModelField {
-  conditions : any[];
+  conditions: any[];
   options: any;
   route: any;
   table: any;
@@ -44,7 +43,6 @@ interface ModelField {
   type: string;
   help: string;
   ordre: number;
-
 }
 
 interface ModelFields {
@@ -74,9 +72,9 @@ interface Setting {
       [key: string]: string;
     };
   };
-  depend : boolean;
-  dependValue : string | undefined;
-  conditions : []
+  depend: boolean;
+  dependValue: string | undefined;
+  conditions: [];
 }
 
 interface SelectedOption {
@@ -84,7 +82,6 @@ interface SelectedOption {
   label: string;
   name?: string;
   id?: number;
-  
 }
 
 interface CustomCategory {
@@ -131,6 +128,11 @@ export class AddAdsComponent implements OnInit {
     code_postal: '',
     files: [],
   };
+  date1: Date | undefined;
+
+  date2: Date | undefined;
+
+  date3: Date | undefined;
   selectedOption: Category = {
     active: false,
     created_at: '',
@@ -724,7 +726,6 @@ export class AddAdsComponent implements OnInit {
     }
   }
 
-  
   toggleOption(option: any, setting: any) {
     // Implement your toggle logic here
     // For example, toggle the selected state of the option
@@ -827,11 +828,9 @@ export class AddAdsComponent implements OnInit {
       if (s !== setting) {
         s.optionsVisible = false;
       }
-
     });
     setting.optionsVisible = !setting.optionsVisible;
   }
-
 
   toggledOptionsDepend(setting: Setting): void {
     this.settings.forEach((s) => {
@@ -840,85 +839,87 @@ export class AddAdsComponent implements OnInit {
       }
       if (s.key === setting.dependant) {
         // Assuming `content` is properly typed in Setting
-        console.log("Content of selected option:", setting.content);
-      //setting.contentDepend = setting.content;
-      if(s.selectedOption?.value){
-        var selectedOptionValue = setting.contentDepend![s.selectedOption?.value];
-         //setting.content
-        console.log(`Value of key '}':`, selectedOptionValue,s.key,setting.dependant);
-        
+        console.log('Content of selected option:', setting.content);
+        //setting.contentDepend = setting.content;
+        if (s.selectedOption?.value) {
+          var selectedOptionValue =
+            setting.contentDepend![s.selectedOption?.value];
+          //setting.content
+          console.log(
+            `Value of key '}':`,
+            selectedOptionValue,
+            s.key,
+            setting.dependant
+          );
+        }
       }
-        
-              }
     });
     setting.optionsVisible = !setting.optionsVisible;
-    console.log("Updated settings:", this.settings);
+    console.log('Updated settings:', this.settings);
   }
-  
-  depend !: string | undefined ;
 
+  depend!: string | undefined;
 
   selectdOptiond(option: any, setting: Setting): void {
     setting.selectedOption = option;
 
     this.settings.forEach((s) => {
-        if (setting.key === s.dependant) {
-            console.log("ffff", s);
-            this.depend = setting.selectedOption?.value;
+      if (setting.key === s.dependant) {
+        console.log('ffff', s);
+        this.depend = setting.selectedOption?.value;
+        s.depend = true;
+        s.dependValue = setting.selectedOption?.value.toString();
+      }
+
+      const val = setting.selectedOption?.value.toString();
+
+      if (Array.isArray(s.conditions)) {
+        s.depend = false; // Initialize s.depend to false
+
+        for (let i = 0; i < s.conditions.length; i++) {
+          if (s.conditions[i] === val) {
             s.depend = true;
-            s.dependValue = setting.selectedOption?.value.toString();
+            break; // Exit the loop early if condition is met
+          } else {
+            // Option to remove the entire element from settings array
+            //this.settings.splice(this.settings.indexOf(s), 1);
+            //s.depend=false;
+            //break; // Exit the loop after removing the element
+          }
         }
-
-        const val = setting.selectedOption?.value.toString();
-
-        if (Array.isArray(s.conditions)) {
-            s.depend = false; // Initialize s.depend to false
-
-            for (let i = 0; i < s.conditions.length; i++) {
-                if (s.conditions[i] === val) {
-                    s.depend = true;
-                    break; // Exit the loop early if condition is met
-                } else {
-                    // Option to remove the entire element from settings array
-                    //this.settings.splice(this.settings.indexOf(s), 1);
-                    //s.depend=false;
-                    //break; // Exit the loop after removing the element
-                }
-            }
-        }
-
+      }
     });
-    
-    console.log('ggg', this.settings.filter((content)=> content.depend=== true || content.depend === null));
+
+    console.log(
+      'ggg',
+      this.settings.filter(
+        (content) => content.depend === true || content.depend === null
+      )
+    );
 
     // Uncomment if needed
     // this.selectedOptionName = option.name;
     this.fieldsErrors[setting.label!] = false;
     setting.optionsVisible = false;
-}
-
+  }
 
   selectdOptiondDepend(option: any, setting: Setting): void {
     setting.selectedOption = option;
     this.settings.forEach((s) => {
-      if (setting.key === s.dependant){
-        console.log("ffff",s);
+      if (setting.key === s.dependant) {
+        console.log('ffff', s);
         this.depend = setting.selectedOption?.value;
         s.depend = true;
         s.dependValue = setting.selectedOption?.value.toString();
       }
       const val = setting.selectedOption?.value.toString();
 
-
-      console.log('ggg',this.settings);
-
-
+      console.log('ggg', this.settings);
     });
     //this.selectedOptionName = option.name
     this.fieldsErrors[setting.label!] = false;
     setting.optionsVisible = false;
   }
-
 
   selectdOption(option: any) {
     this.selectedOption = option;
@@ -1201,7 +1202,9 @@ export class AddAdsComponent implements OnInit {
     this.fieldsErrors = {};
     console.log('great ', this.settings, this.date);
     const settingADS: { [key: string]: any } = {};
-    this.settings = this.settings.filter((content)=> content.depend=== true || content.depend === null) ;
+    this.settings = this.settings.filter(
+      (content) => content.depend === true || content.depend === null
+    );
     for (let i = 0; i < this.settings.length; i++) {
       const setting = this.settings[i];
       if (
@@ -1209,7 +1212,7 @@ export class AddAdsComponent implements OnInit {
         setting.type === 'number' ||
         setting.type === 'bool' ||
         setting.type === 'select' ||
-        setting.type === 'options' || 
+        setting.type === 'options' ||
         setting.type === 'int'
       ) {
         if (setting.selectedOption) {
@@ -1229,7 +1232,7 @@ export class AddAdsComponent implements OnInit {
       } else if (setting.type === 'date') {
         const date = new Date(this.date);
         setting.content = this.formatDate(date);
-        settingADS[setting.key] = setting.content ;
+        settingADS[setting.key] = setting.content;
       }
     }
     console.log('settingADSoooo', settingADS);
@@ -1238,7 +1241,7 @@ export class AddAdsComponent implements OnInit {
         setting.type == 'text' ||
         setting.type == 'number' ||
         setting.type == 'date' ||
-        setting.type == 'bool'||
+        setting.type == 'bool' ||
         setting.type === 'int'
       ) {
         if (setting.content === null) {
@@ -1436,20 +1439,19 @@ export class AddAdsComponent implements OnInit {
                   type: 'table',
                   key: field.key,
                   order: field.order,
-                  depend : null
-
+                  depend: null,
                 };
 
                 this.addSettingInOrder(newSetting);
               }
             });
-        } else if (field.value.type === 'select' && !field.value.options )  {
+        } else if (field.value.type === 'select' && !field.value.options) {
           this.settingsService
             .getSettings(accessToken!, queryParams)
             .subscribe((setting) => {
               setting.data.forEach((data: { content: any; name: string }) => {
                 if (data.name === field.key) {
-                  if(field.value.dependant){
+                  if (field.value.dependant) {
                     const newSetting = {
                       name: field.value.label,
                       label: field.value.label,
@@ -1458,13 +1460,12 @@ export class AddAdsComponent implements OnInit {
                       type: 'select',
                       key: field.key,
                       order: field.order,
-                      contentDepend : data.content,
-                      dependant : field.value.dependant,
-                      depend : false
+                      contentDepend: data.content,
+                      dependant: field.value.dependant,
+                      depend: false,
                     };
                     this.addSettingInOrder(newSetting);
-
-                  }else{
+                  } else {
                     const newSetting = {
                       name: field.value.label,
                       label: field.value.label,
@@ -1473,18 +1474,16 @@ export class AddAdsComponent implements OnInit {
                       type: 'select',
                       key: field.key,
                       order: field.order,
-                      dependant : field.value.dependant,
-                      depend : null
+                      dependant: field.value.dependant,
+                      depend: null,
                     };
                     this.addSettingInOrder(newSetting);
-
                   }
-
                 }
               });
             });
         } else if (field.value.type === 'date') {
-          if (field.value.conditions){    
+          if (field.value.conditions) {
             const newSetting = {
               name: field.value.label,
               label: field.value.label,
@@ -1493,13 +1492,11 @@ export class AddAdsComponent implements OnInit {
               type: 'date',
               key: field.key,
               order: field.order,
-              depend : false,
-              conditions : field.value.conditions
-  
+              depend: false,
+              conditions: field.value.conditions,
             };
             this.addSettingInOrder(newSetting);
-  
-          }else{
+          } else {
             const newSetting = {
               name: field.value.label,
               label: field.value.label,
@@ -1508,17 +1505,15 @@ export class AddAdsComponent implements OnInit {
               type: 'date',
               key: field.key,
               order: field.order,
-              depend : null
-  
+              depend: null,
             };
             this.addSettingInOrder(newSetting);
-  
           }
         } else if (
           field.value.type === 'text' ||
           field.value.type === 'number'
         ) {
-          if (field.value.conditions){
+          if (field.value.conditions) {
             const newSetting = {
               name: field.value.label,
               label: field.value.label,
@@ -1527,12 +1522,11 @@ export class AddAdsComponent implements OnInit {
               type: field.value.type,
               key: field.key,
               order: field.order,
-              depend : false,
-              conditions : field.value.conditions
-  
+              depend: false,
+              conditions: field.value.conditions,
             };
             this.addSettingInOrder(newSetting);
-          }else{
+          } else {
             const newSetting = {
               name: field.value.label,
               label: field.value.label,
@@ -1541,12 +1535,10 @@ export class AddAdsComponent implements OnInit {
               type: field.value.type,
               key: field.key,
               order: field.order,
-              depend : null
-  
+              depend: null,
             };
             this.addSettingInOrder(newSetting);
           }
-
         } else if (field.value.type === 'multiple') {
           this.settingsService
             .getSettings(accessToken!, queryParams)
@@ -1562,8 +1554,7 @@ export class AddAdsComponent implements OnInit {
                     type: 'multiple',
                     key: field.key,
                     order: field.order,
-                    depend : null
-
+                    depend: null,
                   };
                   this.addSettingInOrder(newSetting);
                 }
@@ -1578,12 +1569,11 @@ export class AddAdsComponent implements OnInit {
             type: 'options',
             key: field.key,
             order: field.order,
-            depend : null
-
+            depend: null,
           };
           this.addSettingInOrder(newSetting);
         } else if (field.value.type === 'bool') {
-          if (field.value.conditions){
+          if (field.value.conditions) {
             const newSetting = {
               name: field.value.label,
               label: field.value.label,
@@ -1592,13 +1582,11 @@ export class AddAdsComponent implements OnInit {
               type: field.value.type,
               key: field.key,
               order: field.order,
-              depend : false,
-              conditions : field.value.conditions
-  
+              depend: false,
+              conditions: field.value.conditions,
             };
             this.boolSettings.push(newSetting);
-  
-          }else{
+          } else {
             const newSetting = {
               name: field.value.label,
               label: field.value.label,
@@ -1607,16 +1595,11 @@ export class AddAdsComponent implements OnInit {
               type: field.value.type,
               key: field.key,
               order: field.order,
-              depend : null
-  
+              depend: null,
             };
             this.boolSettings.push(newSetting);
-  
           }
-        }
-        else if (
-          field.value.type === 'int' 
-        ) {
+        } else if (field.value.type === 'int') {
           const newSetting = {
             name: field.value.label,
             label: field.value.label,
@@ -1625,9 +1608,8 @@ export class AddAdsComponent implements OnInit {
             type: field.value.type,
             key: field.key,
             order: field.order,
-            depend : false,
-            conditions : field.value.conditions
-
+            depend: false,
+            conditions: field.value.conditions,
           };
           this.addSettingInOrder(newSetting);
         }
@@ -1650,7 +1632,6 @@ export class AddAdsComponent implements OnInit {
     }
   }
 
-  
   // Inside your component class
   toggleOptionsGO(setting: any) {
     setting.optionsVisible = !setting.optionsVisible;
@@ -1762,7 +1743,7 @@ export class AddAdsComponent implements OnInit {
               setting.type === 'text' ||
               setting.type === 'number' ||
               setting.type === 'select' ||
-              setting.type === 'options' || 
+              setting.type === 'options' ||
               setting.type === 'int'
             ) {
               if (setting.selectedOption) {
@@ -1772,10 +1753,10 @@ export class AddAdsComponent implements OnInit {
               }
             } else if (setting.type === 'table') {
               settingADS[setting.key] = setting.selectedOption?.id;
-            }else if (setting.type === 'bool') {
-              settingADS[setting.key] = setting.selectedOption?.value === 'true' ? 1 : 0;
-            }
-            else if (setting.type === 'multiple') {
+            } else if (setting.type === 'bool') {
+              settingADS[setting.key] =
+                setting.selectedOption?.value === 'true' ? 1 : 0;
+            } else if (setting.type === 'multiple') {
               const list: any[] = [];
               setting.selectedOptions.forEach((element) => {
                 list.push(element.value);
@@ -1785,7 +1766,7 @@ export class AddAdsComponent implements OnInit {
             } else if (setting.type === 'date') {
               const date = new Date(this.date);
               setting.content = this.formatDate(date);
-              settingADS[setting.key] = setting.content ;
+              settingADS[setting.key] = setting.content;
             }
           }
           console.log('settingADS', settingADS);
@@ -1817,7 +1798,11 @@ export class AddAdsComponent implements OnInit {
                 console.log('Annonce créée avec succès !', response);
               },
               (error) => {
-                console.error('Error inserting state and genre:', error, settingADS);
+                console.error(
+                  'Error inserting state and genre:',
+                  error,
+                  settingADS
+                );
               }
             );
         },

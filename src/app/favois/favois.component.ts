@@ -66,7 +66,7 @@ interface ModelFields {
 @Component({
   selector: 'app-favois',
   templateUrl: './favois.component.html',
-  styleUrl: './favois.component.css'
+  styleUrl: './favois.component.css',
 })
 export class FavoisComponent {
   currentPage = 1;
@@ -155,6 +155,38 @@ export class FavoisComponent {
     this.sortAds();
     this.paginateAds();
   }
+  removeFromFavoris(ad: any): void {
+    const accessToken = localStorage.getItem('loggedInUserToken');
+
+    if (!accessToken) {
+      console.error('No access token found. Please log in.');
+      return;
+    }
+
+    if (!ad.favorites || ad.favorites.length === 0) {
+      console.error('This ad is not in the favorites list.');
+      return;
+    }
+
+    const favoriteId = ad.favorites[0].id; // Assuming `id` is the identifier for the favorite
+
+    this.annonceService.removeFromFavorites(favoriteId, accessToken).subscribe(
+      (response) => {
+        // Remove favorite locally
+        ad.favorites = [];
+        console.log('Removed from favorites successfully:', response);
+
+        // Remove ad from the list of ads
+        const index = this.ads.indexOf(ad);
+        if (index !== -1) {
+          this.ads.splice(index, 1);
+        }
+      },
+      (error) => {
+        console.error('Failed to remove from favorites:', error);
+      }
+    );
+  }
 
   sortAds(): void {
     switch (this.sortOption) {
@@ -196,30 +228,40 @@ export class FavoisComponent {
     this.paginateAds();
   }
 
-
-
   getAdsList(): void {
-    //console.log('adsff', this.allCategoriesSameParent);
+    const userId = localStorage.getItem('loggedInUserId');
 
-    this.annonceService.getAds().subscribe((datas) => {
-      let ads = datas.data
-      let adsProcessed = 0;
-console.log("ads",datas.data)
-      this.originalAds = [];
+    if (userId) {
+      this.annonceService
+        .getAdsWithFavoris(Number(userId))
+        .subscribe((datas) => {
+          const ads = datas.data.filter((ad: any) => ad.favorites.length > 0);
+          let adsProcessed = 0;
 
-      ads.forEach((element: { id: string }) => {
-        this.annonceService.getAdById(element.id).subscribe((data) => {
-          adsProcessed++;
-          const detailedAd = data.data;
+          this.originalAds = [];
+          this.ads = [];
 
-          this.ads.push(detailedAd);
-          this.originalAds.push(detailedAd);
+          ads.forEach((element: { favorites: any; id: string }) => {
+            this.annonceService.getAdById(element.id).subscribe((data) => {
+              adsProcessed++;
+              const detailedAd = data.data;
+              data.data.favorites = element.favorites;
+
+              this.originalAds.push(detailedAd);
+              this.ads.push(detailedAd);
+
+              if (adsProcessed === ads.length) {
+                console.log('All ads processed:', this.ads);
+              }
+            });
+          });
         });
-      });
-    });
+    } else {
+      console.error('No user ID found in local storage.');
+    }
   }
 
   ngOnInit(): void {
-this.getAdsList();
+    this.getAdsList();
   }
 }

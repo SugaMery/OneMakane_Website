@@ -60,32 +60,32 @@ export class HeaderComponent {
     const localStorage = this.document?.defaultView?.localStorage;
 
     if (localStorage) {
-        const userId = localStorage.getItem('loggedInUserId');
-        const accessToken = localStorage.getItem('loggedInUserToken');
-        const refrechToken = localStorage.getItem('loggedInUserRefreshToken');
+      const userId = localStorage.getItem('loggedInUserId');
+      const accessToken = localStorage.getItem('loggedInUserToken');
+      const refreshToken = localStorage.getItem('loggedInUserRefreshToken');
 
-        if (userId && accessToken && refrechToken ) {
-            this.userService.refreshToken(refrechToken).subscribe(
-                (response) => {
-                  localStorage.setItem('loggedInUserRefreshToken', response.data.refresh_token);
-
-                    this.userService.getUserInfoById(Number(userId), accessToken).subscribe((userInfo) => {
-                        if (userInfo.data) {
-                            this.status = true;
-                            this.loggedInUserName = `${userInfo.data.first_name} ${userInfo.data.last_name}`;
-                        } else {
-                            this.status = false;
-                        }
-                    });
-                },
-                (error) => {
-                   // console.error('Error refreshing token:', error);
-                    this.status = false;
-                }
-            );
-        }
+      if (userId && accessToken && refreshToken) {
+        this.userService.getUserInfoById(Number(userId), accessToken).subscribe(
+          (userInfo) => {
+            if (userInfo.data) {
+              this.status = true;
+              this.loggedInUserName = `${userInfo.data.first_name} ${userInfo.data.last_name}`;
+            } else {
+              this.status = false;
+            }
+          },
+          (error) => {
+            console.error('Error fetching user info:', error);
+            this.status = false;
+          }
+        );
+      } else {
+        this.status = false;
+      }
+    } else {
+      this.status = false;
     }
-}
+  }
 
   logout(): void {
     this.status = false;
@@ -96,7 +96,7 @@ export class HeaderComponent {
   navigateToCategory(categoryId: number) {
     window.location.href = `/ads-category/${categoryId}`;
   }
-/*   fetchCategories(): void {
+  /*   fetchCategories(): void {
     const accessToken = localStorage.getItem('loggedInUserToken');
     if (!accessToken) {
       return;
@@ -179,7 +179,7 @@ export class HeaderComponent {
         // Loop through subcategories
         category.subcategories.forEach((subcategory: any) => {
           //Find sub-subcategories for each subcategory
-/*           subcategory.subsubcategories = categories.data.filter(
+          /*           subcategory.subsubcategories = categories.data.filter(
             (subsubcat: any) =>
               subsubcat.active === true &&
               subsubcat.parent_id === subcategory.id
@@ -187,45 +187,51 @@ export class HeaderComponent {
           console.log("subcategory", subcategory);
  */
 
-   this.categoryService.getCategoryById(subcategory.id).subscribe((data) => {
-      const preFilter = data.data.pre_filter;
-      //console.log("daaaaaaaaaaaaaaaaaaaateeeee", preFilter);
+          this.categoryService
+            .getCategoryById(subcategory.id)
+            .subscribe((data) => {
+              const preFilter = data.data.pre_filter;
+              //console.log("daaaaaaaaaaaaaaaaaaaateeeee", preFilter);
 
-      // Clear the array before populating it
-      this.preFilterValues = [];
-      subcategory.subsubscategories =  [];
+              // Clear the array before populating it
+              this.preFilterValues = [];
+              subcategory.subsubscategories = [];
 
-      // Collect values in the array
-      for (const key in preFilter) {
-        if (preFilter.hasOwnProperty(key)) {
-          const list = preFilter[key];
-          for (const keys in list) {
-            if (list.hasOwnProperty(keys)) {
-             // console.log('kkkkkkkkkkk', list[keys], key);
-              const alreadyExists = this.preFilterValues.some(item => item[keys] === list[keys]);
-      
-              // If it doesn't exist, push it into this.preFilterValues
-              if (!alreadyExists) {
-                this.preFilterValues.push({ [keys]: list[keys] });
-      
-                // Push this.preFilterValues into subcategory.subsubcategories
-                subcategory.subsubscategories.push({ key: keys, value: list[keys] ,type: key });
+              // Collect values in the array
+              for (const key in preFilter) {
+                if (preFilter.hasOwnProperty(key)) {
+                  const list = preFilter[key];
+                  for (const keys in list) {
+                    if (list.hasOwnProperty(keys)) {
+                      // console.log('kkkkkkkkkkk', list[keys], key);
+                      const alreadyExists = this.preFilterValues.some(
+                        (item) => item[keys] === list[keys]
+                      );
+
+                      // If it doesn't exist, push it into this.preFilterValues
+                      if (!alreadyExists) {
+                        this.preFilterValues.push({ [keys]: list[keys] });
+
+                        // Push this.preFilterValues into subcategory.subsubcategories
+                        subcategory.subsubscategories.push({
+                          key: keys,
+                          value: list[keys],
+                          type: key,
+                        });
+                      }
+                    }
+                  }
+                }
               }
-            }
-          }
-        }
-      }
-      
 
-// Ensure subcategory.subsubcategories is initialized as an array
+              // Ensure subcategory.subsubcategories is initialized as an array
 
-// Log to check values for debugging
+              // Log to check values for debugging
 
-      // Log the array to verify the values
-      //console.log('preFilterValues:', this.preFilterValues);
-    }); 
-    //console.log("subcategory", subcategory, this.preFilterValues, subcategory.subsubscategories);
-   
+              // Log the array to verify the values
+              //console.log('preFilterValues:', this.preFilterValues);
+            });
+          //console.log("subcategory", subcategory, this.preFilterValues, subcategory.subsubscategories);
         });
       });
 
@@ -236,7 +242,7 @@ export class HeaderComponent {
     const key = Object.keys(obj)[0]; // Get the key ('vtt' in this case)
     return { key: key, value: obj[key] }; // Return an object with the key and value
   }
-  
+
   toggleMoreCategories(): void {
     this.showMore = !this.showMore;
     const moreSlideOpen = document.querySelector(
@@ -254,7 +260,7 @@ export class HeaderComponent {
     const url = `/ads-category/${categoryId}?search=${searchQuery}`;
     window.location.href = url;
   }
-  navigateToCategorys(subcategory : any,subsubcat: any) {
+  navigateToCategorys(subcategory: any, subsubcat: any) {
     const key = Object.keys(subsubcat)[0]; // Get the key ('vtt' in this case)
     const value = subsubcat[key]; // Get the corresponding value ('VTT' in this case)
 
@@ -273,7 +279,7 @@ export class HeaderComponent {
     if (selectElement) {
       // Get the selected option's value
       const selectedOptionValue = selectElement.value;
-      this.selectedCategoryId = selectedOptionValue
+      this.selectedCategoryId = selectedOptionValue;
 
       // Display the selected option's value in the console
       console.log('yyyyyyyyyyy', selectedOptionValue);
@@ -281,8 +287,8 @@ export class HeaderComponent {
       console.log('Select element not found');
     }
 
-    console.log('zzzzz', this.selectedCategoryId,this.searchQuery);
-      window.location.href = `/ads-category/${this.selectedCategoryId}?search=${this.searchQuery}`;
-      //this.navigateToCategory1(this.selectedCategoryId, this.searchQuery);
+    console.log('zzzzz', this.selectedCategoryId, this.searchQuery);
+    window.location.href = `/ads-category/${this.selectedCategoryId}?search=${this.searchQuery}`;
+    //this.navigateToCategory1(this.selectedCategoryId, this.searchQuery);
   }
 }

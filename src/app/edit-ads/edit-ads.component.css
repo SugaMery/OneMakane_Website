@@ -31858,7 +31858,7 @@ table th {
 }
 
 
-@media only screen and (max-width: 480px){
+@media only screen and (max-width: 480px) {
     ::ng-deep .cart-totals.ml-30 {
         margin-left: 0 !important;
         text-align: center;
@@ -31867,7 +31867,54 @@ table th {
 }
 
 
-::ng-deep .select-menu .select-btn{
+::ng-deep .select-menu .select-btn {
     font-size: 15px !important;
     color: black !important;
+}
+
+
+@layer primeng {
+    .p-checkbox {
+        display: inline-flex;
+        cursor: pointer;
+        -webkit-user-select: none;
+        user-select: none;
+        vertical-align: bottom;
+        position: relative
+    }
+
+    .p-checkbox-disabled {
+        cursor: default !important;
+        pointer-events: none
+    }
+
+    .p-checkbox-box {
+        display: flex;
+        justify-content: center;
+        align-items: center
+    }
+
+    p-checkbox {
+        display: inline-flex;
+        vertical-align: bottom;
+        align-items: center
+    }
+
+    .p-checkbox-label {
+        line-height: 1
+    }
+}
+
+
+::ng-deep .option input[type="checkbox"] {
+    margin-right: 0.5rem;
+    /* Space between checkbox and label */
+    cursor: pointer;
+    /* Change cursor to pointer on hover */
+}
+
+::ng-deep .option.selected label {
+    font-weight: bold;
+    color: #3bb77e !important;
+    padding-left: 0.5rem;
 }

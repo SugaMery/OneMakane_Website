@@ -112,21 +112,22 @@ export class HomePageComponent implements OnInit {
   addToFavorites(ad: any): void {
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
-  
+
     // Vérifiez si l'utilisateur est connecté
     if (!userId || !accessToken) {
       // Rediriger vers la page de connexion
       window.location.href = '/login';
       return;
     }
-  
+
     // Check if the ad is already in favorites
     const isFavorited = ad.favorites.length > 0;
-  
+
     if (isFavorited) {
       // Remove from favorites
       const favoriteId = ad.favorites[0].id; // Assuming `id` is the identifier for the favorite
-      this.annonceService.removeFromFavorites(favoriteId, accessToken)
+      this.annonceService
+        .removeFromFavorites(favoriteId, accessToken)
         .subscribe(
           (response) => {
             // Remove favorite locally
@@ -139,11 +140,18 @@ export class HomePageComponent implements OnInit {
         );
     } else {
       // Add to favorites
-      this.annonceService.addToFavorites(Number(userId), ad.id, accessToken)
+      this.annonceService
+        .addToFavorites(Number(userId), ad.id, accessToken)
         .subscribe(
           (response) => {
             // Add favorite locally
-            ad.favorites = [{ ad_id: ad.id, created_at: new Date().toISOString() }];
+            ad.favorites = [
+              {
+                ad_id: response.data.ad_id,
+                id: response.data.id,
+                created_at: response.data.created_at,
+              },
+            ];
             console.log('Added to favorites successfully:', response);
           },
           (error) => {
@@ -152,9 +160,8 @@ export class HomePageComponent implements OnInit {
         );
     }
   }
-  
+
   isFavorited(ad: any): boolean {
-    
     return ad.favorites && ad.favorites.length > 0;
   }
   ngOnInit(): void {
@@ -204,137 +211,140 @@ export class HomePageComponent implements OnInit {
     if (this.document.defaultView && this.document.defaultView.localStorage) {
       const accessToken =
         this.document.defaultView.localStorage.getItem('loggedInUserToken');
-        const userId =
+      const userId =
         this.document.defaultView.localStorage.getItem('loggedInUserId');
       this.annonceService.getAds().subscribe((data) => {
         //this.ads = data.data;
-        console.log("userid",userId);
-  if(userId){
-    this.annonceService.getAdsWithFavoris(Number(userId)).subscribe((dataFilter)=>{
-      this.ads = dataFilter.data;
-      
+        console.log('userid', userId);
+        if (userId) {
+          this.annonceService
+            .getAdsWithFavoris(Number(userId))
+            .subscribe((dataFilter) => {
+              this.ads = dataFilter.data;
 
-      dataFilter.data.forEach((element: any) => {
-        this.annonceService.getAdById(element.id).subscribe((adData) => {
-          if (!adData || !adData.data) {
-            return;
-          }
-          console.log("ggg",dataFilter.data);
-
-    this.isFavorited(element)
-          if (adData.data.category.model == jobs) {
-            this.ads_jobs.push(adData.data);
-          }
-          element.image = adData.data.image;
-          if (!this.categorizedAds[element.category.name]) {
-            this.categorizedAds[element.category.name] = [];
-          }
-          adData.data.favorites=element.favorites;
-          this.categorizedAds[element.category.name].push(adData.data);
-          console.log("categorizedAds",this.categorizedAds)
-
-        });
-      });
-    })
-  }else{
-    this.ads = data.data;
-    console.log("gggad",data.data);
-
-    data.data.forEach((element: any) => {
-      this.annonceService.getAdById(element.id).subscribe((adData) => {
-        if (!adData || !adData.data) {
-          return;
-        }
-
-        if (adData.data.category.model == jobs) {
-          this.ads_jobs.push(adData.data);
-        }
-        element.image = adData.data.image;
-        if (!this.categorizedAds[element.category.name]) {
-          this.categorizedAds[element.category.name] = [];
-        }
-        this.categorizedAds[element.category.name].push(adData.data);
-
-        this.categoryService
-          .getCategoryById(adData.data.category_id)
-          .subscribe((category) => {
-            if (
-              !category ||
-              !category.data ||
-              !category.data.model_fields
-            ) {
-              return;
-            }
-            const modelFields = category.data.model_fields;
-            const queryParams = { model: category.data.model };
-
-            if (
-              this.document.defaultView &&
-              this.document.defaultView.localStorage
-            ) {
-              const accessToken =
-                this.document.defaultView.localStorage.getItem(
-                  'loggedInUserToken'
-                );
-              this.settingService
-                .getSettings(accessToken!, queryParams)
-                .subscribe(
-                  (setting) => {
-                    if (!setting || !setting.data) {
+              dataFilter.data.forEach((element: any) => {
+                this.annonceService
+                  .getAdById(element.id)
+                  .subscribe((adData) => {
+                    if (!adData || !adData.data) {
                       return;
                     }
-                    const transformedFields = Object.keys(modelFields).map(
-                      (key) => ({
-                        value: key,
-                        label: modelFields[key].label,
-                        setting: key,
-                      })
-                    );
+                    console.log('ggg', dataFilter.data);
 
-                    transformedFields.forEach(
-                      (field: {
-                        value: string;
-                        label: any;
-                        setting: string;
-                      }) => {
-                        const matchedSetting = setting.data.find(
-                          (settingItem: { name: string }) =>
-                            settingItem.name === field.value
-                        );
-                        if (matchedSetting) {
-                          if (
-                            adData.data.additional &&
-                            adData.data.additional[field.value]
-                          ) {
-                            field.setting =
-                              matchedSetting.content[
-                                adData.data.additional[field.value]
-                              ];
-                            //console.log('jj', field.setting);
-                            //console.log('Transformed f', matchedSetting);
-                          } /*  else {
+                    this.isFavorited(element);
+                    if (adData.data.category.model == jobs) {
+                      this.ads_jobs.push(adData.data);
+                    }
+                    element.image = adData.data.image;
+                    if (!this.categorizedAds[element.category.name]) {
+                      this.categorizedAds[element.category.name] = [];
+                    }
+                    adData.data.favorites = element.favorites;
+                    this.categorizedAds[element.category.name].push(
+                      adData.data
+                    );
+                    console.log('categorizedAds', this.categorizedAds);
+                  });
+              });
+            });
+        } else {
+          this.ads = data.data;
+          console.log('gggad', data.data);
+
+          data.data.forEach((element: any) => {
+            this.annonceService.getAdById(element.id).subscribe((adData) => {
+              if (!adData || !adData.data) {
+                return;
+              }
+
+              if (adData.data.category.model == jobs) {
+                this.ads_jobs.push(adData.data);
+              }
+              element.image = adData.data.image;
+              if (!this.categorizedAds[element.category.name]) {
+                this.categorizedAds[element.category.name] = [];
+              }
+              this.categorizedAds[element.category.name].push(adData.data);
+
+              this.categoryService
+                .getCategoryById(adData.data.category_id)
+                .subscribe((category) => {
+                  if (
+                    !category ||
+                    !category.data ||
+                    !category.data.model_fields
+                  ) {
+                    return;
+                  }
+                  const modelFields = category.data.model_fields;
+                  const queryParams = { model: category.data.model };
+
+                  if (
+                    this.document.defaultView &&
+                    this.document.defaultView.localStorage
+                  ) {
+                    const accessToken =
+                      this.document.defaultView.localStorage.getItem(
+                        'loggedInUserToken'
+                      );
+                    this.settingService
+                      .getSettings(accessToken!, queryParams)
+                      .subscribe(
+                        (setting) => {
+                          if (!setting || !setting.data) {
+                            return;
+                          }
+                          const transformedFields = Object.keys(
+                            modelFields
+                          ).map((key) => ({
+                            value: key,
+                            label: modelFields[key].label,
+                            setting: key,
+                          }));
+
+                          transformedFields.forEach(
+                            (field: {
+                              value: string;
+                              label: any;
+                              setting: string;
+                            }) => {
+                              const matchedSetting = setting.data.find(
+                                (settingItem: { name: string }) =>
+                                  settingItem.name === field.value
+                              );
+                              if (matchedSetting) {
+                                if (
+                                  adData.data.additional &&
+                                  adData.data.additional[field.value]
+                                ) {
+                                  field.setting =
+                                    matchedSetting.content[
+                                      adData.data.additional[field.value]
+                                    ];
+                                  //console.log('jj', field.setting);
+                                  //console.log('Transformed f', matchedSetting);
+                                } /*  else {
                                     console.error(`No setting found for key '${field.value}' in data.data.additional`);
                                 } */
-                        }
-                      }
-                    );
+                              }
+                            }
+                          );
 
-                    this.transformedField = transformedFields;
-                    adData.data.additional = transformedFields;
-                  },
-                  (error) => {
-                    console.error('Error fetching settings:', error);
+                          this.transformedField = transformedFields;
+                          adData.data.additional = transformedFields;
+                        },
+                        (error) => {
+                          console.error('Error fetching settings:', error);
+                        }
+                      );
                   }
-                );
-            }
+                });
+            });
           });
-      });
-    });
-  }
+        }
         const jobs = 'ad_jobs';
 
         this.categorizedAds = {};
-
       });
     }
     this.convertAdsToArray();

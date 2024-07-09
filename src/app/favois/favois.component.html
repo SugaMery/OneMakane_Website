@@ -10,15 +10,10 @@
             <h1 class="mb-15">Mes Favoris</h1>
             <div class="breadcrumb">
               <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
-              <span  >
-              Compte
-              </span>
-             
-                <span></span> Mes favoris 
-         
+
+              <span></span> Mes favoris
             </div>
           </div>
-        
         </div>
       </div>
     </div>
@@ -35,11 +30,10 @@
         <div class="shop-product-fillter filter">
           <div class="totall-product" *ngIf="!isScreenphone">
             <p>
-                Nous avons trouvé
-                <strong class="text-brand">{{ ads.length }}</strong>
-                annonces favorites pour vous !
-              </p>
-              
+              Nous avons trouvé
+              <strong class="text-brand">{{ ads.length }}</strong>
+              annonces favorites pour vous !
+            </p>
           </div>
           <div class="sort-by-product-area" *ngIf="!isScreenphone">
             <div class="sort-by-cover mr-10">
@@ -131,7 +125,7 @@
                 </ul>
               </div>
             </div>
-        </div>
+          </div>
           <div class="sort-by-product-area" style="" *ngIf="isScreenphone">
             <div class="sort-by-cover" class="width:max-content">
               <div class="sort-by-product-wrap">
@@ -216,85 +210,84 @@
           </div>
         </div>
         <div class="col-lg-4-5">
-            <div class="row">
-              <div
+          <div class="row">
+            <div
               [ngClass]="{
                 'col-lg-2 col-md-6 col-6': isScreenphone,
                 'col-lg-2 col-md-6 col-12': !isScreenphone
               }"
-                *ngFor="let ad of ads "
+              *ngFor="let ad of ads"
+            >
+              <div
+                class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
               >
                 <div
-                  class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
+                  class="product-img-action-wrap"
+                  style="padding: 25px 25px 0 25px !important"
                 >
                   <div
-                    class="product-img-action-wrap"
-                    style="padding: 25px 25px 0 25px !important"
+                    class="product-img product-img-zoom"
+                    style="height: 240px"
                   >
-                    <div
-                      class="product-img product-img-zoom"
-                      style="height: 240px"
+                    <a [href]="'/ads/' + ad.id" style="height: 100%">
+                      <img
+                        class="default-img"
+                        [src]="ad.medias[0]?.url"
+                        alt=""
+                      />
+                      <img
+                        class="hover-img"
+                        [src]="ad.medias[1]?.url || ad.medias[0]?.url"
+                        alt=""
+                        style="height: 100%"
+                      />
+                    </a>
+                  </div>
+                  <div class="product-action-1">
+                    <a
+                      aria-label="Supprimer de la liste de souhaits"
+                      class="action-btn"
+                      (click)="removeFromFavoris(ad)"
                     >
-                      <a [href]="'/ads/' + ad.id" style="height: 100%">
-                        <img
-                          class="default-img"
-                          [src]="ad.medias[0]?.url"
-                          alt=""
-                        />
-                        <img
-                          class="hover-img"
-                          [src]="ad.medias[1]?.url || ad.medias[0]?.url"
-                          alt=""
-                          style="height: 100%"
-                        />
-                      </a>
-                    </div>
-                    <div class="product-action-1">
-                        <a
-                        aria-label="Supprimer de la liste de souhaits"
-                        class="action-btn"
-                        href="#"
-                      >
-                        <i class="fi-rs-trash"></i>
-                      </a>
+                      <i class="fi-rs-trash"></i>
+                    </a>
+                  </div>
+                </div>
+                <div class="product-content-wrap">
+                  <div class="product-category" style="margin-top: 1rem">
+                    <a [href]="'/ads-category/' + ad.category?.id">{{
+                      ad.category.name
+                    }}</a>
+                  </div>
+                  <h2>
+                    <a [href]="'/ads/' + ad.id">
+                      {{ ad.title | slice : 0 : 17
+                      }}{{ ad.title.length > 17 ? "..." : "" }}
+                    </a>
+                  </h2>
+                  <div class="product-rate-cover">
+                    <div
+                      class=""
+                      style="
+                        width: 100%;
+                        font-weight: 800;
+                        font-size: medium;
+                        color: black;
+                      "
+                    >
+                      {{ ad.price }} DH
                     </div>
                   </div>
-                  <div class="product-content-wrap">
-                    <div class="product-category" style="margin-top: 1rem">
-                      <a [href]="'/ads-category/' + ad.category?.id">{{
-                        ad.category.name
-                      }}</a>
-                    </div>
-                    <h2>
-                      <a [href]="'/ads/' + ad.id">
-                        {{ ad.title | slice : 0 : 17
-                        }}{{ ad.title.length > 17 ? "..." : "" }}
-                      </a>
-                    </h2>
-                    <div class="product-rate-cover">
-                      <div
-                        class=""
-                        style="
-                          width: 100%;
-                          font-weight: 800;
-                          font-size: medium;
-                          color: black;
-                        "
-                      >
-                        {{ ad.price }} DH
-                      </div>
-                    </div>
-                    <div>
-                      <span class="font-small text-muted">
-                        {{ getRelativeTime(ad.created_at) }}
-                      </span>
-                    </div>
+                  <div>
+                    <span class="font-small text-muted">
+                      {{ getRelativeTime(ad.created_at) }}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
+        </div>
 
         <ng-template #noAds>
           <p>Aucune annonce trouvée pour cette catégorie.</p>
@@ -330,7 +323,6 @@
 
         <!--End Deals-->
       </div>
-
     </div>
   </div>
 </main>
@@ -338,4 +330,3 @@
 <app-footer></app-footer>
 
 <app-preloader></app-preloader>
-

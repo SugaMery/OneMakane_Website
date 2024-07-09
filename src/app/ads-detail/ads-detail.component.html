@@ -376,9 +376,18 @@
                             <a
                               aria-label="Ajouter à la liste de souhaits"
                               class="action-btn"
-                              (click)="addToFavorites(ad.id)"
+                              (click)="addToFavorites(ad)"
                             >
-                              <i class="fi-rs-heart"></i>
+                              <img
+                                *ngIf="ad.favorites.length > 0"
+                                src="../../assets/imgs/coeur.png"
+                                alt="Filled Heart Icon"
+                                style="width: 15px; margin-left: 1px"
+                              />
+                              <i
+                                *ngIf="ad.favorites.length === 0"
+                                class="fi fi-rs-heart"
+                              ></i>
                             </a>
                           </div>
                         </div>
