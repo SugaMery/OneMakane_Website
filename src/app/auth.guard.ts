@@ -46,7 +46,7 @@ export class AuthGuard implements CanActivate {
   logout(): void {
     // Clear local storage
     localStorage.removeItem('loggedInUserToken');
-    localStorage.removeItem('loggedInUser');
+    localStorage.removeItem('loggedInUserId');
     localStorage.removeItem('loggedInUserRefreshToken');
     this.userService.logout(localStorage.getItem('loggedInUserToken')!).subscribe()
     window.location.href = '/login';

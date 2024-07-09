@@ -326,3 +326,22 @@ width: 100% !important;
     margin-bottom: 0rem;
     height: 2rem;
 }
+
+
+
+ ::ng-deep i[class*=" fi-sr-"]:before {
+    font-family: uicons-regular-straight !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1 !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* In your component's CSS file or a global styles file */
+.green-heart {
+    color: green;
+  }
+  

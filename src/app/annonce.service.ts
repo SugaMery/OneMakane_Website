@@ -82,6 +82,11 @@ export class AnnonceService {
     const url = `${this.apiUrl}/ads`;
     return this.http.get<any>(url);
   }
+  getAdsWithFavoris(user_id: number): Observable<any> {
+    const url = `${this.apiUrl}/ads?user_id=${user_id}`;
+    return this.http.get<any>(url);
+  }
+  
 
   getAdsValidator(validationStatus: string): Observable<any> {
     const url = `${this.apiUrl}/ads`;
