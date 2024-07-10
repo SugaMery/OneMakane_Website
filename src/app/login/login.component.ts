@@ -27,10 +27,16 @@ export class LoginComponent {
 
   allcategories: any[] = [];
   fetchCategories(): void {
+    if (typeof localStorage === 'undefined') {
+      console.error('localStorage is not available.');
+      return;
+    }
+
     const accessToken = localStorage.getItem('loggedInUserToken');
     if (!accessToken) {
       return;
     }
+
     this.categoryService.getCategoriesFrom().subscribe(
       (categories) => {
         this.categories = categories.data.filter(
@@ -43,14 +49,17 @@ export class LoginComponent {
           if (!parentId) {
             continue;
           }
+          // Additional logic here if needed
         }
       },
       (error) => {
         console.error('Error fetching categories: ', error);
       }
     );
+
     console.log('categories categories', this.categories);
   }
+
   userData = {
     email: '',
     password: '',

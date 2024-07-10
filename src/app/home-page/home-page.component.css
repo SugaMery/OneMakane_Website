@@ -329,7 +329,7 @@ width: 100% !important;
 
 
 
- ::ng-deep i[class*=" fi-sr-"]:before {
+::ng-deep i[class*=" fi-sr-"]:before {
     font-family: uicons-regular-straight !important;
     font-style: normal;
     font-weight: normal !important;
@@ -343,5 +343,9 @@ width: 100% !important;
 /* In your component's CSS file or a global styles file */
 .green-heart {
     color: green;
-  }
-  
+}
+
+
+::ng-deep .slick-slide img {
+    display: inline !important;
+}

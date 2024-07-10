@@ -16,14 +16,14 @@
                 Ne manquez pas <br />
                 cette occasion !
               </h1>
-              <p class="mb-65">Déposer votre annonce maintenant</p>
+              <p class="mb-65">Déposer votre article maintenant</p>
               <button
                 style="max-width: 450px; border-radius: 50px"
                 onclick="window.location.href='/deposer_une_annonce'"
                 class="btn"
                 type="submit"
               >
-                Déposer votre annonce
+                Déposer votre article
               </button>
             </div>
           </div>
@@ -36,14 +36,14 @@
                 Ne manquez pas <br />
                 cette occasion !
               </h1>
-              <p class="mb-65">Déposer votre annonce maintenant</p>
+              <p class="mb-65">Déposer votre article maintenant</p>
               <button
                 style="max-width: 450px; border-radius: 50px"
                 onclick="window.location.href='/deposer_une_annonce'"
                 class="btn"
                 type="submit"
               >
-                Déposer votre annonce
+                Déposer votre article
               </button>
             </div>
           </div>
@@ -115,14 +115,14 @@
                     Ne manquez pas <br />
                     cette occasion !
                   </h1>
-                  <p class="mb-65">Déposer votre annonce maintenant</p>
+                  <p class="mb-65">Déposer votre article maintenant</p>
                   <button
                     style="max-width: 450px; border-radius: 50px"
                     onclick="window.location.href='/deposer_une_annonce'"
                     class="btn"
                     type="submit"
                   >
-                    Déposer votre annonce
+                    Déposer votre article
                   </button>
                 </div>
               </div>
@@ -135,14 +135,14 @@
                     Ne manquez pas <br />
                     cette occasion !
                   </h1>
-                  <p class="mb-65">Déposer votre annonce maintenant</p>
+                  <p class="mb-65">Déposer votre article maintenant</p>
                   <button
                     style="max-width: 450px; border-radius: 50px"
                     onclick="window.location.href='/deposer_une_annonce'"
                     class="btn"
                     type="submit"
                   >
-                    Déposer votre annonce
+                    Déposer votre article
                   </button>
                 </div>
               </div>
@@ -158,10 +158,10 @@
                 <img src="../../assets/imgs/banner/bannar-1.png" alt="" />
                 <div class="banner-text">
                   <h4 class="mb-30">
-                    Le meilleur chez nous pour des annonces de qualité
+                    Le meilleur chez nous pour des articles de qualité
                   </h4>
                   <a class="btn btn-xs mb-50" href="/deposer_une_annonce">
-                    Déposer votre annonce
+                    Déposer votre article
                     <i class="fi-rs-arrow-small-right"></i>
                   </a>
                 </div>
@@ -174,11 +174,11 @@
                   <h5 class="mb-20">
                     Trouvez ce que <br />
                     vous cherchez<br />
-                    avec nos annonces <br />
+                    avec nos articles <br />
                     de qualité
                   </h5>
                   <a class="btn btn-xs" href="/deposer_une_annonce">
-                    Déposer votre annonce
+                    Déposer votre article
                     <i class="fi-rs-arrow-small-right"></i>
                   </a>
                 </div>
@@ -372,18 +372,19 @@
                           <a
                             aria-label="Ajouter à la liste de souhaits"
                             class="action-btn"
-                            href="#"
+                            (click)="addToFavorites(adsfirst)"
                           >
-                            <i class="fi fi-rs-heart"></i>
+                            <img
+                              *ngIf="adsfirst.favorites.length > 0"
+                              src="../../assets/imgs/coeur.png"
+                              alt="Filled Heart Icon"
+                              style="width: 15px; margin-left: 1px"
+                            />
+                            <i
+                              *ngIf="adsfirst.favorites.length === 0"
+                              class="fi fi-rs-heart"
+                            ></i>
                           </a>
-                          <!--                         <a
-                        aria-label="Aperçu rapide"
-                        class="action-btn"
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                      >
-                        <i class="fi-rs-eye"></i>
-                      </a> -->
                         </div>
                       </div>
                       <div class="product-content-wrap">
@@ -474,11 +475,19 @@
                           class="action-btn"
                           (click)="addToFavorites(ad)"
                         >
-                          <img *ngIf="ad.favorites.length > 0" src="../../assets/imgs/coeur.png" alt="Filled Heart Icon" style="width: 15px; margin-left: 1px;">
-                          <i *ngIf="ad.favorites.length === 0" class="fi fi-rs-heart"></i>
+                          <img
+                            *ngIf="ad.favorites.length > 0"
+                            src="../../assets/imgs/coeur.png"
+                            alt="Filled Heart Icon"
+                            style="width: 15px; margin-left: 1px"
+                          />
+                          <i
+                            *ngIf="ad.favorites.length === 0"
+                            class="fi fi-rs-heart"
+                          ></i>
                         </a>
                       </div>
-                      
+
                       <div
                         class="product-badges product-badges-position product-badges-mrg"
                       >
@@ -552,7 +561,7 @@
                 "
                 [href]="'/ads-category/' + 233"
               >
-                Allez voir ces annonces
+                Allez voir ces articles
                 <i class="fi fi-rr-angle-circle-right"></i>
               </a>
             </div>
@@ -578,7 +587,7 @@
                 "
                 [href]="'/ads-category/' + 147"
               >
-                Allez voir ces annonces
+                Allez voir ces articles
                 <i class="fi fi-rr-angle-circle-right"></i>
               </a>
             </div>
@@ -604,7 +613,7 @@
                 "
                 [href]="'/ads-category/' + 350"
               >
-                Allez voir ces annonces
+                Allez voir ces articles
                 <i class="fi fi-rr-angle-circle-right"></i>
               </a>
             </div>
@@ -631,7 +640,7 @@
                 "
                 [href]="'/ads-category/' + 214"
               >
-                Allez voir ces annonces
+                Allez voir ces articles
                 <i class="fi fi-rr-angle-circle-right"></i>
               </a>
             </div>
@@ -644,7 +653,7 @@
   <section class="section-padding pb-5">
     <div class="container">
       <div class="section-title wow animate__animated animate__fadeIn">
-        <h3 class="">Annonces Populaires</h3>
+        <h3 class="">Articles Populaires</h3>
         <!--         <ul class="nav nav-tabs links" id="myTab-2" role="tablist">
           <li class="nav-item" role="presentation">
             <button
@@ -698,7 +707,7 @@
             <div class="banner-text">
               <h2 class="mb-10">Qu'attendez-vous ?</h2>
               <h4 style="color: white">
-                Déposez votre annonce dès maintenant !
+                Déposez votre article dès maintenant !
               </h4>
               <a class="btn btn-xs" href="/deposer_une_annonce"
                 >Déposer maintenant <i class="fi-rs-arrow-small-right"></i
@@ -817,18 +826,19 @@
                               <a
                                 aria-label="Ajouter à la liste de souhaits"
                                 class="action-btn"
-                                (click)="addToFavorites(adsfirst.id)"
+                                (click)="addToFavorites(adsfirst)"
                               >
-                                <i class="fi-rs-heart"></i>
+                                <img
+                                  *ngIf="adsfirst.favorites.length > 0"
+                                  src="../../assets/imgs/coeur.png"
+                                  alt="Filled Heart Icon"
+                                  style="width: 15px; margin-left: 1px"
+                                />
+                                <i
+                                  *ngIf="adsfirst.favorites.length === 0"
+                                  class="fi fi-rs-heart"
+                                ></i>
                               </a>
-                              <!--                               <a
-                                aria-label="Aperçu rapide"
-                                class="action-btn"
-                                data-bs-toggle="modal"
-                                data-bs-target="#quickViewModal"
-                              >
-                                <i class="fi-rs-eye"></i>
-                              </a> -->
                             </div>
                           </div>
                           <div class="product-content-wrap">

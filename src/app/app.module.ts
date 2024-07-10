@@ -52,6 +52,7 @@ import { FavoisComponent } from './favois/favois.component';
 import { CompteVendorComponent } from './compte-vendor/compte-vendor.component';
 import { MessageComponent } from './message/message.component';
 import { MatSliderModule } from '@angular/material/slider';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 @NgModule({
   declarations: [
     AppComponent,
@@ -114,6 +115,7 @@ import { MatSliderModule } from '@angular/material/slider';
       },
     }),
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [provideClientHydration()],
   bootstrap: [AppComponent],
 })

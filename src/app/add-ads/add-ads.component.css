@@ -31838,7 +31838,3 @@ table th {
   height: 35px !important;
 
 }
-
-::ng-deep .display-contents {
-  display: none !important;
-}

@@ -17,12 +17,12 @@
             <div class="col-lg-12">
               <div class="single-page pr-30 mb-lg-0 mb-sm-5">
                 <div class="single-header style-2">
-                  <h2>Ajouter une annonce</h2>
+                  <h2>Ajouter une article</h2>
                 </div>
                 <div class="single-content mb-50">
                   <div class="card-body contact-from-area">
                     <p>
-                      Pour ajouter votre annonce, veuillez remplir le formulaire
+                      Pour ajouter votre article, veuillez remplir le formulaire
                       ci-dessous et cliquer sur le bouton "Ajouter".
                     </p>
                     <div class="row">
@@ -53,14 +53,15 @@
                                     <!-- Champ de titre -->
                                     <div class="input-style mb-20">
                                       <label
-                                        >Quel est le titre de l'annonce ?
+                                        >Quel est le titre de l'article ?
                                       </label>
+
                                       <input
                                         id="titre"
                                         name="titre"
                                         [(ngModel)]="formData.titre"
                                         (ngModelChange)="onTitleChange($event)"
-                                        placeholder="Titre de votre annonce"
+                                        placeholder="Titre de votre article"
                                         type="text"
                                         required
                                         maxlength="50"
@@ -828,10 +829,6 @@
                                               *ngIf="setting.type === 'date'"
                                               style="margin-bottom: 1rem"
                                             >
-                                              <div
-                                                id="calendarContainer"
-                                                class="calendar-container"
-                                              ></div>
                                               <p-calendar
                                                 name="date"
                                                 [(ngModel)]="date"
@@ -845,8 +842,7 @@
                                                 class="full-width-calendar"
                                                 [style]="{ width: '100%' }"
                                               >
-                                                ></p-calendar
-                                              >
+                                              </p-calendar>
                                             </div>
 
                                             <div
@@ -1061,13 +1057,13 @@
 
                                     <!-- Champ de titre -->
                                     <div class="input-style mb-20">
-                                      <label>Titre de l'annonce </label>
+                                      <label>Titre de l'article </label>
                                       <input
                                         id="titre"
                                         name="titre"
                                         [(ngModel)]="formData.titre"
                                         (ngModelChange)="onTitleChange($event)"
-                                        placeholder="Titre de votre annonce"
+                                        placeholder="Titre de votre article"
                                         type="text"
                                         required
                                         maxlength="50"
@@ -1093,7 +1089,7 @@
                                     </div>
 
                                     <div class="input-style mb-20">
-                                      <label>Description de l'annonce </label>
+                                      <label>Description de l'article </label>
                                       <textarea
                                         id="description"
                                         name="description"
@@ -1298,7 +1294,7 @@
                                           name="ville"
                                           [(ngModel)]="formData.ville"
                                           (ngModelChange)="clearError('ville')"
-                                          placeholder="Ville de l'annonce"
+                                          placeholder="Ville de l'article"
                                           type="text"
                                         />
                                         <div
@@ -1316,7 +1312,7 @@
                                           (ngModelChange)="
                                             clearError('code_postal')
                                           "
-                                          placeholder="Code postal de l'annonce"
+                                          placeholder="Code postal de l'article"
                                           type="text"
                                         />
                                         <div
@@ -1337,7 +1333,7 @@
                                           id="prix"
                                           name="prix"
                                           [(ngModel)]="formData.prix"
-                                          placeholder="Prix de votre annonce"
+                                          placeholder="Prix de votre article"
                                           type="number"
                                           required
                                           (ngModelChange)="clearError('prix')"
