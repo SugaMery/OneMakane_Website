@@ -141,17 +141,41 @@ export class AdsDetailComponent implements OnInit {
   map: google.maps.Map | undefined;
   initMap(): void {
     const geocoder = new google.maps.Geocoder();
-    const mapElement = document.getElementById('map') as HTMLElement; // Assertion de type
+    const mapElement = document.getElementById('map') as HTMLElement;
 
     if (!mapElement) {
       console.error('Élément de carte introuvable !');
       return;
     }
 
+    // Style pour masquer les frontières
+    const mapStyle: google.maps.MapTypeStyle[] = [
+      {
+        featureType: 'administrative',
+        elementType: 'geometry',
+        stylers: [{ visibility: 'off' }],
+      },
+      {
+        featureType: 'administrative.country',
+        elementType: 'labels',
+        stylers: [{ visibility: 'off' }],
+      },
+    ];
+
     const map = new google.maps.Map(mapElement, {
-      center: { lat: 31.6295, lng: -7.9811 }, // Centre par défaut (Marrakech, Maroc)
-      zoom: 12,
+      center: { lat: 31.1728205, lng: -7.3362482 }, // Centre sur le Maroc
+      zoom: 5, // Zoom ajusté pour montrer tout le Maroc
+      styles: mapStyle, // Appliquer le style pour masquer les frontières
     });
+
+    // Utiliser des limites pour inclure tout le Maroc
+    const moroccoBounds = {
+      north: 35.92,
+      south: 21.42,
+      west: -17.13,
+      east: -1.01,
+    };
+    map.fitBounds(moroccoBounds);
 
     // Remplacez par votre adDetail.postal_code
     const postalCode = this.adDetail.postal_code;
@@ -202,6 +226,7 @@ export class AdsDetailComponent implements OnInit {
       }
     );
   }
+
   ngOnInit() {
     this.responsiveOptions = [
       {

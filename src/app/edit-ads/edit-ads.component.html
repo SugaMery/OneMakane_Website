@@ -4,7 +4,7 @@
     <div class="container">
       <div class="breadcrumb">
         <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Accueil</a>
-        <span></span> Mon Compte <span></span> Modifier l'article
+        <span></span> Mon Compte <span></span> Modifier l'annonce
       </div>
     </div>
   </div>
@@ -123,7 +123,7 @@
                       {{ getStatusInFrench(ad.validation_status) }}
                     </span>
                   </div>
-                  <h4>Les informations de l'article</h4>
+                  <h4>Les informations de l'annonce</h4>
                   <form (ngSubmit)="onSubmit()">
                     <div class="row">
                       <div class="form-group col-lg-12">
@@ -298,7 +298,7 @@
                       "
                     >
                       <!-- Titre avant les critères -->
-                      <h3>Critères de l'article</h3>
+                      <h3>Critères de l'annonce</h3>
 
                       <div class="row">
                         <div
@@ -644,7 +644,7 @@
                             <div class="position-relative">
                               <img
                                 [src]="media?.url || media"
-                                alt="Image de l'article"
+                                alt="Image de l'annonce"
                                 style="width: 100%"
                               />
                               <div class="image-overlay">
@@ -679,7 +679,7 @@
                   <a
                     (click)="modifier()"
                     class="btn btn-fill-out btn-block mt-30"
-                    >Modifier l'article<i class="fi-rs-sign-out ml-15"></i
+                    >Modifier l'annonce<i class="fi-rs-sign-out ml-15"></i
                   ></a>
                 </div>
               </div>
