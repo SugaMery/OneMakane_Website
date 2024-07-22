@@ -10,6 +10,7 @@ import { UserService } from '../user.service';
 import { AuthGuard } from '../auth.guard';
 import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
+import { LanguageService } from '../language.service';
 
 interface Category {
   active: boolean;
@@ -45,10 +46,17 @@ export class HeaderComponent {
     private userService: UserService,
     private authGuard: AuthGuard,
     @Inject(DOCUMENT) private document: Document,
-    private router: Router
+    private router: Router,
+    private languageService: LanguageService
   ) {}
+  currentLanguage!: string;
 
+  setLanguage(language: string) {
+    this.languageService.setLanguage(language);
+    this.currentLanguage = language;
+  }
   ngOnInit(): void {
+    this.currentLanguage = this.languageService.getCurrentLanguage();
     this.categories = [];
     this.Souscategories = [];
     this.checkLoggedInUser();
@@ -159,6 +167,7 @@ export class HeaderComponent {
     );
     console.log('categories categories', this.categories);
   } */
+  subcategories: any[] = [];
   getCategories(): void {
     this.categoryService.getCategoriesFrom().subscribe((categories) => {
       // Filter root categories
@@ -166,18 +175,37 @@ export class HeaderComponent {
         (category: { active: boolean; parent_id: null }) =>
           category.active === true && category.parent_id === null
       );
-      //console.log('ttttttttttttt', categories, this.categories);
 
+      this.categories.forEach((category: any, index: number) => {
+        this.categoryService.getCategoryById(category.id).subscribe((datas) => {
+          this.categories[index] = { ...category, ...datas.data };
+        });
+      });
+
+      console.log('Initial categories:', this.categories);
       // Loop through root categories
       this.categories.forEach((category: any) => {
         // Find subcategories for each root category
-        category.subcategories = categories.data.filter(
+        this.subcategories = categories.data;
+
+        this.subcategories.forEach((category: any, index: number) => {
+          this.categoryService
+            .getCategoryById(category.id)
+            .subscribe((datas) => {
+              this.subcategories[index] = { ...category, ...datas.data };
+            });
+        });
+
+        category.subcategories = this.subcategories.filter(
           (subcat: any) =>
             subcat.active === true && subcat.parent_id === category.id
         );
+        console.log('Updated category:', category.subcategories);
 
         // Loop through subcategories
         category.subcategories.forEach((subcategory: any) => {
+          //console.log('Updated category:', subcategory);
+
           //Find sub-subcategories for each subcategory
           /*           subcategory.subsubcategories = categories.data.filter(
             (subsubcat: any) =>
@@ -190,8 +218,12 @@ export class HeaderComponent {
           this.categoryService
             .getCategoryById(subcategory.id)
             .subscribe((data) => {
+              //this.categories[index] = { ...subcategory, ...data.data };
+              //subcategory = data.data;
+              //console.log('Updated categoryrrrr:', subcategory);
+
               const preFilter = data.data.pre_filter;
-              //console.log("daaaaaaaaaaaaaaaaaaaateeeee", preFilter);
+              // console.log('daaaaaaaaaaaaaaaaaaaateeeee', data.data);
 
               // Clear the array before populating it
               this.preFilterValues = [];
@@ -235,7 +267,7 @@ export class HeaderComponent {
         });
       });
 
-      //console.log('Filter root categories', this.categories);
+      console.log('Filter root categories', this.categories);
     });
   }
   getValueFromObject(obj: any): { key: string; value: string } {

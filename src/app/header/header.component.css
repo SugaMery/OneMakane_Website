@@ -327,3 +327,102 @@ nav>ul>li {
     width: 50%;
   }
 }
+
+
+::ng-deep .header-info>ul>li:last-child::before {
+  content: "";
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 10px;
+  background: #dedfe2;
+}
+
+::ng-deep .header-info>ul>li:after {
+  content: "";
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 10px;
+  background: #dedfe2;
+}
+
+:host-context([dir="rtl"]) {
+  ::ng-deep .header-info>ul>li {
+    margin-left: 20px;
+  }
+
+  ::ng-deep .logo.logo-width-1 {
+    margin-left: 70px;
+    margin-right: 0px;
+  }
+
+  ::ng-deep .header-style-1 .select2-container--default .select2-selection--single .select2-selection__rendered::after {
+    left: 0;
+    right: unset;
+  }
+
+  .header-style-1 .select2-container--default .select2-selection--single .select2-selection__rendered:after {
+    content: "";
+    height: 20px;
+    width: 1px;
+    background-color: #CACACA;
+    position: absolute;
+    right: 0;
+    top: 15px;
+  }
+
+  ::ng-deep .header-style-1 .select2-container--default .select2-selection--single {
+    width: auto;
+  }
+
+  ::ng-deep .select2-selection--single .select2-selection__rendered {
+    padding-right: 50px;
+    padding-left: 20px;
+  }
+
+  ::ng-deep i.fi.fi-rr-search {
+    margin-left: 1rem;
+    margin-right: 0rem;
+  }
+
+  ::ng-deep .header-style-1 .select2-container--default .select2-selection--single .select2-selection__arrow b::before {
+    font-family: uicons-regular-straight !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1 !important;
+    content: "\f10f";
+    position: absolute;
+    top: -4px;
+  }
+
+  ::ng-deep .header-style-1 .main-categori-wrap>a span {
+    color: #fff !important;
+    margin-left: 2.5rem;
+  }
+
+  ::ng-deep .main-categori-wrap {
+    position: relative;
+    margin-right: 0px;
+  }
+
+  ::ng-deep .categories-dropdown-active-large {
+    right: 0;
+    left: unset;
+  }
+
+  ::ng-deep .categories-dropdown-wrap ul li a img {
+    margin-right: unset;
+    margin-left: 15px;
+  }
+
+  ::ng-deep .mr-10 {
+    margin-left: 10px !important;
+  }
+}

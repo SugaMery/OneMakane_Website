@@ -180,8 +180,12 @@
         <div class="col-xl-3 col-lg-4">
           <div class="header-info">
             <ul>
-              <li><a href="/qui-sommes-nous">À Propos</a></li>
-              <li><a href="/page-account">Mon Compte</a></li>
+              <li>
+                <a href="/qui-sommes-nous">{{ "about" | translate }}</a>
+              </li>
+              <li>
+                <a href="/page-account">{{ "myAccount" | translate }}</a>
+              </li>
             </ul>
           </div>
         </div>
@@ -189,9 +193,9 @@
           <div class="text-center">
             <div id="news-flash" class="d-inline-block">
               <ul>
-                <li>Explorez le site d'annonces le plus complet et efficace</li>
-                <li>Découvrez la meilleure plateforme d'annonces en ligne</li>
-                <li>Choisissez la référence des annonces en ligne</li>
+                <li>{{ "newsFlash1" | translate }}</li>
+                <li>{{ "newsFlash2" | translate }}</li>
+                <li>{{ "newsFlash3" | translate }}</li>
               </ul>
             </div>
           </div>
@@ -200,38 +204,27 @@
           <div class="header-info header-info-right">
             <ul>
               <li>
-                Besoin d'aide ? Appelez-nous :
+                {{ "help" | translate }}
                 <strong class="text-brand"> +212699050501</strong>
               </li>
               <li>
-                <a class="language-dropdown-active" href="#"
-                  >Français <i class="fi-rs-angle-small-down"></i
-                ></a>
+                <a class="language-dropdown-active" href="#">
+                  {{ currentLanguage | translate }}
+                  <i class="fi-rs-angle-small-down"></i>
+                </a>
                 <ul class="language-dropdown">
                   <li>
-                    <a href="#"
-                      ><img
-                        src="../../assets/imgs/theme/flag-fr.png"
-                        alt=""
-                      />Français</a
-                    >
-                  </li>
-                  <!--                   <li>
-                    <a href="#"
-                      ><img
-                        src="../../assets/imgs/theme/flag-dt.png"
-                        alt=""
-                      />Deutsch</a
-                    >
+                    <a (click)="setLanguage('fr')">
+                      <img src="../../assets/imgs/theme/flag-fr.png" alt="" />
+                      {{ "fr" | translate }}
+                    </a>
                   </li>
                   <li>
-                    <a href="#"
-                      ><img
-                        src="../../assets/imgs/theme/flag-ru.png"
-                        alt=""
-                      />Pусский</a
-                    >
-                  </li> -->
+                    <a (click)="setLanguage('ar')">
+                      <img src="../../assets/imgs/theme/flag-ar.png" alt="" />
+                      {{ "ar" | translate }}
+                    </a>
+                  </li>
                 </ul>
               </li>
             </ul>
@@ -262,7 +255,7 @@
               </select>
               <input
                 type="text"
-                placeholder="Rechercher des annonces..."
+                [placeholder]="'searchPlaceholder' | translate"
                 [(ngModel)]="searchQuery"
                 name="search"
               />
@@ -286,9 +279,9 @@
                     href="https://cdn-uicons.flaticon.com/2.2.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
                   />
                   <a class="btn" href="/deposer_une_annonce"
-                    ><i class="fi fi-rr-square-plus"></i> Déposer votre
-                    annonce</a
-                  >
+                    ><i class="fi fi-rr-square-plus"></i>
+                    {{ "postAd" | translate }}
+                  </a>
                 </div>
                 <div
                   class="banner-text"
@@ -303,7 +296,8 @@
                     class="btn"
                     href="/chat"
                     style="background: linear-gradient(45deg, #fdc040, #fdc040)"
-                    ><i class="fi fi-rr-messages"></i> Messages
+                    ><i class="fi fi-rr-messages"></i>
+                    {{ "messages" | translate }}
                   </a>
                 </div>
                 <div
@@ -322,7 +316,8 @@
                     class="btn"
                     href="/favoris"
                     style="background: linear-gradient(45deg, #fdc040, #fdc040)"
-                    ><i class="fi fi-rr-heart"></i> Favoris
+                    ><i class="fi fi-rr-heart"></i>
+                    {{ "favorites" | translate }}
                   </a>
                 </div>
               </div>
@@ -344,12 +339,14 @@
                   <ul>
                     <li>
                       <a href="/login"
-                        ><i class="fi fi-rs-user mr-10"></i>Connexion</a
+                        ><i class="fi fi-rs-user mr-10"></i
+                        >{{ "login" | translate }}</a
                       >
                     </li>
                     <li>
                       <a href="/register"
-                        ><i class="fi fi-rs-user mr-10"></i>Créer un compte</a
+                        ><i class="fi fi-rs-user mr-10"></i
+                        >{{ "register" | translate }}</a
                       >
                     </li>
                   </ul>
@@ -362,38 +359,44 @@
                   <ul>
                     <li>
                       <a href="/page-account#account-detail"
-                        ><i class="fi fi-rs-user mr-10"></i>Mon compte</a
+                        ><i class="fi fi-rs-user mr-10"></i
+                        >{{ "accountDetails" | translate }}</a
                       >
                     </li>
                     <li>
                       <a href="/deposer_une_annonce"
-                        ><i class="fi fi-rr-square-plus mr-10"></i>Déposer votre
-                        annonce</a
+                        ><i class="fi fi-rr-square-plus mr-10"></i
+                        >{{ "postAd" | translate }}</a
                       >
                     </li>
                     <li>
                       <a href="/page-account#orders"
-                        ><i class="fi fi-rs-list mr-10"></i>Mes annonces</a
+                        ><i class="fi fi-rs-list mr-10"></i
+                        >{{ "orders" | translate }}</a
                       >
                     </li>
                     <li>
                       <a href="/favoris"
-                        ><i class="fi fi-rr-heart mr-10"></i>Mes favoris</a
+                        ><i class="fi fi-rr-heart mr-10"></i
+                        >{{ "favorites" | translate }}</a
                       >
                     </li>
                     <li>
                       <a href="/chat"
-                        ><i class="fi fi-rr-messages mr-10"></i>Mes Messages</a
+                        ><i class="fi fi-rr-messages mr-10"></i
+                        >{{ "messages" | translate }}</a
                       >
                     </li>
                     <li>
                       <a href="/page-account#address"
-                        ><i class="fi fi-rr-lock mr-10"></i>Mot de passe</a
+                        ><i class="fi fi-rr-lock mr-10"></i
+                        >{{ "password" | translate }}</a
                       >
                     </li>
                     <li>
                       <a (click)="logout()" href="javascript:void(0)">
-                        <i class="fi fi-rs-sign-out mr-10"></i>Déconnexion
+                        <i class="fi fi-rs-sign-out mr-10"></i
+                        >{{ "logout" | translate }}
                       </a>
                     </li>
                   </ul>
@@ -418,7 +421,7 @@
           <div class="main-categori-wrap d-none d-lg-block">
             <a class="categories-button-active" href="#">
               <span class="fi-rs-apps"></span>
-              <span class="et">Catégories</span> Tendance
+              <span class="et">{{ "categories_trend" | translate }}</span>
               <i class="fi-rs-angle-down"></i>
             </a>
             <div
@@ -428,27 +431,53 @@
                 <ul>
                   <li *ngFor="let category of categories.slice(0, 5)">
                     <a (click)="navigateToCategory(category.id)">
-                      <img [src]="category?.media?.url" alt="" />{{
-                        category.name
-                      }}
+                      <img [src]="category?.media?.url" alt="" />
+
+                      <span
+                        *ngIf="
+                          currentLanguage === 'ar' &&
+                          category.category_langs &&
+                          category.category_langs.length > 0
+                        "
+                      >
+                        {{ category.category_langs[0]?.name }}
+                      </span>
+                      <span *ngIf="currentLanguage !== 'ar'">
+                        {{ category.name }}
+                      </span>
                     </a>
                   </li>
                 </ul>
                 <ul class="end">
                   <li *ngFor="let category of categories.slice(5, 10)">
                     <a (click)="navigateToCategory(category.id)">
-                      <img [src]="category?.media?.url" alt="" />{{
-                        category.name
-                      }}
+                      <img [src]="category?.media?.url" alt="" />
+
+                      <span
+                        *ngIf="
+                          currentLanguage === 'ar' &&
+                          category.category_langs &&
+                          category.category_langs.length > 0
+                        "
+                      >
+                        {{ category.category_langs[0]?.name }}
+                      </span>
+                      <span *ngIf="currentLanguage !== 'ar'">
+                        {{ category.name }}
+                      </span>
                     </a>
                   </li>
                 </ul>
               </div>
               <div class="more_categories" (click)="toggleMoreCategories()">
                 <span class="icon"></span>
-                <span class="heading-sm-1">{{
-                  showMore ? "Show less..." : "Show more..."
-                }}</span>
+                <span class="heading-sm-1">
+                  {{
+                    showMore
+                      ? ("show_less" | translate)
+                      : ("show_more" | translate)
+                  }}
+                </span>
               </div>
             </div>
           </div>
@@ -458,19 +487,26 @@
           >
             <nav>
               <ul>
-                <!--                 <li class="hot-deals">
-                  <img
-                    src="../../assets/imgs/theme/icons/icon-hot-white.svg"
-                    alt="offres spéciales"
-                  /><a href="/shop-grid-right">Offres</a>
-                </li> -->
                 <li
                   class="position-static"
                   *ngFor="let category of categories.slice(0, 6)"
                 >
                   <a href="javascript:void(0)">
-                    {{ category.name }} <i class="fi-rs-angle-down"></i>
+                    <span
+                      *ngIf="
+                        currentLanguage === 'ar' &&
+                        category.category_langs &&
+                        category.category_langs.length > 0
+                      "
+                    >
+                      {{ category.category_langs[0]?.name }}
+                    </span>
+                    <span *ngIf="currentLanguage !== 'ar'">
+                      {{ category.name }}
+                    </span>
+                    <i class="fi-rs-angle-down"></i>
                   </a>
+
                   <ul class="mega-menu">
                     <ul style="width: 80%">
                       <li
@@ -482,7 +518,18 @@
                           href="javascript:void(0)"
                           (click)="navigateToCategory(subcategory.id)"
                         >
-                          {{ subcategory.name }}
+                          <span
+                            *ngIf="
+                              currentLanguage === 'ar' &&
+                              subcategory.category_langs &&
+                              subcategory.category_langs.length > 0
+                            "
+                          >
+                            {{ subcategory.category_langs[0]?.name }}
+                          </span>
+                          <span *ngIf="currentLanguage !== 'ar'">
+                            {{ subcategory.name }}
+                          </span>
                         </a>
                         <ul *ngIf="subcategory.subsubscategories?.length">
                           <li
@@ -525,15 +572,11 @@
                           />
                         </a>
                         <div class="menu-banner-content">
-                          <h3>
-                            Ne laissez <br />
-                            pas passer <br />
-                            cette opportunité
-                          </h3>
+                          <h3>{{ "dont_miss_opportunity" | translate }}</h3>
                           <div class="menu-banner-btn">
                             <a href="/deposer_une_annonce">
                               <i class="fi fi-rr-square-plus"></i>
-                              Déposer votre annonce
+                              {{ "post_your_ad" | translate }}
                             </a>
                           </div>
                         </div>
@@ -544,7 +587,7 @@
 
                 <li class="position-static">
                   <a href="javascript:void(0)">
-                    Autre <i class="fi-rs-angle-down"></i>
+                    {{ "other" | translate }} <i class="fi-rs-angle-down"></i>
                   </a>
                   <ul class="mega-menu">
                     <ul style="width: 80%">
@@ -556,7 +599,6 @@
                         >
                           {{ category.name }}
                         </a>
-
                         <ul>
                           <li
                             *ngFor="let subcategory of category.subcategories"
@@ -582,7 +624,6 @@
                         </ul>
                       </li>
                     </ul>
-
                     <li
                       class="sub-mega-menu sub-mega-menu-width-40 right-menu"
                       style="height: 35%; width: 30% !important"
@@ -599,15 +640,11 @@
                           />
                         </a>
                         <div class="menu-banner-content">
-                          <h3>
-                            Ne laissez <br />
-                            pas passer <br />
-                            cette opportunité
-                          </h3>
+                          <h3>{{ "dont_miss_opportunity" | translate }}</h3>
                           <div class="menu-banner-btn">
                             <a href="/deposer_une_annonce">
                               <i class="fi fi-rr-square-plus"></i>
-                              Déposer votre annonce
+                              {{ "post_your_ad" | translate }}
                             </a>
                           </div>
                         </div>
@@ -624,7 +661,9 @@
             src="../../assets/imgs/theme/icons/icon-headphone-white.svg"
             alt="hotline"
           />
-          <p>06-61327755<span>Centre de support 24/7</span></p>
+          <p>
+            06-61327755<span>{{ "support_center" | translate }}</span>
+          </p>
         </div>
         <div class="header-action-icon-2 d-block d-lg-none">
           <div class="burger-icon burger-icon-white">
@@ -636,7 +675,7 @@
         <div class="header-action-right d-block d-lg-none">
           <div class="header-action-2">
             <div class="header-action-icon-2">
-              <a lass="myicon" href="/favoris">
+              <a class="myicon" href="/favoris">
                 <i class="fi fi-rr-heart"></i>
               </a>
             </div>
@@ -652,14 +691,16 @@
               >
                 <ul>
                   <li>
-                    <a href="/login"
-                      ><i class="fi fi-rs-user mr-10"></i>Connexion</a
-                    >
+                    <a href="/login">
+                      <i class="fi fi-rs-user mr-10"></i
+                      >{{ "login" | translate }}
+                    </a>
                   </li>
                   <li>
-                    <a href="/register"
-                      ><i class="fi fi-rs-user mr-10"></i>Créer un compte</a
-                    >
+                    <a href="/register">
+                      <i class="fi fi-rs-user mr-10"></i
+                      >{{ "create_account" | translate }}
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -670,39 +711,45 @@
               >
                 <ul>
                   <li>
-                    <a href="/page-account#account-detail"
-                      ><i class="fi fi-rs-user mr-10"></i>Mon compte</a
-                    >
+                    <a href="/page-account#account-detail">
+                      <i class="fi fi-rs-user mr-10"></i
+                      >{{ "my_account" | translate }}
+                    </a>
                   </li>
                   <li>
-                    <a href="/deposer_une_annonce"
-                      ><i class="fi fi-rr-square-plus mr-10"></i>Déposer votre
-                      annonce</a
-                    >
+                    <a href="/deposer_une_annonce">
+                      <i class="fi fi-rr-square-plus mr-10"></i
+                      >{{ "post_your_ad" | translate }}
+                    </a>
                   </li>
                   <li>
-                    <a href="/page-account#orders"
-                      ><i class="fi fi-rs-list mr-10"></i>Mes annonces</a
-                    >
+                    <a href="/page-account#orders">
+                      <i class="fi fi-rs-list mr-10"></i
+                      >{{ "my_ads" | translate }}
+                    </a>
                   </li>
                   <li>
-                    <a href="/favoris"
-                      ><i class="fi fi-rr-heart mr-10"></i>Mes favoris</a
-                    >
+                    <a href="/favoris">
+                      <i class="fi fi-rr-heart mr-10"></i
+                      >{{ "my_favorites" | translate }}
+                    </a>
                   </li>
                   <li>
-                    <a href="/chat"
-                      ><i class="fi fi-rr-messages mr-10"></i>Mes Messages</a
-                    >
+                    <a href="/chat">
+                      <i class="fi fi-rr-messages mr-10"></i
+                      >{{ "my_messages" | translate }}
+                    </a>
                   </li>
                   <li>
-                    <a href="/page-account#address"
-                      ><i class="fi fi-rr-lock mr-10"></i>Mot de passe</a
-                    >
+                    <a href="/page-account#address">
+                      <i class="fi fi-rr-lock mr-10"></i
+                      >{{ "password" | translate }}
+                    </a>
                   </li>
                   <li>
                     <a (click)="logout()" href="javascript:void(0)">
-                      <i class="fi fi-rs-sign-out mr-10"></i>Déconnexion
+                      <i class="fi fi-rs-sign-out mr-10"></i
+                      >{{ "logout" | translate }}
                     </a>
                   </li>
                 </ul>
