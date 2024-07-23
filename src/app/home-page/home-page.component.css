@@ -349,3 +349,30 @@ width: 100% !important;
 ::ng-deep .slick-slide img {
     display: inline !important;
 }
+
+:host-context([dir="rtl"]) {
+
+    ::ng-deep .categories-dropdown-wrap ul li a img {
+        max-width: 30px;
+        margin-right: 0px;
+    }
+
+    ::ng-deep .categories-dropdown-wrap.style-2 {
+        padding-right: 50px;
+        padding-left: 50px;
+    }
+
+    ::ng-deep .categories-dropdown-wrap.style-2 ul li img {
+        max-height: 20px !important;
+    }
+
+    ::ng-deep .custom-carousel {
+        /* RTL specific styles */
+        direction: ltr;
+    }
+
+    ::ng-deep .hero-slider-1 {
+        direction: rtl;
+    }
+
+}

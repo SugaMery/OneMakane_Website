@@ -195,56 +195,51 @@ export class HeaderComponent {
               this.subcategories[index] = { ...category, ...datas.data };
             });
         });
+        this.subcategories.forEach((categorys) => {
+          if (
+            categorys.active === true &&
+            categorys.parent_id === category.id
+          ) {
+            // Ensure category.subcategories is initialized
+            if (!category.subcategories) {
+              category.subcategories = [];
+            }
+            // console.log('Initial categorys:', categorys.id);
 
-        category.subcategories = this.subcategories.filter(
-          (subcat: any) =>
-            subcat.active === true && subcat.parent_id === category.id
+            this.categoryService
+              .getCategoryById(categorys.id)
+              .subscribe((datas) => {
+                //console.log('Initial datas:', datas.data);
+                //category.subcategories.push(datas.data);
+                categorys.category_langs = datas.data.category_langs;
+              });
+            // console.log('Initial caty:', caty);
+            category.subcategories.push(categorys);
+          }
+        });
+
+        console.log(
+          'Updated category:',
+          this.subcategories,
+          category.subcategories
         );
-        console.log('Updated category:', category.subcategories);
-
-        // Loop through subcategories
         category.subcategories.forEach((subcategory: any) => {
-          //console.log('Updated category:', subcategory);
-
-          //Find sub-subcategories for each subcategory
-          /*           subcategory.subsubcategories = categories.data.filter(
-            (subsubcat: any) =>
-              subsubcat.active === true &&
-              subsubcat.parent_id === subcategory.id
-          );
-          console.log("subcategory", subcategory);
- */
-
           this.categoryService
             .getCategoryById(subcategory.id)
             .subscribe((data) => {
-              //this.categories[index] = { ...subcategory, ...data.data };
-              //subcategory = data.data;
-              //console.log('Updated categoryrrrr:', subcategory);
-
               const preFilter = data.data.pre_filter;
-              // console.log('daaaaaaaaaaaaaaaaaaaateeeee', data.data);
-
-              // Clear the array before populating it
               this.preFilterValues = [];
               subcategory.subsubscategories = [];
-
-              // Collect values in the array
               for (const key in preFilter) {
                 if (preFilter.hasOwnProperty(key)) {
                   const list = preFilter[key];
                   for (const keys in list) {
                     if (list.hasOwnProperty(keys)) {
-                      // console.log('kkkkkkkkkkk', list[keys], key);
                       const alreadyExists = this.preFilterValues.some(
                         (item) => item[keys] === list[keys]
                       );
-
-                      // If it doesn't exist, push it into this.preFilterValues
                       if (!alreadyExists) {
                         this.preFilterValues.push({ [keys]: list[keys] });
-
-                        // Push this.preFilterValues into subcategory.subsubcategories
                         subcategory.subsubscategories.push({
                           key: keys,
                           value: list[keys],
@@ -255,15 +250,7 @@ export class HeaderComponent {
                   }
                 }
               }
-
-              // Ensure subcategory.subsubcategories is initialized as an array
-
-              // Log to check values for debugging
-
-              // Log the array to verify the values
-              //console.log('preFilterValues:', this.preFilterValues);
             });
-          //console.log("subcategory", subcategory, this.preFilterValues, subcategory.subsubscategories);
         });
       });
 

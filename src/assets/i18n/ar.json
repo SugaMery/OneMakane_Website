@@ -21,12 +21,17 @@
     "show_more": "عرض المزيد...",
     "show_less": "عرض أقل...",
     "dont_miss_opportunity": "لا تفوت هذه الفرصة",
-    "post_your_ad": "انشروا إعلانكُم",
+    "post_your_ad": "قم بإدراج إعلانك الآن",
     "support_center": "مركز الدعم 24/7",
     "create_account": "إنشاء حساب",
     "my_account": "حسابي",
     "my_ads": "إعلاناتي",
     "my_favorites": "مفضلتي",
     "my_messages": "رسائلي",
-    "other": "أخرى"
+    "other": "أخرى",
+    "best_with_us": "اختر الأفضل معنا للحصول على إعلانات ذات جودة عالية",
+    "find_what_you_seek": "اعثر على ما تبحث عنه من خلال إعلاناتنا عالية الجودة",
+    "popular_categories_title": "الفئات الشائعة",
+    "category_item_plural": "منتجات",
+    "category_item_singular": "منتج"
 }

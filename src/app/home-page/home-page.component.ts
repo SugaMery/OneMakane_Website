@@ -11,6 +11,7 @@ import { AnnonceService } from '../annonce.service';
 import { Console } from 'console';
 import { SettingService } from '../setting.service';
 import { Carousel } from 'primeng/carousel';
+import { LanguageService } from '../language.service';
 interface Product {
   id: number;
   category: { id: number; name: string; route: string | null };
@@ -54,12 +55,14 @@ export class HomePageComponent implements OnInit {
   responsiveOptions2:
     | { breakpoint: string; numVisible: number; numScroll: number }[]
     | undefined;
+  isArabic: any;
   constructor(
     private categoryService: CategoryService,
     private annonceService: AnnonceService,
     private settingService: SettingService,
     @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: any
+    @Inject(PLATFORM_ID) private platformId: any,
+    private languageService: LanguageService
   ) {
     Carousel.prototype.onTouchMove = () => {};
   }
@@ -105,6 +108,13 @@ export class HomePageComponent implements OnInit {
   ];
   isScreenSmall!: boolean;
   isScreenphone: boolean = false;
+  currentLanguage!: string;
+
+  setLanguage(language: string) {
+    this.languageService.setLanguage(language);
+    this.currentLanguage = language;
+    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+  }
 
   navigateToCategory(categoryId: number) {
     window.location.href = `/ads-category/${categoryId}`;
@@ -165,6 +175,8 @@ export class HomePageComponent implements OnInit {
     return ad.favorites && ad.favorites.length > 0;
   }
   ngOnInit(): void {
+    this.currentLanguage = this.languageService.getCurrentLanguage();
+
     this.getAdsForCarousel();
     this.fetchCategories();
     this.getCategories();
@@ -229,7 +241,7 @@ export class HomePageComponent implements OnInit {
                     if (!adData || !adData.data) {
                       return;
                     }
-                    console.log('ggg', dataFilter.data);
+                    //console.log('ggg', dataFilter.data);
 
                     this.isFavorited(element);
                     if (adData.data.category.model == jobs) {
@@ -243,13 +255,13 @@ export class HomePageComponent implements OnInit {
                     this.categorizedAds[element.category.name].push(
                       adData.data
                     );
-                    console.log('categorizedAds', this.categorizedAds);
+                    // console.log('categorizedAds', this.categorizedAds);
                   });
               });
             });
         } else {
           this.ads = data.data;
-          console.log('gggad', data.data);
+          // console.log('gggad', data.data);
 
           data.data.forEach((element: any) => {
             this.annonceService.getAdById(element.id).subscribe((adData) => {
@@ -460,7 +472,7 @@ export class HomePageComponent implements OnInit {
       const accessToken =
         this.document.defaultView.localStorage.getItem('loggedInUserToken');
 
-      this.categoryService.getCategoriesFrom().subscribe((categories) => {
+      this.categoryService.getCategoriesFrom().subscribe(async (categories) => {
         const allCategories = categories.data;
 
         // Filter active main categories (parent_id === null)
@@ -492,11 +504,21 @@ export class HomePageComponent implements OnInit {
           );
         }
 
+        const categoryPromises = this.categories.map(async (media) => {
+          const response = await this.categoryService
+            .getCategoryById(media.id)
+            .toPromise();
+          return response.data;
+        });
+
+        this.categories = await Promise.all(categoryPromises);
+        console.log('greeeet', this.categories);
+
         this.displayedCategories = this.categories.slice(0, 11);
         this.hiddenCategories = this.categories.slice(11);
 
         // Create a list to include subcategories with a reference to their parent category
-        this.Souscategorie = this.categories.reduce((acc, category) => {
+        const Souscategorie = this.categories.reduce((acc, category) => {
           const subcategories = this.Souscategories.filter(
             (subCategory) => subCategory.parent_id === category.id
           );
@@ -507,8 +529,17 @@ export class HomePageComponent implements OnInit {
             }))
           );
         }, []);
+        Souscategorie.forEach((data: any) => {
+          this.categoryService.getCategoryById(data.id).subscribe((datas) => {
+            this.Souscategorie.push(datas.data);
+          });
+        });
+        console.log('messag', this.Souscategorie);
       });
     }
+  }
+  isArabicLanguage(): boolean {
+    return this.currentLanguage === 'ar'; // Adjust based on your language detection
   }
 
   toggleShowMore(): void {

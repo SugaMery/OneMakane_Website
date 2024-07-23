@@ -76,8 +76,10 @@
         prevArrow: '<span class="slider-btn slider-prev"><i class="fi-rs-angle-left"></i></span>',
         nextArrow: '<span class="slider-btn slider-next"><i class="fi-rs-angle-right"></i></span>',
         appendArrows: ".hero-slider-1-arrow",
-        autoplay: true
+        autoplay: true,
+        rtl: $('html').attr('dir') === 'rtl' // Enable RTL if the document direction is RTL
     });
+
 
     /*Carausel 8 columns*/
     $(".carausel-8-columns").each(function (key, item) {

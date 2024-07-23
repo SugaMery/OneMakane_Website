@@ -28,5 +28,10 @@
     "my_ads": "Mes annonces",
     "my_favorites": "Mes favoris",
     "my_messages": "Mes Messages",
-    "other": "Autre"
+    "other": "Autre",
+    "best_with_us": "Le meilleur chez nous pour des annonces de qualité",
+    "find_what_you_seek": "Trouvez ce que vous cherchez avec nos annonces de qualité",
+    "popular_categories_title": "Catégories en Vedette",
+    "category_item_plural": "articles",
+    "category_item_singular": "article"
 }

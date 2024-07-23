@@ -250,7 +250,20 @@
             <form (ngSubmit)="onSubmit()">
               <select class="select-active">
                 <ng-container *ngFor="let category of categories">
-                  <option [value]="category.id">{{ category.name }}</option>
+                  <option [value]="category.id">
+                    <span
+                      *ngIf="
+                        currentLanguage === 'ar' &&
+                        category.category_langs &&
+                        category.category_langs.length > 0
+                      "
+                    >
+                      {{ category.category_langs[0]?.name }}
+                    </span>
+                    <span *ngIf="currentLanguage !== 'ar'">
+                      {{ category.name }}
+                    </span>
+                  </option>
                 </ng-container>
               </select>
               <input
@@ -531,7 +544,10 @@
                             {{ subcategory.name }}
                           </span>
                         </a>
-                        <ul *ngIf="subcategory.subsubscategories?.length">
+                        <ul
+                          *ngIf="subcategory.subsubscategories?.length"
+                          class="subsubscategories"
+                        >
                           <li
                             *ngFor="
                               let subsubcat of subcategory.subsubscategories.slice(
@@ -584,20 +600,33 @@
                     </li>
                   </ul>
                 </li>
-
                 <li class="position-static">
                   <a href="javascript:void(0)">
                     {{ "other" | translate }} <i class="fi-rs-angle-down"></i>
                   </a>
                   <ul class="mega-menu">
                     <ul style="width: 80%">
-                      <li *ngFor="let category of categories.slice(6)">
+                      <li
+                        *ngFor="let category of categories.slice(6)"
+                        class="sub-mega-menu sub-mega-menu-width-10 left-menu"
+                      >
                         <a
                           class="menu-title"
                           href="javascript:void(0)"
                           (click)="navigateToCategory(category.id)"
                         >
-                          {{ category.name }}
+                          <span
+                            *ngIf="
+                              currentLanguage === 'ar' &&
+                              category.category_langs &&
+                              category.category_langs.length > 0
+                            "
+                          >
+                            {{ category.category_langs[0]?.name }}
+                          </span>
+                          <span *ngIf="currentLanguage !== 'ar'">
+                            {{ category.name }}
+                          </span>
                         </a>
                         <ul>
                           <li
@@ -607,19 +636,19 @@
                               href="javascript:void(0)"
                               (click)="navigateToCategory(subcategory.id)"
                             >
-                              {{ subcategory.name }}
-                            </a>
-                            <ul>
-                              <li
-                                *ngFor="
-                                  let subsubcat of subcategory.subsubcategories
+                              <span
+                                *ngIf="
+                                  currentLanguage === 'ar' &&
+                                  subcategory.category_langs &&
+                                  subcategory.category_langs.length > 0
                                 "
                               >
-                                <a href="/shop-product-right">{{
-                                  subsubcat.name
-                                }}</a>
-                              </li>
-                            </ul>
+                                {{ subcategory.category_langs[0]?.name }}
+                              </span>
+                              <span *ngIf="currentLanguage !== 'ar'">
+                                {{ subcategory.name }}
+                              </span>
+                            </a>
                           </li>
                         </ul>
                       </li>

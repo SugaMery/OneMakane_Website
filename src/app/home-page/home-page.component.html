@@ -69,7 +69,18 @@
                       [src]="category.media?.url"
                       alt="{{ category.name }}"
                     />
-                    {{ category.name }}
+                    <span
+                      *ngIf="
+                        currentLanguage === 'ar' &&
+                        category.category_langs &&
+                        category.category_langs.length > 0
+                      "
+                    >
+                      {{ category.category_langs[0]?.name }}
+                    </span>
+                    <span *ngIf="currentLanguage !== 'ar'">
+                      {{ category.name }}
+                    </span>
                   </a>
                 </li>
               </ul>
@@ -86,7 +97,18 @@
                         [src]="category.icon_path"
                         alt="{{ category.name }}"
                       />
-                      {{ category.name }}
+                      <span
+                        *ngIf="
+                          currentLanguage === 'ar' &&
+                          category.category_langs &&
+                          category.category_langs.length > 0
+                        "
+                      >
+                        {{ category.category_langs[0]?.name }}
+                      </span>
+                      <span *ngIf="currentLanguage !== 'ar'">
+                        {{ category.name }}
+                      </span>
                     </a>
                   </li>
                 </ul>
@@ -94,9 +116,13 @@
             </div>
             <div class="more_categories" (click)="toggleShowMore()">
               <span class="icon"></span>
-              <span class="heading-sm-1">{{
-                showMore ? "Voir moins..." : "Voir plus..."
-              }}</span>
+              <span class="heading-sm-1">
+                {{
+                  showMore
+                    ? ("show_less" | translate)
+                    : ("show_more" | translate)
+                }}
+              </span>
             </div>
           </div>
         </div>
@@ -112,17 +138,16 @@
               >
                 <div class="slider-content">
                   <h1 class="display-2 mb-40">
-                    Ne manquez pas <br />
-                    cette occasion !
+                    {{ "dont_miss_opportunity" | translate }} <br />
                   </h1>
-                  <p class="mb-65">Déposer votre annonce maintenant</p>
+                  <p class="mb-65">{{ "post_your_ad" | translate }}</p>
                   <button
                     style="max-width: 450px; border-radius: 50px"
                     onclick="window.location.href='/deposer_une_annonce'"
                     class="btn"
                     type="submit"
                   >
-                    Déposer votre annonce
+                    {{ "post_your_ad" | translate }}
                   </button>
                 </div>
               </div>
@@ -132,17 +157,16 @@
               >
                 <div class="slider-content">
                   <h1 class="display-2 mb-40">
-                    Ne manquez pas <br />
-                    cette occasion !
+                    {{ "dont_miss_opportunity" | translate }} <br />
                   </h1>
-                  <p class="mb-65">Déposer votre annonce maintenant</p>
+                  <p class="mb-65">{{ "post_your_ad" | translate }}</p>
                   <button
                     style="max-width: 450px; border-radius: 50px"
                     onclick="window.location.href='/deposer_une_annonce'"
                     class="btn"
                     type="submit"
                   >
-                    Déposer votre annonce
+                    {{ "post_your_ad" | translate }}
                   </button>
                 </div>
               </div>
@@ -158,10 +182,10 @@
                 <img src="../../assets/imgs/banner/bannar-1.png" alt="" />
                 <div class="banner-text">
                   <h4 class="mb-30">
-                    Le meilleur chez nous pour des annonces de qualité
+                    {{ "best_with_us" | translate }}
                   </h4>
                   <a class="btn btn-xs mb-50" href="/deposer_une_annonce">
-                    Déposer votre annonce
+                    {{ "post_your_ad" | translate }}
                     <i class="fi-rs-arrow-small-right"></i>
                   </a>
                 </div>
@@ -172,13 +196,10 @@
                 <img src="../../assets/imgs/banner/bannar-2.png" alt="" />
                 <div class="banner-text">
                   <h5 class="mb-20">
-                    Trouvez ce que <br />
-                    vous cherchez<br />
-                    avec nos annonces <br />
-                    de qualité
+                    {{ "find_what_you_seek" | translate }}
                   </h5>
                   <a class="btn btn-xs" href="/deposer_une_annonce">
-                    Déposer votre annonce
+                    {{ "post_your_ad" | translate }}
                     <i class="fi-rs-arrow-small-right"></i>
                   </a>
                 </div>
@@ -195,32 +216,62 @@
     <div class="container wow animate__animated animate__fadeIn">
       <div class="section-title">
         <div class="title">
-          <h3>Catégories en Vedette</h3>
+          <h3>{{ "popular_categories_title" | translate }}</h3>
           <ul
             class="list-inline nav nav-tabs links"
-            *ngIf="isScreenSmall == false && isScreenphone == false"
+            *ngIf="!isScreenSmall && !isScreenphone"
           >
             <li
               class="list-inline-item nav-item"
               *ngFor="let category of categories.slice(0, 6)"
             >
-              <a class="nav-link" [href]="'/ads-category/' + category?.id">{{
-                category.name
-              }}</a>
+              <a
+                class="nav-link"
+                [href]="'/ads-category/' + category?.id"
+                *ngIf="
+                  currentLanguage === 'ar' &&
+                  category.category_langs &&
+                  category.category_langs.length > 0
+                "
+              >
+                {{ category.category_langs[0]?.name }}
+              </a>
+              <a
+                class="nav-link"
+                [href]="'/ads-category/' + category?.id"
+                *ngIf="currentLanguage !== 'ar'"
+              >
+                {{ category.name }}
+              </a>
             </li>
           </ul>
 
           <ul
             class="list-inline nav nav-tabs links"
-            *ngIf="isScreenSmall == true || isScreenphone == true"
+            *ngIf="isScreenSmall || isScreenphone"
           >
             <li
               class="list-inline-item nav-item"
               *ngFor="let category of categories.slice(0, 3)"
             >
-              <a class="nav-link" [href]="'/ads-category/' + category?.id">{{
-                category.name
-              }}</a>
+              <a
+                class="nav-link"
+                [href]="'/ads-category/' + category?.id"
+                *ngIf="
+                  currentLanguage === 'ar' &&
+                  category.category_langs &&
+                  category.category_langs.length > 0
+                "
+              >
+                {{ category.category_langs[0]?.name }}
+              </a>
+              <a
+                class="nav-link"
+                [href]="'/ads-category/' + category?.id"
+                *ngIf="currentLanguage !== 'ar'"
+              >
+                {{ category.name }}
+              </a>
             </li>
           </ul>
         </div>
@@ -249,16 +300,34 @@
               data-wow-delay=".1s"
             >
               <figure class="img-hover-scale overflow-hidden">
-                <a (click)="navigateToCategory(category.id)"
-                  ><img [src]="category?.media?.url" alt=""
-                /></a>
+                <a (click)="navigateToCategory(category.id)">
+                  <img [src]="category?.media?.url" alt="" />
+                </a>
               </figure>
               <h6>
-                <a (click)="navigateToCategory(category.id)">{{
-                  category.name
-                }}</a>
+                <a (click)="navigateToCategory(category.id)">
+                  <span
+                    *ngIf="
+                      currentLanguage === 'ar' &&
+                      category.category_langs &&
+                      category.category_langs.length > 0
+                    "
+                  >
+                    {{ category.category_langs[0]?.name }}
+                  </span>
+                  <span *ngIf="currentLanguage !== 'ar'">
+                    {{ category.name }}
+                  </span>
+                </a>
               </h6>
-              <span>{{ category.item_count }} items</span>
+              <span
+                >{{ category.item_count }}
+                {{
+                  category.item_count > 1
+                    ? ("category_item_plural" | translate)
+                    : ("category_item_singular" | translate)
+                }}</span
+              >
             </div>
           </div>
         </ng-template>

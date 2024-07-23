@@ -425,4 +425,41 @@ nav>ul>li {
   ::ng-deep .mr-10 {
     margin-left: 10px !important;
   }
+
+  ::ng-deep .main-menu>nav>ul>li ul.mega-menu li {
+    padding-right: 0px !important;
+  }
+
+  /* 
+  ::ng-deep .main-menu>nav>ul>li ul.mega-menu li {
+    float: right;
+  } */
+
+  ::ng-deep .main-categori-wrap {
+    margin-left: 4rem !important;
+  }
+
+  ::ng-deep .categories-dropdown-wrap ul li a img {
+    margin-right: unset;
+    margin-left: 0px;
+  }
+
+  ::ng-deep .categories-dropdown-wrap ul li a img {
+    margin-left: 15px;
+  }
+}
+
+
+
+
+::ng-deep .categories-dropdown-wrap.style-2 ul li img {
+  max-height: 30px !important;
+}
+
+::ng-deep .categories-dropdown-wrap ul li a img {
+  margin-left: 15px;
+}
+
+::ng-deep .categories-dropdown-wrap.style-2 .more_categories {
+  justify-content: center;
 }
