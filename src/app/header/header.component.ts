@@ -195,6 +195,7 @@ export class HeaderComponent {
               this.subcategories[index] = { ...category, ...datas.data };
             });
         });
+
         this.subcategories.forEach((categorys) => {
           if (
             categorys.active === true &&

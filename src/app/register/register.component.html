@@ -3,8 +3,11 @@
   <div class="page-header breadcrumb-wrap">
     <div class="container">
       <div class="breadcrumb">
-        <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Accueil</a>
-        <span></span> Pages <span></span> Mon compte
+        <a href="/" rel="nofollow"
+          ><i class="fi-rs-home mr-5 ml-10"></i> {{ "home" | translate }}</a
+        >
+        <span></span> {{ "pages" | translate }} <span></span>
+        {{ "myAccount" | translate }}
       </div>
     </div>
   </div>
@@ -16,443 +19,637 @@
             <form method="post" (ngSubmit)="onSubmit()" #registerForm="ngForm">
               <div class="row">
                 <div class="heading_s1">
-                  <h1 class="mb-5" style="font-size: 2.5rem;">Créer un compte</h1>
+                  <h1 class="mb-5" style="font-size: 2.5rem">
+                    {{ "create_account" | translate }}
+                  </h1>
                   <p class="mb-30">
-                    Vous avez déjà un compte?
-                    <a href="/login">Connexion</a>
+                    {{ "already_have_account" | translate }}
+                    <a href="/login" class="ml-15">{{ "login" | translate }}</a>
                   </p>
                 </div>
-<!-- First column -->
-<div class="col-lg-6 col-md-6">
-  <div class="login_wrap widget-taber-content background-white">
-    <div class="padding_eight_all bg-white">
-      <div class="form-group mb-3">
-        <input
-          type="text"
-          required
-          name="last_name"
-          placeholder="Nom de famille"
-          [(ngModel)]="userData.last_name"
-          class="form-control custom-spacing"
-          (ngModelChange)="clearError('last_name')"
-        />
-        <div
-          *ngIf="fieldErrors.last_name"
-          class="text-danger requisDiv"
-          style="margin-top: 1rem"
-        >
-          <div>Nom de famille est requis.</div>
-        </div>
-      </div>
-      <div class="form-group mb-3">
-        <input
-          type="email"
-          required
-          name="email"
-          placeholder="E-mail"
-          [(ngModel)]="userData.email"
-          class="form-control custom-spacing"
-          (ngModelChange)="clearError('email')"
-        />
-        <div
-          *ngIf="fieldErrors.email"
-          class="text-danger requisDiv"
-          style="margin-top: 1rem"
-        >
-          <div>E-mail est requis.</div>
-        </div>
-        <div
-        *ngIf="error && error.error && error.error.data && error.error.data.email && error.error.data.email.unique"
-          class="text-danger requisDiv"
-          style="margin-top: 1rem"
-        >
-          <div>Cet e-mail existe déjà.</div>
-        </div>
-      </div>
-      <div class="form-group mb-3">
-        <input
-          type="text"
-          required
-          name="address"
-          placeholder="Adresse"
-          [(ngModel)]="userData.address"
-          class="form-control custom-spacing"
-          (ngModelChange)="clearError('address')"
-        />
-        <div
-          *ngIf="fieldErrors.address"
-          class="text-danger requisDiv"
-          style="margin-top: 1rem"
-        >
-          <div>Adresse est requis.</div>
-        </div>
-      </div>
-      <div class="form-group mb-3">
-        <input
-          type="text"
-          required
-          name="postal_code"
-          placeholder="Code Postal"
-          [(ngModel)]="userData.postal_code"
-          class="form-control custom-spacing"
-          (ngModelChange)="clearError('postal_code')"
-        />
-        <div
-          *ngIf="fieldErrors.postal_code"
-          class="text-danger requisDiv"
-          style="margin-top: 1rem"
-        >
-          <div>Code Postal est requis.</div>
-        </div>
-      </div>
-      <div class="form-group mb-3">
-        <div class="form-group">
-          <input 
-            [type]="showPassword ? 'text' : 'password'"
-            placeholder=" Mot de passe"
-            [(ngModel)]="userData.password"
-            name="password"
-            class="password-input"
-            (ngModelChange)="clearError('password')"
-          >
-          <span class="eyeicon" (click)="togglePasswordVisibility()">
-            <i [ngClass]="showPassword ? 'fi-rs-eye' : 'fi-rr-eye-crossed'"></i>
-          </span>
-        </div>
-        
-        <div
-          *ngIf="fieldErrors.password"
-          class="text-danger requisDiv"
-          style="margin-top: 1rem"
-        >
-          <div> 
-             Mot de passe est requis.</div>
-        </div>
-        <div
-        *ngIf="error && error.error && error.error.data && error.error.data.password && error.error.data.password.regex"
-          class="text-danger requisDiv"
-          style="margin-top: 1rem"
-        >
-          <div>Le mot de passe doit inclure au moins une minuscule, une majuscule et un caractère spécial.</div>
-        </div>
-      </div>
-      <div class="login_footer form-group">
-        <input
-          style="width: 50%"
-          type="text"
-          required
-          name="enteredSecurityCode"
-          placeholder="Code de sécurité"
-          [(ngModel)]="userData.enteredSecurityCode"
-          (input)="updateSecurityCode($event)"
-          (ngModelChange)="clearError('enteredSecurityCode')"
-          class="form-control custom-spacing"
-        />
-        <button
-          type="button"
-          class="btn btn-success"
-          style="background-color: #5ef292"
-          (click)="resetForm()"
-        >
-          <span class="pi pi-refresh"></span>
-          <!-- PrimeNG refresh icon -->
-        </button>
+                <!-- First column -->
+                <div class="col-lg-6 col-md-6">
+                  <div class="login_wrap widget-taber-content background-white">
+                    <div class="padding_eight_all bg-white">
+                      <div class="form-group mb-3">
+                        <label
+                          for="lastName"
+                          style="
+                            font-size: 1rem;
+                            font-weight: 550;
+                            color: #253d4e;
+                          "
+                          >{{ "last_name" | translate }}</label
+                        >
+                        <input
+                          type="text"
+                          required
+                          name="last_name"
+                          placeholder="{{ 'last_name' | translate }}"
+                          [(ngModel)]="userData.last_name"
+                          class="form-control custom-spacing"
+                          (ngModelChange)="clearError('last_name')"
+                        />
+                        <div
+                          *ngIf="fieldErrors.last_name"
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>{{ "last_name_required" | translate }}</div>
+                        </div>
+                      </div>
+                      <div class="form-group mb-3">
+                        <label
+                          for="lastName"
+                          style="
+                            font-size: 1rem;
+                            font-weight: 550;
+                            color: #253d4e;
+                          "
+                          >{{ "email" | translate }}</label
+                        >
+                        <input
+                          type="email"
+                          required
+                          name="email"
+                          [(ngModel)]="userData.email"
+                          class="form-control custom-spacing"
+                          (ngModelChange)="clearError('email')"
+                        />
+                        <div
+                          *ngIf="fieldErrors.email"
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>{{ "email_required" | translate }}</div>
+                        </div>
+                        <div
+                          *ngIf="
+                            error &&
+                            error.error &&
+                            error.error.data &&
+                            error.error.data.email &&
+                            error.error.data.email.unique
+                          "
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>{{ "email_exists" | translate }}</div>
+                        </div>
+                      </div>
+                      <div class="form-group mb-3">
+                        <label
+                          for="lastName"
+                          style="
+                            font-size: 1rem;
+                            font-weight: 550;
+                            color: #253d4e;
+                          "
+                          >{{ "address" | translate }}</label
+                        >
+                        <input
+                          type="text"
+                          required
+                          name="address"
+                          placeholder="{{ 'address' | translate }}"
+                          [(ngModel)]="userData.address"
+                          class="form-control custom-spacing"
+                          (ngModelChange)="clearError('address')"
+                        />
+                        <div
+                          *ngIf="fieldErrors.address"
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>{{ "address_required" | translate }}</div>
+                        </div>
+                      </div>
+                      <div class="form-group mb-3">
+                        <label
+                          for="lastName"
+                          style="
+                            font-size: 1rem;
+                            font-weight: 550;
+                            color: #253d4e;
+                          "
+                          >{{ "postal_code" | translate }}</label
+                        >
+                        <input
+                          type="text"
+                          required
+                          name="postal_code"
+                          placeholder="{{ 'postal_code' | translate }}"
+                          [(ngModel)]="userData.postal_code"
+                          class="form-control custom-spacing"
+                          (ngModelChange)="clearError('postal_code')"
+                        />
+                        <div
+                          *ngIf="fieldErrors.postal_code"
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>{{ "postal_code_required" | translate }}</div>
+                        </div>
+                      </div>
+                      <div class="form-group mb-3">
+                        <div class="form-group">
+                          <label
+                            for="lastName"
+                            style="
+                              font-size: 1rem;
+                              font-weight: 550;
+                              color: #253d4e;
+                            "
+                            >{{ "password" | translate }}</label
+                          >
+                          <input
+                            style="direction: ltr"
+                            [type]="showPassword ? 'text' : 'password'"
+                            placeholder="{{ 'password' | translate }}"
+                            [(ngModel)]="userData.password"
+                            name="password"
+                            class="password-input"
+                            (ngModelChange)="clearError('password')"
+                          />
+                          <span
+                            class="eyeicon"
+                            (click)="togglePasswordVisibility()"
+                            style="transform: translateZ(10px)"
+                          >
+                            <i
+                              [ngClass]="
+                                showPassword ? 'fi-rs-eye' : 'fi-rr-eye-crossed'
+                              "
+                            ></i>
+                          </span>
+                        </div>
 
-        <span class="security-code">
-          <b class="text-new">{{
-            userData.generatedSecurityCode[0]
-          }}</b>
-          <b class="text-hot">{{
-            userData.generatedSecurityCode[1]
-          }}</b>
-          <b class="text-sale">{{
-            userData.generatedSecurityCode[2]
-          }}</b>
-          <b class="text-best">{{
-            userData.generatedSecurityCode[3]
-          }}</b>
-        </span>
-      </div>
-      <div
-        *ngIf="fieldErrors.enteredSecurityCode"
-        class="text-danger requisDiv"
-        style="margin-top: 1rem"
-      >
-        <div>Code de sécurité est requis.</div>
-      </div>
+                        <div
+                          *ngIf="fieldErrors.password"
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>{{ "password_required" | translate }}</div>
+                        </div>
+                        <div
+                          *ngIf="
+                            error &&
+                            error.error &&
+                            error.error.data &&
+                            error.error.data.password &&
+                            error.error.data.password.regex
+                          "
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>{{ "password_requirements" | translate }}</div>
+                        </div>
+                      </div>
+                      <div class="login_footer form-group">
+                        <input
+                          style="width: 50%"
+                          type="text"
+                          required
+                          name="enteredSecurityCode"
+                          placeholder="{{ 'security_code' | translate }}"
+                          [(ngModel)]="userData.enteredSecurityCode"
+                          (input)="updateSecurityCode($event)"
+                          (ngModelChange)="clearError('enteredSecurityCode')"
+                          class="form-control custom-spacing"
+                        />
+                        <button
+                          type="button"
+                          class="btn btn-success"
+                          style="background-color: #5ef292"
+                          (click)="resetForm()"
+                        >
+                          <span class="pi pi-refresh"></span>
+                          <!-- PrimeNG refresh icon -->
+                        </button>
 
-      <div
-      *ngIf="fieldErrors.security_code_incorect"
-      class="text-danger requisDiv"
-      style="margin-top: 1rem"
-    >
-      <div>Code de sécurité incorrecte.</div>
-    </div>
+                        <span class="security-code">
+                          <b class="text-new">{{
+                            userData.generatedSecurityCode[0]
+                          }}</b>
+                          <b class="text-hot">{{
+                            userData.generatedSecurityCode[1]
+                          }}</b>
+                          <b class="text-sale">{{
+                            userData.generatedSecurityCode[2]
+                          }}</b>
+                          <b class="text-best">{{
+                            userData.generatedSecurityCode[3]
+                          }}</b>
+                        </span>
+                      </div>
+                      <div
+                        *ngIf="fieldErrors.enteredSecurityCode"
+                        class="text-danger requisDiv"
+                        style="margin-top: 1rem"
+                      >
+                        <div>{{ "security_code_required" | translate }}</div>
+                      </div>
 
-    </div>
-  </div>
-</div>
+                      <div
+                        *ngIf="fieldErrors.security_code_incorect"
+                        class="text-danger requisDiv"
+                        style="margin-top: 1rem"
+                      >
+                        <div>{{ "security_code_incorrect" | translate }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-<!-- Second column -->
-<div class="col-lg-6 col-md-6">
-  <div class="login_wrap widget-taber-content background-white">
-    <div class="padding_eight_all bg-white">
-      <div class="form-group mb-3">
-        <input
-          type="text"
-          required
-          name="first_name"
-          placeholder="Prénom"
-          [(ngModel)]="userData.first_name"
-          class="form-control custom-spacing"
-          (ngModelChange)="clearError('first_name')"
-        />
-        <div
-          *ngIf="fieldErrors.first_name"
-          class="text-danger requisDiv"
-          style="margin-top: 1rem"
-        >
-          <div>Prénom est requis.</div>
-        </div>
-      </div>
-      <div class="form-group mb-3">
-        <input
-          type="tel"
-          required
-          name="telephone"
-          placeholder="Téléphone"
-          [(ngModel)]="userData.telephone"
-          class="form-control custom-spacing"
-          (ngModelChange)="clearError('telephone')"
-        />
-        <div
-          *ngIf="fieldErrors.telephone"
-          class="text-danger requisDiv"
-          style="margin-top: 1rem"
-        >
-          <div>Téléphone est requis.</div>
-        </div>
-      </div>
-      <div class="form-group mb-3">
-        <input
-          type="text"
-          required
-          name="city"
-          placeholder="Ville"
-          [(ngModel)]="userData.city"
-          class="form-control custom-spacing"
-          (ngModelChange)="clearError('city')"
-        />
-        <div
-          *ngIf="fieldErrors.city"
-          class="text-danger requisDiv"
-          style="margin-top: 1rem"
-        >
-          <div>Ville est requis.</div>
-        </div>
-      </div>
-      <div class="select-menu" [class.has-error]="fieldErrors.civility">
-        <div class="select-btn" style="
-          margin-bottom: 1rem;
-          background: #fff;
-          border: 1px solid #ececec;
-          height: 64px;
-          box-shadow: none;
-          padding-left: 20px;
-          font-size: 16px;
-          width: 100%;
-        " (click)="toggleOptions()">
-          <span class="sBtn-text">{{
-            selectedOption || "Civilité"
-          }}</span>
-          <i class="bx bx-chevron-down"></i>
-        </div>
-        <ul class="options" [ngClass]="{ active: optionsVisible }">
-          <li class="option" (click)="selectOption('Monsieur')">
-            Monsieur
-          </li>
-          <li class="option" (click)="selectOption('Madame')">
-            Madame
-          </li>
-        </ul>
-      </div>
-      <div
-        *ngIf="fieldErrors.civility"
-        class="text-danger requisDiv"
-        style="margin-bottom: 1rem"
-      >
-        <div>Civilité est requise.</div>
-      </div>
-      <div class="form-group mb-3">
-        <div class="form-group">
-          <input 
-            [type]="showRepeatPassword ? 'text' : 'password'"
-            placeholder="Confirmer le mot de passe"
-            [(ngModel)]="userData.repeat_password"
-            name="repeat_password"
-            class="password-input"
-            (ngModelChange)="clearError('repeat_password')"
-          >
-          <span class="eyeicon" (click)="toggleRepeatPasswordVisibility()">
-            <i [ngClass]="showRepeatPassword ? 'fi-rs-eye' : 'fi-rr-eye-crossed'"></i>
-          </span>
-        </div>
-        
-        <div
-          *ngIf="fieldErrors.repeat_password"
-          class="text-danger requisDiv"
-          style="margin-top: 1rem"
-        >
-          <div>Confirmer le mot de passe est requis.</div>
-        </div>
-        <div
-          *ngIf="fieldErrors.passwordMismatch"
-          class="text-danger requisDiv"
-          style="margin-top: 1rem"
-        >
-          <div>Les mots de passe ne correspondent pas.</div>
-        </div>
-      </div>
-      <div
-        class="payment_option mb-50"
-        style="margin-top: 2rem; margin-bottom: 0 !important"
-      >
-        <div
-          class="custome-radio d-inline-flex align-items-center"
-        >
-          <input
-            class="form-check-input"
-            type="radio"
-            name="account_type"
-            id="personalAccount"
-            value="personal"
-            (change)="toggleParticulierAccount()"
-            checked
-          />
-          <label class="form-check-label" for="personalAccount"
-            >Compte particulier</label
-          >
-        </div>
-        <div
-          class="custome-radio d-inline-flex align-items-center ms-4"
-        >
-          <input
-            class="form-check-input"
-            type="radio"
-            name="account_type"
-            id="professionalAccount"
-            value="professional"
-            (change)="toggleProfessionalAccount()"
-          />
-          <label
-            class="form-check-label"
-            for="professionalAccount"
-            >Compte Professionals</label
-          >
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+                <!-- Deuxième colonne -->
+                <div class="col-lg-6 col-md-6">
+                  <div class="login_wrap widget-taber-content background-white">
+                    <div class="padding_eight_all bg-white">
+                      <div class="form-group mb-3">
+                        <label
+                          for="lastName"
+                          style="
+                            font-size: 1rem;
+                            font-weight: 550;
+                            color: #253d4e;
+                          "
+                          >{{ "first_name" | translate }}</label
+                        >
+                        <input
+                          type="text"
+                          required
+                          name="first_name"
+                          placeholder="{{ 'first_name' | translate }}"
+                          [(ngModel)]="userData.first_name"
+                          class="form-control custom-spacing"
+                          (ngModelChange)="clearError('first_name')"
+                        />
+                        <div
+                          *ngIf="fieldErrors.first_name"
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>{{ "first_name_required" | translate }}</div>
+                        </div>
+                      </div>
+                      <div class="form-group mb-3">
+                        <label
+                          for="lastName"
+                          style="
+                            font-size: 1rem;
+                            font-weight: 550;
+                            color: #253d4e;
+                          "
+                          >{{ "phone" | translate }}</label
+                        >
+                        <input
+                          type="tel"
+                          required
+                          name="telephone"
+                          [(ngModel)]="userData.telephone"
+                          class="form-control custom-spacing"
+                          (ngModelChange)="clearError('telephone')"
+                        />
+                        <div
+                          *ngIf="fieldErrors.telephone"
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>{{ "telephone_required" | translate }}</div>
+                        </div>
+                      </div>
+                      <div class="form-group mb-3">
+                        <label
+                          for="lastName"
+                          style="
+                            font-size: 1rem;
+                            font-weight: 550;
+                            color: #253d4e;
+                          "
+                          >{{ "city" | translate }}</label
+                        >
+                        <input
+                          type="text"
+                          required
+                          name="city"
+                          placeholder="{{ 'city' | translate }}"
+                          [(ngModel)]="userData.city"
+                          class="form-control custom-spacing"
+                          (ngModelChange)="clearError('city')"
+                        />
+                        <div
+                          *ngIf="fieldErrors.city"
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>{{ "city_required" | translate }}</div>
+                        </div>
+                      </div>
+                      <div
+                        class="select-menu"
+                        [class.has-error]="fieldErrors.civility"
+                      >
+                        <label
+                          for="lastName"
+                          style="
+                            font-size: 1rem;
+                            font-weight: 550;
+                            color: #253d4e;
+                          "
+                          >{{ "civility" | translate }}</label
+                        >
+                        <div
+                          class="select-btn"
+                          style="
+                            margin-bottom: 1rem;
+                            background: #fff;
+                            border: 1px solid #ececec;
+                            height: 64px;
+                            box-shadow: none;
+                            padding-left: 20px;
+                            font-size: 16px;
+                            width: 100%;
+                          "
+                          (click)="toggleOptions()"
+                        >
+                          <span class="sBtn-text">{{
+                            selectedOption || "civility" | translate
+                          }}</span>
+                          <i class="bx bx-chevron-down"></i>
+                        </div>
+                        <ul
+                          class="options"
+                          [ngClass]="{ active: optionsVisible }"
+                        >
+                          <li class="option" (click)="selectOption('Monsieur')">
+                            {{ "monsieur" | translate }}
+                          </li>
+                          <li class="option" (click)="selectOption('Madame')">
+                            {{ "madame" | translate }}
+                          </li>
+                        </ul>
+                      </div>
+                      <div
+                        *ngIf="fieldErrors.civility"
+                        class="text-danger requisDiv"
+                        style="margin-bottom: 1rem"
+                      >
+                        <div>{{ "civility_required" | translate }}</div>
+                      </div>
+                      <div class="form-group mb-3">
+                        <label
+                          for="lastName"
+                          style="
+                            font-size: 1rem;
+                            font-weight: 550;
+                            color: #253d4e;
+                          "
+                          >{{ "confirm_password" | translate }}</label
+                        >
+                        <div class="form-group" style="direction: ltr">
+                          <input
+                            [type]="showRepeatPassword ? 'text' : 'password'"
+                            placeholder="{{ 'confirm_password' | translate }}"
+                            [(ngModel)]="userData.repeat_password"
+                            name="repeatPassword"
+                            class="password-input"
+                            (ngModelChange)="clearError('repeatPassword')"
+                          />
+                          <span
+                            class="eyeicon"
+                            (click)="toggleRepeatPasswordVisibility()"
+                          >
+                            <i
+                              [ngClass]="
+                                showRepeatPassword
+                                  ? 'fi-rs-eye'
+                                  : 'fi-rr-eye-crossed'
+                              "
+                            ></i>
+                          </span>
+                        </div>
 
+                        <div
+                          *ngIf="fieldErrors.repeat_password"
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>
+                            {{ "repeat_password_required" | translate }}
+                          </div>
+                        </div>
+                        <div
+                          *ngIf="
+                            error &&
+                            error.error &&
+                            error.error.data &&
+                            error.error.data.repeatPassword &&
+                            error.error.data.repeatPassword.match
+                          "
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>{{ "repeat_password_match" | translate }}</div>
+                        </div>
+                      </div>
+                      <div
+                        class="payment_option mb-50"
+                        style="
+                          margin-top: 2rem;
+                          margin-bottom: 0 !important;
+                          direction: ltr;
+                        "
+                      >
+                        <div
+                          class="custome-radio d-inline-flex align-items-center"
+                        >
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            name="account_type"
+                            id="personalAccount"
+                            value="personal"
+                            (change)="toggleParticulierAccount()"
+                            checked
+                          />
+                          <label
+                            class="form-check-label"
+                            for="personalAccount"
+                            >{{ "Compte particulier" | translate }}</label
+                          >
+                        </div>
+                        <div
+                          class="custome-radio d-inline-flex align-items-center ms-4"
+                        >
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            name="account_type"
+                            id="professionalAccount"
+                            value="professional"
+                            (change)="toggleProfessionalAccount()"
+                          />
+                          <label
+                            class="form-check-label"
+                            for="professionalAccount"
+                            >{{ "Compte Professionals" | translate }}</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div class="col-lg-6 col-md-6" *ngIf="showProfessionalAccount">
                   <div class="login_wrap widget-taber-content background-white">
                     <div class="padding_eight_all bg-white">
                       <div class="form-group mb-3">
+                        <label
+                          for="company_name"
+                          style="
+                            font-size: 1rem;
+                            font-weight: 550;
+                            color: #253d4e;
+                          "
+                          >{{ "company_name" | translate }}</label
+                        >
                         <input
                           type="text"
                           required
+                          id="company_name"
                           name="company_name"
-                          placeholder="Nom de l'entreprise"
+                          [placeholder]="'company_name' | translate"
                           [(ngModel)]="userDataPro.company_name"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('company_name')"
-
                         />
                         <div
-                        *ngIf="fieldErrors.company_name"
-                        class="text-danger requisDiv"
-                        style="margin-top: 1rem"
-                      >
-                        <div>Nom de l'entreprise est requis.</div>
-                      </div>
+                          *ngIf="fieldErrors.company_name"
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>{{ "company_name_required" | translate }}</div>
+                        </div>
                       </div>
                       <div class="form-group mb-3">
+                        <label
+                          for="company_address"
+                          style="
+                            font-size: 1rem;
+                            font-weight: 550;
+                            color: #253d4e;
+                          "
+                          >{{ "company_address" | translate }}</label
+                        >
                         <input
                           type="text"
                           required
+                          id="company_address"
                           name="company_address"
-                          placeholder="Adresse de l'entreprise"
+                          [placeholder]="'company_address' | translate"
                           [(ngModel)]="userDataPro.company_address"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('company_address')"
-
                         />
                         <div
-                        *ngIf="fieldErrors.company_address"
-                        class="text-danger requisDiv"
-                        style="margin-top: 1rem"
-                      >
-                        <div>Adresse de l'entreprise est requis.</div>
-                      </div>
+                          *ngIf="fieldErrors.company_address"
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>
+                            {{ "company_address_required" | translate }}
+                          </div>
+                        </div>
                       </div>
                       <div class="form-group mb-3">
+                        <label
+                          for="company_postal_code"
+                          style="
+                            font-size: 1rem;
+                            font-weight: 550;
+                            color: #253d4e;
+                          "
+                          >{{ "company_postal_code" | translate }}</label
+                        >
                         <input
                           type="text"
                           required
+                          id="company_postal_code"
                           name="company_postal_code"
-                          placeholder="Code postal de l'entreprise"
+                          [placeholder]="'company_postal_code' | translate"
                           [(ngModel)]="userDataPro.company_postal_code"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('company_postal_code')"
-
                         />
                         <div
-                        *ngIf="fieldErrors.company_postal_code"
-                        class="text-danger requisDiv"
-                        style="margin-top: 1rem"
-                      >
-                        <div>Code postal de l'entreprise est requis.</div>
-                      </div>
+                          *ngIf="fieldErrors.company_postal_code"
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>
+                            {{ "company_postal_code_required" | translate }}
+                          </div>
+                        </div>
                       </div>
                       <div class="form-group mb-3">
+                        <label
+                          for="activity_sector"
+                          style="
+                            font-size: 1rem;
+                            font-weight: 550;
+                            color: #253d4e;
+                          "
+                          >{{ "activity_sector" | translate }}</label
+                        >
                         <input
                           type="text"
                           required
+                          id="activity_sector"
                           name="activity_sector"
-                          placeholder="Secteur d'activité"
+                          [placeholder]="'activity_sector' | translate"
                           [(ngModel)]="userDataPro.activity_sector"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('activity_sector')"
-
                         />
                         <div
-                        *ngIf="fieldErrors.activity_sector"
-                        class="text-danger requisDiv"
-                        style="margin-top: 1rem"
-                      >
-                        <div>Secteur d'activité est requis.</div>
-                      </div>
+                          *ngIf="fieldErrors.activity_sector"
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>
+                            {{ "activity_sector_required" | translate }}
+                          </div>
+                        </div>
                       </div>
 
                       <div class="form-group mb-3">
+                        <label
+                          for="contact_first_name"
+                          style="
+                            font-size: 1rem;
+                            font-weight: 550;
+                            color: #253d4e;
+                          "
+                          >{{ "contact_first_name" | translate }}</label
+                        >
                         <input
                           type="text"
                           required
+                          id="contact_first_name"
                           name="contact_first_name"
-                          placeholder="Prénom du responsable"
+                          [placeholder]="'contact_first_name' | translate"
                           [(ngModel)]="userDataPro.contact_first_name"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('contact_first_name')"
-
                         />
                         <div
-                        *ngIf="fieldErrors.contact_first_name"
-                        class="text-danger requisDiv"
-                        style="margin-top: 1rem"
-                      >
-                        <div>Prénom du responsable est requis.</div>
-                      </div>
+                          *ngIf="fieldErrors.contact_first_name"
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>
+                            {{ "contact_first_name_required" | translate }}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -462,101 +659,140 @@
                   <div class="login_wrap widget-taber-content background-white">
                     <div class="padding_eight_all bg-white">
                       <div class="form-group mb-3">
+                        <label
+                          for="ice"
+                          style="
+                            font-size: 1rem;
+                            font-weight: 550;
+                            color: #253d4e;
+                          "
+                          >{{ "ice" | translate }}</label
+                        >
                         <input
                           type="text"
                           required
+                          id="ice"
                           name="ice"
-                          placeholder="Numéro ICE"
+                          [placeholder]="'ice' | translate"
                           [(ngModel)]="userDataPro.ice"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('ice')"
-
                         />
                         <div
-                        *ngIf="fieldErrors.ice"
-                        class="text-danger requisDiv"
-                        style="margin-top: 1rem"
-                      >
-                        <div>Numéro ICE est requis.</div>
-                      </div>
+                          *ngIf="fieldErrors.ice"
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>{{ "ice_required" | translate }}</div>
+                        </div>
                       </div>
                       <div class="form-group mb-3">
+                        <label
+                          for="company_address_rest"
+                          style="
+                            font-size: 1rem;
+                            font-weight: 550;
+                            color: #253d4e;
+                          "
+                          >{{ "company_address_rest" | translate }}</label
+                        >
                         <input
                           type="text"
                           required
+                          id="company_address_rest"
                           name="company_address_rest"
-                          placeholder="Complément d'adresse"
+                          [placeholder]="'company_address_rest' | translate"
                           [(ngModel)]="userDataPro.company_address_rest"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('company_address_rest')"
-
                         />
-<!--                         <div
-                        *ngIf="fieldErrors.company_address_rest"
-                        class="text-danger requisDiv"
-                        style="margin-top: 1rem"
-                      >
-                        <div>Complément d'adresse est requis.</div>
-                      </div> -->
                       </div>
                       <div class="form-group mb-3">
+                        <label
+                          for="company_city"
+                          style="
+                            font-size: 1rem;
+                            font-weight: 550;
+                            color: #253d4e;
+                          "
+                          >{{ "company_city" | translate }}</label
+                        >
                         <input
                           type="text"
                           required
+                          id="company_city"
                           name="company_city"
-                          placeholder="Ville de l'entreprise"
+                          [placeholder]="'company_city' | translate"
                           [(ngModel)]="userDataPro.company_city"
                           class="form-control custom-spacing"
-                          (ngModelChange)="clearError('company_name')"
-
+                          (ngModelChange)="clearError('company_city')"
                         />
                         <div
-                        *ngIf="fieldErrors.company_city"
-                        class="text-danger requisDiv"
-                        style="margin-top: 1rem"
-                      >
-                        <div>Ville de l'entreprise est requis.</div>
-                      </div>
+                          *ngIf="fieldErrors.company_city"
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>{{ "company_city_required" | translate }}</div>
+                        </div>
                       </div>
                       <div class="form-group mb-3">
+                        <label
+                          for="contact_email"
+                          style="
+                            font-size: 1rem;
+                            font-weight: 550;
+                            color: #253d4e;
+                          "
+                          >{{ "contact_email" | translate }}</label
+                        >
                         <input
                           type="text"
                           required
+                          id="contact_email"
                           name="contact_email"
-                          placeholder="Email du responsable"
+                          [placeholder]="'contact_email' | translate"
                           [(ngModel)]="userDataPro.contact_email"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('contact_email')"
-
                         />
                         <div
-                        *ngIf="fieldErrors.contact_email"
-                        class="text-danger requisDiv"
-                        style="margin-top: 1rem"
-                      >
-                        <div>Email du responsable est requis.</div>
-                      </div>
+                          *ngIf="fieldErrors.contact_email"
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>{{ "contact_email_required" | translate }}</div>
+                        </div>
                       </div>
                       <div class="form-group mb-3">
+                        <label
+                          for="contact_last_name"
+                          style="
+                            font-size: 1rem;
+                            font-weight: 550;
+                            color: #253d4e;
+                          "
+                          >{{ "contact_last_name" | translate }}</label
+                        >
                         <input
                           type="text"
                           required
+                          id="contact_last_name"
                           name="contact_last_name"
-                          placeholder="Nom du responsable"
+                          [placeholder]="'contact_last_name' | translate"
                           [(ngModel)]="userDataPro.contact_last_name"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('contact_last_name')"
-
                         />
                         <div
-                        *ngIf="fieldErrors.contact_last_name"
-                        class="text-danger requisDiv"
-                        style="margin-top: 1rem"
-                      >
-                        <div>Nom du responsable est requis.</div>
+                          *ngIf="fieldErrors.contact_last_name"
+                          class="text-danger requisDiv"
+                          style="margin-top: 1rem"
+                        >
+                          <div>
+                            {{ "contact_last_name_required" | translate }}
+                          </div>
+                        </div>
                       </div>
-                      </div>
-                      <!-- Ajoutez d'autres champs ici si nécessaire -->
                     </div>
                   </div>
                 </div>
@@ -576,47 +812,39 @@
                       id="termsCheckbox"
                       [(ngModel)]="userData.termsAccepted"
                       (ngModelChange)="clearError('termsAccepted')"
-
-
                     />
-                    <label class="form-check-label" for="termsCheckbox"
-                      ><span>J'accepte les termes et conditions.</span></label
-                    >
+                    <label class="form-check-label" for="termsCheckbox">
+                      <span>{{ "terms_and_conditions" | translate }}</span>
+                    </label>
                     <div
-                    *ngIf="fieldErrors.termsAccepted"
-                    class="text-danger requisDiv"
-                    style="margin-top: 1rem"
-                  >
-                    <div>
-                      Veuillez accepter les termes et conditions pour continuer.
+                      *ngIf="fieldErrors.termsAccepted"
+                      class="text-danger requisDiv"
+                      style="margin-top: 1rem"
+                    >
+                      <div>{{ "accept_terms_error" | translate }}</div>
                     </div>
                   </div>
-                  
-                  </div>
                 </div>
-                <a href="/conditions_generales_de_ventes"
-                  ><i class="fi-rs-book-alt mr-5 text-muted"></i>En savoir
-                  plus</a
-                >
+                <a href="/conditions_generales_de_ventes">
+                  <i class="fi-rs-book-alt mr-5 text-muted ml-10"></i
+                  >{{ "learn_more" | translate }}
+                </a>
               </div>
 
               <div class="form-group mb-30 text-end">
-                <!-- Add 'text-end' class here -->
                 <button
                   type="submit"
                   class="btn btn-fill-out btn-block hover-up font-weight-bold"
                   name="register"
                   (onClick)="onSubmit()"
                 >
-                  Soumettre & S'inscrire
+                  {{ "submit_and_register" | translate }}
                 </button>
               </div>
 
               <p class="font-xs text-muted">
-                <strong>Remarque:</strong> Vos données personnelles seront
-                utilisées pour prendre en charge votre expérience sur notre
-                site, pour gérer l'accès à votre compte et à d'autres fins
-                décrites dans notre politique de confidentialité
+                <strong>{{ "note1" | translate }}</strong>
+                {{ "privacy_policy" | translate }}
               </p>
             </form>
           </div>

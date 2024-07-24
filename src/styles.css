@@ -46,3 +46,12 @@ span[class*="fi-rr-"]:before {
 	color: white !important;
 
 }
+
+::ng-deep .hero-slider-1 {
+	direction: ltr;
+}
+
+::ng-deep .custom-carousel {
+	/* RTL specific styles */
+	direction: ltr;
+}

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UserService } from '../user.service';
 import { MessageService } from 'primeng/api';
 import { CategoryService } from '../category.service';
+import { LanguageService } from '../language.service';
 
 @Component({
   selector: 'app-login',
@@ -16,12 +17,20 @@ export class LoginComponent {
 
   constructor(
     private userService: UserService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private languageService: LanguageService
   ) {}
   categories: any[] = [];
   Souscategories: any[] = [];
+  currentLanguage!: string;
+
+  setLanguage(language: string) {
+    this.languageService.setLanguage(language);
+    this.currentLanguage = language;
+  }
 
   ngOnInit() {
+    this.currentLanguage = this.languageService.getCurrentLanguage();
     this.fetchCategories();
   }
 

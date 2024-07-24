@@ -24,3 +24,11 @@
         font-size: 1.3rem !important;
     }
 }
+
+:host-context([dir="rtl"]) {
+
+    ::ng-deep .newsletter-content {
+        direction: ltr;
+    }
+
+}

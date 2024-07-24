@@ -5,14 +5,19 @@
         <div class="col-lg-12">
           <div class="position-relative newsletter-inner">
             <div class="newsletter-content">
-              <h2 class="mb-20">Publiez vos annonces sur notre site</h2>
+              <h2 class="mb-20">{{ "publish_ads" | translate }}</h2>
               <p class="mb-45">
-                Commencez dès maintenant à publier vos annonces sur
-                <span class="text-brand">Onemakan</span>
+                {{ "start_now" | translate }}
+                <span class="text-brand">{{ "brand_name" | translate }}</span>
               </p>
               <form class="form-subscriber d-flex">
-                <input type="email" placeholder="Votre adresse e-mail" />
-                <button class="btn" type="submit">S'abonner</button>
+                <input
+                  type="email"
+                  [attr.placeholder]="'email_placeholder' | translate"
+                />
+                <button class="btn" type="submit">
+                  {{ "subscribe" | translate }}
+                </button>
               </form>
             </div>
             <img src="../../assets/imgs/banner/banner-9.png" alt="newsletter" />
@@ -21,6 +26,7 @@
       </div>
     </div>
   </section>
+
   <section class="featured section-padding">
     <div class="container">
       <div class="row">
@@ -29,12 +35,14 @@
             class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp"
             data-wow-delay="0"
           >
-            <div class="banner-icon">
+            <div class="banner-icon ml-10">
               <img src="../../assets/imgs/theme/icons/icon-1.png" alt="" />
             </div>
             <div class="banner-text">
-              <h3 class="icon-box-title">Annonces pour tous</h3>
-              <p>Publiez vos annonces</p>
+              <h3 class="icon-box-title">
+                {{ "announcements_for_all" | translate }}
+              </h3>
+              <p>{{ "publish_your_ads" | translate }}</p>
             </div>
           </div>
         </div>
@@ -43,12 +51,12 @@
             class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp"
             data-wow-delay=".1s"
           >
-            <div class="banner-icon">
+            <div class="banner-icon ml-10">
               <img src="../../assets/imgs/theme/icons/icon-2.png" alt="" />
             </div>
             <div class="banner-text">
-              <h3 class="icon-box-title">Facile et rapide</h3>
-              <p>Publiez en quelques clics</p>
+              <h3 class="icon-box-title">{{ "easy_and_fast" | translate }}</h3>
+              <p>{{ "publish_in_a_few_clicks" | translate }}</p>
             </div>
           </div>
         </div>
@@ -57,12 +65,14 @@
             class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp"
             data-wow-delay=".2s"
           >
-            <div class="banner-icon">
+            <div class="banner-icon ml-10">
               <img src="../../assets/imgs/theme/icons/icon-3.png" alt="" />
             </div>
             <div class="banner-text">
-              <h3 class="icon-box-title">Grand public cible</h3>
-              <p>Atteignez un large public</p>
+              <h3 class="icon-box-title">
+                {{ "wide_target_audience" | translate }}
+              </h3>
+              <p>{{ "reach_a_wide_audience" | translate }}</p>
             </div>
           </div>
         </div>
@@ -71,12 +81,14 @@
             class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp"
             data-wow-delay=".3s"
           >
-            <div class="banner-icon">
+            <div class="banner-icon ml-10">
               <img src="../../assets/imgs/theme/icons/icon-4.png" alt="" />
             </div>
             <div class="banner-text">
-              <h3 class="icon-box-title">Options pers</h3>
-              <p>Adaptez vos annonces</p>
+              <h3 class="icon-box-title">
+                {{ "personalized_options" | translate }}
+              </h3>
+              <p>{{ "customize_your_ads" | translate }}</p>
             </div>
           </div>
         </div>
@@ -85,18 +97,21 @@
             class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp"
             data-wow-delay=".4s"
           >
-            <div class="banner-icon">
+            <div class="banner-icon ml-10">
               <img src="../../assets/imgs/theme/icons/icon-5.png" alt="" />
             </div>
             <div class="banner-text">
-              <h3 class="icon-box-title">Support réactif</h3>
-              <p>Assistance dédiée</p>
+              <h3 class="icon-box-title">
+                {{ "responsive_support" | translate }}
+              </h3>
+              <p>{{ "dedicated_assistance" | translate }}</p>
             </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+
   <section class="section-padding footer-mid">
     <div class="container pt-15 pb-20">
       <div class="row">
@@ -109,38 +124,38 @@
               <a class="mb-15" href="/"
                 ><img src="../../assets/imgs/theme/logo.png" alt="logo"
               /></a>
-              <p class="font-lg text-heading">Site d'annonces</p>
+              <p class="font-lg text-heading">
+                {{ "site_annonces" | translate }}
+              </p>
             </div>
             <ul class="contact-infor">
               <li>
                 <img
                   src="../../assets/imgs/theme/icons/icon-location.svg"
                   alt=""
-                /><strong>Adresse : </strong>
-                <span
-                  >Avenue Yaacoub Almansour centre d'affaire Sara Guéliz
-                  ,Marrakech</span
-                >
+                /><strong> {{ "adresse" | translate }} </strong>
+                <span> {{ "adresse_detail" | translate }}</span>
               </li>
               <li>
                 <img
                   src="../../assets/imgs/theme/icons/icon-contact.svg"
                   alt=""
-                /><strong>Appelez-nous : </strong
-                ><span> (+212) - 699050501</span>
+                /><strong> {{ "appelez_nous" | translate }} </strong>
+                <span> 0699050501 </span>
               </li>
               <li>
                 <img
                   src="../../assets/imgs/theme/icons/icon-email-2.svg"
                   alt=""
-                /><strong>Email : </strong><span> support&#64;onemakan.ma</span>
+                /><strong> {{ "email" | translate }} </strong
+                ><span> {{ "email_detail" | translate }}</span>
               </li>
               <li>
                 <img
                   src="../../assets/imgs/theme/icons/icon-clock.svg"
                   alt=""
-                /><strong>Horaires : </strong
-                ><span>09:00 - 19:00, Lun - Ven</span>
+                /><strong> {{ "horaires" | translate }} </strong>
+                <span> {{ "horaires_detail" | translate }}</span>
               </li>
             </ul>
           </div>
@@ -149,41 +164,74 @@
           class="footer-link-widget col wow animate__animated animate__fadeInUp"
           data-wow-delay=".1s"
         >
-          <h4 class="widget-title">À Propos du OneMakan</h4>
+          <h4 class="widget-title">{{ "a_propos" | translate }}</h4>
           <ul class="footer-list mb-sm-5 mb-md-0">
-            <li><a href="qui-sommes-nous">Qui sommes-nous ?</a></li>
-            <li><a href="mentions_legales">Mentions légales</a></li>
+            <li>
+              <a href="qui-sommes-nous">{{ "qui_sommes_nous" | translate }}</a>
+            </li>
+            <li>
+              <a href="mentions_legales">{{
+                "mentions_legales" | translate
+              }}</a>
+            </li>
             <li>
               <a href="/conditions_generales_de_ventes">
-                {{ titrePage1 }}
+                {{ "conditions_generales" | translate }}
               </a>
             </li>
-            <li><a href="contact-nous">Contactez-nous</a></li>
+            <li>
+              <a href="contact-nous">{{ "contactez_nous" | translate }}</a>
+            </li>
           </ul>
         </div>
         <div
           class="footer-link-widget col wow animate__animated animate__fadeInUp"
           data-wow-delay=".2s"
         >
-          <h4 class="widget-title">Mon Compte</h4>
+          <h4 class="widget-title">{{ "mon_compte" | translate }}</h4>
           <ul class="footer-list mb-sm-5 mb-md-0">
-            <li><a href="/login">Connexion</a></li>
-            <li><a href="/register">Créer un compte</a></li>
-            <li><a href="/page-account#orders">Mes annonces</a></li>
-            <li><a href="/favoris">Mes favoris</a></li>
-            <li><a href="/chat">Mes Messages</a></li>
+            <li>
+              <a href="/login">{{ "connexion" | translate }}</a>
+            </li>
+            <li>
+              <a href="/register">{{ "creer_compte" | translate }}</a>
+            </li>
+            <li>
+              <a href="/page-account#orders">{{
+                "mes_annonces" | translate
+              }}</a>
+            </li>
+            <li>
+              <a href="/favoris">{{ "mes_favoris" | translate }}</a>
+            </li>
+            <li>
+              <a href="/chat">{{ "mes_messages" | translate }}</a>
+            </li>
           </ul>
         </div>
         <div
           class="footer-link-widget col wow animate__animated animate__fadeInUp"
           data-wow-delay=".3s"
         >
-          <h4 class="widget-title">Catégories en Vedette</h4>
+          <h4 class="widget-title">
+            {{ "categories_en_vedette" | translate }}
+          </h4>
           <ul class="footer-list mb-sm-5 mb-md-0">
             <li *ngFor="let category of categoriesFooter.slice(0, 5)">
-              <a (click)="navigateToCategory(category.id)">{{
-                category.name
-              }}</a>
+              <a (click)="navigateToCategory(category.id)">
+                <span
+                  *ngIf="
+                    currentLanguage === 'ar' &&
+                    category.category_langs &&
+                    category.category_langs.length > 0
+                  "
+                >
+                  {{ category.category_langs[0]?.name }}
+                </span>
+                <span *ngIf="currentLanguage !== 'ar'">
+                  {{ category.name }}
+                </span></a
+              >
             </li>
           </ul>
         </div>
@@ -191,20 +239,7 @@
           class="footer-link-widget widget-install-app col wow animate__animated animate__fadeInUp"
           data-wow-delay=".4s"
         >
-          <h4 class="widget-title">Passerelles de paiement</h4>
-          <!--           <p>Depuis l'App Store ou Google Play</p>
-          <div class="download-app">
-            <a href="#" class="hover-up mb-sm-2 mb-lg-0"
-              ><img
-                class="active"
-                src="../../assets/imgs/theme/app-store.jpg"
-                alt=""
-            /></a>
-            <a href="#" class="hover-up mb-sm-2"
-              ><img src="../../assets/imgs/theme/google-play.jpg" alt=""
-            /></a>
-          </div>
-          <p class="mb-20">Passerelles de paiement sécurisées</p> -->
+          <h4 class="widget-title">{{ "passerelles_paiement" | translate }}</h4>
           <img
             class=""
             src="../../assets/imgs/theme/payment-method.png"
@@ -214,6 +249,7 @@
       </div>
     </div>
   </section>
+
   <div
     class="container pb-30 wow animate__animated animate__fadeInUp"
     data-wow-delay="0"
@@ -224,9 +260,10 @@
       </div>
       <div class="col-xl-4 col-lg-6 col-md-6">
         <p class="font-sm mb-0">
-          &copy; 2024, Site d'annonces
-          <strong class="text-brand"> OneMakan</strong><br />Tous droits
-          réservés
+          &copy; 2024, {{ "tous_droits_reserves" | translate }}
+          <strong class="text-brand">
+            {{ "copyright_brand" | translate }}</strong
+          ><br />
         </p>
       </div>
       <div class="col-xl-4 col-lg-6 text-center d-none d-xl-block">
@@ -234,38 +271,27 @@
           <img
             src="../../assets/imgs/theme/icons/phone-call.svg"
             alt="hotline"
+            class="ml-10"
           />
-          <p>06-61327755<span>Ouvert de 9h00 à 19h00</span></p>
+          <p>
+            {{ "hotline" | translate
+            }}<span>{{ "hotline_hours" | translate }}</span>
+          </p>
         </div>
       </div>
       <div class="col-xl-4 col-lg-6 col-md-6 text-end d-none d-md-block">
         <div class="mobile-social-icon">
-          <h6>Suivez-nous</h6>
-          <a href="https://web.facebook.com/Onemakan.ma"
+          <h6>{{ "suivez_nous" | translate }}</h6>
+          <a href="https://web.facebook.com/Onemakan.ma" class="ml-5 mr-5"
             ><img
               src="../../assets/imgs/theme/icons/icon-facebook-white.svg"
-              alt=""
+              alt="{{ 'facebook' | translate }}"
           /></a>
-          <!--           <a href="#"
-            ><img
-              src="../../assets/imgs/theme/icons/icon-twitter-white.svg"
-              alt=""
-          /></a> -->
           <a href="https://www.instagram.com/onemakan.ma/"
             ><img
               src="../../assets/imgs/theme/icons/icon-instagram-white.svg"
-              alt=""
+              alt="{{ 'instagram' | translate }}"
           /></a>
-          <!--           <a href="#"
-            ><img
-              src="../../assets/imgs/theme/icons/icon-pinterest-white.svg"
-              alt=""
-          /></a> -->
-          <!--           <a href="#"
-            ><img
-              src="../../assets/imgs/theme/icons/icon-youtube-white.svg"
-              alt=""
-          /></a> -->
         </div>
       </div>
     </div>

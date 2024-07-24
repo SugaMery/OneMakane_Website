@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from '../category.service';
+import { LanguageService } from '../language.service';
 
 @Component({
   selector: 'app-about-us',
@@ -10,8 +11,21 @@ export class AboutUsComponent implements OnInit {
   categories: any[] = [];
   Souscategories: any[] = [];
 
-  constructor(private categoryService: CategoryService) {}
+  constructor(
+    private categoryService: CategoryService,
+    private languageService: LanguageService
+  ) {}
+
+  currentLanguage!: string;
+
+  setLanguage(language: string) {
+    this.languageService.setLanguage(language);
+    this.currentLanguage = language;
+  }
+
   ngOnInit() {
+    this.currentLanguage = this.languageService.getCurrentLanguage();
+
     this.fetchCategories();
   }
 

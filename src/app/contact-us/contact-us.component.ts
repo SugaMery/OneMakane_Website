@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ContactService } from '../contact.service';
 import { CategoryService } from '../category.service';
+import { LanguageService } from '../language.service';
 @Component({
   selector: 'app-contact-us',
   templateUrl: './contact-us.component.html',
@@ -13,10 +14,19 @@ export class ContactUsComponent {
   constructor(
     private fb: FormBuilder,
     private contactService: ContactService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private languageService: LanguageService
   ) {}
+  currentLanguage!: string;
+
+  setLanguage(language: string) {
+    this.languageService.setLanguage(language);
+    this.currentLanguage = language;
+  }
 
   ngOnInit(): void {
+    this.currentLanguage = this.languageService.getCurrentLanguage();
+
     this.fetchCategories();
 
     this.contactForm = this.fb.group({

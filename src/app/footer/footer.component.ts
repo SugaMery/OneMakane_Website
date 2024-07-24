@@ -2,6 +2,7 @@ import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { CategoryService } from '../category.service';
 import { PageService } from '../page.service';
 import { isPlatformBrowser } from '@angular/common';
+import { LanguageService } from '../language.service';
 
 @Component({
   selector: 'app-footer',
@@ -20,10 +21,19 @@ export class FooterComponent implements OnInit {
   constructor(
     private pageService: PageService,
     private categoryService: CategoryService,
-    @Inject(PLATFORM_ID) private platformId: any
+    @Inject(PLATFORM_ID) private platformId: any,
+    private languageService: LanguageService
   ) {}
+  currentLanguage!: string;
+
+  setLanguage(language: string) {
+    this.languageService.setLanguage(language);
+    this.currentLanguage = language;
+  }
 
   ngOnInit(): void {
+    this.currentLanguage = this.languageService.getCurrentLanguage();
+
     this.getCategories();
     if (isPlatformBrowser(this.platformId)) {
       this.checkScreenWidth();
@@ -55,9 +65,11 @@ export class FooterComponent implements OnInit {
           category.active === true && category.parent_id === null
       );
       //console.log('ttttttttttttt', categories, this.categoriesFooter);
-
       // Loop through root categories
       this.categoriesFooter.forEach((category: any) => {
+        this.categoryService.getCategoryById(category.id).subscribe((datas) => {
+          category.category_langs = datas.data.category_langs;
+        });
         // Find subcategories for each root category
         category.subcategories = categories.data.filter(
           (subcat: any) =>
@@ -75,7 +87,7 @@ export class FooterComponent implements OnInit {
         });
       });
 
-      //console.log('Filter root categories', this.categoriesFooter);
+      console.log('Filter root categories', this.categoriesFooter);
     });
   }
 }

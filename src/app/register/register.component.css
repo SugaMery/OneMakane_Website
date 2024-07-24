@@ -3,117 +3,158 @@
 @import "primeng/resources/primeng.css";
 
 
-.select-menu .select-btn{
-    display: flex;
-    height: 55px;
-    background: #fff;
-    padding: 20px;
-    font-size: 18px;
-    font-weight: 400;
-    border-radius: 8px;
-    align-items: center;
-    cursor: pointer;
-    justify-content: space-between;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
-}
-.select-btn i{
-    font-size: 25px;
-    transition: 0.3s;
-}
-.select-menu.active .select-btn i{
-    transform: rotate(-180deg);
-}
-.select-menu .options{
-    position: relative;
-    padding: 20px;
-    margin-top: 10px;
-    border-radius: 8px;
-    background: #fff;
-    box-shadow: 0 0 3px rgba(0,0,0,0.1);
-    width: 100%;
+.select-menu .select-btn {
+  display: flex;
+  height: 55px;
+  background: #fff;
+  padding: 20px;
+  font-size: 18px;
+  font-weight: 400;
+  border-radius: 8px;
+  align-items: center;
+  cursor: pointer;
+  justify-content: space-between;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.options .option{
-    height: 55px;
-    cursor: pointer;
-    padding: 0 16px;
-    border-radius: 8px;
-    align-items: center;
-    background: #fff;
-    display: grid;
-    color: black;
+.select-btn i {
+  font-size: 25px;
+  transition: 0.3s;
 }
-.options .option:hover{
-    background: #F2F2F2;
+
+.select-menu.active .select-btn i {
+  transform: rotate(-180deg);
 }
-.option i{
-    font-size: 25px;
-    margin-right: 12px;
+
+.select-menu .options {
+  position: relative;
+  padding: 20px;
+  margin-top: 10px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
-.option .option-text{
-    font-size: 18px;
-    color: #333;
+
+.options .option {
+  height: 55px;
+  cursor: pointer;
+  padding: 0 16px;
+  border-radius: 8px;
+  align-items: center;
+  background: #fff;
+  display: grid;
+  color: black;
+}
+
+.options .option:hover {
+  background: #F2F2F2;
+}
+
+.option i {
+  font-size: 25px;
+  margin-right: 12px;
+}
+
+.option .option-text {
+  font-size: 18px;
+  color: #333;
 }
 
 
 .options {
-    display: none;
-  }
-  
-  .options.active {
-    display: block;
-  }
-  
+  display: none;
+}
 
-  .select-menu .select-btn:focus {
-    background: transparent !important;
-    border-color: #BCE3C9 !important;
+.options.active {
+  display: block;
+}
+
+
+.select-menu .select-btn:focus {
+  background: transparent !important;
+  border-color: #BCE3C9 !important;
 }
 
 .select-menu .select-btn:hover {
-    background: transparent !important;
-    border-color: #BCE3C9 !important;
+  background: transparent !important;
+  border-color: #BCE3C9 !important;
 }
 
 .select-menu {
-    position: relative; /* Ensure proper positioning */
-  }
-  
-  .options {
-    position: absolute !important; /* Position the options menu relative to the select button */
-    top: 100%; /* Position the options menu just below the select button */
-    left: 0;
-    z-index: 999; /* Set a high z-index to ensure the menu appears on top */
-  }
-  
-  .options.active {
-    display: block; /* Show the options menu when active */
-  }
-  .bg-selected {
-    background-color: #f0f0f0; /* Set the background color when options are visible */
-  }.option.selected {
-    background-color: #b7d1f3; /* Set the background color for selected option */
-  }
+  position: relative;
+  /* Ensure proper positioning */
+}
+
+.options {
+  position: absolute !important;
+  /* Position the options menu relative to the select button */
+  top: 100%;
+  /* Position the options menu just below the select button */
+  left: 0;
+  z-index: 999;
+  /* Set a high z-index to ensure the menu appears on top */
+}
+
+.options.active {
+  display: block;
+  /* Show the options menu when active */
+}
+
+.bg-selected {
+  background-color: #f0f0f0;
+  /* Set the background color when options are visible */
+}
+
+.option.selected {
+  background-color: #b7d1f3;
+  /* Set the background color for selected option */
+}
 
 
-  ::ng-deep .form-group {
-    position: relative;
+::ng-deep .form-group {
+  position: relative;
+}
+
+::ng-deep .password-input {
+  padding-right: 30px;
+  /* Adjust the padding to accommodate the icon */
+}
+
+::ng-deep .eyeicon {
+  position: absolute;
+  top: 50%;
+  right: 2rem;
+  /* Adjust the position as needed */
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+::ng-deep .eyeicon i {
+  font-size: 18px;
+  /* Adjust the font size of the icon */
+  color: #777;
+  /* Adjust the color of the icon */
+}
+
+
+:host-context([dir="rtl"]) {
+  ::ng-deep .payment_option .custome-radio {
+    float: right;
+
   }
-  
-  ::ng-deep .password-input {
-    padding-right: 30px; /* Adjust the padding to accommodate the icon */
+
+  ::ng-deep .payment_option .custome-radio:nth-last-child(1) {
+    margin-right: 2rem;
+
   }
-  
-  ::ng-deep .eyeicon {
-    position: absolute;
-    top: 50%;
-    right: 2rem; /* Adjust the position as needed */
-    transform: translateY(-50%);
-    cursor: pointer;
-  }
-  
-  ::ng-deep .eyeicon i {
-    font-size: 18px; /* Adjust the font size of the icon */
-    color: #777; /* Adjust the color of the icon */
-  }
-  
+
+}
+
+
+::ng-deep .custome-checkbox input[type=checkbox]:checked+.form-check-label::before {
+
+  margin-left: 1rem !important;
+
+
+}

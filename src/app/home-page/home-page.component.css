@@ -363,16 +363,18 @@ width: 100% !important;
     }
 
     ::ng-deep .categories-dropdown-wrap.style-2 ul li img {
-        max-height: 20px !important;
+        max-height: 30px !important;
     }
 
-    ::ng-deep .custom-carousel {
-        /* RTL specific styles */
-        direction: ltr;
-    }
+
 
     ::ng-deep .hero-slider-1 {
         direction: rtl;
     }
 
+}
+
+::ng-deep .custom-carousel {
+    /* RTL specific styles */
+    direction: ltr;
 }

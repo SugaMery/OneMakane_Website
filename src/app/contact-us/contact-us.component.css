@@ -1,0 +1,7 @@
+:host-context([dir="rtl"]) {
+    ::ng-deep input {
+        padding-right: 20px !important;
+    }
+
+
+}

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CategoryService } from '../category.service';
+import { LanguageService } from '../language.service';
 
 @Component({
   selector: 'app-message-add-annonce',
@@ -10,14 +11,26 @@ export class MessageAddAnnonceComponent {
   categories: any[] = [];
   Souscategories: any[] = [];
 
-  constructor(private categoryService: CategoryService) {}
+  constructor(
+    private categoryService: CategoryService,
+    private languageService: LanguageService
+  ) {}
+
+  currentLanguage!: string;
+
+  setLanguage(language: string) {
+    this.languageService.setLanguage(language);
+    this.currentLanguage = language;
+  }
+
   ngOnInit() {
+    this.currentLanguage = this.languageService.getCurrentLanguage();
+
     this.fetchCategories();
   }
 
   allcategories: any[] = [];
   fetchCategories(): void {
-
     this.categoryService.getCategoriesFrom().subscribe(
       (categories) => {
         this.categories = categories.data.filter(

@@ -3,8 +3,11 @@
   <div class="page-header breadcrumb-wrap">
     <div class="container">
       <div class="breadcrumb">
-        <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Accueil</a>
-        <span></span> À Propos du OneMakan <span></span> Qui sommes-nous ?
+        <a href="/" rel="nofollow"
+          ><i class="fi-rs-home mr-5"></i>{{ "home" | translate }}</a
+        >
+        <span></span> {{ "about_one_makan" | translate }} <span></span>
+        {{ "who_we_are" | translate }}
       </div>
     </div>
   </div>
@@ -17,28 +20,23 @@
             <div class="col-lg-6">
               <img
                 src="../../assets/imgs/people/person.png"
-                alt=""
+                alt="{{ 'person' | translate }}"
                 class="border-radius-15 mb-md-3 mb-lg-0 mb-sm-4"
               />
             </div>
             <div class="col-lg-6">
               <div class="pl-15">
-                <h2 class="mb-30">Bienvenue sur OneMakan</h2>
+                <h2 class="mb-30">{{ "welcome_one_makan" | translate }}</h2>
                 <p class="mb-25">
-                  OneMakan est la plateforme idéale pour publier vos annonces
-                  dans diverses catégories. Que vous cherchiez à vendre,
-                  acheter, louer ou échanger, notre site vous offre une place de
-                  choix pour atteindre un large public.
+                  {{ "one_makan_description" | translate }}
                 </p>
                 <p class="mb-50">
-                  Nous nous engageons à fournir une expérience utilisateur
-                  fluide et sécurisée. Profitez de notre interface conviviale
-                  pour gérer vos annonces facilement. Chez OneMakan, nous
-                  valorisons votre temps et vos efforts, et nous sommes là pour
-                  vous aider à maximiser vos opportunités. Publiez dès
-                  aujourd'hui et découvrez la puissance de notre communauté.
+                  {{ "commitment" | translate }}
                 </p>
-                <div class="carausel-3-columns-cover position-relative">
+                <div
+                  class="carausel-3-columns-cover position-relative"
+                  style="direction: ltr"
+                >
                   <div id="carausel-3-columns-arrows"></div>
                   <div
                     class="carausel-3-columns"
@@ -57,19 +55,18 @@
           </section>
           <section class="text-center mb-50 pl-15">
             <h2 class="title style-3 mb-40" style="font-size: 2.2rem">
-              Que proposons-nous ?
+              {{ "what_we_offer" | translate }}
             </h2>
             <div class="row" style="padding-right: 15px">
               <div class="col-lg-4 col-md-6 mb-24">
                 <div class="featured-card">
                   <img
                     src="assets/imgs/theme/icons/icon-1.png"
-                    alt="Icone annonces pour tous"
+                    alt="{{ 'ads_for_all' | translate }}"
                   />
-                  <h4>Annonces pour tous</h4>
+                  <h4>{{ "ads_for_all" | translate }}</h4>
                   <p>
-                    Publiez vos annonces facilement sur notre plateforme et
-                    atteignez un large public.
+                    {{ "ads_for_all_description" | translate }}
                   </p>
                 </div>
               </div>
@@ -77,12 +74,11 @@
                 <div class="featured-card">
                   <img
                     src="assets/imgs/theme/icons/icon-2.png"
-                    alt="Icone facilité et rapidité"
+                    alt="{{ 'easy_and_fast' | translate }}"
                   />
-                  <h4>Facile et rapide</h4>
+                  <h4>{{ "easy_and_fast" | translate }}</h4>
                   <p>
-                    Publiez en quelques clics et commencez à recevoir des
-                    réponses immédiatement.
+                    {{ "easy_and_fast_description" | translate }}
                   </p>
                 </div>
               </div>
@@ -90,12 +86,11 @@
                 <div class="featured-card">
                   <img
                     src="assets/imgs/theme/icons/icon-3.png"
-                    alt="Icone grand public cible"
+                    alt="{{ 'large_target_audience' | translate }}"
                   />
-                  <h4>Grand public cible</h4>
+                  <h4>{{ "large_target_audience" | translate }}</h4>
                   <p>
-                    Atteignez un large public avec vos annonces pour maximiser
-                    vos chances de succès.
+                    {{ "large_target_audience_description" | translate }}
                   </p>
                 </div>
               </div>
@@ -103,12 +98,11 @@
                 <div class="featured-card">
                   <img
                     src="assets/imgs/theme/icons/icon-4.png"
-                    alt="Icone options personnalisées"
+                    alt="{{ 'custom_options' | translate }}"
                   />
-                  <h4>Options personnalisées</h4>
+                  <h4>{{ "custom_options" | translate }}</h4>
                   <p>
-                    Adaptez vos annonces avec des options personnalisées pour
-                    attirer plus d'acheteurs.
+                    {{ "custom_options_description" | translate }}
                   </p>
                 </div>
               </div>
@@ -116,12 +110,11 @@
                 <div class="featured-card">
                   <img
                     src="assets/imgs/theme/icons/icon-5.png"
-                    alt="Icone support réactif"
+                    alt="{{ 'responsive_support' | translate }}"
                   />
-                  <h4>Support réactif</h4>
+                  <h4>{{ "responsive_support" | translate }}</h4>
                   <p>
-                    Profitez d'une assistance dédiée pour répondre à toutes vos
-                    questions rapidement.
+                    {{ "responsive_support_description" | translate }}
                   </p>
                 </div>
               </div>
@@ -133,52 +126,42 @@
               <div class="col-lg-7 pr-30">
                 <img
                   src="../../assets/imgs/theme/about-5.png"
-                  alt="OneMakan présentation"
+                  alt="{{ 'about_us' | translate }}"
                   class="mb-md-3 mb-lg-0 mb-sm-4"
                 />
               </div>
               <div class="col-lg-5">
-                <h4 class="mb-20 text-muted">Notre Performance</h4>
+                <h4 class="mb-20 text-muted">
+                  {{ "our_performance" | translate }}
+                </h4>
                 <h1 class="heading-1 mb-40" style="font-size: 2.3rem">
-                  Votre Partenaire pour la Publication d'Annonces
+                  {{ "your_partner_for_ads" | translate }}
                 </h1>
                 <p class="mb-30">
-                  Chez OneMakan, nous facilitons la publication de vos annonces
-                  avec une plateforme intuitive et efficace. Que vous souhaitiez
-                  vendre, acheter, ou louer, notre service vous offre une
-                  visibilité maximale.
+                  {{ "one_makan_intro" | translate }}
                 </p>
                 <p>
-                  Nous nous engageons à fournir une expérience utilisateur
-                  exceptionnelle, en assurant la sécurité et la simplicité dans
-                  la gestion de vos annonces.
+                  {{ "commitment_description" | translate }}
                 </p>
               </div>
             </div>
             <div class="row">
               <div class="col-lg-4 pr-30 mb-md-5 mb-lg-0 mb-sm-5">
-                <h3 class="mb-30">Qui sommes-nous ?</h3>
+                <h3 class="mb-30">{{ "who_we_are" | translate }}</h3>
                 <p>
-                  OneMakan est la plateforme de référence pour publier et
-                  consulter des annonces dans diverses catégories. Nous
-                  connectons acheteurs et vendeurs de manière simple et rapide.
+                  {{ "who_we_are_description" | translate }}
                 </p>
               </div>
               <div class="col-lg-4 pr-30 mb-md-5 mb-lg-0 mb-sm-5">
-                <h3 class="mb-30">Notre histoire</h3>
+                <h3 class="mb-30">{{ "our_story" | translate }}</h3>
                 <p>
-                  Fondée en 2024, OneMakan a évolué pour devenir un acteur clé
-                  dans le domaine des annonces en ligne, offrant un service
-                  fiable et accessible à tous.
+                  {{ "our_story_description" | translate }}
                 </p>
               </div>
               <div class="col-lg-4">
-                <h3 class="mb-30">Notre mission</h3>
+                <h3 class="mb-30">{{ "our_mission" | translate }}</h3>
                 <p>
-                  Notre mission est de faciliter les transactions entre
-                  particuliers et professionnels en offrant une plateforme
-                  sécurisée, efficace et facile à utiliser pour la publication
-                  d'annonces.
+                  {{ "our_mission_description" | translate }}
                 </p>
               </div>
             </div>
@@ -190,81 +173,28 @@
       <div class="row about-count">
         <div class="col-lg-1-5 col-md-6 text-center mb-lg-0 mb-md-5">
           <h1 class="heading-1"><span class="count">5</span>+</h1>
-          <h4>Années de service</h4>
+          <h4>{{ "years_of_service" | translate }}</h4>
         </div>
         <div class="col-lg-1-5 col-md-6 text-center">
           <h1 class="heading-1"><span class="count">500</span>+</h1>
-          <h4>Clients satisfaits</h4>
+          <h4>{{ "satisfied_clients" | translate }}</h4>
         </div>
         <div class="col-lg-1-5 col-md-6 text-center">
           <h1 class="heading-1"><span class="count">1000</span>+</h1>
-          <h4>Annonces publiées</h4>
+          <h4>{{ "published_ads" | translate }}</h4>
         </div>
         <div class="col-lg-1-5 col-md-6 text-center">
           <h1 class="heading-1"><span class="count">50</span>+</h1>
-          <h4>Catégories disponibles</h4>
+          <h4>{{ "available_categories" | translate }}</h4>
         </div>
         <div class="col-lg-1-5 text-center d-none d-lg-block">
           <h1 class="heading-1"><span class="">24/7</span></h1>
-          <h4>Support en ligne</h4>
+          <h4>{{ "online_support" | translate }}</h4>
         </div>
       </div>
     </section>
-
-    <!--     <div class="container">
-        <div class="row">
-            <div class="col-xl-10 col-lg-12 m-auto">
-                <section class="mb-50">
-                    <h2 class="title style-3 mb-40 text-center">Our Team</h2>
-                    <div class="row">
-                        <div class="col-lg-4 mb-lg-0 mb-md-5 mb-sm-5">
-                            <h6 class="mb-5 text-brand">Our Team</h6>
-                            <h1 class="mb-30">Meet Our Expert Team</h1>
-                            <p class="mb-30">Proin ullamcorper pretium orci. Donec necscele risque leo. Nam massa dolor imperdiet neccon sequata congue idsem. Maecenas malesuada faucibus finibus.</p>
-                            <p class="mb-30">Proin ullamcorper pretium orci. Donec necscele risque leo. Nam massa dolor imperdiet neccon sequata congue idsem. Maecenas malesuada faucibus finibus.</p>
-                            <a href="#" class="btn">View All Members</a>
-                        </div>
-                        <div class="col-lg-8">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6">
-                                    <div class="team-card">
-                                        <img src="assets/imgs/page/about-6.png" alt="" />
-                                        <div class="content text-center">
-                                            <h4 class="mb-5">H. Merinda</h4>
-                                            <span>CEO & Co-Founder</span>
-                                            <div class="social-network mt-20">
-                                                <a href="#"><img src="assets/imgs/theme/icons/icon-facebook-brand.svg" alt="" /></a>
-                                                <a href="#"><img src="assets/imgs/theme/icons/icon-twitter-brand.svg" alt="" /></a>
-                                                <a href="#"><img src="assets/imgs/theme/icons/icon-instagram-brand.svg" alt="" /></a>
-                                                <a href="#"><img src="assets/imgs/theme/icons/icon-youtube-brand.svg" alt="" /></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6">
-                                    <div class="team-card">
-                                        <img src="assets/imgs/page/about-8.png" alt="" />
-                                        <div class="content text-center">
-                                            <h4 class="mb-5">Dilan Specter</h4>
-                                            <span>Head Engineer</span>
-                                            <div class="social-network mt-20">
-                                                <a href="#"><img src="assets/imgs/theme/icons/icon-facebook-brand.svg" alt="" /></a>
-                                                <a href="#"><img src="assets/imgs/theme/icons/icon-twitter-brand.svg" alt="" /></a>
-                                                <a href="#"><img src="assets/imgs/theme/icons/icon-instagram-brand.svg" alt="" /></a>
-                                                <a href="#"><img src="assets/imgs/theme/icons/icon-youtube-brand.svg" alt="" /></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div>
-    </div> -->
   </div>
-
-  <app-footer></app-footer>
-  <app-preloader></app-preloader>
 </main>
+
+<app-footer></app-footer>
+<app-preloader></app-preloader>

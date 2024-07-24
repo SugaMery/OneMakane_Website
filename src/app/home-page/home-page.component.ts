@@ -233,6 +233,7 @@ export class HomePageComponent implements OnInit {
             .getAdsWithFavoris(Number(userId))
             .subscribe((dataFilter) => {
               this.ads = dataFilter.data;
+              console.log('gggad ads this1', this.ads);
 
               dataFilter.data.forEach((element: any) => {
                 this.annonceService
@@ -241,21 +242,42 @@ export class HomePageComponent implements OnInit {
                     if (!adData || !adData.data) {
                       return;
                     }
-                    //console.log('ggg', dataFilter.data);
+                    this.categoryService
+                      .getCategoryById(adData.data.category_id)
+                      .subscribe((dats) => {
+                        element.category_langs = dats.data.category_langs;
+                        adData.data.category_langs = dats.data.category_langs;
+                        //console.log('dats', dats);
+                      });
 
                     this.isFavorited(element);
                     if (adData.data.category.model == jobs) {
                       this.ads_jobs.push(adData.data);
                     }
                     element.image = adData.data.image;
-                    if (!this.categorizedAds[element.category.name]) {
-                      this.categorizedAds[element.category.name] = [];
+                    if (this.currentLanguage === 'fr') {
+                      if (!this.categorizedAds[element.category.name]) {
+                        this.categorizedAds[element.category.name] = [];
+                      }
+                    } else {
+                      if (!this.categorizedAds[element.category_langs]) {
+                        this.categorizedAds[element.category_langs[0].name] =
+                          [];
+                      }
                     }
+                    //console.log('categorizedAds', this.categorizedAds);
+
                     adData.data.favorites = element.favorites;
-                    this.categorizedAds[element.category.name].push(
-                      adData.data
-                    );
-                    // console.log('categorizedAds', this.categorizedAds);
+
+                    if (this.currentLanguage === 'fr') {
+                      this.categorizedAds[element.category.name].push(
+                        adData.data
+                      );
+                    } else {
+                      this.categorizedAds[element.category_langs[0].name].push(
+                        adData.data
+                      );
+                    }
                   });
               });
             });
@@ -268,6 +290,13 @@ export class HomePageComponent implements OnInit {
               if (!adData || !adData.data) {
                 return;
               }
+              this.categoryService
+                .getCategoryById(adData.data.category_id)
+                .subscribe((dats) => {
+                  element.category_langs = dats.data.category_langs;
+                  adData.data.category_langs = dats.data.category_langs;
+                  console.log('dats', dats);
+                });
 
               if (adData.data.category.model == jobs) {
                 this.ads_jobs.push(adData.data);
@@ -353,9 +382,9 @@ export class HomePageComponent implements OnInit {
                 });
             });
           });
+          console.log('gggad ads this', this.ads);
         }
         const jobs = 'ad_jobs';
-
         this.categorizedAds = {};
       });
     }
@@ -447,6 +476,14 @@ export class HomePageComponent implements OnInit {
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
 
+    if (this.currentLanguage === 'ar') {
+      return this.getRelativeTimeInArabic(days, adDate);
+    } else {
+      return this.getRelativeTimeInFrench(days, adDate);
+    }
+  }
+
+  getRelativeTimeInFrench(days: number, adDate: Date): string {
     if (days > 1) {
       return `${days} jours passés`;
     } else if (days === 1) {
@@ -466,6 +503,49 @@ export class HomePageComponent implements OnInit {
       }
     }
   }
+
+  getRelativeTimeInArabic(days: number, adDate: Date): string {
+    if (days > 1) {
+      return `مرت ${days} أيام`;
+    } else if (days === 1) {
+      return `أمس في ${adDate.toLocaleTimeString('ar-EG', {
+        hour: '2-digit',
+        minute: '2-digit',
+      })}`;
+    } else {
+      const timeString = adDate.toLocaleTimeString('ar-EG', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      if (!this.isScreenphone) {
+        return `اليوم في ${timeString}`;
+      } else {
+        return `اليوم في ${timeString}`;
+      }
+    }
+  }
+  banners = [
+    {
+      imgSrc: '../../assets/imgs/banner/banner-16.png',
+      title: 'find_next_car',
+      categoryId: 233,
+    },
+    {
+      imgSrc: '../../assets/imgs/banner/banner-17.png',
+      title: 'renovate_with_furniture',
+      categoryId: 147,
+    },
+    {
+      imgSrc: '../../assets/imgs/banner/banner-18.png',
+      title: 'dream_vacation',
+      categoryId: 350,
+    },
+    {
+      imgSrc: '../../assets/imgs/banner/banner-19.png',
+      title: 'discover_latest_fashion',
+      categoryId: 214,
+    },
+  ];
 
   getCategories(): void {
     if (this.document.defaultView && this.document.defaultView.localStorage) {

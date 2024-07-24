@@ -3,8 +3,11 @@
   <div class="page-header breadcrumb-wrap">
     <div class="container">
       <div class="breadcrumb">
-        <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Accueil</a>
-        <span></span> À Propos du OneMakan <span></span> Qui sommes-nous ?
+        <a href="/" rel="nofollow"
+          ><i class="fi-rs-home mr-5"></i>{{ "home" | translate }}</a
+        >
+        <span></span> {{ "about_one_makan" | translate }} <span></span>
+        {{ "who_we_are" | translate }}
       </div>
     </div>
   </div>
@@ -16,50 +19,48 @@
           <section class="row align-items-end mb-50">
             <div class="col-lg-6 mb-lg-0 mb-md-5 mb-sm-5">
               <h4 class="mb-20 text-brand">
-                Comment pouvons-nous vous aider ?
+                {{ "how_can_we_help" | translate }}
               </h4>
               <h1 class="mb-30">
-                Faites-nous savoir comment nous pouvons vous aider
+                {{ "let_us_know_how_we_can_help" | translate }}
               </h1>
               <p class="mb-20">
-                Chez OneMakan, nous sommes là pour vous aider à publier et gérer
-                vos annonces efficacement. Contactez-nous pour toute question ou
-                assistance.
+                {{ "one_makan_help_intro" | translate }}
               </p>
               <p>
-                Nous sommes dédiés à offrir un service client de qualité pour
-                répondre à toutes vos préoccupations.
+                {{ "dedicated_to_quality_service" | translate }}
               </p>
             </div>
             <div class="col-lg-6">
               <div class="row">
                 <div class="col-lg-6 mb-4">
-                  <h5 class="mb-20">01. Retour d'expérience</h5>
+                  <h5 class="mb-20">01. {{ "feedback" | translate }}</h5>
                   <p>
-                    Votre avis compte ! Dites-nous ce que vous pensez de notre
-                    plateforme et comment nous pouvons l'améliorer.
+                    {{ "feedback_description" | translate }}
                   </p>
                 </div>
                 <div class="col-lg-6 mb-4">
-                  <h5 class="mb-20">02. Services aux employeurs</h5>
+                  <h5 class="mb-20">
+                    02. {{ "employer_services" | translate }}
+                  </h5>
                   <p>
-                    Découvrez nos services dédiés aux employeurs pour la
-                    publication d'offres d'emploi et la gestion des
-                    candidatures.
+                    {{ "employer_services_description" | translate }}
                   </p>
                 </div>
                 <div class="col-lg-6 mb-lg-0 mb-4">
-                  <h5 class="mb-20 text-brand">03. Questions de facturation</h5>
+                  <h5 class="mb-20 text-brand">
+                    03. {{ "billing_questions" | translate }}
+                  </h5>
                   <p>
-                    Pour toute question concernant la facturation et les
-                    paiements, notre équipe est là pour vous assister.
+                    {{ "billing_questions_description" | translate }}
                   </p>
                 </div>
                 <div class="col-lg-6">
-                  <h5 class="mb-20">04. Questions générales</h5>
+                  <h5 class="mb-20">
+                    04. {{ "general_questions" | translate }}
+                  </h5>
                   <p>
-                    Pour toute autre question ou assistance, n'hésitez pas à
-                    nous contacter. Nous sommes là pour vous aider.
+                    {{ "general_questions_description" | translate }}
                   </p>
                 </div>
               </div>
@@ -89,22 +90,26 @@
           <section class="mb-50">
             <div class="row mb-60">
               <div class="col-md-4 mb-4 mb-md-0">
-                <h4 class="mb-15 text-brand">Bureau</h4>
+                <h4 class="mb-15 text-brand">{{ "office" | translate }}</h4>
+                {{ "address" | translate }}<br />
                 Avenue Yacoub el Mansour<br />
                 Guéliz, 40000, Marrakech, Maroc<br />
-                <abbr title="Téléphone">Téléphone :</abbr> (+212)6-99050501
+                <abbr title="Téléphone">{{ "phone" | translate }} :</abbr>
+                (+212)6-99050501
                 <br />
-                <abbr title="Email">Email : </abbr>support&#64;onemakan.ma<br />
+                <abbr title="Email">{{ "email" | translate }} :</abbr
+                >support&#64;onemakan.ma<br />
               </div>
             </div>
             <div class="row">
               <div class="col-xl-8">
                 <div class="contact-from-area padding-20-row-col">
-                  <h5 class="text-brand mb-10">Formulaire de contact</h5>
-                  <h2 class="mb-10">Laissez-nous un message</h2>
+                  <h5 class="text-brand mb-10">
+                    {{ "contact_form" | translate }}
+                  </h5>
+                  <h2 class="mb-10">{{ "leave_us_message" | translate }}</h2>
                   <p class="text-muted mb-30 font-sm">
-                    Votre adresse email ne sera pas publiée. Les champs
-                    obligatoires sont marqués *
+                    {{ "email_privacy_notice" | translate }}
                   </p>
                   <form
                     [formGroup]="contactForm"
@@ -114,10 +119,20 @@
                     <div class="row">
                       <div class="col-lg-6 col-md-6">
                         <div class="input-style mb-20">
+                          <label
+                            for="name"
+                            style="
+                              font-size: 1rem;
+                              font-weight: 550;
+                              color: #253d4e;
+                            "
+                            >{{ "name" | translate }}</label
+                          >
                           <input
+                            id="name"
                             formControlName="name"
                             name="name"
-                            placeholder="Nom"
+                            placeholder="{{ 'name' | translate }}"
                             type="text"
                           />
                         </div>
@@ -131,16 +146,26 @@
                         >
                           <span
                             *ngIf="contactForm.get('name')?.errors?.['required']"
-                            >Le nom est requis.</span
+                            >{{ "name_required" | translate }}</span
                           >
                         </div>
                       </div>
                       <div class="col-lg-6 col-md-6">
                         <div class="input-style mb-20">
+                          <label
+                            for="email"
+                            style="
+                              font-size: 1rem;
+                              font-weight: 550;
+                              color: #253d4e;
+                            "
+                            >{{ "your_email" | translate }}</label
+                          >
                           <input
+                            style="direction: ltr"
+                            id="email"
                             formControlName="email"
                             name="email"
-                            placeholder="Votre Email"
                             type="email"
                           />
                         </div>
@@ -154,20 +179,30 @@
                         >
                           <span
                             *ngIf="contactForm.get('email')?.errors?.['required']"
-                            >L'email est requis.</span
+                            >{{ "email_required" | translate }}</span
                           >
                           <span
                             *ngIf="contactForm.get('email')?.errors?.['email']"
-                            >L'email doit être valide.</span
+                            >{{ "email_invalid" | translate }}</span
                           >
                         </div>
                       </div>
                       <div class="col-lg-6 col-md-6">
                         <div class="input-style mb-20">
+                          <label
+                            for="phone"
+                            style="
+                              font-size: 1rem;
+                              font-weight: 550;
+                              color: #253d4e;
+                            "
+                            >{{ "your_phone" | translate }}</label
+                          >
                           <input
+                            id="phone"
                             formControlName="phone"
                             name="phone"
-                            placeholder="Votre Téléphone"
+                            style="direction: ltr"
                             type="tel"
                           />
                         </div>
@@ -181,16 +216,26 @@
                         >
                           <span
                             *ngIf="contactForm.get('phone')?.errors?.['pattern']"
-                            >Le numéro de téléphone doit être valide.</span
+                            >{{ "phone_invalid" | translate }}</span
                           >
                         </div>
                       </div>
                       <div class="col-lg-6 col-md-6">
                         <div class="input-style mb-20">
+                          <label
+                            for="object"
+                            style="
+                              font-size: 1rem;
+                              font-weight: 550;
+                              color: #253d4e;
+                            "
+                            >{{ "subject" | translate }}</label
+                          >
                           <input
+                            id="object"
                             formControlName="object"
                             name="object"
-                            placeholder="Sujet"
+                            placeholder="{{ 'subject' | translate }}"
                             type="text"
                           />
                         </div>
@@ -204,16 +249,26 @@
                         >
                           <span
                             *ngIf="contactForm.get('object')?.errors?.['required']"
-                            >Le sujet est requis.</span
+                            >{{ "subject_required" | translate }}</span
                           >
                         </div>
                       </div>
                       <div class="col-lg-12 col-md-12">
                         <div class="textarea-style mb-30">
+                          <label
+                            for="message"
+                            style="
+                              font-size: 1rem;
+                              font-weight: 550;
+                              color: #253d4e;
+                            "
+                            >{{ "message" | translate }}</label
+                          >
                           <textarea
+                            id="message"
                             formControlName="message"
                             name="message"
-                            placeholder="Message"
+                            placeholder="{{ 'message' | translate }}"
                           ></textarea>
                         </div>
                         <div
@@ -222,32 +277,34 @@
                             contactForm.get('message')?.touched
                           "
                           class="error"
+                          style="margin-bottom: 1rem; color: red"
                         >
                           <span
                             *ngIf="contactForm.get('message')?.errors?.['required']"
-                            >Le message est requis.</span
+                            >{{ "message_required" | translate }}</span
                           >
                         </div>
+                      </div>
+                      <div class="col-md-12">
                         <button
-                          class="submit submit-auto-width"
-                          style="float: right"
-                          onclick="onSubmit()"
+                          class="btn btn-brand mt-30"
                           type="submit"
+                          [disabled]="contactForm.invalid"
                         >
-                          Envoyer le message
+                          {{ "send_message" | translate }}
                         </button>
                       </div>
                     </div>
                   </form>
-                  <p class="form-message"></p>
                 </div>
               </div>
-              <div class="col-lg-4 pl-50 d-lg-block d-none">
-                <img
-                  class="border-radius-15 mt-50"
-                  src="assets/imgs/page/contact-2.png"
-                  alt=""
-                />
+              <div class="col-xl-4">
+                <div class="contact-info">
+                  <h5 class="text-brand mb-30">
+                    {{ "contact_us" | translate }}
+                  </h5>
+                  <p>{{ "contact_info_description" | translate }}</p>
+                </div>
               </div>
             </div>
           </section>
@@ -255,7 +312,7 @@
       </div>
     </div>
   </div>
-
-  <app-footer></app-footer>
-  <app-preloader></app-preloader>
 </main>
+
+<app-footer></app-footer>
+<app-preloader></app-preloader>

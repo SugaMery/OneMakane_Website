@@ -3,8 +3,11 @@
   <div class="page-header breadcrumb-wrap">
     <div class="container">
       <div class="breadcrumb">
-        <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Accueil</a>
-        <span></span> Pages <span></span> Mon compte
+        <a href="/" rel="nofollow"
+          ><i class="fi-rs-home mr-5 ml-10"></i>{{ "home" | translate }}</a
+        >
+        <span></span> {{ "pages" | translate }} <span></span>
+        {{ "myAccount" | translate }}
       </div>
     </div>
   </div>
@@ -17,10 +20,10 @@
               <div class="login_wrap widget-taber-content background-white">
                 <div class="padding_eight_all bg-white">
                   <div class="heading_s1">
-                    <h1 class="mb-5">Connexion</h1>
+                    <h1 class="mb-5">{{ "login" | translate }}</h1>
                     <p class="mb-30">
-                      Vous n'avez pas encore de compte?
-                      <a href="/register">Créer un compte</a>
+                      {{ "createAccount" | translate }}
+                      <a href="/register">{{ "createAccount" | translate }}</a>
                     </p>
                   </div>
                   <form
@@ -33,7 +36,7 @@
                         type="email"
                         required
                         name="email"
-                        placeholder="E-mail"
+                        [placeholder]="'emailPlaceholder' | translate"
                         [(ngModel)]="userData.email"
                         class="form-control custom-spacing"
                         (ngModelChange)="clearError('email')"
@@ -43,7 +46,7 @@
                         class="text-danger requisDiv"
                         style="margin-top: 1rem"
                       >
-                        <div>E-mail est requis.</div>
+                        <div>{{ "emailRequired" | translate }}</div>
                       </div>
                       <div
                         *ngIf="
@@ -56,7 +59,7 @@
                         class="text-danger requisDiv"
                         style="margin-top: 1rem"
                       >
-                        <div>Cet e-mail existe déjà.</div>
+                        <div>{{ "emailExists" | translate }}</div>
                       </div>
                       <div
                         *ngIf="
@@ -67,24 +70,17 @@
                         class="text-danger requisDiv"
                         style="margin-top: 1rem"
                       >
-                        <div>
-                          Compte non activé, vérifiez votre email pour
-                          l'activer.
-                        </div>
+                        <div>{{ "accountNotActivated" | translate }}</div>
                       </div>
                     </div>
                     <div class="form-group">
                       <div class="form-group">
-                        <input
-                          [type]="showPassword ? 'text' : 'password'"
-                          placeholder=" Mot de passe"
-                          [(ngModel)]="userData.password"
-                          name="password"
-                          class="password-input"
-                          (ngModelChange)="clearError('password')"
-                        />
                         <span
                           class="eyeicon"
+                          [ngClass]="{
+                            'rtl-eye': currentLanguage === 'ar',
+                            'ltr-eye': currentLanguage !== 'ar'
+                          }"
                           (click)="togglePasswordVisibility()"
                         >
                           <i
@@ -93,6 +89,14 @@
                             "
                           ></i>
                         </span>
+                        <input
+                          [type]="showPassword ? 'text' : 'password'"
+                          [placeholder]="'passwordPlaceholder' | translate"
+                          [(ngModel)]="userData.password"
+                          name="password"
+                          class="password-input"
+                          (ngModelChange)="clearError('password')"
+                        />
                       </div>
 
                       <div
@@ -100,7 +104,7 @@
                         class="text-danger requisDiv"
                         style="margin-top: 1rem"
                       >
-                        <div>Mot de passe est requis.</div>
+                        <div>{{ "passwordRequired" | translate }}</div>
                       </div>
                       <div
                         *ngIf="
@@ -111,11 +115,13 @@
                         class="text-danger requisDiv"
                         style="margin-top: 1rem"
                       >
-                        <div>Email ou mot de passe incorrect.</div>
+                        <div>{{ "incorrectCredentials" | translate }}</div>
                       </div>
                     </div>
                     <div class="" style="float: right">
-                      <a href="/reset-password">Mot de passe oublié?</a>
+                      <a href="/reset-password">{{
+                        "forgotPassword" | translate
+                      }}</a>
                     </div>
                     <div class="form-group mb-40" style="margin-top: 4rem">
                       <!-- Bouton de connexion aligné à droite -->
@@ -124,12 +130,11 @@
                         class="btn btn-fill-out btn-block hover-up font-weight-bold float-end"
                         name="login"
                       >
-                        Se connecter
+                        {{ "loginButton" | translate }}
                       </button>
                     </div>
                     <p class="font-xs text-muted" style="margin-top: 8rem">
-                      <strong>Remarque:</strong> Veuillez saisir votre email et
-                      votre mot de passe pour vous connecter à votre compte.
+                      <strong>{{ "note" | translate }}</strong>
                     </p>
                   </form>
                 </div>
@@ -141,22 +146,31 @@
                   <img
                     src="../../assets/imgs/theme/icons/logo-facebook.svg"
                     alt=""
+                    class="ml-10"
                   />
-                  <span style="font-size: 1rem">Continuer avec Facebook</span>
+                  <span style="font-size: 1rem">{{
+                    "continueWithFacebook" | translate
+                  }}</span>
                 </a>
                 <a href="#" class="social-login google-login">
                   <img
                     src="../../assets/imgs/theme/icons/logo-google.svg"
                     alt=""
+                    class="ml-10"
                   />
-                  <span style="font-size: 1rem">Continuer avec Google</span>
+                  <span style="font-size: 1rem">{{
+                    "continueWithGoogle" | translate
+                  }}</span>
                 </a>
                 <a href="#" class="social-login apple-login">
                   <img
                     src="../../assets/imgs/theme/icons/logo-apple.svg"
                     alt=""
+                    class="ml-10"
                   />
-                  <span style="font-size: 1rem">Continuer avec Apple</span>
+                  <span style="font-size: 1rem">{{
+                    "continueWithApple" | translate
+                  }}</span>
                 </a>
               </div>
             </div>
