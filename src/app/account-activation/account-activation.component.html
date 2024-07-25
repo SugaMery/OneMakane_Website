@@ -1,45 +1,38 @@
 <app-header></app-header>
 <main class="main pages">
-    <div class="page-header breadcrumb-wrap">
-        <div class="container">
-            <div class="breadcrumb">
-                <a href='/' rel='nofollow'><i class="fi-rs-home mr-5"></i>Accueil</a>
-                <span></span> <a href='/account' rel='nofollow'>Compte</a>
-                <span></span> Activation du Compte
-            </div>
-        </div>
+  <div class="page-header breadcrumb-wrap">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="/" rel="nofollow"
+          ><i class="fi-rs-home mr-5"></i>{{ "home" | translate }}</a
+        >
+        <span></span>
+        <a href="/account" rel="nofollow">{{ "account" | translate }}</a>
+        <span></span> {{ "account_activation" | translate }}
+      </div>
     </div>
-    <div class="page-content pt-50">
-        <div class="container">
-            <div class="row">
-
-                <div class="col-lg-6 mx-auto text-center">
-                    <h1 class="title heading-1 style-3 mb-40"><span class="text-brand"> Félicitations ! <img src="../../assets/imgs/clap.gif" style="width: 7%;"> </span> Votre compte est maintenant activé.</h1>
-                    <p class="font-xl mb-80">Vous pouvez maintenant vous connecter en utilisant vos identifiants. Si vous avez des questions, n'hésitez pas à nous contacter. <a href="/login">Retour à la page de connexion</a></p>
-                </div>
-                               
-                
-
-<!--                 <div class="col-xl-10 col-lg-12 m-auto">
-                    <section class="text-center mb-50">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6 mb-24">
-                                <div class="featured-card">
-                                    <img src="assets/imgs/theme/icons/icon-1.svg" alt="" />
-                                    <h4>Best Prices & Offers</h4>
-                                    <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form</p>
-                                    <a href="#">Read more</a>
-                                </div>
-                            </div>
-
-                        </div>
-                    </section>
-                </div> -->
-            </div>
+  </div>
+  <div class="page-content pt-50">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 mx-auto text-center">
+          <h1 class="title heading-1 style-3 mb-40">
+            <span class="text-brand"
+              >{{ "congratulations" | translate }}
+              <img src="../../assets/imgs/clap.gif" style="width: 7%" />
+            </span>
+            {{ "account_activated" | translate }}
+          </h1>
+          <p class="font-xl mb-80">
+            {{ "login_instruction" | translate }}
+            <a href="/login">{{ "back_to_login" | translate }}</a>
+          </p>
         </div>
+      </div>
     </div>
-  </main>
+  </div>
+</main>
 
 <app-footer></app-footer>
 
-  <app-preloader></app-preloader>
+<app-preloader></app-preloader>

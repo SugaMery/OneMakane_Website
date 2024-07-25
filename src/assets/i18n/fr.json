@@ -234,5 +234,22 @@
     "message_required": "Le message est requis",
     "send_message": "Envoyer le message",
     "contact_us": "Nous contacter",
-    "contact_info_description": "Vous pouvez nous contacter via les informations ci-dessous pour toute question ou demande. Notre équipe est là pour vous aider."
+    "contact_info_description": "Vous pouvez nous contacter via les informations ci-dessous pour toute question ou demande. Notre équipe est là pour vous aider.",
+    "account_activation": "Activation du Compte",
+    "congratulations": "Félicitations !",
+    "account_activated": "Votre compte est maintenant activé.",
+    "login_instruction": "Vous pouvez maintenant vous connecter en utilisant vos identifiants. Si vous avez des questions, n'hésitez pas à nous contacter.",
+    "back_to_login": "Retour à la page de connexion",
+    "account_validation": "Validation du Compte",
+    "account_validation_email_sent": "Un email de validation de compte a été envoyé.",
+    "add_ad": "Ajouter une annonce",
+    "add_ad_info": "Pour ajouter votre annonce, veuillez remplir le formulaire ci-dessous et cliquer sur le bouton \"Ajouter\".",
+    "stepper_header_basic_info": "Informations de base",
+    "stepper_title_prompt": "Quel est le titre de l'annonce ?",
+    "stepper_title_placeholder": "Titre de votre annonce",
+    "stepper_title_required": "Titre est requis.",
+    "stepper_title_length_warning": "Le titre est proche de la longueur maximale.",
+    "stepper_choose_suggested_category": "Choisir une catégorie suggérée",
+    "stepper_choose_category": "Choisir une catégorie",
+    "stepper_next": "Suivant"
 }

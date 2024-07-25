@@ -13,6 +13,7 @@ import { SettingService } from '../setting.service';
 import { Router } from '@angular/router';
 import { formatDate } from '@angular/common';
 import { PrimeNGConfig } from 'primeng/api';
+import { LanguageService } from '../language.service';
 declare var $: any;
 
 interface Category {
@@ -31,6 +32,7 @@ interface Category {
   content?: string;
   label?: string;
   media?: { url: string };
+  category_langs: any[];
 }
 
 interface ModelField {
@@ -82,6 +84,7 @@ interface SelectedOption {
   label: string;
   name?: string;
   id?: number;
+  category_langs: any[];
 }
 
 interface CustomCategory {
@@ -144,6 +147,7 @@ export class AddAdsComponent implements OnInit {
     route: null,
     url: null,
     icon_path: '',
+    category_langs: [],
   };
   uploadedImageIds: number[] = [];
   optionsVisible: boolean = false;
@@ -183,7 +187,7 @@ export class AddAdsComponent implements OnInit {
   settingsOption: ModelFields | undefined;
   setting: any;
   date!: string;
-  categoriesParent: any;
+  categoriesParent: any[] = [];
   selectedOptionName: any;
   constructor(
     private authService: AuthGuard,
@@ -192,8 +196,15 @@ export class AddAdsComponent implements OnInit {
     private categoryService: CategoryService,
     private settingsService: SettingService,
     private router: Router,
-    private primengConfig: PrimeNGConfig
+    private primengConfig: PrimeNGConfig,
+    private languageService: LanguageService
   ) {}
+  currentLanguage!: string;
+
+  setLanguage(language: string) {
+    this.languageService.setLanguage(language);
+    this.currentLanguage = language;
+  }
 
   // Liste de catégories avec leurs mots-clés associés
   Customcategories: CustomCategory[] = [
@@ -631,7 +642,9 @@ export class AddAdsComponent implements OnInit {
         url: null,
         route: null,
         icon_path: '',
+        category_langs: [],
       };
+
       this.fieldErrors['category'] = false;
       this.formData.category_id = this.selectedSubCategory.id!;
       this.settings = [];
@@ -641,6 +654,7 @@ export class AddAdsComponent implements OnInit {
           sub.isChecked = false;
         }
       });
+      console.log('categories categories', this.suggestedCategory);
     }
   }
 
@@ -958,6 +972,8 @@ export class AddAdsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.currentLanguage = this.languageService.getCurrentLanguage();
+
     this.getUserInfo();
     this.fetchCategories();
     const userId = localStorage.getItem('loggedInUserId');
@@ -1092,10 +1108,15 @@ export class AddAdsComponent implements OnInit {
     };
     this.categoryService
       .getCategories(queryParams)
-      .subscribe((categorieParent) => {
-        this.categoriesParent = categorieParent.data;
+      .subscribe((categorieParent: any) => {
+        const categorieParents = categorieParent.data;
+        categorieParents.forEach((datas: any) => {
+          this.categoryService.getCategoryById(datas.id).subscribe((data) => {
+            this.categoriesParent.push(data.data);
+          });
+        });
+        console.log('categories categories', this.categoriesParent);
       });
-    console.log('categories categories', this.categories);
   }
 
   uploadFiles() {
@@ -1328,16 +1349,19 @@ export class AddAdsComponent implements OnInit {
     return true;
   }
   openselect = false;
-  selectOption(category: Category): void {
+  selectOption(category: any): void {
     this.filteredSubcategories = [];
     this.formData.category_id = 0;
     this.selectedOption = category;
+    //console.log('goooooddddddd', category);
+
     if (this.selectedOption) {
       this.categoryService.getCategories({ active: 1 }).subscribe((data) => {
         this.filteredSubcategories = data.data.filter(
           (parent: { parent_id: number }) => parent.parent_id == category.id
         );
       });
+
       // Assuming allCategories is an array of objects and category.id is the parent_id you want to filter by
       /*       this.categoryService.getCategories({active:1}).subscribe((all) => {
         all.data.forEach((element: { id: string; }) => {
@@ -1353,6 +1377,7 @@ export class AddAdsComponent implements OnInit {
       this.selectedSubcategory = null; // Reset subcategory when parent changes
       this.openselect = true;
       this.subcategoryOptionsVisible = false;
+      console.log('goooooddddddd', this.filteredSubcategories);
     } else {
       if (this.selectedSubCategory!.id) {
         this.formData.category_id = this.selectedSubCategory!.id;
@@ -1364,6 +1389,7 @@ export class AddAdsComponent implements OnInit {
     this.selectedSubCategory = null;
     this.genreOptionsVisible = false;
   }
+
   marquesPopulaires: Array<{ id: number; name: string }> = [];
   autresMarques: Array<{ id: number; name: string }> = [];
 
@@ -1794,6 +1820,7 @@ export class AddAdsComponent implements OnInit {
                   url: null,
                   route: null,
                   icon_path: '',
+                  category_langs: [],
                 };
                 console.log('Annonce créée avec succès !', response);
               },

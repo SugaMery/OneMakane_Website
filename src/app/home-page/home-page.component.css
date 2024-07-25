@@ -372,6 +372,10 @@ width: 100% !important;
         direction: rtl;
     }
 
+    ::ng-deep .row.thisRow {
+        direction: ltr;
+    }
+
 }
 
 ::ng-deep .custom-carousel {

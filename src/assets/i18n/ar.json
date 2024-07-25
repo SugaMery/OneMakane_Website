@@ -233,5 +233,22 @@
     "message_required": "الرسالة مطلوبة",
     "send_message": "إرسال الرسالة",
     "contact_us": "تواصل معنا",
-    "contact_info_description": "يمكنك التواصل معنا عبر المعلومات أدناه لأي استفسارات أو طلبات. فريقنا هنا لمساعدتك."
+    "contact_info_description": "يمكنك التواصل معنا عبر المعلومات أدناه لأي استفسارات أو طلبات. فريقنا هنا لمساعدتك.",
+    "account_activation": "تفعيل الحساب",
+    "congratulations": "تهانينا!",
+    "account_activated": "تم تفعيل حسابك الآن.",
+    "login_instruction": "يمكنك الآن تسجيل الدخول باستخدام بيانات اعتمادك. إذا كانت لديك أي أسئلة، فلا تتردد في الاتصال بنا.",
+    "back_to_login": "العودة إلى صفحة تسجيل الدخول",
+    "account_validation": "التحقق من الحساب",
+    "account_validation_email_sent": "تم إرسال بريد إلكتروني للتحقق من الحساب.",
+    "add_ad": "إضافة إعلان",
+    "add_ad_info": "لإضافة إعلانك، يرجى ملء النموذج أدناه والنقر على زر \"إضافة\".",
+    "stepper_header_basic_info": "معلومات أساسية",
+    "stepper_title_prompt": "ما هو عنوان الإعلان؟",
+    "stepper_title_placeholder": "عنوان إعلانك",
+    "stepper_title_required": "العنوان مطلوب.",
+    "stepper_title_length_warning": "العنوان قريب من الطول الأقصى.",
+    "stepper_choose_suggested_category": "اختر فئة مقترحة",
+    "stepper_choose_category": "اختر فئة",
+    "stepper_next": "التالي"
 }

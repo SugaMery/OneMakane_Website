@@ -31838,3 +31838,21 @@ table th {
   height: 35px !important;
 
 }
+
+
+:host-context([dir="rtl"]) {
+
+  ::ng-deep img.iconUrl {
+    margin-left: 1rem;
+    margin-right: 0rem;
+  }
+
+  ::ng-deep input {
+    padding-right: 1.5rem;
+  }
+
+  ::ng-deep .p-stepper .p-stepper-header.p-highlight .p-stepper-number {
+    margin-left: 1rem;
+  }
+
+}

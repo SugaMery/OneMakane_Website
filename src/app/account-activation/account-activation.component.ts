@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryService } from '../category.service';
+import { LanguageService } from '../language.service';
 
 @Component({
   selector: 'app-account-activation',
@@ -15,10 +16,19 @@ export class AccountActivationComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private route: ActivatedRoute,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private languageService: LanguageService
   ) {}
+  currentLanguage!: string;
+
+  setLanguage(language: string) {
+    this.languageService.setLanguage(language);
+    this.currentLanguage = language;
+  }
 
   ngOnInit(): void {
+    this.currentLanguage = this.languageService.getCurrentLanguage();
+
     this.fetchCategories();
     this.route.params.subscribe((params) => {
       this.userId = params['userId'];
