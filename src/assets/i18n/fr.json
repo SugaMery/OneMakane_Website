@@ -251,5 +251,7 @@
     "stepper_title_length_warning": "Le titre est proche de la longueur maximale.",
     "stepper_choose_suggested_category": "Choisir une catégorie suggérée",
     "stepper_choose_category": "Choisir une catégorie",
-    "stepper_next": "Suivant"
+    "stepper_next": "Suivant",
+    "stepper_basic_info_title": "Commençons par l'essentiel !",
+    "stepper_tell_us_more": "Dites-nous en plus"
 }

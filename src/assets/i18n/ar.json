@@ -250,5 +250,7 @@
     "stepper_title_length_warning": "العنوان قريب من الطول الأقصى.",
     "stepper_choose_suggested_category": "اختر فئة مقترحة",
     "stepper_choose_category": "اختر فئة",
-    "stepper_next": "التالي"
+    "stepper_next": "التالي",
+    "stepper_basic_info_title": "لنبدأ بالأشياء الأساسية !",
+    "stepper_tell_us_more": "أخبرنا المزيد"
 }

@@ -627,6 +627,8 @@ export class AddAdsComponent implements OnInit {
   ];
 
   selectSubCategory(subcategory: SubCategory) {
+    console.log('categories categories', subcategory);
+
     if (this.selectedSubCategory === subcategory) {
       this.selectedSubCategory = null;
     } else {
@@ -654,7 +656,6 @@ export class AddAdsComponent implements OnInit {
           sub.isChecked = false;
         }
       });
-      console.log('categories categories', this.suggestedCategory);
     }
   }
 
@@ -685,6 +686,7 @@ export class AddAdsComponent implements OnInit {
         }
       }
     }
+    console.log('selectedOption', this.selectedOption);
   }
 
   hasKeywords(subcategory: SubCategory): boolean {
@@ -1354,11 +1356,36 @@ export class AddAdsComponent implements OnInit {
     this.formData.category_id = 0;
     this.selectedOption = category;
     //console.log('goooooddddddd', category);
-
+    this.selectedSubcategory = {
+      active: false,
+      created_at: '',
+      id: 0,
+      model: null,
+      name: '',
+      parent_id: null,
+      slug: null,
+      url: null,
+      route: null,
+      icon_path: '',
+      category_langs: [],
+    };
     if (this.selectedOption) {
       this.categoryService.getCategories({ active: 1 }).subscribe((data) => {
-        this.filteredSubcategories = data.data.filter(
+        const filteredSubcategories = data.data.filter(
           (parent: { parent_id: number }) => parent.parent_id == category.id
+        );
+        filteredSubcategories.forEach((Subcategories: any) => {
+          this.categoryService
+            .getCategoryById(Subcategories.id)
+            .subscribe((datas) => {
+              this.filteredSubcategories.push(datas.data);
+            });
+        });
+
+        console.log(
+          'goooooddddddd',
+          this.filteredSubcategories,
+          this.selectedSubcategory
         );
       });
 
@@ -1374,10 +1401,21 @@ export class AddAdsComponent implements OnInit {
         });
       }); */
 
-      this.selectedSubcategory = null; // Reset subcategory when parent changes
+      this.selectedSubcategory = {
+        active: false,
+        created_at: '',
+        id: 0,
+        model: null,
+        name: '',
+        parent_id: null,
+        slug: null,
+        url: null,
+        route: null,
+        icon_path: '',
+        category_langs: [],
+      }; // Reset subcategory when parent changes
       this.openselect = true;
       this.subcategoryOptionsVisible = false;
-      console.log('goooooddddddd', this.filteredSubcategories);
     } else {
       if (this.selectedSubCategory!.id) {
         this.formData.category_id = this.selectedSubCategory!.id;
@@ -1407,6 +1445,12 @@ export class AddAdsComponent implements OnInit {
     this.subcategoryOptionsVisible = false;
 
     this.selectedSubcategory = subcategory;
+    console.log(
+      'categories selectedSubcategory',
+      this.selectedSubcategory?.category_langs.length == 0,
+      subcategory
+    );
+
     this.categoryService.getCategoryById(subcategory.id).subscribe((data) => {
       this.selectedSubcategory = data.data;
       this.settings = [];

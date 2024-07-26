@@ -31855,4 +31855,8 @@ table th {
     margin-left: 1rem;
   }
 
+  ::ng-deep span.p-button-label.ng-star-inserted {
+    margin-left: 1rem !important;
+  }
+
 }
