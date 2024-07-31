@@ -56,6 +56,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { EnterKeyDirective } from './enter-key.directive';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -91,6 +92,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     FavoisComponent,
     CompteVendorComponent,
     MessageComponent,
+    EnterKeyDirective,
   ],
   imports: [
     BrowserModule,

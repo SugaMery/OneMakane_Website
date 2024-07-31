@@ -1,9 +1,11 @@
 import {
   Component,
+  ElementRef,
   HostListener,
   Inject,
   OnInit,
   PLATFORM_ID,
+  ViewChild,
 } from '@angular/core';
 import { CategoryService } from '../category.service';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
@@ -283,13 +285,15 @@ export class HomePageComponent implements OnInit {
             });
         } else {
           this.ads = data.data;
-          // console.log('gggad', data.data);
 
           data.data.forEach((element: any) => {
             this.annonceService.getAdById(element.id).subscribe((adData) => {
               if (!adData || !adData.data) {
                 return;
               }
+
+              console.log('gggad', adData.data);
+
               this.categoryService
                 .getCategoryById(adData.data.category_id)
                 .subscribe((dats) => {
@@ -548,75 +552,70 @@ export class HomePageComponent implements OnInit {
   ];
 
   getCategories(): void {
-    if (this.document.defaultView && this.document.defaultView.localStorage) {
-      const accessToken =
-        this.document.defaultView.localStorage.getItem('loggedInUserToken');
+    this.categoryService.getCategoriesFrom().subscribe(async (categories) => {
+      const allCategories = categories.data;
 
-      this.categoryService.getCategoriesFrom().subscribe(async (categories) => {
-        const allCategories = categories.data;
+      // Filter active main categories (parent_id === null)
+      this.categories = allCategories.filter(
+        (category: { active: boolean; parent_id: null }) =>
+          category.active === true && category.parent_id === null
+      );
 
-        // Filter active main categories (parent_id === null)
-        this.categories = allCategories.filter(
-          (category: { active: boolean; parent_id: null }) =>
-            category.active === true && category.parent_id === null
-        );
+      // Filter active subcategories (parent_id !== null)
+      this.Souscategories = allCategories.filter(
+        (category: { active: boolean; parent_id: number }) =>
+          category.active === true && category.parent_id !== null
+      );
 
-        // Filter active subcategories (parent_id !== null)
-        this.Souscategories = allCategories.filter(
-          (category: { active: boolean; parent_id: number }) =>
-            category.active === true && category.parent_id !== null
-        );
-
-        // Check if the first element of Souscategories has the media property
-        if (
-          this.Souscategories &&
-          this.Souscategories.length > 0 &&
-          this.Souscategories[0].media
-        ) {
-          if (this.Souscategories[0].media.url) {
-            console.log(this.Souscategories[0].media.url);
-          } else {
-            console.log('URL property does not exist in media object');
-          }
+      // Check if the first element of Souscategories has the media property
+      if (
+        this.Souscategories &&
+        this.Souscategories.length > 0 &&
+        this.Souscategories[0].media
+      ) {
+        if (this.Souscategories[0].media.url) {
+          console.log(this.Souscategories[0].media.url);
         } else {
-          console.log(
-            'Media property or Souscategories array does not exist or is empty'
-          );
+          console.log('URL property does not exist in media object');
         }
+      } else {
+        console.log(
+          'Media property or Souscategories array does not exist or is empty'
+        );
+      }
 
-        const categoryPromises = this.categories.map(async (media) => {
-          const response = await this.categoryService
-            .getCategoryById(media.id)
-            .toPromise();
-          return response.data;
-        });
-
-        this.categories = await Promise.all(categoryPromises);
-        console.log('greeeet', this.categories);
-
-        this.displayedCategories = this.categories.slice(0, 11);
-        this.hiddenCategories = this.categories.slice(11);
-
-        // Create a list to include subcategories with a reference to their parent category
-        const Souscategorie = this.categories.reduce((acc, category) => {
-          const subcategories = this.Souscategories.filter(
-            (subCategory) => subCategory.parent_id === category.id
-          );
-          return acc.concat(
-            subcategories.map((subCategory) => ({
-              ...subCategory,
-              parentCategory: category,
-            }))
-          );
-        }, []);
-        Souscategorie.forEach((data: any) => {
-          this.categoryService.getCategoryById(data.id).subscribe((datas) => {
-            this.Souscategorie.push(datas.data);
-          });
-        });
-        console.log('messag', this.Souscategorie);
+      const categoryPromises = this.categories.map(async (media) => {
+        const response = await this.categoryService
+          .getCategoryById(media.id)
+          .toPromise();
+        return response.data;
       });
-    }
+
+      this.categories = await Promise.all(categoryPromises);
+      console.log('greeeet', this.categories);
+
+      this.displayedCategories = this.categories.slice(0, 11);
+      this.hiddenCategories = this.categories.slice(11);
+
+      // Create a list to include subcategories with a reference to their parent category
+      const Souscategorie = this.categories.reduce((acc, category) => {
+        const subcategories = this.Souscategories.filter(
+          (subCategory) => subCategory.parent_id === category.id
+        );
+        return acc.concat(
+          subcategories.map((subCategory) => ({
+            ...subCategory,
+            parentCategory: category,
+          }))
+        );
+      }, []);
+      Souscategorie.forEach((data: any) => {
+        this.categoryService.getCategoryById(data.id).subscribe((datas) => {
+          this.Souscategorie.push(datas.data);
+        });
+      });
+      console.log('messag', this.Souscategorie);
+    });
   }
   isArabicLanguage(): boolean {
     return this.currentLanguage === 'ar'; // Adjust based on your language detection

@@ -15,7 +15,7 @@ export class PreloaderComponent implements OnInit {
       window.onload = () => {
         setTimeout(() => {
           this.hidePreloader();
-        }, 450); // Adjust delay as needed
+        }, 2000); // Adjust delay as needed
       };
 
       // Fallback for iOS devices in case window.onload doesn't work

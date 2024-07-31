@@ -253,5 +253,14 @@
     "stepper_choose_category": "Choisir une catégorie",
     "stepper_next": "Suivant",
     "stepper_basic_info_title": "Commençons par l'essentiel !",
-    "stepper_tell_us_more": "Dites-nous en plus"
+    "stepper_tell_us_more": "Dites-nous en plus",
+    "first_name_required": "Le prénom est requis",
+    "last_name_required": "Le nom est requis",
+    "address_required": "L'adresse est requise",
+    "postal_code_required": "Le code postal est requis",
+    "password_requirements": "Le mot de passe doit répondre aux exigences",
+    "repeat_password_required": "La confirmation du mot de passe est requise",
+    "repeat_password_match": "Les mots de passe ne correspondent pas",
+    "city_required": "La ville est requise",
+    "telephone_required": "Le téléphone est requis"
 }

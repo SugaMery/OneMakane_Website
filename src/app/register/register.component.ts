@@ -1,8 +1,16 @@
-import { Component, HostListener } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  Inject,
+  PLATFORM_ID,
+  ViewChild,
+} from '@angular/core';
 import { UserService } from '../user.service';
 
 import { Router } from '@angular/router';
 import { CategoryService } from '../category.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-register',
@@ -137,9 +145,71 @@ export class RegisterComponent {
   constructor(
     private router: Router,
     private userService: UserService,
-    private categoryService: CategoryService
-  ) {}
+    private categoryService: CategoryService,
+    @Inject(PLATFORM_ID) private platformId: any
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.checkScreenWidth();
+      // Listen to window resize event only in browser environment
+      window.addEventListener('resize', () => this.checkScreenWidth());
+    }
+  }
+  isScreenSmall!: boolean;
+  isScreenphone: boolean = false;
+  @ViewChild('firstName') firstNameInput!: ElementRef;
+  @ViewChild('telephone') telephoneInput!: ElementRef;
+  @ViewChild('city') cityInput!: ElementRef;
+  @ViewChild('repeatPassword') repeatPasswordInput!: ElementRef;
+  @ViewChild('lastName') lastNameInput!: ElementRef;
+  @ViewChild('email') emailInput!: ElementRef;
+  @ViewChild('address') addressInput!: ElementRef;
+  @ViewChild('postalCode') postalCodeInput!: ElementRef;
+  @ViewChild('password') passwordInput!: ElementRef;
+  @ViewChild('enteredSecurityCode') enteredSecurityCodeInput!: ElementRef;
 
+  focusNext(field: string) {
+    switch (field) {
+      case 'firstName':
+        this.firstNameInput.nativeElement.focus();
+        break;
+      case 'telephone':
+        this.telephoneInput.nativeElement.focus();
+        break;
+      case 'city':
+        this.cityInput.nativeElement.focus();
+        break;
+      case 'repeatPassword':
+        this.repeatPasswordInput.nativeElement.focus();
+        break;
+      case 'lastName':
+        this.lastNameInput.nativeElement.focus();
+        break;
+      case 'email':
+        this.emailInput.nativeElement.focus();
+        break;
+      case 'address':
+        this.addressInput.nativeElement.focus();
+        break;
+      case 'postalCode':
+        this.postalCodeInput.nativeElement.focus();
+        break;
+      case 'password':
+        this.passwordInput.nativeElement.focus();
+        break;
+      case 'enteredSecurityCode':
+        this.enteredSecurityCodeInput.nativeElement.focus();
+        break;
+      default:
+        break;
+    }
+  }
+  countsAds = 0;
+  checkScreenWidth() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isScreenSmall = window.innerWidth < 1600 && window.innerWidth > 992;
+      this.isScreenphone = window.innerWidth < 500;
+    }
+  }
   ngOnInit() {
     this.fetchCategories();
   }

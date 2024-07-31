@@ -252,5 +252,14 @@
     "stepper_choose_category": "اختر فئة",
     "stepper_next": "التالي",
     "stepper_basic_info_title": "لنبدأ بالأشياء الأساسية !",
-    "stepper_tell_us_more": "أخبرنا المزيد"
+    "stepper_tell_us_more": "أخبرنا المزيد",
+    "last_name_required": "اسم العائلة مطلوب",
+    "address_required": "العنوان مطلوب",
+    "postal_code_required": "الرمز البريدي مطلوب",
+    "password_requirements": "يجب أن تفي كلمة المرور بمتطلبات الأمان",
+    "first_name_required": "الاسم الأول مطلوب",
+    "repeat_password_required": "تأكيد كلمة المرور مطلوب",
+    "repeat_password_match": "كلمتا المرور غير متطابقتين",
+    "city_required": "المدينة مطلوبة",
+    "telephone_required": "الهاتف مطلوب"
 }

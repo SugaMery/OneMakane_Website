@@ -351,6 +351,18 @@ width: 100% !important;
 }
 
 :host-context([dir="rtl"]) {
+    ::ng-deep .hero-slider-1 {
+        direction: rtl;
+    }
+
+    ::ng-deep .row.thisRow {
+        direction: ltr;
+    }
+
+    ::ng-deep .custom-carousel {
+        /* RTL specific styles */
+        direction: ltr;
+    }
 
     ::ng-deep .categories-dropdown-wrap ul li a img {
         max-width: 30px;
@@ -368,17 +380,5 @@ width: 100% !important;
 
 
 
-    ::ng-deep .hero-slider-1 {
-        direction: rtl;
-    }
 
-    ::ng-deep .row.thisRow {
-        direction: ltr;
-    }
-
-}
-
-::ng-deep .custom-carousel {
-    /* RTL specific styles */
-    direction: ltr;
 }
