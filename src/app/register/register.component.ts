@@ -35,7 +35,14 @@ export class RegisterComponent {
     enteredSecurityCode: '',
     termsAccepted: false,
   };
-
+  onInputChange(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement.value) {
+      inputElement.classList.add('show-autofill-new');
+    } else {
+      inputElement.classList.remove('show-autofill-new');
+    }
+  }
   userDataPro = {
     company_name: '',
     company_address: '',
@@ -166,7 +173,24 @@ export class RegisterComponent {
   @ViewChild('postalCode') postalCodeInput!: ElementRef;
   @ViewChild('password') passwordInput!: ElementRef;
   @ViewChild('enteredSecurityCode') enteredSecurityCodeInput!: ElementRef;
-
+  @ViewChild('companyName') companyNameInput!: ElementRef;
+  @ViewChild('companyAddress') companyAddressInput!: ElementRef;
+  @ViewChild('companyPostalCode') companyPostalCodeInput!: ElementRef;
+  @ViewChild('activitySector') activitySectorInput!: ElementRef;
+  @ViewChild('contactFirstName') contactFirstNameInput!: ElementRef;
+  @ViewChild('submitButton') submitButton!: ElementRef;
+  @ViewChild('iceId') iceInput!: ElementRef;
+  @ViewChild('companyAddressRest') companyAddressRestInput!: ElementRef;
+  @ViewChild('companyCity') companyCityInput!: ElementRef;
+  @ViewChild('contactEmail') contactEmailInput!: ElementRef;
+  @ViewChild('contactLastName') contactLastNameInput!: ElementRef;
+  
+  handleEnterKey(event: Event, field: string) {
+    const keyboardEvent = event as KeyboardEvent;
+    keyboardEvent.preventDefault();
+    this.focusNext(field);
+  }
+  
   focusNext(field: string) {
     switch (field) {
       case 'firstName':
@@ -199,6 +223,37 @@ export class RegisterComponent {
       case 'enteredSecurityCode':
         this.enteredSecurityCodeInput.nativeElement.focus();
         break;
+        case 'companyAddress':
+          this.companyAddressInput.nativeElement.focus();
+          break;
+        case 'companyPostalCode':
+          this.companyPostalCodeInput.nativeElement.focus();
+          break;
+        case 'activitySector':
+          this.activitySectorInput.nativeElement.focus();
+          break;
+        case 'contactFirstName':
+          this.contactFirstNameInput.nativeElement.focus();
+          break;
+        case 'submitButton':
+          this.submitButton.nativeElement.focus();
+          break;
+          case 'companyAddressRest':
+            this.companyAddressRestInput.nativeElement.focus();
+            break;
+          case 'companyCity':
+            this.companyCityInput.nativeElement.focus();
+            break;
+          case 'contactEmail':
+            this.contactEmailInput.nativeElement.focus();
+            break;
+          case 'contactLastName':
+            this.contactLastNameInput.nativeElement.focus();
+            break;
+                  case 'iceID':
+        this.iceInput.nativeElement.focus();
+        break;
+ 
       default:
         break;
     }
@@ -347,7 +402,7 @@ export class RegisterComponent {
         this.fieldErrors.security_code_incorect = false;
       }
     }
-
+console.log("ggggggggggggggggggttttttttttttuuuuuuuiii",this.selectedOption)
     if (this.selectedOption) {
       if (this.selectedOption == 'Monsieur') {
         this.userData.civility = 'Mr';
@@ -361,6 +416,9 @@ export class RegisterComponent {
       } else {
         this.fieldErrors.civility = false;
       }
+    }else{
+      this.fieldErrors.civility = true;
+      isValid = false;
     }
 
     if (!this.userData.termsAccepted) {

@@ -31860,3 +31860,10 @@ table th {
   }
 
 }
+
+
+::ng-deep .show-autofill-new {
+  background-color: #E8F0FE !important;
+  background-image: none !important;
+  color: #000000 !important;
+}

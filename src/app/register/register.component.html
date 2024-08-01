@@ -38,18 +38,18 @@
                             font-size: 1rem;
                             font-weight: 550;
                             color: #253d4e;
-                          "
+                          "input
                         >
                           {{ "last_name" | translate }}
                         </label>
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           #lastName
                           type="text"
-                          required
+                          required   
                           name="last_name"
                           placeholder="{{ 'last_name' | translate }}"
                           [(ngModel)]="userData.last_name"
-                          (keydown.enter)="focusNext('firstName')"
+                          (keydown.enter)="handleEnterKey($event, 'firstName')"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('last_name')"
                         />
@@ -73,14 +73,14 @@
                         >
                           {{ "email" | translate }}
                         </label>
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           #email
                           type="email"
                           required
                           name="email"
                           placeholder="{{ 'email' | translate }}"
                           [(ngModel)]="userData.email"
-                          (keydown.enter)="focusNext('telephone')"
+                          (keydown.enter)="handleEnterKey($event, 'telephone')"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('email')"
                         />
@@ -111,14 +111,14 @@
                         >
                           {{ "address" | translate }}
                         </label>
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           #address
                           type="text"
                           required
                           name="address"
                           placeholder="{{ 'address' | translate }}"
                           [(ngModel)]="userData.address"
-                          (keydown.enter)="focusNext('city')"
+                          (keydown.enter)="handleEnterKey($event, 'city')"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('address')"
                         />
@@ -142,14 +142,14 @@
                         >
                           {{ "postal_code" | translate }}
                         </label>
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           #postalCode
                           type="text"
                           required
                           name="postal_code"
                           placeholder="{{ 'postal_code' | translate }}"
                           [(ngModel)]="userData.postal_code"
-                          (keydown.enter)="focusNext('password')"
+                          (keydown.enter)="handleEnterKey($event, 'password')"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('postal_code')"
                         />
@@ -173,7 +173,7 @@
                         >
                           {{ "password" | translate }}
                         </label>
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           #password
                           style="direction: ltr"
                           [type]="showPassword ? 'text' : 'password'"
@@ -181,7 +181,7 @@
                           [(ngModel)]="userData.password"
                           name="password"
                           class="password-input"
-                          (keydown.enter)="focusNext('repeatPassword')"
+                          (keydown.enter)="handleEnterKey($event, 'repeatPassword')"
                           (ngModelChange)="clearError('password')"
                         />
                         <span
@@ -212,11 +212,14 @@
                       </div>
 
                       <div class="login_footer form-group">
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           #enteredSecurityCode
                           style="width: 50%"
                           type="text"
                           required
+                          
+                          (keydown.enter)="handleEnterKey($event, 'submitButton')"
+
                           name="enteredSecurityCode"
                           placeholder="{{ 'security_code' | translate }}"
                           [(ngModel)]="userData.enteredSecurityCode"
@@ -282,14 +285,14 @@
                         >
                           {{ "first_name" | translate }}
                         </label>
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           #firstName
                           type="text"
                           required
                           name="first_name"
                           placeholder="{{ 'first_name' | translate }}"
                           [(ngModel)]="userData.first_name"
-                          (keydown.enter)="focusNext('email')"
+                          (keydown.enter)="handleEnterKey($event, 'email')"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('first_name')"
                         />
@@ -313,13 +316,15 @@
                         >
                           {{ "phone" | translate }}
                         </label>
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           #telephone
                           type="tel"
                           required
                           name="telephone"
+                          placeholder="{{ 'phone' | translate }}"
+
                           [(ngModel)]="userData.telephone"
-                          (keydown.enter)="focusNext('address')"
+                          (keydown.enter)="handleEnterKey($event, 'address')"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('telephone')"
                         />
@@ -343,14 +348,14 @@
                         >
                           {{ "city" | translate }}
                         </label>
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           #city
                           type="text"
                           required
                           name="city"
                           placeholder="{{ 'city' | translate }}"
                           [(ngModel)]="userData.city"
-                          (keydown.enter)="focusNext('postalCode')"
+                          (keydown.enter)="handleEnterKey($event, 'postalCode')"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('city')"
                         />
@@ -428,14 +433,14 @@
                           {{ "confirm_password" | translate }}
                         </label>
                         <div class="form-group" style="direction: ltr">
-                          <input
+                          <input          id="myInput"   (input)="onInputChange($event)"
                             #repeatPassword
                             [type]="showRepeatPassword ? 'text' : 'password'"
                             placeholder="{{ 'confirm_password' | translate }}"
                             [(ngModel)]="userData.repeat_password"
                             name="repeatPassword"
                             class="password-input"
-                            (keydown.enter)="focusNext('enteredSecurityCode')"
+                            (keydown.enter)="handleEnterKey($event, 'enteredSecurityCode')"
                             (ngModelChange)="clearError('repeatPassword')"
                           />
                           <span
@@ -480,7 +485,7 @@
                         <div
                           class="custome-radio d-inline-flex align-items-center"
                         >
-                          <input
+                          <input          id="myInput"   (input)="onInputChange($event)"
                             class="form-check-input"
                             type="radio"
                             name="account_type"
@@ -498,7 +503,7 @@
                         <div
                           class="custome-radio d-inline-flex align-items-center ms-4"
                         >
-                          <input
+                          <input          id="myInput"   (input)="onInputChange($event)"
                             class="form-check-input"
                             type="radio"
                             name="account_type"
@@ -517,23 +522,16 @@
                   </div>
                 </div>
 
-                <div
-                  class="col-lg-6 col-md-6"
-                  *ngIf="showProfessionalAccount && !isScreenphone"
-                >
+                <div class="col-lg-6 col-md-6" *ngIf="showProfessionalAccount && !isScreenphone">
                   <div class="login_wrap widget-taber-content background-white">
                     <div class="padding_eight_all bg-white">
+                      <!-- Company Name Field -->
                       <div class="form-group mb-3">
-                        <label
-                          for="company_name"
-                          style="
-                            font-size: 1rem;
-                            font-weight: 550;
-                            color: #253d4e;
-                          "
-                          >{{ "company_name" | translate }}</label
-                        >
+                        <label for="company_name" style="font-size: 1rem; font-weight: 550; color: #253d4e;">
+                          {{ "company_name" | translate }}
+                        </label>
                         <input
+                          #companyName
                           type="text"
                           required
                           id="company_name"
@@ -542,27 +540,21 @@
                           [(ngModel)]="userDataPro.company_name"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('company_name')"
+                          (keydown.enter)="handleEnterKey($event, 'iceId')"
                         />
-                        <div
-                          *ngIf="fieldErrors.company_name"
-                          class="text-danger requisDiv"
-                          style="margin-top: 1rem"
-                        >
+                        <div *ngIf="fieldErrors.company_name" class="text-danger requisDiv" style="margin-top: 1rem">
                           <div>{{ "company_name_required" | translate }}</div>
                         </div>
                       </div>
+                      
+                      <!-- Company Address Field -->
                       <div class="form-group mb-3">
-                        <label
-                          for="company_address"
-                          style="
-                            font-size: 1rem;
-                            font-weight: 550;
-                            color: #253d4e;
-                          "
-                          >{{ "company_address" | translate }}</label
-                        >
+                        <label for="company_address" style="font-size: 1rem; font-weight: 550; color: #253d4e;">
+                          {{ "company_address" | translate }}
+                        </label>
                         <input
-                          type="text"
+                          #companyAddress
+                          type="text" 
                           required
                           id="company_address"
                           name="company_address"
@@ -570,28 +562,20 @@
                           [(ngModel)]="userDataPro.company_address"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('company_address')"
+                          (keydown.enter)="handleEnterKey($event, 'companyAddressRest')"
                         />
-                        <div
-                          *ngIf="fieldErrors.company_address"
-                          class="text-danger requisDiv"
-                          style="margin-top: 1rem"
-                        >
-                          <div>
-                            {{ "company_address_required" | translate }}
-                          </div>
+                        <div *ngIf="fieldErrors.company_address" class="text-danger requisDiv" style="margin-top: 1rem">
+                          <div>{{ "company_address_required" | translate }}</div>
                         </div>
                       </div>
+                
+                      <!-- Company Postal Code Field -->
                       <div class="form-group mb-3">
-                        <label
-                          for="company_postal_code"
-                          style="
-                            font-size: 1rem;
-                            font-weight: 550;
-                            color: #253d4e;
-                          "
-                          >{{ "company_postal_code" | translate }}</label
-                        >
+                        <label for="company_postal_code" style="font-size: 1rem; font-weight: 550; color: #253d4e;">
+                          {{ "company_postal_code" | translate }}
+                        </label>
                         <input
+                          #companyPostalCode
                           type="text"
                           required
                           id="company_postal_code"
@@ -600,28 +584,20 @@
                           [(ngModel)]="userDataPro.company_postal_code"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('company_postal_code')"
+                          (keydown.enter)="handleEnterKey($event, 'companyCity')"
                         />
-                        <div
-                          *ngIf="fieldErrors.company_postal_code"
-                          class="text-danger requisDiv"
-                          style="margin-top: 1rem"
-                        >
-                          <div>
-                            {{ "company_postal_code_required" | translate }}
-                          </div>
+                        <div *ngIf="fieldErrors.company_postal_code" class="text-danger requisDiv" style="margin-top: 1rem">
+                          <div>{{ "company_postal_code_required" | translate }}</div>
                         </div>
                       </div>
+                
+                      <!-- Activity Sector Field -->
                       <div class="form-group mb-3">
-                        <label
-                          for="activity_sector"
-                          style="
-                            font-size: 1rem;
-                            font-weight: 550;
-                            color: #253d4e;
-                          "
-                          >{{ "activity_sector" | translate }}</label
-                        >
+                        <label for="activity_sector" style="font-size: 1rem; font-weight: 550; color: #253d4e;">
+                          {{ "activity_sector" | translate }}
+                        </label>
                         <input
+                          #activitySector
                           type="text"
                           required
                           id="activity_sector"
@@ -630,29 +606,20 @@
                           [(ngModel)]="userDataPro.activity_sector"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('activity_sector')"
+                          (keydown.enter)="handleEnterKey($event, 'contactEmail')"
                         />
-                        <div
-                          *ngIf="fieldErrors.activity_sector"
-                          class="text-danger requisDiv"
-                          style="margin-top: 1rem"
-                        >
-                          <div>
-                            {{ "activity_sector_required" | translate }}
-                          </div>
+                        <div *ngIf="fieldErrors.activity_sector" class="text-danger requisDiv" style="margin-top: 1rem">
+                          <div>{{ "activity_sector_required" | translate }}</div>
                         </div>
                       </div>
-
+                
+                      <!-- Contact First Name Field -->
                       <div class="form-group mb-3">
-                        <label
-                          for="contact_first_name"
-                          style="
-                            font-size: 1rem;
-                            font-weight: 550;
-                            color: #253d4e;
-                          "
-                          >{{ "contact_first_name" | translate }}</label
-                        >
+                        <label for="contact_first_name" style="font-size: 1rem; font-weight: 550; color: #253d4e;">
+                          {{ "contact_first_name" | translate }}
+                        </label>
                         <input
+                          #contactFirstName
                           type="text"
                           required
                           id="contact_first_name"
@@ -661,38 +628,26 @@
                           [(ngModel)]="userDataPro.contact_first_name"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('contact_first_name')"
+                          (keydown.enter)="handleEnterKey($event, 'contactLastName')"
                         />
-                        <div
-                          *ngIf="fieldErrors.contact_first_name"
-                          class="text-danger requisDiv"
-                          style="margin-top: 1rem"
-                        >
-                          <div>
-                            {{ "contact_first_name_required" | translate }}
-                          </div>
+                        <div *ngIf="fieldErrors.contact_first_name" class="text-danger requisDiv" style="margin-top: 1rem">
+                          <div>{{ "contact_first_name_required" | translate }}</div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div
-                  class="col-lg-6 col-md-6"
-                  *ngIf="showProfessionalAccount && !isScreenphone"
-                >
+                <div class="col-lg-6 col-md-6" *ngIf="showProfessionalAccount && !isScreenphone">
                   <div class="login_wrap widget-taber-content background-white">
                     <div class="padding_eight_all bg-white">
+                      <!-- ICE Field -->
                       <div class="form-group mb-3">
-                        <label
-                          for="ice"
-                          style="
-                            font-size: 1rem;
-                            font-weight: 550;
-                            color: #253d4e;
-                          "
-                          >{{ "ice" | translate }}</label
-                        >
+                        <label for="ice" style="font-size: 1rem; font-weight: 550; color: #253d4e;">
+                          {{ "ice" | translate }}
+                        </label>
                         <input
+                          #iceId
                           type="text"
                           required
                           id="ice"
@@ -701,26 +656,20 @@
                           [(ngModel)]="userDataPro.ice"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('ice')"
+                          (keydown.enter)="handleEnterKey($event, 'companyAddress')"
                         />
-                        <div
-                          *ngIf="fieldErrors.ice"
-                          class="text-danger requisDiv"
-                          style="margin-top: 1rem"
-                        >
+                        <div *ngIf="fieldErrors.ice" class="text-danger requisDiv" style="margin-top: 1rem">
                           <div>{{ "ice_required" | translate }}</div>
                         </div>
                       </div>
+                      
+                      <!-- Company Address Rest Field -->
                       <div class="form-group mb-3">
-                        <label
-                          for="company_address_rest"
-                          style="
-                            font-size: 1rem;
-                            font-weight: 550;
-                            color: #253d4e;
-                          "
-                          >{{ "company_address_rest" | translate }}</label
-                        >
+                        <label for="company_address_rest" style="font-size: 1rem; font-weight: 550; color: #253d4e;">
+                          {{ "company_address_rest" | translate }}
+                        </label>
                         <input
+                          #companyAddressRest
                           type="text"
                           required
                           id="company_address_rest"
@@ -729,19 +678,17 @@
                           [(ngModel)]="userDataPro.company_address_rest"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('company_address_rest')"
+                          (keydown.enter)="handleEnterKey($event, 'companyPostalCode')"
                         />
                       </div>
+                      
+                      <!-- Company City Field -->
                       <div class="form-group mb-3">
-                        <label
-                          for="company_city"
-                          style="
-                            font-size: 1rem;
-                            font-weight: 550;
-                            color: #253d4e;
-                          "
-                          >{{ "company_city" | translate }}</label
-                        >
+                        <label for="company_city" style="font-size: 1rem; font-weight: 550; color: #253d4e;">
+                          {{ "company_city" | translate }}
+                        </label>
                         <input
+                          #companyCity
                           type="text"
                           required
                           id="company_city"
@@ -750,26 +697,20 @@
                           [(ngModel)]="userDataPro.company_city"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('company_city')"
+                          (keydown.enter)="handleEnterKey($event, 'activitySector')"
                         />
-                        <div
-                          *ngIf="fieldErrors.company_city"
-                          class="text-danger requisDiv"
-                          style="margin-top: 1rem"
-                        >
+                        <div *ngIf="fieldErrors.company_city" class="text-danger requisDiv" style="margin-top: 1rem">
                           <div>{{ "company_city_required" | translate }}</div>
                         </div>
                       </div>
+                      
+                      <!-- Contact Email Field -->
                       <div class="form-group mb-3">
-                        <label
-                          for="contact_email"
-                          style="
-                            font-size: 1rem;
-                            font-weight: 550;
-                            color: #253d4e;
-                          "
-                          >{{ "contact_email" | translate }}</label
-                        >
+                        <label for="contact_email" style="font-size: 1rem; font-weight: 550; color: #253d4e;">
+                          {{ "contact_email" | translate }}
+                        </label>
                         <input
+                          #contactEmail
                           type="text"
                           required
                           id="contact_email"
@@ -778,26 +719,20 @@
                           [(ngModel)]="userDataPro.contact_email"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('contact_email')"
+                          (keydown.enter)="handleEnterKey($event, 'contactFirstName')"
                         />
-                        <div
-                          *ngIf="fieldErrors.contact_email"
-                          class="text-danger requisDiv"
-                          style="margin-top: 1rem"
-                        >
+                        <div *ngIf="fieldErrors.contact_email" class="text-danger requisDiv" style="margin-top: 1rem">
                           <div>{{ "contact_email_required" | translate }}</div>
                         </div>
                       </div>
+                      
+                      <!-- Contact Last Name Field -->
                       <div class="form-group mb-3">
-                        <label
-                          for="contact_last_name"
-                          style="
-                            font-size: 1rem;
-                            font-weight: 550;
-                            color: #253d4e;
-                          "
-                          >{{ "contact_last_name" | translate }}</label
-                        >
+                        <label for="contact_last_name" style="font-size: 1rem; font-weight: 550; color: #253d4e;">
+                          {{ "contact_last_name" | translate }}
+                        </label>
                         <input
+                          #contactLastName
                           type="text"
                           required
                           id="contact_last_name"
@@ -806,20 +741,17 @@
                           [(ngModel)]="userDataPro.contact_last_name"
                           class="form-control custom-spacing"
                           (ngModelChange)="clearError('contact_last_name')"
+                          (keydown.enter)="handleEnterKey($event, 'submitButton')"
                         />
-                        <div
-                          *ngIf="fieldErrors.contact_last_name"
-                          class="text-danger requisDiv"
-                          style="margin-top: 1rem"
-                        >
-                          <div>
-                            {{ "contact_last_name_required" | translate }}
-                          </div>
+                        <div *ngIf="fieldErrors.contact_last_name" class="text-danger requisDiv" style="margin-top: 1rem">
+                          <div>{{ "contact_last_name_required" | translate }}</div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+
+                
 
                 <div class="col-lg-6 col-md-6" *ngIf="isScreenphone">
                   <div class="login_wrap widget-taber-content background-white">
@@ -834,7 +766,7 @@
                           "
                           >{{ "last_name" | translate }}</label
                         >
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           type="text"
                           appEnterKey
                           required
@@ -862,7 +794,7 @@
                           "
                           >{{ "first_name" | translate }}</label
                         >
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           type="text"
                           appEnterKey
                           required
@@ -890,7 +822,7 @@
                           "
                           >{{ "email" | translate }}</label
                         >
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           type="email"
                           required
                           appEnterKey
@@ -930,7 +862,7 @@
                           "
                           >{{ "phone" | translate }}</label
                         >
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           type="tel"
                           required
                           appEnterKey
@@ -957,7 +889,7 @@
                           "
                           >{{ "address" | translate }}</label
                         >
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           type="text"
                           appEnterKey
                           required
@@ -985,7 +917,7 @@
                           "
                           >{{ "city" | translate }}</label
                         >
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           type="text"
                           appEnterKey
                           required
@@ -1013,7 +945,7 @@
                           "
                           >{{ "postal_code" | translate }}</label
                         >
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           type="text"
                           appEnterKey
                           required
@@ -1086,7 +1018,7 @@
                             "
                             >{{ "password" | translate }}</label
                           >
-                          <input
+                          <input          id="myInput"   (input)="onInputChange($event)"
                             style="direction: ltr"
                             appEnterKey
                             [type]="showPassword ? 'text' : 'password'"
@@ -1148,7 +1080,7 @@
                           >{{ "confirm_password" | translate }}</label
                         >
                         <div class="form-group" style="direction: ltr">
-                          <input
+                          <input          id="myInput"   (input)="onInputChange($event)"
                             appEnterKey
                             [type]="showRepeatPassword ? 'text' : 'password'"
                             placeholder="{{ 'confirm_password' | translate }}"
@@ -1195,7 +1127,7 @@
                         </div>
                       </div>
                       <div class="login_footer form-group">
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           style="width: 50%"
                           type="text"
                           appEnterKey
@@ -1260,7 +1192,7 @@
                         <div
                           class="custome-radio d-inline-flex align-items-center"
                         >
-                          <input
+                          <input          id="myInput"   (input)="onInputChange($event)"
                             class="form-check-input"
                             type="radio"
                             name="account_type"
@@ -1278,7 +1210,7 @@
                         <div
                           class="custome-radio d-inline-flex align-items-center ms-4"
                         >
-                          <input
+                          <input          id="myInput"   (input)="onInputChange($event)"
                             class="form-check-input"
                             type="radio"
                             name="account_type"
@@ -1313,7 +1245,7 @@
                           "
                           >{{ "company_name" | translate }}</label
                         >
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           type="text"
                           appEnterKey
                           required
@@ -1342,7 +1274,7 @@
                           "
                           >{{ "ice" | translate }}</label
                         >
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           type="text"
                           appEnterKey
                           required
@@ -1371,7 +1303,7 @@
                           "
                           >{{ "company_address" | translate }}</label
                         >
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           type="text"
                           appEnterKey
                           required
@@ -1402,7 +1334,7 @@
                           "
                           >{{ "company_address_rest" | translate }}</label
                         >
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           type="text"
                           appEnterKey
                           required
@@ -1424,7 +1356,7 @@
                           "
                           >{{ "company_postal_code" | translate }}</label
                         >
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           type="text"
                           appEnterKey
                           required
@@ -1455,7 +1387,7 @@
                           "
                           >{{ "company_city" | translate }}</label
                         >
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           type="text"
                           appEnterKey
                           required
@@ -1484,7 +1416,7 @@
                           "
                           >{{ "activity_sector" | translate }}</label
                         >
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           type="text"
                           appEnterKey
                           required
@@ -1515,7 +1447,7 @@
                           "
                           >{{ "contact_email" | translate }}</label
                         >
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           type="text"
                           appEnterKey
                           required
@@ -1544,7 +1476,7 @@
                           "
                           >{{ "contact_first_name" | translate }}</label
                         >
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           type="text"
                           appEnterKey
                           required
@@ -1575,7 +1507,7 @@
                           "
                           >{{ "contact_last_name" | translate }}</label
                         >
-                        <input
+                        <input          id="myInput"   (input)="onInputChange($event)"
                           type="text"
                           appEnterKey
                           required
@@ -1608,7 +1540,7 @@
               <div class="login_footer form-group mb-3">
                 <div class="chek-form">
                   <div class="custome-checkbox">
-                    <input
+                    <input          id="myInput"   (input)="onInputChange($event)"
                       class="form-check-input"
                       type="checkbox"
                       name="terms"
@@ -1636,6 +1568,7 @@
 
               <div class="form-group mb-30 text-end">
                 <button
+                #submitButton
                   type="submit"
                   class="btn btn-fill-out btn-block hover-up font-weight-bold"
                   name="register"

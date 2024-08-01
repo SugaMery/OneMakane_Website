@@ -205,7 +205,14 @@ export class AddAdsComponent implements OnInit {
     this.languageService.setLanguage(language);
     this.currentLanguage = language;
   }
-
+  onInputChange(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement.value) {
+      inputElement.classList.add('show-autofill-new');
+    } else {
+      inputElement.classList.remove('show-autofill-new');
+    }
+  }
   // Liste de catégories avec leurs mots-clés associés
   Customcategories: CustomCategory[] = [
     /*     {

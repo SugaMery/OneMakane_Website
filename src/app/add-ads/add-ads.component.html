@@ -3,11 +3,8 @@
   <div class="page-header breadcrumb-wrap">
     <div class="container">
       <div class="breadcrumb">
-        <a href="/" rel="nofollow"
-          ><i class="fi-rs-home mr-5 ml-10"></i>{{ "home" | translate }}</a
-        >
-        <span></span> {{ "pages" | translate }} <span></span>
-        {{ "my_account" | translate }}
+        <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Accueil</a>
+        <span></span> Pages <span></span> Mon Compte
       </div>
     </div>
   </div>
@@ -20,12 +17,13 @@
             <div class="col-lg-12">
               <div class="single-page pr-30 mb-lg-0 mb-sm-5">
                 <div class="single-header style-2">
-                  <h2>{{ "add_ad" | translate }}</h2>
+                  <h2>Ajouter une annonce</h2>
                 </div>
                 <div class="single-content mb-50">
                   <div class="card-body contact-from-area">
                     <p>
-                      {{ "add_ad_info" | translate }}
+                      Pour ajouter votre annonce, veuillez remplir le formulaire
+                      ci-dessous et cliquer sur le bouton "Ajouter".
                     </p>
                     <div class="row">
                       <form class="" action="#" method="post">
@@ -33,9 +31,7 @@
                           [linear]="isLinear()"
                           [orientation]="isPhone() ? 'vertical' : 'horizontal'"
                         >
-                          <p-stepperPanel
-                            [header]="'stepper_header_basic_info' | translate"
-                          >
+                          <p-stepperPanel header="Informations de base">
                             <ng-template
                               pTemplate="content"
                               let-nextCallback="nextCallback"
@@ -50,25 +46,21 @@
                                     style="padding: 2rem 2rem 2rem 2rem"
                                   >
                                     <h5 class="section-title style-1 mb-30">
-                                      {{
-                                        "stepper_basic_info_title" | translate
-                                      }}
+                                      Commençons par l'essentiel !
                                     </h5>
 
                                     <!-- Champ de titre -->
+                                    <!-- Champ de titre -->
                                     <div class="input-style mb-20">
-                                      <label>{{
-                                        "stepper_title_prompt" | translate
-                                      }}</label>
+                                      <label
+                                        >Quel est le titre de l'annonce ?
+                                      </label>
                                       <input
                                         id="titre"
                                         name="titre"
                                         [(ngModel)]="formData.titre"
                                         (ngModelChange)="onTitleChange($event)"
-                                        [placeholder]="
-                                          'stepper_title_placeholder'
-                                            | translate
-                                        "
+                                        placeholder="Titre de votre annonce"
                                         type="text"
                                         required
                                         maxlength="50"
@@ -77,11 +69,7 @@
                                         *ngIf="fieldErrors.titre"
                                         class="text-danger requisDiv"
                                       >
-                                        <div>
-                                          {{
-                                            "stepper_title_required" | translate
-                                          }}
-                                        </div>
+                                        <div>Titre est requis.</div>
                                       </div>
                                       <div
                                         class="text-infos requisDiv"
@@ -91,10 +79,8 @@
                                         "
                                       >
                                         <div>
-                                          {{
-                                            "stepper_title_length_warning"
-                                              | translate
-                                          }}
+                                          Le titre est proche de la longueur
+                                          maximale.
                                         </div>
                                       </div>
                                     </div>
@@ -116,12 +102,9 @@
                                       <div
                                         class="sidebar-widget widget-category-2 mb-30"
                                       >
-                                        <label *ngIf="suggestedsubcategoryIf">
-                                          {{
-                                            "stepper_choose_suggested_category"
-                                              | translate
-                                          }}
-                                        </label>
+                                        <label *ngIf="suggestedsubcategoryIf"
+                                          >Choisir une catégorie suggérée</label
+                                        >
 
                                         <ul *ngIf="suggestedsubcategoryIf">
                                           <!-- Affichage de la catégorie suggérée -->
@@ -147,10 +130,9 @@
                                                   <input
                                                     class="form-check-input"
                                                     type="checkbox"
-                                                    [id]="
-                                                      subcategory.name +
-                                                      'Checkbox'
-                                                    "
+                                                    id="{{
+                                                      subcategory.name
+                                                    }}Checkbox"
                                                     [checked]="
                                                       selectedSubCategory ===
                                                       subcategory
@@ -164,22 +146,22 @@
                                                   />
                                                   <label
                                                     class="form-check-label"
-                                                    [for]="
-                                                      subcategory.name +
-                                                      'Checkbox'
-                                                    "
+                                                    for="{{
+                                                      subcategory.name
+                                                    }}Checkbox"
                                                   ></label>
                                                 </div>
                                                 <!-- Lien -->
                                                 <a class="ml-2">
                                                   <img
-                                                    [src]="
+                                                    src="{{
                                                       suggestedCategory!
                                                         .icon_path
-                                                    "
+                                                    }}"
                                                     alt=""
-                                                  />
-                                                  {{ suggestedCategory!.name }}
+                                                  />{{
+                                                    suggestedCategory!.name
+                                                  }}
 
                                                   <!-- Pour chaque sous-catégorie de la catégorie suggérée -->
                                                   <ng-container
@@ -209,10 +191,10 @@
                                       </div>
                                       <div class="row">
                                         <div class="form-group col-md-12">
-                                          <label>{{
-                                            "stepper_choose_category"
-                                              | translate
-                                          }}</label>
+                                          <!--                                           <label
+                                            >Ou choisissez une autre Catégorie
+                                          </label> -->
+                                          <label>Choisir une catégorie </label>
                                           <div class="select-menu">
                                             <div
                                               class="select-btn"
@@ -236,9 +218,9 @@
                                                   "
                                                 >
                                                   <img
-                                                    [src]="
+                                                    src="{{
                                                       selectedOption.media?.url
-                                                    "
+                                                    }}"
                                                     *ngIf="selectedOption.name"
                                                     alt=""
                                                     class="iconUrl"
@@ -250,44 +232,10 @@
                                                     }"
                                                   />
                                                   <p style="margin: 0">
-                                                    <span
-                                                      *ngIf="
-                                                        currentLanguage ===
-                                                          'ar' &&
-                                                        selectedOption.category_langs &&
-                                                        selectedOption
-                                                          .category_langs
-                                                          .length > 0
-                                                      "
-                                                    >
-                                                      {{
-                                                        selectedOption
-                                                          .category_langs[0]
-                                                          ?.name || "إختار"
-                                                      }}
-                                                    </span>
-                                                    <span
-                                                      *ngIf="
-                                                        currentLanguage ===
-                                                          'ar' &&
-                                                        selectedOption.category_langs &&
-                                                        selectedOption
-                                                          .category_langs
-                                                          .length == 0
-                                                      "
-                                                    >
-                                                      {{ "إختار" }}
-                                                    </span>
-                                                    <span
-                                                      *ngIf="
-                                                        currentLanguage !== 'ar'
-                                                      "
-                                                    >
-                                                      {{
-                                                        selectedOption.name ||
-                                                          "Choisissez"
-                                                      }}
-                                                    </span>
+                                                    {{
+                                                      selectedOption.name ||
+                                                        "Choisissez"
+                                                    }}
                                                   </p>
                                                 </div>
                                               </span>
@@ -311,7 +259,9 @@
                                                   class="d-inline-flex align-items-center"
                                                 >
                                                   <img
-                                                    [src]="category.media?.url"
+                                                    src="{{
+                                                      category.media?.url
+                                                    }}"
                                                     alt=""
                                                     class="iconUrl"
                                                     [ngStyle]="{
@@ -321,27 +271,7 @@
                                                       'margin-right': '1rem'
                                                     }"
                                                   />
-                                                  <span
-                                                    *ngIf="
-                                                      currentLanguage ===
-                                                        'ar' &&
-                                                      category.category_langs &&
-                                                      category.category_langs
-                                                        .length > 0
-                                                    "
-                                                  >
-                                                    {{
-                                                      category.category_langs[0]
-                                                        ?.name
-                                                    }}
-                                                  </span>
-                                                  <span
-                                                    *ngIf="
-                                                      currentLanguage !== 'ar'
-                                                    "
-                                                  >
-                                                    {{ category.name }}
-                                                  </span>
+                                                  {{ category?.name }}
                                                 </span>
                                               </li>
                                             </ul>
@@ -375,9 +305,9 @@
                                                   "
                                                 >
                                                   <img
-                                                    [src]="
+                                                    src="{{
                                                       selectedOption.media?.url
-                                                    "
+                                                    }}"
                                                     *ngIf="
                                                       selectedSubcategory?.name
                                                     "
@@ -391,43 +321,10 @@
                                                     }"
                                                   />
                                                   <p style="margin: 0">
-                                                    <span
-                                                      *ngIf="
-                                                        currentLanguage ===
-                                                          'ar' &&
-                                                        selectedSubcategory?.category_langs &&
-                                                        selectedSubcategory
-                                                          ?.category_langs
-                                                          .length > 0
-                                                      "
-                                                    >
-                                                      {{
-                                                        selectedSubcategory
-                                                          ?.category_langs[0]
-                                                          ?.name || "إختار"
-                                                      }}
-                                                    </span>
-                                                    <span
-                                                      *ngIf="
-                                                        currentLanguage ===
-                                                          'ar' &&
-                                                        selectedSubcategory
-                                                          ?.category_langs
-                                                          .length == 0
-                                                      "
-                                                    >
-                                                      {{ "إختار" }}
-                                                    </span>
-                                                    <span
-                                                      *ngIf="
-                                                        currentLanguage !== 'ar'
-                                                      "
-                                                    >
-                                                      {{
-                                                        selectedSubcategory?.name ||
-                                                          "Choisissez"
-                                                      }}
-                                                    </span>
+                                                    {{
+                                                      selectedSubcategory?.name ||
+                                                        "Choisissez"
+                                                    }}
                                                   </p>
                                                 </div>
                                               </span>
@@ -454,9 +351,9 @@
                                                   class="d-inline-flex align-items-center"
                                                 >
                                                   <img
-                                                    [src]="
+                                                    src="{{
                                                       selectedOption.media?.url
-                                                    "
+                                                    }}"
                                                     alt=""
                                                     class="iconUrl"
                                                     [ngStyle]="{
@@ -466,28 +363,7 @@
                                                       'margin-right': '1rem'
                                                     }"
                                                   />
-
-                                                  <span
-                                                    *ngIf="
-                                                      currentLanguage ===
-                                                        'ar' &&
-                                                      subcategory.category_langs &&
-                                                      subcategory.category_langs
-                                                        .length > 0
-                                                    "
-                                                  >
-                                                    {{
-                                                      subcategory
-                                                        .category_langs[0]?.name
-                                                    }}
-                                                  </span>
-                                                  <span
-                                                    *ngIf="
-                                                      currentLanguage !== 'ar'
-                                                    "
-                                                  >
-                                                    {{ subcategory.name }}
-                                                  </span>
+                                                  {{ subcategory?.name }}
                                                 </span>
                                               </li>
                                             </ul>
@@ -507,21 +383,8 @@
 
                               <div class="flex pt-4 justify-content-end">
                                 <p-button
-                                  *ngIf="currentLanguage !== 'ar'"
-                                  [label]="'stepper_next' | translate"
+                                  label="Suivant"
                                   icon="pi pi-arrow-right"
-                                  iconPos="right"
-                                  (onClick)="
-                                    emitNextCallbackTitre()
-                                      ? nextCallback.emit()
-                                      : null
-                                  "
-                                ></p-button>
-
-                                <p-button
-                                  *ngIf="currentLanguage === 'ar'"
-                                  [label]="'stepper_next' | translate"
-                                  icon="pi pi-arrow-left"
                                   iconPos="right"
                                   (onClick)="
                                     emitNextCallbackTitre()
@@ -549,7 +412,7 @@
                                     style="padding: 2rem 2rem 2rem 2rem"
                                   >
                                     <h5 class="section-title style-1 mb-30">
-                                      {{ "stepper_tell_us_more" | translate }}
+                                      Dites-nous en plus
                                     </h5>
 
                                     <!-- Liste des catégories suggérées -->

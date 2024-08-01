@@ -410,17 +410,18 @@
                             (click)="addToFavorites(adsfirst)"
                           >
                             <img
-                              *ngIf="adsfirst.favorites.length > 0"
+                              *ngIf="adsfirst.favorites?.length > 0"
                               src="../../assets/imgs/coeur.png"
                               alt="{{ 'filled_heart_icon' | translate }}"
                               style="width: 15px; margin-left: 1px"
                             />
                             <i
-                              *ngIf="adsfirst.favorites.length === 0"
+                              *ngIf="adsfirst.favorites?.length === 0 || !adsfirst.favorites"
                               class="fi fi-rs-heart"
                             ></i>
                           </a>
                         </div>
+  
                       </div>
                       <div class="product-content-wrap">
                         <div class="product-category" style="margin-top: 1rem">
