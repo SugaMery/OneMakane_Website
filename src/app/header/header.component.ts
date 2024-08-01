@@ -65,8 +65,11 @@ export class HeaderComponent {
       const refreshToken = localStorage.getItem('loggedInUserRefreshToken');
 
       if (userId && accessToken && refreshToken) {
+        console.log('userrr', userId);
         this.userService.getUserInfoById(Number(userId), accessToken).subscribe(
           (userInfo) => {
+            console.log('userrrrrrre userInfo', userInfo);
+
             if (userInfo.data) {
               this.status = true;
               this.loggedInUserName = `${userInfo.data.first_name} ${userInfo.data.last_name}`;

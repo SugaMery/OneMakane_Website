@@ -113,6 +113,7 @@ export class PageAccountComponent implements OnInit {
     this.accessToken = localStorage.getItem('loggedInUserToken');
     this.loadAds('pending');
     this.loadAds('approved');
+    this.loadAds('all');
     this.userService
       .getUserInfoById(Number(this.userId!), this.accessToken!)
       .subscribe((data) => {
@@ -189,16 +190,13 @@ export class PageAccountComponent implements OnInit {
                 return ad.data;
               })
           );
-          console.log("adssssssthis",this.ads)
+          console.log('adssssssthis', this.ads, data);
           this.totalPages = Math.ceil(this.ads.length / this.itemsPerPage);
-      
         })
         .catch((error) => {
           console.error('Error loading ads:', error);
         });
     });
-
-
   }
 
   extractDate(dateString: string): string {

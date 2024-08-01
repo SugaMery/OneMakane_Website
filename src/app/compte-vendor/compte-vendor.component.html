@@ -118,6 +118,23 @@
                         <i class="fi-rs-trash"></i>
                       </a>
                     </div>
+                    <div class="product-action-1">
+                      <a
+                        aria-label="Ajouter à la liste de souhaits"
+                        class="action-btn"
+                        (click)="addToFavorites(ad)"
+                      >
+                        <img
+                          *ngIf="ad.favorites?.length > 0"
+                          src="../../assets/imgs/coeur.png"
+                          style="width: 15px; margin-left: 1px"
+                        />
+                        <i
+                          *ngIf="ad.favorites?.length === 0 || !ad.favorites"
+                          class="fi fi-rs-heart"
+                        ></i>
+                      </a>
+                    </div>
                   </div>
                   <div class="product-content-wrap">
                     <div class="product-category" style="margin-top: 1rem">

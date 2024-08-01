@@ -368,22 +368,26 @@
                             />
                           </a>
                         </div>
+
                         <div class="product-action-1">
                           <a
                             aria-label="Ajouter à la liste de souhaits"
                             class="action-btn"
-                            href="#"
+                            (click)="addToFavorites(adsfirst)"
                           >
-                            <i class="fi fi-rs-heart"></i>
+                            <img
+                              *ngIf="adsfirst.favorites?.length > 0"
+                              src="../../assets/imgs/coeur.png"
+                              style="width: 15px; margin-left: 1px"
+                            />
+                            <i
+                              *ngIf="
+                                adsfirst.favorites?.length === 0 ||
+                                !adsfirst.favorites
+                              "
+                              class="fi fi-rs-heart"
+                            ></i>
                           </a>
-                          <!--                         <a
-                        aria-label="Aperçu rapide"
-                        class="action-btn"
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                      >
-                        <i class="fi-rs-eye"></i>
-                      </a> -->
                         </div>
                       </div>
                       <div class="product-content-wrap">
@@ -468,6 +472,7 @@
                           />
                         </a>
                       </div>
+
                       <div class="product-action-1">
                         <a
                           aria-label="Ajouter à la liste de souhaits"
@@ -475,13 +480,12 @@
                           (click)="addToFavorites(ad)"
                         >
                           <img
-                            *ngIf="ad.favorites.length > 0"
+                            *ngIf="ad.favorites?.length > 0"
                             src="../../assets/imgs/coeur.png"
-                            alt="Filled Heart Icon"
                             style="width: 15px; margin-left: 1px"
                           />
                           <i
-                            *ngIf="ad.favorites.length === 0"
+                            *ngIf="ad.favorites?.length === 0 || !ad.favorites"
                             class="fi fi-rs-heart"
                           ></i>
                         </a>
@@ -821,22 +825,26 @@
                                 />
                               </a>
                             </div>
+
                             <div class="product-action-1">
                               <a
                                 aria-label="Ajouter à la liste de souhaits"
                                 class="action-btn"
-                                (click)="addToFavorites(adsfirst.id)"
+                                (click)="addToFavorites(adsfirst)"
                               >
-                                <i class="fi-rs-heart"></i>
+                                <img
+                                  *ngIf="adsfirst.favorites?.length > 0"
+                                  src="../../assets/imgs/coeur.png"
+                                  style="width: 15px; margin-left: 1px"
+                                />
+                                <i
+                                  *ngIf="
+                                    adsfirst.favorites?.length === 0 ||
+                                    !adsfirst.favorites
+                                  "
+                                  class="fi fi-rs-heart"
+                                ></i>
                               </a>
-                              <!--                               <a
-                                aria-label="Aperçu rapide"
-                                class="action-btn"
-                                data-bs-toggle="modal"
-                                data-bs-target="#quickViewModal"
-                              >
-                                <i class="fi-rs-eye"></i>
-                              </a> -->
                             </div>
                           </div>
                           <div class="product-content-wrap">

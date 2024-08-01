@@ -20,7 +20,7 @@ export class RegisterComponent {
     city: '',
     civility: '',
     password: '',
-    role_id: 2,
+    role_id: 4,
     repeat_password: '',
     professional: {},
     generatedSecurityCode: this.generateSecurityCode(),

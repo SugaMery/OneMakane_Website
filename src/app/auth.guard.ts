@@ -34,6 +34,10 @@ export class AuthGuard implements CanActivate {
         (error) => {
           // Handle any error that occurs during the token refresh
           console.error('Error refreshing token:', error);
+          localStorage.removeItem('loggedInUserToken');
+          localStorage.removeItem('loggedInUserId');
+          localStorage.removeItem('loggedInUserRefreshToken');
+
           this.logout(); // This will also redirect to login
         }
       );

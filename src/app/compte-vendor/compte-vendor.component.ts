@@ -111,7 +111,57 @@ export class CompteVendorComponent {
   getPagesArray(): number[] {
     return Array.from({ length: this.totalPages }, (v, k) => k + 1);
   }
+  addToFavorites(ad: any): void {
+    const userId = localStorage.getItem('loggedInUserId');
+    const accessToken = localStorage.getItem('loggedInUserToken');
 
+    // Vérifiez si l'utilisateur est connecté
+    if (!userId || !accessToken) {
+      // Rediriger vers la page de connexion
+      window.location.href = '/login';
+      return;
+    }
+
+    // Check if the ad is already in favorites
+    const isFavorited = ad.favorites.length > 0;
+
+    if (isFavorited) {
+      // Remove from favorites
+      const favoriteId = ad.favorites[0].id; // Assuming `id` is the identifier for the favorite
+      this.annonceService
+        .removeFromFavorites(favoriteId, accessToken)
+        .subscribe(
+          (response) => {
+            // Remove favorite locally
+            ad.favorites = [];
+            console.log('Removed from favorites successfully:', response);
+          },
+          (error) => {
+            console.error('Failed to remove from favorites:', error);
+          }
+        );
+    } else {
+      // Add to favorites
+      this.annonceService
+        .addToFavorites(Number(userId), ad.id, accessToken)
+        .subscribe(
+          (response) => {
+            // Add favorite locally
+            ad.favorites = [
+              {
+                ad_id: response.data.ad_id,
+                id: response.data.id,
+                created_at: response.data.created_at,
+              },
+            ];
+            console.log('Added to favorites successfully:', response);
+          },
+          (error) => {
+            console.error('Failed to add to favorites:', error);
+          }
+        );
+    }
+  }
   getRelativeTime(createdAt: string): string {
     const currentDate = new Date();
     const adDate = new Date(createdAt);

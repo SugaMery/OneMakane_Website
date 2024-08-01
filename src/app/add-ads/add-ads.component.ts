@@ -1384,7 +1384,10 @@ export class AddAdsComponent implements OnInit {
     this.categoryService.getCategoryById(subcategory.id).subscribe((data) => {
       this.selectedSubcategory = data.data;
       this.settings = [];
+      this.boolSettings = [];
+
       this.fetchSettings();
+      console.log('this.settings', this.settings, this.boolSettings);
     });
 
     this.formData.category_id = subcategory.id;

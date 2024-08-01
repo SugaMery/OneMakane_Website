@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class PageService {
-  private apiUrl = 'https://devapi.onemakan.com/v1/pages';
+  private apiUrl = 'https://api.onemakan.com/v1/pages';
   //getPageBySlug: any;
 
   constructor(private http: HttpClient) {}

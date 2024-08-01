@@ -8,7 +8,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class CategoryService {
   private apiUrl = 'http://localhost:3000/categories';
-  private devApiUrl = 'https://devapi.onemakan.com/v1';
+  private devApiUrl = 'https://api.onemakan.com/v1';
   private headers = new HttpHeaders();
 
   constructor(private http: HttpClient) {
@@ -22,7 +22,7 @@ export class CategoryService {
   getAdsByCategory(categoryId: number, params: any): Observable<any> {
     // Construct the URL with categoryId and additional params
     let url = `${this.devApiUrl}/categories/${categoryId}/ads`;
-    
+
     // Append query parameters if there are any
     if (params) {
       url += '?' + this.serializeParams(params);
@@ -35,7 +35,9 @@ export class CategoryService {
   // Helper function to serialize parameters
   private serializeParams(params: any): string {
     return Object.keys(params)
-      .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+      .map(
+        (key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
+      )
       .join('&');
   }
 

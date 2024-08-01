@@ -10,7 +10,7 @@ import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { PreloaderComponent } from './preloader/preloader.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
@@ -53,6 +53,13 @@ import { CompteVendorComponent } from './compte-vendor/compte-vendor.component';
 import { MessageComponent } from './message/message.component';
 import { MatSliderModule } from '@angular/material/slider';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -107,6 +114,13 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
     GalleriaModule,
     FormsModule,
     MatSliderModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient],
+      },
+    }),
     JwtModule.forRoot({
       config: {
         tokenGetter: () => {
