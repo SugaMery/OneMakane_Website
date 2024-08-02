@@ -1113,17 +1113,26 @@ export class AddAdsComponent implements OnInit {
     });
     this.selectedFiles = [];
   }
-
+  fileError: string = '';
   onFileSelected(event: any): void {
     const maxImagesAllowed = 3;
+    const allowedFileTypes = ['image/jpeg', 'image/png'];
     const files: FileList = event.target.files;
+    this.fileError = '';
+
     if (files && files.length > 0) {
       if (this.uploadedImages.length + files.length > maxImagesAllowed) {
         this.maxImages = true;
         return;
       }
+
       for (let i = 0; i < files.length; i++) {
         const file: File = files[i];
+        if (!allowedFileTypes.includes(file.type)) {
+          this.fileError = 'Seuls les formats JPG et PNG sont acceptés.';
+          return;
+        }
+
         const reader: FileReader = new FileReader();
         this.selectedFiles.push(file);
         reader.onload = (e) => {
@@ -1133,7 +1142,8 @@ export class AddAdsComponent implements OnInit {
         reader.readAsDataURL(file);
       }
     }
-    console.log('greeeeeeettttt', this.uploadedImages);
+
+    console.log('Images téléchargées', this.uploadedImages);
   }
 
   count: number = 0;

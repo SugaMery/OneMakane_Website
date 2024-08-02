@@ -514,6 +514,7 @@
                       />
                     </a>
                   </div>
+
                   <div class="product-action-1">
                     <a
                       aria-label="Ajouter à la liste de souhaits"
@@ -521,13 +522,12 @@
                       (click)="addToFavorites(ad)"
                     >
                       <img
-                        *ngIf="ad.favorites.length > 0"
+                        *ngIf="ad.favorites?.length > 0"
                         src="../../assets/imgs/coeur.png"
-                        alt="Filled Heart Icon"
                         style="width: 15px; margin-left: 1px"
                       />
                       <i
-                        *ngIf="ad.favorites.length === 0"
+                        *ngIf="ad.favorites?.length === 0 || !ad.favorites"
                         class="fi fi-rs-heart"
                       ></i>
                     </a>
@@ -592,6 +592,7 @@
                     />
                   </a>
                 </div>
+
                 <div class="product-action-1">
                   <a
                     aria-label="Ajouter à la liste de souhaits"
@@ -599,13 +600,12 @@
                     (click)="addToFavorites(ad)"
                   >
                     <img
-                      *ngIf="ad.favorites.length > 0"
+                      *ngIf="ad.favorites?.length > 0"
                       src="../../assets/imgs/coeur.png"
-                      alt="Filled Heart Icon"
                       style="width: 15px; margin-left: 1px"
                     />
                     <i
-                      *ngIf="ad.favorites.length === 0"
+                      *ngIf="ad.favorites?.length === 0 || !ad.favorites"
                       class="fi fi-rs-heart"
                     ></i>
                   </a>

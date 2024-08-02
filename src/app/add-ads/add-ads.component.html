@@ -1200,6 +1200,12 @@
                                               style="display: none"
                                               accept="image/*"
                                             />
+                                            <div
+                                              *ngIf="fileError"
+                                              class="error-message"
+                                            >
+                                              {{ fileError }}
+                                            </div>
                                           </div>
                                         </label>
                                       </div>

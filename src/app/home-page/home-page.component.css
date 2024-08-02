@@ -349,3 +349,23 @@ width: 100% !important;
 ::ng-deep .slick-slide img {
     display: inline !important;
 }
+
+
+::ng-deep .carouseled .p-carousel-container .p-carousel-items-content {
+    margin-left: -1.5rem !important;
+}
+
+
+::ng-deep .carouseled .p-carousel-container .p-carousel-items-container {
+    margin-left: 0rem !important;
+}
+
+
+::ng-deep .carouseled .p-carousel-container .p-carousel-items-content {
+    margin-right: 0.5rem !important;
+
+}
+
+::ng-deep .carouseled .p-carousel-container .p-carousel-items-container {
+    margin-left: 0rem !important;
+}

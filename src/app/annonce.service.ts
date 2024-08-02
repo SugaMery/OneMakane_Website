@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -82,9 +82,86 @@ export class AnnonceService {
     const url = `${this.apiUrl}/ads`;
     return this.http.get<any>(url);
   }
-  getAdsWithFavoris(user_id: number): Observable<any> {
-    const url = `${this.apiUrl}/ads?user_id=${user_id}`;
+
+  getAdsFirst(page: number = 1): Observable<any> {
+    const url = `${this.apiUrl}/ads?page=${page}`;
     return this.http.get<any>(url);
+  }
+
+  getAllAds(): Observable<any[]> {
+    return this.getAdsFirst().pipe(
+      switchMap((response) => {
+        const totalPages = response.pagination.total_page;
+        const requests: Observable<any>[] = [];
+
+        // Push the first page response
+        requests.push(of(response));
+
+        // Create requests for all other pages
+        for (let page = 2; page <= totalPages; page++) {
+          requests.push(this.getAdsFirst(page));
+        }
+
+        // Execute all requests and combine results
+        return forkJoin(requests).pipe(
+          map((responses) => responses.flatMap((res) => res.data))
+        );
+      })
+    );
+  }
+
+  getAdsWithFavoris(user_id: number, page: number = 1): Observable<any> {
+    const url = `${this.apiUrl}/ads?user_id=${user_id}&page=${page}`;
+    return this.http.get<any>(url);
+  }
+
+  getAllAdsWithFavoris(user_id: number): Observable<any[]> {
+    return this.getAdsWithFavoris(user_id).pipe(
+      switchMap((response) => {
+        const totalPages = response.pagination.total_page;
+        const requests: Observable<any>[] = [];
+
+        // Push the first page response
+        requests.push(of(response));
+
+        // Create requests for all other pages
+        for (let page = 2; page <= totalPages; page++) {
+          requests.push(this.getAdsWithFavoris(user_id, page));
+        }
+
+        // Execute all requests and combine results
+        return forkJoin(requests).pipe(
+          map((responses) => responses.flatMap((res) => res.data))
+        );
+      })
+    );
+  }
+
+  getAdsWithUser(user_id: number, page: number = 1): Observable<any> {
+    const url = `${this.apiUrl}/users/${user_id}/ads?page=${page}`;
+    return this.http.get<any>(url);
+  }
+
+  getAllAdsWithUser(user_id: number): Observable<any[]> {
+    return this.getAdsWithUser(user_id).pipe(
+      switchMap((response) => {
+        const totalPages = response.pagination.total_page;
+        const requests: Observable<any>[] = [];
+
+        // Push the first page response
+        requests.push(of(response));
+
+        // Create requests for all other pages
+        for (let page = 2; page <= totalPages; page++) {
+          requests.push(this.getAdsWithUser(user_id, page));
+        }
+
+        // Execute all requests and combine results
+        return forkJoin(requests).pipe(
+          map((responses) => responses.flatMap((res) => res.data))
+        );
+      })
+    );
   }
 
   getAdsValidator(validationStatus: string): Observable<any> {

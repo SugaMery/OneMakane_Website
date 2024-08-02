@@ -329,6 +329,8 @@ export class AdsGridComponent {
   }
 
   ngOnInit(): void {
+    console.log('gogoogoggogoffttttteeee');
+
     const id = this.route.snapshot.paramMap.get('id');
     if (id !== null) {
       this.categoryId = +id;
@@ -377,16 +379,18 @@ export class AdsGridComponent {
   }
   getAdsList(): void {
     //console.log('adsff', this.allCategoriesSameParent);
-
+    console.log('gogoogoggogoff');
     if (this.allCategoriesSameParent.length == 0) {
+      console.log('gogoogoggogoff');
       const userId = localStorage.getItem('loggedInUserId');
-      this.annonceService
-        .getAdsWithFavoris(Number(userId))
+      this.categoryService
+        .getAdsWithFavoris(Number(userId), Number(this.categoryId))
         .subscribe((datas) => {
           let ads = datas.data.filter(
             (ad: { category_id: number }) => ad.category_id === this.categoryId
           );
           let adsProcessed = 0;
+          console.log('gogoogoggogoff ads', ads);
 
           this.originalAds = [];
 
@@ -394,9 +398,9 @@ export class AdsGridComponent {
             this.annonceService.getAdById(element.id).subscribe((data) => {
               adsProcessed++;
               data.data.favorites = element.favorites;
-
+              console.log('gogoogoggogoff adsttt');
               const detailedAd = data.data;
-
+              console.log('gogoogoggogoffttttt');
               this.ads.push(detailedAd);
               this.originalAds.push(detailedAd);
             });
@@ -404,6 +408,7 @@ export class AdsGridComponent {
         });
     } else {
       for (let i = 0; i < this.allCategoriesSameParent.length; i++) {
+        console.log('gogoogoggogo');
         this.annonceService.getAds().subscribe((datas) => {
           let ads = datas.data.filter(
             (ad: { category_id: number }) =>
@@ -417,6 +422,7 @@ export class AdsGridComponent {
             this.annonceService.getAdById(element.id).subscribe((data) => {
               adsProcessed++;
               const detailedAd = data.data;
+              console.log('gogoogoggogofftttttiii');
 
               this.ads.push(detailedAd);
               this.originalAds.push(detailedAd);
@@ -942,6 +948,7 @@ export class AdsGridComponent {
 
   getAds(): void {
     console.log('Fetching ads...');
+    console.log('gogoogoggogo');
 
     if (this.allCategoriesSameParent.length == 0) {
       this.annonceService.getAds().subscribe((datas) => {

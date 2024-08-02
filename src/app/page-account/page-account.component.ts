@@ -57,12 +57,6 @@ export class PageAccountComponent implements OnInit {
     return this.ads.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
-  changePage(page: number) {
-    if (page > 0 && page <= this.totalPages) {
-      this.currentPage = page;
-    }
-  }
-
   activateTab(tabId: string, contentId: string) {
     const tabElement = document.getElementById(tabId);
     const contentElement = document.getElementById(contentId);
@@ -111,9 +105,18 @@ export class PageAccountComponent implements OnInit {
   ngOnInit(): void {
     this.userId = localStorage.getItem('loggedInUserId');
     this.accessToken = localStorage.getItem('loggedInUserToken');
-    this.loadAds('pending');
-    this.loadAds('approved');
-    this.loadAds('all');
+    //this.loadAds('pending');
+    //this.loadAds('approved');
+    //this.loadAds('all');
+
+    this.annonceService
+      .getAllAdsWithUser(Number(this.userId))
+      .subscribe((data) => {
+        this.ads = data;
+        console.log('adddddd', data);
+      });
+
+    this.paginateAds();
     this.userService
       .getUserInfoById(Number(this.userId!), this.accessToken!)
       .subscribe((data) => {
@@ -170,6 +173,7 @@ export class PageAccountComponent implements OnInit {
 
   loadAds(validationStatus: string): void {
     this.annonceService.getAdsValidator(validationStatus).subscribe((data) => {
+      console.log('adddddd', data);
       const adIds = data.data.map((ad: any) => ad.id);
 
       const adPromises = adIds.map((adId: any) => {
@@ -198,7 +202,25 @@ export class PageAccountComponent implements OnInit {
         });
     });
   }
+  adsPerPage = 10;
 
+  getPagesArray(): number[] {
+    return Array.from({ length: this.totalPages }, (v, k) => k + 1);
+  }
+  changePage(page: number): void {
+    if (page < 1 || page > this.totalPages) {
+      return;
+    }
+    this.currentPage = page;
+    this.paginateAds();
+  }
+
+  paginateAds(): void {
+    this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
+    const startIndex = (this.currentPage - 1) * this.adsPerPage;
+    const endIndex = startIndex + this.adsPerPage;
+    this.ads = this.ads.slice(startIndex, endIndex);
+  }
   extractDate(dateString: string): string {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = {

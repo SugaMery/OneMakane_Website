@@ -41,6 +41,8 @@ export class HomePageComponent implements OnInit {
   hiddenCategories: any[] = [];
   showMore: boolean = false;
   ads: any[] = [];
+  adsAll: any[] = [];
+
   ads_jobs: any[] = [];
   adsLivres: any[] = [];
   adsVehicules: any[] = [];
@@ -213,23 +215,51 @@ export class HomePageComponent implements OnInit {
         this.document.defaultView.localStorage.getItem('loggedInUserToken');
       const userId =
         this.document.defaultView.localStorage.getItem('loggedInUserId');
-      this.annonceService.getAds().subscribe((data) => {
-        //this.ads = data.data;
-        console.log('userid', userId);
-        if (userId) {
-          this.annonceService
-            .getAdsWithFavoris(Number(userId))
+      //this.ads = data.data;
+      console.log('userid', userId);
+      this.annonceService.getAds().subscribe((dt) => {
+        this.adsAll = dt.data;
+      });
+      let listCategory = [
+        141, // Offres d'emploi
+        142, // Personnel de maison
+        145, // Formations professionnelles
+      ];
+      for (let i = 0; i < listCategory.length; i++) {
+        this.categoryService
+          .getAllAdsWithFavoris(Number(userId), listCategory[i])
+          .subscribe((dataFilter) => {
+            console.log('ads_jobs', dataFilter);
+            dataFilter.forEach((jobs) => {
+              this.annonceService.getAdById(jobs.id).subscribe((jobsData) => {
+                this.ads_jobs.push(jobsData.data);
+              });
+            });
+          });
+      }
+      if (userId) {
+        let listCategory = [
+          197, // Offres d'emploi
+          215, // Personnel de maison
+          171, // Formations professionnelles
+          150, // Ventes immobilières
+          234, // Locations
+          148, // Électroménagers
+        ];
+        for (let i = 0; i < listCategory.length; i++) {
+          this.categoryService
+            .getAllAdsWithFavoris(Number(userId), listCategory[i])
             .subscribe((dataFilter) => {
-              this.ads = dataFilter.data;
+              this.ads = dataFilter;
+              console.log('ggg dataFilter', dataFilter);
 
-              dataFilter.data.forEach((element: any) => {
+              dataFilter.forEach((element: any) => {
                 this.annonceService
                   .getAdById(element.id)
                   .subscribe((adData) => {
                     if (!adData || !adData.data) {
                       return;
                     }
-                    console.log('ggg', dataFilter.data);
 
                     this.isFavorited(element);
                     if (adData.data.category.model == jobs) {
@@ -240,116 +270,162 @@ export class HomePageComponent implements OnInit {
                       this.categorizedAds[element.category.name] = [];
                     }
                     adData.data.favorites = element.favorites;
+                    console.log('adData.data.length', adData.data);
+
                     this.categorizedAds[element.category.name].push(
                       adData.data
                     );
-                    console.log('categorizedAds', this.categorizedAds);
                   });
               });
             });
-        } else {
-          this.ads = data.data;
-          console.log('gggad', data.data);
-
-          data.data.forEach((element: any) => {
-            this.annonceService.getAdById(element.id).subscribe((adData) => {
-              if (!adData || !adData.data) {
-                return;
-              }
-
-              if (adData.data.category.model == jobs) {
-                this.ads_jobs.push(adData.data);
-              }
-              element.image = adData.data.image;
-              if (!this.categorizedAds[element.category.name]) {
-                this.categorizedAds[element.category.name] = [];
-              }
-              this.categorizedAds[element.category.name].push(adData.data);
-
-              this.categoryService
-                .getCategoryById(adData.data.category_id)
-                .subscribe((category) => {
-                  if (
-                    !category ||
-                    !category.data ||
-                    !category.data.model_fields
-                  ) {
-                    return;
-                  }
-                  const modelFields = category.data.model_fields;
-                  const queryParams = { model: category.data.model };
-
-                  if (
-                    this.document.defaultView &&
-                    this.document.defaultView.localStorage
-                  ) {
-                    const accessToken =
-                      this.document.defaultView.localStorage.getItem(
-                        'loggedInUserToken'
-                      );
-                    this.settingService
-                      .getSettings(accessToken!, queryParams)
-                      .subscribe(
-                        (setting) => {
-                          if (!setting || !setting.data) {
-                            return;
-                          }
-                          const transformedFields = Object.keys(
-                            modelFields
-                          ).map((key) => ({
-                            value: key,
-                            label: modelFields[key].label,
-                            setting: key,
-                          }));
-
-                          transformedFields.forEach(
-                            (field: {
-                              value: string;
-                              label: any;
-                              setting: string;
-                            }) => {
-                              const matchedSetting = setting.data.find(
-                                (settingItem: { name: string }) =>
-                                  settingItem.name === field.value
-                              );
-                              if (matchedSetting) {
-                                if (
-                                  adData.data.additional &&
-                                  adData.data.additional[field.value]
-                                ) {
-                                  field.setting =
-                                    matchedSetting.content[
-                                      adData.data.additional[field.value]
-                                    ];
-                                  //console.log('jj', field.setting);
-                                  //console.log('Transformed f', matchedSetting);
-                                } /*  else {
-                                    console.error(`No setting found for key '${field.value}' in data.data.additional`);
-                                } */
-                              }
-                            }
-                          );
-
-                          this.transformedField = transformedFields;
-                          adData.data.additional = transformedFields;
-                        },
-                        (error) => {
-                          console.error('Error fetching settings:', error);
-                        }
-                      );
-                  }
-                });
-            });
-          });
         }
-        const jobs = 'ad_jobs';
+      } else {
+        let listCategory = [
+          197, // Offres d'emploi
+          215, // Personnel de maison
+          171, // Formations professionnelles
+          150, // Ventes immobilières
+          234, // Locations
+          148, // Électroménagers
+        ];
+        for (let i = 0; i < listCategory.length; i++) {
+          this.categoryService
+            .getAllAdsWithFavoris(Number(userId), listCategory[i])
+            .subscribe((data) => {
+              this.ads = data;
+              console.log('ggg dataFilter', data);
 
-        this.categorizedAds = {};
-      });
+              data.forEach((element: any) => {
+                this.annonceService
+                  .getAdById(element.id)
+                  .subscribe((adData) => {
+                    if (!adData || !adData.data) {
+                      return;
+                    }
+
+                    if (adData.data.category.model == jobs) {
+                      this.ads_jobs.push(adData.data);
+                    }
+                    element.image = adData.data.image;
+                    if (!this.categorizedAds[element.category.name]) {
+                      this.categorizedAds[element.category.name] = [];
+                    }
+                    this.categorizedAds[element.category.name].push(
+                      adData.data
+                    );
+
+                    this.categoryService
+                      .getCategoryById(adData.data.category_id)
+                      .subscribe((category) => {
+                        if (
+                          !category ||
+                          !category.data ||
+                          !category.data.model_fields
+                        ) {
+                          return;
+                        }
+                        const modelFields = category.data.model_fields;
+                        const queryParams = { model: category.data.model };
+
+                        if (
+                          this.document.defaultView &&
+                          this.document.defaultView.localStorage
+                        ) {
+                          const accessToken =
+                            this.document.defaultView.localStorage.getItem(
+                              'loggedInUserToken'
+                            );
+                          this.settingService
+                            .getSettings(accessToken!, queryParams)
+                            .subscribe(
+                              (setting) => {
+                                if (!setting || !setting.data) {
+                                  return;
+                                }
+                                const transformedFields = Object.keys(
+                                  modelFields
+                                ).map((key) => ({
+                                  value: key,
+                                  label: modelFields[key].label,
+                                  setting: key,
+                                }));
+
+                                transformedFields.forEach(
+                                  (field: {
+                                    value: string;
+                                    label: any;
+                                    setting: string;
+                                  }) => {
+                                    const matchedSetting = setting.data.find(
+                                      (settingItem: { name: string }) =>
+                                        settingItem.name === field.value
+                                    );
+                                    if (matchedSetting) {
+                                      if (
+                                        adData.data.additional &&
+                                        adData.data.additional[field.value]
+                                      ) {
+                                        field.setting =
+                                          matchedSetting.content[
+                                            adData.data.additional[field.value]
+                                          ];
+                                        //console.log('jj', field.setting);
+                                        //console.log('Transformed f', matchedSetting);
+                                      } /*  else {
+                                              console.error(`No setting found for key '${field.value}' in data.data.additional`);
+                                          } */
+                                    }
+                                  }
+                                );
+
+                                this.transformedField = transformedFields;
+                                adData.data.additional = transformedFields;
+                              },
+                              (error) => {
+                                console.error(
+                                  'Error fetching settings:',
+                                  error
+                                );
+                              }
+                            );
+                        }
+                      });
+                  });
+              });
+            });
+        }
+      }
+      const jobs = 'ad_jobs';
+
+      this.categorizedAds = {};
     }
-    this.convertAdsToArray();
-  }
+    // Define the desired order
+    const desiredOrder = [
+      'Ventes immobilières',
+      'Voitures',
+      'Locations',
+      'Électroménagers',
+      'Téléphone & objets connectés',
+      'Vêtements',
+    ];
 
+    // Method to sort categories based on desired order
+    const sortedCategorizedAds: any = {};
+
+    // Sort categories according to the defined order
+    desiredOrder.forEach((categoryName) => {
+      if (this.categorizedAds[categoryName]) {
+        sortedCategorizedAds[categoryName] = this.categorizedAds[categoryName];
+      }
+    });
+
+    // Update the instance variable
+    this.categorizedAds = sortedCategorizedAds;
+
+    //this.categoryService.getAdsByCategory()
+    this.convertAdsToArray();
+    console.log('categorizedAds', this.categorizedAds);
+  }
   checkScreenWidth() {
     if (isPlatformBrowser(this.platformId)) {
       this.isScreenSmall = window.innerWidth < 1600 && window.innerWidth > 992;

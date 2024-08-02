@@ -180,11 +180,13 @@
                                     <a
                                       class="product-name mb-10"
                                       [href]="'/modifier-annonce/' + ad.id"
-                                      >{{ ad.title }}</a
                                     >
+                                      {{ ad.title | slice : 0 : 20
+                                      }}{{ ad.title.length > 20 ? "..." : "" }}
+                                    </a>
                                   </h6>
                                   <span class="font-small text-muted">{{
-                                    ad.created_at
+                                    this.extractDate(ad.created_at)
                                   }}</span>
                                 </td>
                                 <td class="price" data-title="Prix">
@@ -309,6 +311,45 @@
                           </p-dialog>
                         </div>
                       </div>
+                    </div>
+
+                    <div
+                      class="pagination-area mt-20 mb-20"
+                      *ngIf="ads.length > 0"
+                    >
+                      <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-start">
+                          <li
+                            class="page-item"
+                            [class.disabled]="currentPage === 1"
+                          >
+                            <a
+                              class="page-link"
+                              (click)="changePage(currentPage - 1)"
+                              ><i class="fi-rs-arrow-small-left"></i
+                            ></a>
+                          </li>
+                          <li
+                            *ngFor="let page of getPagesArray()"
+                            class="page-item"
+                            [class.active]="page === currentPage"
+                          >
+                            <a class="page-link" (click)="changePage(page)">{{
+                              page
+                            }}</a>
+                          </li>
+                          <li
+                            class="page-item"
+                            [class.disabled]="currentPage === totalPages"
+                          >
+                            <a
+                              class="page-link"
+                              (click)="changePage(currentPage + 1)"
+                              ><i class="fi-rs-arrow-small-right"></i
+                            ></a>
+                          </li>
+                        </ul>
+                      </nav>
                     </div>
                   </div>
                 </div>
