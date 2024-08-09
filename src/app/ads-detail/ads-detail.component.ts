@@ -80,7 +80,9 @@ export class AdsDetailComponent implements OnInit {
       this.isScreenphone = window.innerWidth < 500;
     }
   }
+  userId: number | null = null;  
   addToFavorites(ad: any): void {
+    
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
 
@@ -228,6 +230,8 @@ export class AdsDetailComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.userId = Number(localStorage.getItem('loggedInUserId'));
+
     this.responsiveOptions = [
       {
         breakpoint: '1024px',
@@ -480,8 +484,8 @@ export class AdsDetailComponent implements OnInit {
             const innerObservables: Observable<any>[] = [];
             const userId = localStorage.getItem('loggedInUserId');
 
-            this.annonceService
-              .getAdsWithFavoris(Number(userId))
+            this.categoryService
+              .getAdsWithFavoris(Number(userId),this.adDetail.category_id)
               .subscribe((adsData) => {
                 let relatedAdsTemp: any[] = [];
                 let count = 0;

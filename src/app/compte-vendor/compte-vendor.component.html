@@ -75,14 +75,14 @@
               </p>
             </div>
           </div>
-          <div class="col-lg-4-5">
+          <div class="col-lg-4-6">
             <div class="row">
               <div
                 [ngClass]="{
                   'col-lg-2 col-md-6 col-6': isScreenphone,
                   'col-lg-2 col-md-6 col-12': !isScreenphone
                 }"
-                *ngFor="let ad of ads"
+                *ngFor="let ad of paginatedAds"
               >
                 <div
                   class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
@@ -181,24 +181,17 @@
             <nav aria-label="Page navigation example">
               <ul class="pagination justify-content-start">
                 <li class="page-item" [class.disabled]="currentPage === 1">
-                  <a class="page-link" (click)="changePage(currentPage - 1)"
-                    ><i class="fi-rs-arrow-small-left"></i
-                  ></a>
+                  <a class="page-link" (click)="changePage(currentPage - 1)">
+                    <i class="fi-rs-arrow-small-left"></i>
+                  </a>
                 </li>
-                <li
-                  *ngFor="let page of getPagesArray()"
-                  class="page-item"
-                  [class.active]="page === currentPage"
-                >
+                <li *ngFor="let page of getPagesArray()" class="page-item" [class.active]="page === currentPage">
                   <a class="page-link" (click)="changePage(page)">{{ page }}</a>
                 </li>
-                <li
-                  class="page-item"
-                  [class.disabled]="currentPage === totalPages"
-                >
-                  <a class="page-link" (click)="changePage(currentPage + 1)"
-                    ><i class="fi-rs-arrow-small-right"></i
-                  ></a>
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                  <a class="page-link" (click)="changePage(currentPage + 1)">
+                    <i class="fi-rs-arrow-small-right"></i>
+                  </a>
                 </li>
               </ul>
             </nav>

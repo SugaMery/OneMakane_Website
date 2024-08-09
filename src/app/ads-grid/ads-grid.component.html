@@ -490,7 +490,7 @@
                 'col-lg-2 col-md-6 col-12': !isScreenphone,
                 'col-6': isScreenphone
               }"
-              *ngFor="let ad of ads | slice : 0 : 4"
+              *ngFor="let ad of paginatedAds "
             >
               <div
                 class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
@@ -704,23 +704,23 @@
           </div>
         </div>
         <div class="sidebar-widget price_range range mb-30">
-          <h5 class="section-title style-1 mb-30">Filter by price</h5>
+          <h5 class="section-title style-1 mb-30">Filtrer par prix</h5>
           <div class="slider">
             <div class="range-slider">
-              <span class="rangeValues">{{ displayValue }}</span>
+              <span class="rangeValues">{{ price1 }} DH - {{ price2 }} DH</span>              
               <input
                 [(ngModel)]="price1"
                 (input)="getVals()"
-                min="500"
-                max="1000000"
+                [min]="minPrice"
+                [max]="maxPrice"
                 step="500"
                 type="range"
               />
               <input
                 [(ngModel)]="price2"
                 (input)="getVals()"
-                min="500"
-                max="1000000"
+                [min]="minPrice"
+                [max]="maxPrice"
                 step="500"
                 type="range"
               />

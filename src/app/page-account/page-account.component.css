@@ -31911,7 +31911,21 @@ label {
 }
 
 @media only screen and (max-width: 500px) {
-  ::ng-deep .custom-dialog {
+  .custom-dialog {
     width: 20rem !important;
   }
+}
+
+
+@media only screen and (max-width: 768px){
+  ::ng-deep .shopping-summery .form-check-label {
+    display: flex; 
+}
+}
+
+
+@media only screen and (min-width: 768px){
+  ::ng-deep .p-element.ng-trigger.ng-trigger-animation.ng-tns-c566989842-0.p-fluid.p-dialog.p-component.p-dialog-draggable.p-dialog-resizable.ng-star-inserted {
+    width: 26rem !important; 
+}
 }

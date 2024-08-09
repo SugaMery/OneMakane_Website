@@ -7,3 +7,330 @@
     padding-left: calc(var(--bs-gutter-x)* .5);
     margin-top: var(--bs-gutter-y);
 }
+
+
+::ng-deep .row.g-0 > *{
+
+    width: initial !important;
+}
+
+
+::ng-deep .col-auto {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    width: auto !important;
+}
+
+::ng-deep .chat-conversation .conversation-list .ctext-wrap-content {
+    padding: 12px 20px;
+    /* background-color: #ECFFEC; */
+    border-radius: 8px 8px 8px 0;
+    color: #fff;
+    position: relative;
+    background: linear-gradient(45deg, #3BB77E, #3BB77E);
+}
+
+::ng-deep .mb-0 {
+    margin-bottom: 0 !important;
+    color: white;
+    font-weight: 500;
+}
+
+::ng-deep .chat-conversation .conversation-list .ctext-wrap-content:before {
+    content: "";
+    position: absolute;
+    border: 5px solid transparent;
+    border-left-color: #3BB77E;
+    border-top-color: #3BB77E;
+    left: 0;
+    right: auto;
+    bottom: -10px;
+}
+
+::ng-deep .chat-conversation .list-unstyled .right .conversation-list .ctext-wrap .ctext-wrap-content {
+    -webkit-box-ordinal-group: 3;
+    -ms-flex-order: 2;
+    order: 2;
+    background-color: #f5f7fb !important;
+    color: #343a40 !important;
+    text-align: right;
+    border-radius: 8px 8px 0 8px;
+    background: linear-gradient(45deg, #f5f7fb, #f5f7fb);
+}
+
+::ng-deep .chat-conversation .list-unstyled .right .conversation-list .ctext-wrap .ctext-wrap-content p {
+    color: #343a40 !important;
+}
+
+
+::ng-deep .chat-conversation .list-unstyled .right .conversation-list .ctext-wrap .ctext-wrap-content .chat-time {
+    text-align: right !important;
+    color: #7a7f9a !important;
+}
+
+::ng-deep .p-lg-4 {
+    padding: 1rem !important;
+}
+
+@media (min-width: 992px) {
+    ::ng-deep .border-top {
+        padding: 1rem !important;
+    }
+}
+
+/* ::ng-deep .chat-conversation {
+    height: 50vh !important;
+}
+ */
+/* ::ng-deep .chat-leftsidebar {
+    height: 75vh !important;
+}
+ */
+/* ::ng-deep .side-menu {
+    height: 75vh !important;
+    min-height: 570px;
+}
+ */
+@media (min-width: 992px) {
+    ::ng-deep .chat-leftsidebar.left {
+        min-width: 300px;
+        max-width: 380px;
+    }
+}
+
+::ng-deep .slider-nav-thumbnails div.slick-slide {
+    width: 200px !important;
+}
+
+::ng-deep .social-links a {
+    text-align: center;
+    float: left;
+    width: 50px;
+    height: 50px;
+    border: 2px solid #57e68e;
+    border-radius: 100%;
+    margin-right: 7px;
+    /*space between*/
+    display: flex;
+    align-items: flex-start;
+    transition: all 0.4s;
+    -webkit-transition: all 0.4s;
+}
+
+.social-links a img {
+    font-size: 20px;
+    align-self: center;
+    color: #909090;
+    transition: all 0.4s;
+    -webkit-transition: all 0.4s;
+    margin: 0 auto;
+}
+
+.social-links a img::before {
+    display: inline-block;
+    text-decoration: none;
+}
+
+.social-links a:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.social-links a:hover i {
+    color: #fff;
+}
+
+::ng-deep
+
+/* CSS for the grid layout */
+.row1 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    /* Adjust the minmax value to change the minimum width of each column */
+    gap: 20px;
+    /* Adjust the gap between grid items */
+}
+
+::ng-deep .column1 {
+    width: 100%;
+}
+
+::ng-deep
+
+/* CSS for the images */
+.grid-image {
+    width: 100%;
+    height: 350px !important;
+    border: 2px solid #ddd;
+    /* Border around the images */
+    border-radius: 5px;
+    /* Rounded corners for the border */
+    object-fit: cover;
+    /* Ensure the image covers the entire space */
+}
+
+::ng-deep .linksS a {
+    text-align: center;
+    float: left;
+    width: 100px;
+    height: 100px;
+    border: 2px solid #57e68e;
+    border-radius: 100%;
+    margin-right: 7px;
+    display: flex;
+    align-items: flex-start;
+    transition: all 0.4s;
+    -webkit-transition: all 0.4s;
+}
+
+::ng-deep .linksS a img {
+    font-size: 20px;
+    align-self: center;
+    color: #909090;
+    transition: all 0.4s;
+    -webkit-transition: all 0.4s;
+    margin: 0 auto;
+}
+
+::ng-deep .linksS a img::before {
+    display: inline-block;
+    text-decoration: none;
+}
+
+::ng-deep .linksS a:hover {
+    background: #57e68e2a;
+}
+
+::ng-deep .linksS a:hover i {
+    color: #fff;
+}
+
+::ng-deep .comments-area .comment-list .single-comment img {
+    min-width: 70px;
+    max-width: 70px;
+
+}
+
+
+/* Style for full-width image */
+::ng-deep .full-width-image {
+    width: 100%;
+    /* Take full width */
+    height: auto;
+    /* Maintain aspect ratio */
+    display: block;
+    /* Ensure block display */
+    margin-bottom: 10px;
+    /* Add some margin for spacing */
+}
+
+/* Style for grid images */
+::ng-deep .grid-image {
+    width: 100%;
+    /* Take full width of parent container */
+    height: auto;
+    /* Maintain aspect ratio */
+    display: block;
+    /* Ensure block display */
+    margin-bottom: 10px;
+    /* Add some margin for spacing */
+}
+
+/* Additional styles for grid layout */
+::ng-deep .row1 {
+    display: flex;
+    /* Use flexbox for grid layout */
+    flex-wrap: wrap;
+    /* Allow wrapping to next row */
+}
+
+::ng-deep .column1 {
+    flex: 1;
+    /* Distribute space equally among columns */
+    max-width: calc(50% - 10px);
+    /* Maximum width of each column (50% - margin) */
+    margin-right: 10px;
+    /* Margin between columns */
+    margin-bottom: 10px;
+    /* Margin between rows */
+}
+
+/* Clearfix for grid layout */
+::ng-deep .row1::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+::ng-deep .banner-img.style-2 {
+    height: 520px !important;
+}
+
+::ng-deep .product-cart-wrap .product-img-action-wrap .product-img-zoom a img {
+    /* height: 300px; */
+    object-fit: cover;
+}
+
+::ng-deep .avatar {
+    height: 4rem !important;
+    width: 4rem !important;
+}
+
+::ng-deep .pSetting {
+    margin-bottom: 0rem !important;
+}
+
+::ng-deep table td,
+table th {
+    padding: 10px 0px !important;
+}
+
+::ng-deep .pe-1 {
+    padding-right: 1rem !important;
+}
+
+::ng-deep .chat-list.list li a:hover {
+    background-color: #e6ebf5 !important;
+}
+
+::ng-deep .chat-list.list li.active a {
+    background-color: #e6ebf5 !important;
+}
+
+::ng-deep .chat-leftsidebar {
+    background-color: #f5f7fb !important;
+}
+
+::ng-deep .avatar-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ccc;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    /* Ensures the initials are in uppercase */
+}
+
+
+.container {
+    max-width: 90% !important;
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      max-width: 100% !important;
+    }
+    .chat-leftsidebar.into {
+display: none !important;
+    }
+  }
+  
+
+
+
+  

@@ -93,7 +93,6 @@ export class AdsGridComponent {
   currentPage = 1;
   totalPages = 1;
   filteredAds: any[] = [];
-  adsPerPage = 10;
   sortOption = 'featured';
   searchTitle: string = '';
   originalAds: any[] = [];
@@ -116,7 +115,44 @@ export class AdsGridComponent {
       window.addEventListener('resize', () => this.checkScreenWidth());
     }
   }
+  adsPerPage = 10;
 
+  getPagesArray(): number[] {
+    return Array.from({ length: this.totalPages }, (v, k) => k + 1);
+  }
+  setPriceRange(): void {
+    if (this.ads.length > 0) {
+      this.minPrice = Math.min(...this.ads.map(ad => ad.price));
+      this.maxPrice = Math.max(...this.ads.map(ad => ad.price));
+      this.price1 = this.minPrice;
+      this.price2 = this.maxPrice;
+    }
+  }
+  changePage(page: number): void {
+    console.log("Changing to page: ", page); // Debug log
+    if (page < 1 || page > this.totalPages) {
+      return;
+    }
+    this.currentPage = page;
+    this.paginateAds();
+  }
+
+  changeAdsPerPage(count: number): void {
+    console.log("Changing ads per page to: ", count); // Debug log
+    this.adsPerPage = count;
+    this.currentPage = 1;
+    this.paginateAds();
+  }
+  paginatedAds :any = [];
+  paginateAds(): void {
+    this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
+    console.log("Total pages: ", this.totalPages); // Debug log
+    const startIndex = (this.currentPage - 1) * this.adsPerPage;
+    const endIndex = startIndex + this.adsPerPage;
+    console.log("Paginating ads from index ", startIndex, " to ", endIndex); // Debug log
+    this.paginatedAds = this.ads.slice(startIndex, endIndex);
+    console.log("Paginated ads: ", this.paginatedAds); // Debug log
+  }
   mobileHeaderActive(): void {
     console.log('rrrrrrtttttt');
     const navbarTrigger2 = this.el.nativeElement.querySelector(
@@ -165,32 +201,13 @@ export class AdsGridComponent {
   displayValue: string = '';
 
   getVals(): void {
-    let slide1 = this.price1;
-    let slide2 = this.price2;
+    const minValue = Math.min(this.price1, this.price2);
+    const maxValue = Math.max(this.price1, this.price2);
 
-    if (slide1 > slide2) {
-      [slide1, slide2] = [slide2, slide1];
-    }
-
-    this.displayValue = `DH${slide1} - DH${slide2}`;
-
-    // Call the method to get ads by category with the price range
-    this.categoryService
-      .getAdsByCategory(Number(this.categoryId), {
-        'price-min': slide1,
-        'price-max': slide2,
-      })
-      .subscribe(
-        (data) => {
-          console.log('Ads data helllo:', data);
-          this.ads = [];
-          this.ads = data.data;
-          // Handle the received ads data here
-        },
-        (error) => {
-          console.error('Error fetching ads:', error);
-        }
-      );
+    this.ads = this.originalAds.filter(ad => ad.price >= minValue && ad.price <= maxValue);
+    this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
+    this.currentPage = 1;
+    this.paginateAds();
   }
   addToFavorites(ad: any): void {
     const userId = localStorage.getItem('loggedInUserId');
@@ -379,10 +396,11 @@ export class AdsGridComponent {
   }
   getAdsList(): void {
     //console.log('adsff', this.allCategoriesSameParent);
+    const userId = localStorage.getItem('loggedInUserId');
+
     console.log('gogoogoggogoff');
     if (this.allCategoriesSameParent.length == 0) {
       console.log('gogoogoggogoff');
-      const userId = localStorage.getItem('loggedInUserId');
       this.categoryService
         .getAdsWithFavoris(Number(userId), Number(this.categoryId))
         .subscribe((datas) => {
@@ -402,38 +420,44 @@ export class AdsGridComponent {
               const detailedAd = data.data;
               console.log('gogoogoggogoffttttt');
               this.ads.push(detailedAd);
+              console.log('Filtered ads:', this.ads);
+              this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
+              this.setPriceRange();
+              this.paginateAds();
               this.originalAds.push(detailedAd);
             });
+ 
           });
         });
     } else {
-      for (let i = 0; i < this.allCategoriesSameParent.length; i++) {
-        console.log('gogoogoggogo');
-        this.annonceService.getAds().subscribe((datas) => {
-          let ads = datas.data.filter(
-            (ad: { category_id: number }) =>
-              ad.category_id === this.allCategoriesSameParent[i].id
-          );
-          let adsProcessed = 0;
+      this.categoryService
+      .getAdsWithFavoris(Number(userId), Number(this.categoryId))
+      .subscribe((datas) => {
+        console.log('gogoogoggogo',this.categoryId,datas);
 
-          this.originalAds = [];
+        let ads = datas.data;
+        let adsProcessed = 0;
 
-          ads.forEach((element: { id: string }) => {
-            this.annonceService.getAdById(element.id).subscribe((data) => {
-              adsProcessed++;
-              const detailedAd = data.data;
-              console.log('gogoogoggogofftttttiii');
+        this.originalAds = [];
 
-              this.ads.push(detailedAd);
-              this.originalAds.push(detailedAd);
-              // console.log('adssss', this.ads, this.originalAds);
-              if (this.searchTitle) {
-                this.filterAdsByTitle(this.searchTitle);
-              }
-            });
+        ads.forEach((element: { id: string }) => {
+          this.annonceService.getAdById(element.id).subscribe((data) => {
+            adsProcessed++;
+            const detailedAd = data.data;
+            console.log('gogoogoggogofftttttiii');
+
+            this.ads.push(detailedAd);
+            this.originalAds.push(detailedAd);
+            this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
+            this.setPriceRange();
+            this.paginateAds();
+            // console.log('adssss', this.ads, this.originalAds);
+            if (this.searchTitle) {
+              this.filterAdsByTitle(this.searchTitle);
+            }
           });
         });
-      }
+      });
     }
   }
 
@@ -504,6 +528,10 @@ export class AdsGridComponent {
     // Reset ads to originalAds if searchTerm is empty
     if (searchTerm === '') {
       this.ads = [...this.originalAds];
+      console.log('Filtered ads:', this.ads);
+      this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
+      this.setPriceRange();
+      this.paginateAds();
       this.applyFilters(); // Apply any existing filters
     } else {
       // Filter ads based on searchTerm
@@ -746,7 +774,10 @@ export class AdsGridComponent {
         // Handle the response here
         console.log('Ads:', response);
         this.ads = response.data;
-
+        console.log('Filtered ads:', this.ads);
+        this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
+        this.setPriceRange();
+        this.paginateAds();
         // Close the sidebar after applying the filter
         this.closeSidebar();
       },
@@ -1020,24 +1051,6 @@ export class AdsGridComponent {
     }
   }
 
-  changePage(page: number): void {
-    if (page < 1 || page > this.totalPages) {
-      return;
-    }
-    this.currentPage = page;
-    this.paginateAds();
-  }
-
-  paginateAds(): void {
-    this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
-    const startIndex = (this.currentPage - 1) * this.adsPerPage;
-    const endIndex = startIndex + this.adsPerPage;
-    this.ads = this.ads.slice(startIndex, endIndex);
-  }
-
-  getPagesArray(): number[] {
-    return Array.from({ length: this.totalPages }, (v, k) => k + 1);
-  }
 
   changeSortOption(option: string): void {
     this.sortOption = option;
@@ -1084,9 +1097,5 @@ export class AdsGridComponent {
     return this.sortOptionsTranslation[option] || option;
   }
 
-  changeAdsPerPage(count: number): void {
-    this.adsPerPage = count;
-    this.currentPage = 1;
-    this.paginateAds();
-  }
+
 }

@@ -444,18 +444,36 @@
 
             <!-- Message Button -->
             <a
+            *ngIf="adDetail.user_id !== userId; else modifyButton"
+            class="btn"
+            href="/chat/{{ adDetail.id }}"
+            style="
+              width: 100%;
+              border-radius: 2rem;
+              margin-top: 1rem;
+              background: linear-gradient(45deg, #5ed0f2, #1d4ed8) !important;
+            "
+          >
+            <i class="fi fi-rr-messages"></i>
+            Contacter le vendeur
+          </a>
+          
+          <ng-template #modifyButton>
+            <a
               class="btn"
-              href="/chat/{{ adDetail.id }}"
+              [href]="'/modifier-annonce/' + adDetail.id"
               style="
                 width: 100%;
                 border-radius: 2rem;
                 margin-top: 1rem;
-                background: linear-gradient(45deg, #5ed0f2, #1d4ed8) !important;
-              "
+                background: linear-gradient(45deg,#d58c42,#FDC040) !important;    "
+              
             >
-              <i class="fi fi-rr-messages"></i>
-              Contacter le vendeur
+              <i class="fi fi-rr-edit"></i>
+              Modifier mon annonce
             </a>
+          </ng-template>
+          
           </div>
           <div
             class="col-xl-4 primary-sidebar mt-30"
@@ -506,23 +524,40 @@
               </h5>
 
               <ul>
+
+                
+
                 <a
-                  class="btn"
-                  href=""
-                  style="
-                    width: 100%;
-                    border-radius: 2rem;
-                    margin-top: 1rem;
-                    background: linear-gradient(
-                      45deg,
-                      #5ed0f2,
-                      #1d4ed8
-                    ) !important;
-                  "
-                  [href]="'/chat/' + adDetail.id"
-                  ><i class="fi fi-rr-messages"></i>
-                  Message
-                </a>
+  *ngIf="adDetail.user_id !== userId; else modifyButton"
+  class="btn"
+  [href]="'/chat/' + adDetail.id"
+  style="
+    width: 100%;
+    border-radius: 2rem;
+    margin-top: 1rem;
+    background: linear-gradient(45deg, #5ed0f2, #1d4ed8) !important;
+  "
+>
+  <i class="fi fi-rr-messages"></i>
+  Contacter le vendeur 
+</a>
+
+<ng-template #modifyButton>
+  <a
+    class="btn"
+    [href]="'/modifier-annonce/' + adDetail.id"
+
+    style="
+      width: 100%;
+      border-radius: 2rem;
+      margin-top: 1rem;
+      background: linear-gradient(45deg,#d58c42,#FDC040) !important;    "
+  >
+    <i class="fi fi-rr-edit"></i>
+    Modifier mon annonce
+  </a>
+</ng-template>
+
               </ul>
             </div>
 

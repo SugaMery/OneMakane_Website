@@ -72,7 +72,6 @@ export class CompteVendorComponent {
   currentPage = 1;
   totalPages = 1;
   ads: any[] = [];
-  adsPerPage = 10;
   isScreenSmall!: boolean;
   isScreenphone: boolean = false;
   sortOption = 'featured';
@@ -95,21 +94,36 @@ export class CompteVendorComponent {
       window.addEventListener('resize', () => this.checkScreenWidth());
     }
   }
+  adsPerPage = 10;
+
+  getPagesArray(): number[] {
+    return Array.from({ length: this.totalPages }, (v, k) => k + 1);
+  }
+
   changePage(page: number): void {
+    console.log("Changing to page: ", page); // Debug log
     if (page < 1 || page > this.totalPages) {
       return;
     }
     this.currentPage = page;
     this.paginateAds();
   }
+
+  changeAdsPerPage(count: number): void {
+    console.log("Changing ads per page to: ", count); // Debug log
+    this.adsPerPage = count;
+    this.currentPage = 1;
+    this.paginateAds();
+  }
+  paginatedAds :any = [];
   paginateAds(): void {
     this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
+    console.log("Total pages: ", this.totalPages); // Debug log
     const startIndex = (this.currentPage - 1) * this.adsPerPage;
     const endIndex = startIndex + this.adsPerPage;
-    this.ads = this.ads.slice(startIndex, endIndex);
-  }
-  getPagesArray(): number[] {
-    return Array.from({ length: this.totalPages }, (v, k) => k + 1);
+    console.log("Paginating ads from index ", startIndex, " to ", endIndex); // Debug log
+    this.paginatedAds = this.ads.slice(startIndex, endIndex);
+    console.log("Paginated ads: ", this.paginatedAds); // Debug log
   }
   addToFavorites(ad: any): void {
     const userId = localStorage.getItem('loggedInUserId');
@@ -242,19 +256,16 @@ export class CompteVendorComponent {
     return this.sortOptionsTranslation[option] || option;
   }
 
-  changeAdsPerPage(count: number): void {
-    this.adsPerPage = count;
-    this.currentPage = 1;
-    this.paginateAds();
-  }
+
 
   getAdsList(): void {
-    this.annonceService.getAds().subscribe((datas) => {
-      let ads = datas.data;
+    this.annonceService.getAllAdsWithUser(Number(this.userId)).subscribe((datas) => {
+      let ads = datas;
       let adsProcessed = 0;
-
+  
       this.originalAds = [];
-
+      this.ads = []; // Reset this.ads before processing
+  
       ads.forEach((element: { id: string }) => {
         this.annonceService.getAdById(element.id).subscribe((data) => {
           adsProcessed++;
@@ -263,17 +274,19 @@ export class CompteVendorComponent {
             this.ads.push(detailedAd);
             this.originalAds.push(detailedAd);
           }
-
+          console.log('Filtered ads:', this.ads);
+          this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
+          this.paginateAds();
           // Check if all ads have been processed
           if (adsProcessed === ads.length) {
             // Now this.ads and this.originalAds should contain filtered ads
-            console.log('Filtered ads:', this.ads);
+
           }
         });
       });
     });
   }
-
+  
   userId!: string;
   uuId!: string;
 

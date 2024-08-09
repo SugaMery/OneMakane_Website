@@ -233,9 +233,10 @@ export class FavoisComponent {
 
     if (userId) {
       this.annonceService
-        .getAdsWithFavoris(Number(userId))
+        .getAllAdsWithFavoris(Number(userId))
         .subscribe((datas) => {
-          const ads = datas.data.filter((ad: any) => ad.favorites.length > 0);
+          console.log('favoriririris',datas)
+          const ads = datas.filter((ad: any) => ad.favorites.length > 0);
           let adsProcessed = 0;
 
           this.originalAds = [];

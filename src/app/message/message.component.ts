@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ChatService } from '../chat.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
@@ -39,6 +39,7 @@ export class MessageComponent {
   ) {}
 
   ngOnInit(): void {
+    this.checkMobileView();
     this.senderId = Number(this.getFromLocalStorage('loggedInUserId'));
     this.route.paramMap.subscribe((params) => {
       this.ad_id = params.get('ad_id');
@@ -53,6 +54,7 @@ export class MessageComponent {
   toggleShowMore() {
     this.showMore = !this.showMore;
   }
+  
   private initializeChat(): void {
     const userId = this.getFromLocalStorage('loggedInUserId');
     const accessToken = this.getFromLocalStorage('loggedInUserToken');
@@ -400,96 +402,83 @@ export class MessageComponent {
       console.error('Access token is not found in localStorage');
     }
   }
+  isMobileView: boolean = false;
+  showMenu: boolean = true;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    this.checkMobileView();
+  }
+
+  checkMobileView() {
+    this.isMobileView = window.innerWidth <= 768;
+  }
 
   onConversationClick(conversation: any): void {
     this.ad_id = conversation;
+
     const accessToken = this.getFromLocalStorage('loggedInUserToken');
     this.ad_conversation = conversation;
     this.activeConversation = conversation; // Set the clicked conversation as active
     const maxLength = 100; // Set your desired max length for short description
     if (this.ad_conversation?.ad?.description) {
       if (this.ad_conversation.ad.description.length > maxLength) {
-        this.shortDescription = this.ad_conversation.ad.description.slice(
-          0,
-          maxLength
-        );
+        this.shortDescription = this.ad_conversation.ad.description.slice(0, maxLength);
         this.longDescription = this.ad_conversation.ad.description.slice(0);
       } else {
         this.shortDescription = this.ad_conversation.ad.description;
       }
     }
 
-    this.annonceService
-      .getAdById(this.ad_conversation?.ad?.id)
-      .subscribe((data) => {
-        //this.adDetail = data.data;
-        this.categoryService
-          .getCategoryById(data.data.category_id)
-          .subscribe((category) => {
-            const modelFields = category.data.model_fields;
-            const queryParams = { model: category.data.model };
+    this.annonceService.getAdById(this.ad_conversation?.ad?.id).subscribe((data) => {
+      this.categoryService.getCategoryById(data.data.category_id).subscribe((category) => {
+        const modelFields = category.data.model_fields;
+        const queryParams = { model: category.data.model };
 
-            this.settingService
-              .getSettings(accessToken!, queryParams)
-              .subscribe(
-                (setting) => {
-                  if (setting.data) {
-                    const transformedFields = Object.keys(modelFields).map(
-                      (key) => ({
-                        value: key,
-                        label: modelFields[key].label,
-                        setting: key,
-                      })
-                    );
+        this.settingService.getSettings(accessToken!, queryParams).subscribe(
+          (setting) => {
+            if (setting.data) {
+              const transformedFields = Object.keys(modelFields).map((key) => ({
+                value: key,
+                label: modelFields[key].label,
+                setting: key,
+              }));
 
-                    transformedFields.forEach(
-                      (field: {
-                        value: string;
-                        label: any;
-                        setting: string;
-                      }) => {
-                        const matchedSetting = setting.data.find(
-                          (settingItem: { name: string }) =>
-                            settingItem.name === field.value
-                        );
-                        if (matchedSetting) {
-                          if (
-                            data.data.additional &&
-                            data.data.additional[field.value]
-                          ) {
-                            field.setting =
-                              matchedSetting.content[
-                                data.data.additional[field.value]
-                              ];
-                            console.log('jj', field.setting);
-                            console.log('Transformed f', matchedSetting);
-                          } else {
-                            console.error(
-                              `No setting found for key '${field.value}' in data.data.additional`
-                            );
-                          }
-                        }
-                      }
-                    );
-                    this.transformedField = transformedFields;
-                    console.log(
-                      'Transformed fields with updated labels:',
-                      transformedFields
-                    );
+              transformedFields.forEach((field) => {
+                const matchedSetting = setting.data.find((settingItem: { name: string }) => settingItem.name === field.value);
+                if (matchedSetting) {
+                  if (data.data.additional && data.data.additional[field.value]) {
+                    field.setting = matchedSetting.content[data.data.additional[field.value]];
                   } else {
-                    console.error('No data found in settings.');
+                    console.error(`No setting found for key '${field.value}' in data.data.additional`);
                   }
-                },
-                (error) => {
-                  console.error('Error fetching settings:', error);
                 }
-              );
-          });
-        console.log('datarrr', data);
+              });
+              this.transformedField = transformedFields;
+            } else {
+              console.error('No data found in settings.');
+            }
+          },
+          (error) => {
+            console.error('Error fetching settings:', error);
+          }
+        );
       });
+    });
 
     this.fetchMessages(conversation.id);
+
+    // Hide menu and show chat for mobile view
+    if (this.isMobileView) {
+      this.showMenu = false;
+    }
   }
+
+  toggleMenu() {
+    this.showMenu = !this.showMenu;
+  }
+
+
 
   sendMessage(): void {
     const accessToken = this.getFromLocalStorage('loggedInUserToken');

@@ -42,9 +42,9 @@ export class PageAccountComponent implements OnInit {
   ) {}
   settings: any;
   ads: any[] = [];
-  currentPage: number = 1;
   itemsPerPage: number = 5;
-  totalPages!: number;
+  currentPage = 1;
+  totalPages = 1;
   ngAfterViewInit() {
     this.route.fragment.subscribe((fragment) => {
       if (fragment === 'orders') {
@@ -52,10 +52,7 @@ export class PageAccountComponent implements OnInit {
       }
     });
   }
-  get paginatedAds() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.ads.slice(startIndex, startIndex + this.itemsPerPage);
-  }
+
 
   activateTab(tabId: string, contentId: string) {
     const tabElement = document.getElementById(tabId);
@@ -73,34 +70,41 @@ export class PageAccountComponent implements OnInit {
       contentElement.classList.add('active', 'show');
     }
   }
-  confirmDeletion(ad: any) {
-    // Get the selected reason
+  reasons: Array<{id: number, long_name: string}> = [];
+  getDeleteReasons() {
+    this.annonceService.getDeleteReasons(this.accessToken!).subscribe((datas: any) => {
+      this.reasons = datas.data;
+    });
+  }
+  
+  confirmDeletion(ad: any): void {
     const selectedReason = (
       document.querySelector('input[name="reason"]:checked') as HTMLInputElement
     ).value;
+  
     this.annonceService
       .deleteAd(ad.id, ad.uuid, Number(selectedReason), this.accessToken!)
-      .subscribe((data) => {
-        console.log('Onemakan', data);
-        this.ads = this.ads.filter((ad) => ad !== this.selectedAd);
-      });
-
-    // Perform the deletion logic based on the selected reason
-    switch (selectedReason) {
-      case '1':
-        console.log('Vendu sur Onemakan', ad);
-        break;
-      case '2':
-        console.log('Vendu par un autre moyen');
-        break;
-      case '3':
-        console.log('Ne souhaite plus vendre');
-        break;
-    }
-
+      .subscribe(
+        (data) => {
+          console.log('Ad deleted successfully', data);
+  
+          // Remove the ad from the list
+          this.ads = this.ads.filter((existingAd) => existingAd.id !== ad.id);
+  
+          // Update the total pages and pagination
+          this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
+          this.paginateAds();
+        },
+        (error) => {
+          console.error('Error deleting ad:', error);
+        }
+      );
+  
     // Close the dialog
     this.adDialog = false;
   }
+  
+  
 
   ngOnInit(): void {
     this.userId = localStorage.getItem('loggedInUserId');
@@ -108,15 +112,18 @@ export class PageAccountComponent implements OnInit {
     //this.loadAds('pending');
     //this.loadAds('approved');
     //this.loadAds('all');
-
-    this.annonceService
+    this.getDeleteReasons();
+    console.log(this.reasons);
+        this.annonceService
       .getAllAdsWithUser(Number(this.userId))
       .subscribe((data) => {
         this.ads = data;
-        console.log('adddddd', data);
+        console.log("Ads loaded: ", this.ads); // Debug log
+        this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
+        this.paginateAds();
       });
 
-    this.paginateAds();
+  
     this.userService
       .getUserInfoById(Number(this.userId!), this.accessToken!)
       .subscribe((data) => {
@@ -195,19 +202,21 @@ export class PageAccountComponent implements OnInit {
               })
           );
           console.log('adssssssthis', this.ads, data);
-          this.totalPages = Math.ceil(this.ads.length / this.itemsPerPage);
+          //this.totalPages = Math.ceil(this.ads.length / this.itemsPerPage);
         })
         .catch((error) => {
           console.error('Error loading ads:', error);
         });
     });
   }
-  adsPerPage = 10;
+  adsPerPage = 6;
 
   getPagesArray(): number[] {
     return Array.from({ length: this.totalPages }, (v, k) => k + 1);
   }
+
   changePage(page: number): void {
+    console.log("Changing to page: ", page); // Debug log
     if (page < 1 || page > this.totalPages) {
       return;
     }
@@ -215,11 +224,21 @@ export class PageAccountComponent implements OnInit {
     this.paginateAds();
   }
 
+  changeAdsPerPage(count: number): void {
+    console.log("Changing ads per page to: ", count); // Debug log
+    this.adsPerPage = count;
+    this.currentPage = 1;
+    this.paginateAds();
+  }
+  paginatedAds :any = [];
   paginateAds(): void {
     this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
+    console.log("Total pages: ", this.totalPages); // Debug log
     const startIndex = (this.currentPage - 1) * this.adsPerPage;
     const endIndex = startIndex + this.adsPerPage;
-    this.ads = this.ads.slice(startIndex, endIndex);
+    console.log("Paginating ads from index ", startIndex, " to ", endIndex); // Debug log
+    this.paginatedAds = this.ads.slice(startIndex, endIndex);
+    console.log("Paginated ads: ", this.paginatedAds); // Debug log
   }
   extractDate(dateString: string): string {
     const date = new Date(dateString);
@@ -240,6 +259,7 @@ export class PageAccountComponent implements OnInit {
   logout(): void {
     this.authService.logout();
   }
+
   adDialog: boolean = false;
   selectedAd: any; // To store the selected ad object
   productDialog: boolean = false;
