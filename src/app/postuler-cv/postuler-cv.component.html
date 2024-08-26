@@ -1,0 +1,309 @@
+<p>postuler-cv works!</p>
+<app-header></app-header>
+<main class="main pages">
+  <div class="page-header breadcrumb-wrap">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Accueil</a>
+        <span></span> Mon Compte <span></span> Modifier l'annonce
+      </div>
+    </div>
+  </div>
+  <div class="page-content pb-15">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-10 m-auto">
+          <div class="container mb-80 mt-10">
+            <!--     <div class="row">
+              <div class="col-lg-8 mb-40">
+                <h1 class="heading-2 mb-10"></h1>
+                      <div class="d-flex justify-content-between">
+                  <h6 class="text-body">
+                    There are <span class="text-brand">3</span> products in your cart
+                  </h6>
+                </div> 
+              </div>
+            </div> -->
+            <div class="row">
+              <div class="col-lg-8">
+                <div class="row">
+                  <div class="col-lg-8 mb-sm-15 mb-lg-0 mb-md-3">
+                    <!--             <div class="toggle_info">
+                      <span
+                        ><i class="fi-rs-user mr-10"></i
+                        ><span class="text-muted font-lg"
+                          >Already have an account?</span
+                        >
+                        <a
+                          href="#loginform"
+                          data-bs-toggle="collapse"
+                          class="collapsed font-lg"
+                          aria-expanded="false"
+                          >Click here to login</a
+                        ></span
+                      >
+                    </div> -->
+                    <div
+                      class="panel-collapse collapse login_form"
+                      id="loginform"
+                    >
+                      <div class="panel-body">
+                        <p class="mb-30 font-sm">
+                          If you have shopped with us before, please enter your
+                          details below. If you are a new customer, please
+                          proceed to the Billing &amp; Shipping section.
+                        </p>
+                        <form method="post">
+                          <div class="form-group">
+                            <input
+                              type="text"
+                              name="email"
+                              placeholder="Username Or Email"
+                            />
+                          </div>
+                          <div class="form-group">
+                            <input
+                              type="password"
+                              name="password"
+                              placeholder="Password"
+                            />
+                          </div>
+                          <div class="login_footer form-group">
+                            <div class="chek-form">
+                              <div class="custome-checkbox">
+                                <input
+                                  class="form-check-input"
+                                  type="checkbox"
+                                  name="checkbox"
+                                  id="remember"
+                                  value=""
+                                />
+                                <label class="form-check-label" for="remember"
+                                  ><span>Remember me</span></label
+                                >
+                              </div>
+                            </div>
+                            <a href="#">Forgot password?</a>
+                          </div>
+                          <div class="form-group">
+                            <button class="btn btn-md" name="login">
+                              Log in
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <a
+                    href="/page-account#orders"
+                    class="btn btn-fill-out btn-block mt-30"
+                    style="
+                      background: linear-gradient(45deg, #6b7280, #6b7280);
+                      width: auto;
+                      margin-bottom: 1rem;
+                    "
+                    ><i class="fi-rs-sign-in ml-15"></i> Retourner</a
+                  >
+                  <div
+                    class="d-flex align-items-end justify-content-between mb-30"
+                  >
+                    <span
+                      *ngIf="ad.validation_status == 'approved'"
+                      class="stock-status in-stock mb-0"
+                      [ngClass]="'p-tag p-tag-success'"
+                    >
+                      Publié le : {{ formatPublishedAt(ad.published_at) }}
+                    </span>
+                  </div>
+                  <h3>Contacter l'annonceur</h3>
+                  <form (ngSubmit)="onSubmit()">
+                    <div class="row">
+                      <div class="form-group col-lg-12">
+                        <label for="title">Votre adresse mail : </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="title"
+                          placeholder="Titre"
+                          [(ngModel)]="userData.email"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-lg-6">
+                        <label for="price">Votre nom / prénom :</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="price"
+                          placeholder="Prix"
+                          [(ngModel)]="userData.full_name"
+                          required
+                        />
+                      </div>
+                      <div class="form-group col-lg-6">
+                        <label for="postal_code">Téléphone :</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="postal_code"
+                          placeholder="Code Postal"
+                          [(ngModel)]="userData.telephone"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="row shipping_calculator">
+                      <div class="form-group col-lg-6">
+                        <label for="price">Ville : </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="city"
+                          placeholder="Ville"
+                          [(ngModel)]="userData.city"
+                          required
+                        />
+                      </div>
+                      <div class="form-group col-lg-6">
+                        <label for="price">Prix</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="city"
+                          placeholder="Ville"
+                          [(ngModel)]="ad.price"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="form-group col-lg-12">
+                        <label for="description">Motivation : </label>
+                        <textarea
+                          class="form-control"
+                          rows="50"
+                          name="description"
+                          placeholder="Description"
+                          [(ngModel)]="description"
+                          required
+                        ></textarea>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="border p-40 cart-totals ml-30 mb-50">
+                  <div
+                    class="d-flex align-items-end justify-content-between mb-30"
+                  >
+                    <h4>Joindre CV</h4>
+                    <h6 class="text-muted">Nombre: {{ ad.medias?.length }}</h6>
+                    <div>
+                      <button
+                        class="btn btn-primary btn-modifier btn-sm top-0 start-0 m-2"
+                        (click)="fileInput.click()"
+                        style="
+                          border-radius: 1rem;
+                          background-color: #3bb77e !important;
+                        "
+                      >
+                        <i
+                          class="fi fi-rr-plus-small"
+                          style="font-size: large"
+                        ></i>
+                      </button>
+                      <input
+                        #fileInput
+                        id="files"
+                        name="files[]"
+                        type="file"
+                        class="file-input"
+                        (change)="onFileSelected($event)"
+                        style="display: none"
+                        accept=".pdf,.doc,.docx,image/*"
+                      />
+                    </div>
+                  </div>
+                  <h6>
+                    <p
+                      *ngIf="maxFiles"
+                      class="fw-bold"
+                      style="color: #ff3737; font-size: small"
+                    >
+                      Vous ne pouvez télécharger que jusqu'à 3 fichiers.
+                    </p>
+                  </h6>
+                  <div class="divider-2 mb-30"></div>
+                  <div class="table-responsive order_table checkout">
+                    <table class="table no-border">
+                      <tbody>
+                        <tr *ngFor="let media of ad.medias; let i = index">
+                          <td>
+                            <div class="position-relative">
+                              <ng-container [ngSwitch]="media?.type">
+                                <img
+                                  *ngSwitchCase="'image'"
+                                  [src]="media?.url"
+                                  alt="Image de l'annonce"
+                                  style="width: 100%"
+                                />
+                                <img
+                                  *ngSwitchCase="'pdf'"
+                                  [src]="media?.url"
+                                  alt="PDF Placeholder"
+                                  style="width: 100%"
+                                />
+                                <img
+                                  *ngSwitchCase="'doc'"
+                                  [src]="media?.url"
+                                  alt="Word Placeholder"
+                                  style="width: 100%"
+                                />
+                              </ng-container>
+
+                              <div class="image-overlay">
+                                <button
+                                  class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2"
+                                  (click)="deleteFile(i)"
+                                >
+                                  <i class="pi pi-trash"></i>
+                                </button>
+                                <button
+                                  class="btn btn-primary btn-modifier btn-sm position-absolute top-0 start-0 m-2"
+                                  (click)="replaceFile(i)"
+                                >
+                                  <i class="pi pi-pencil"></i>
+                                </button>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="payment ml-30">
+                  <a
+                    (click)="modifier()"
+                    class="btn btn-fill-out btn-block mt-30"
+                    >Envoyer<i class="fi-rs-sign-out ml-15"></i
+                  ></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<app-footer></app-footer>
+<app-preloader></app-preloader>

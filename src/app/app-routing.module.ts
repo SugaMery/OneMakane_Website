@@ -26,6 +26,7 @@ import { AdsGridComponent } from './ads-grid/ads-grid.component';
 import { FavoisComponent } from './favois/favois.component';
 import { CompteVendorComponent } from './compte-vendor/compte-vendor.component';
 import { MessageComponent } from './message/message.component';
+import { PostulerCvComponent } from './postuler-cv/postuler-cv.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -41,6 +42,11 @@ const routes: Routes = [
   {
     path: 'modifier-annonce/:id',
     component: EditAdsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'postuler-annonce/:id',
+    component: PostulerCvComponent,
     canActivate: [AuthGuard],
   },
   {
