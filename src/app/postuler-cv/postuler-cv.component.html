@@ -9,7 +9,7 @@
       </div>
     </div>
   </div>
-  <div class="page-content pb-15">
+  <div class="page-content pb-15 pt-50">
     <div class="container">
       <div class="row">
         <div class="col-lg-10 m-auto">
@@ -96,28 +96,9 @@
                   </div>
                 </div>
                 <div class="row">
-                  <a
-                    href="/page-account#orders"
-                    class="btn btn-fill-out btn-block mt-30"
-                    style="
-                      background: linear-gradient(45deg, #6b7280, #6b7280);
-                      width: auto;
-                      margin-bottom: 1rem;
-                    "
-                    ><i class="fi-rs-sign-in ml-15"></i> Retourner</a
-                  >
-                  <div
-                    class="d-flex align-items-end justify-content-between mb-30"
-                  >
-                    <span
-                      *ngIf="ad.validation_status == 'approved'"
-                      class="stock-status in-stock mb-0"
-                      [ngClass]="'p-tag p-tag-success'"
-                    >
-                      Publié le : {{ formatPublishedAt(ad.published_at) }}
-                    </span>
+                  <div class="single-header style-2">
+                    <h1>Contacter l'annonceur</h1>
                   </div>
-                  <h3>Contacter l'annonceur</h3>
                   <form (ngSubmit)="onSubmit()">
                     <div class="row">
                       <div class="form-group col-lg-12">
@@ -169,15 +150,94 @@
                         />
                       </div>
                       <div class="form-group col-lg-6">
-                        <label for="price">Prix</label>
+                        <label for="price">Code Postal</label>
                         <input
                           type="text"
                           class="form-control"
                           name="city"
-                          placeholder="Ville"
-                          [(ngModel)]="ad.price"
+                          placeholder="Code Postal"
+                          [(ngModel)]="userData.address"
                           required
                         />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <!-- Niveau d'étude Select Menu -->
+                      <div class="col-md-6 col-sm-12">
+                        <div class="select-menu">
+                          <label>Niveau d'étude</label>
+                          <div
+                            class="select-btn"
+                            style="margin-bottom: 1rem"
+                            (click)="toggleStudyLevelOptions($event)"
+                          >
+                            <span class="sBtn-text">
+                              <div style="display: flex; align-items: center">
+                                {{
+                                  selectedStudyLevel
+                                    ? selectedStudyLevel.label
+                                    : "Choisissez"
+                                }}
+                              </div>
+                            </span>
+                            <i class="bx bx-chevron-down"></i>
+                          </div>
+                          <ul
+                            class="options"
+                            [class.active]="studyLevelOptionsVisible"
+                            style="font-size: smaller"
+                          >
+                            <li
+                              class="option"
+                              *ngFor="let option of studyLevelOptions"
+                              [value]="option.value"
+                              (click)="selectStudyLevel(option)"
+                            >
+                              <span class="d-inline-flex align-items-center">{{
+                                option.label
+                              }}</span>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+
+                      <!-- Années d'expérience Select Menu -->
+                      <div class="col-md-6 col-sm-12">
+                        <div class="select-menu">
+                          <label>Années d'expérience</label>
+                          <div
+                            class="select-btn"
+                            style="margin-bottom: 1rem"
+                            (click)="toggleExperienceOptions($event)"
+                          >
+                            <span class="sBtn-text">
+                              <div style="display: flex; align-items: center">
+                                {{
+                                  selectedExperience
+                                    ? selectedExperience.label
+                                    : "Choisissez"
+                                }}
+                              </div>
+                            </span>
+                            <i class="bx bx-chevron-down"></i>
+                          </div>
+                          <ul
+                            class="options"
+                            [class.active]="experienceOptionsVisible"
+                            style="font-size: smaller"
+                          >
+                            <li
+                              class="option"
+                              *ngFor="let option of experienceOptions"
+                              [value]="option.value"
+                              (click)="selectExperience(option)"
+                            >
+                              <span class="d-inline-flex align-items-center">{{
+                                option.label
+                              }}</span>
+                            </li>
+                          </ul>
+                        </div>
                       </div>
                     </div>
 
@@ -191,6 +251,7 @@
                           placeholder="Description"
                           [(ngModel)]="description"
                           required
+                          style="padding-top: 1rem"
                         ></textarea>
                       </div>
                     </div>
@@ -203,7 +264,8 @@
                     class="d-flex align-items-end justify-content-between mb-30"
                   >
                     <h4>Joindre CV</h4>
-                    <h6 class="text-muted">Nombre: {{ ad.medias?.length }}</h6>
+                    <!--                     <h6 class="text-muted">Nombre: {{ ad.medias?.length }}</h6>
+ -->
                     <div>
                       <button
                         class="btn btn-primary btn-modifier btn-sm top-0 start-0 m-2"
@@ -213,9 +275,10 @@
                           background-color: #3bb77e !important;
                         "
                       >
+                        Télécharger le cv
                         <i
-                          class="fi fi-rr-plus-small"
-                          style="font-size: large"
+                          class="fi fi-rr-upload"
+                          style="font-size: large; margin-left: 0.5rem"
                         ></i>
                       </button>
                       <input
@@ -236,47 +299,90 @@
                       class="fw-bold"
                       style="color: #ff3737; font-size: small"
                     >
-                      Vous ne pouvez télécharger que jusqu'à 3 fichiers.
+                      Vous ne pouvez télécharger que un seule fichier.
                     </p>
                   </h6>
                   <div class="divider-2 mb-30"></div>
                   <div class="table-responsive order_table checkout">
                     <table class="table no-border">
                       <tbody>
-                        <tr *ngFor="let media of ad.medias; let i = index">
+                        <tr *ngFor="let media of medias; let i = index">
                           <td>
-                            <div class="position-relative">
-                              <ng-container [ngSwitch]="media?.type">
-                                <img
-                                  *ngSwitchCase="'image'"
-                                  [src]="media?.url"
-                                  alt="Image de l'annonce"
-                                  style="width: 100%"
-                                />
-                                <img
-                                  *ngSwitchCase="'pdf'"
-                                  [src]="media?.url"
-                                  alt="PDF Placeholder"
-                                  style="width: 100%"
-                                />
-                                <img
-                                  *ngSwitchCase="'doc'"
-                                  [src]="media?.url"
-                                  alt="Word Placeholder"
-                                  style="width: 100%"
-                                />
-                              </ng-container>
+                            <div class="row" *ngIf="media?.type !== 'image'">
+                              <!-- 4-column layout for the media image -->
+                              <div class="col-2">
+                                <div class="position-relative">
+                                  <ng-container [ngSwitch]="media?.type">
+                                    <img
+                                      *ngSwitchCase="'image'"
+                                      [src]="media?.url || media"
+                                      alt="Image de l'annonce"
+                                      style="width: 100%"
+                                    />
+                                    <a
+                                      *ngSwitchCase="'pdf'"
+                                      [href]="media?.url"
+                                      target="_blank"
+                                    >
+                                      <img
+                                        src="../../assets/images/PDF.png"
+                                        alt="PDF Placeholder"
+                                        style="width: 100%"
+                                      />
+                                    </a>
+                                    <a
+                                      *ngSwitchCase="'doc'"
+                                      [href]="media?.url"
+                                      target="_blank"
+                                    >
+                                      <img
+                                        src="../../assets/images/WORD.png"
+                                        alt="Word Placeholder"
+                                        style="width: 100%"
+                                      />
+                                    </a>
+                                  </ng-container>
+                                </div>
+                              </div>
 
+                              <!-- 6-column layout for the file name -->
+                              <div class="col-10 d-flex align-items-center">
+                                <span>{{ media?.name }}</span>
+                              </div>
+                              <!-- Delete icon -->
+                              <span
+                                class="delete-icon"
+                                (click)="onDelete(media)"
+                              >
+                                &times;
+                              </span>
+                            </div>
+
+                            <div
+                              class="position-relative"
+                              *ngIf="media?.type === 'image'"
+                            >
+                              <img
+                                [src]="media?.url || media"
+                                alt="Image de l'annonce"
+                                style="width: 100%"
+                              />
                               <div class="image-overlay">
                                 <button
                                   class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2"
-                                  (click)="deleteFile(i)"
+                                  (click)="deleteImage(i)"
                                 >
                                   <i class="pi pi-trash"></i>
                                 </button>
                                 <button
                                   class="btn btn-primary btn-modifier btn-sm position-absolute top-0 start-0 m-2"
-                                  (click)="replaceFile(i)"
+                                  (click)="replaceImage(i)"
+                                >
+                                  <i class="pi pi-pencil"></i>
+                                </button>
+                                <button
+                                  class="btn btn-primary btn-modifier btn-sm position-absolute top-0 start-0 m-2"
+                                  (click)="replaceImage(i)"
                                 >
                                   <i class="pi pi-pencil"></i>
                                 </button>

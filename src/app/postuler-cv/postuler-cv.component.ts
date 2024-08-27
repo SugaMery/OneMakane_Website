@@ -372,22 +372,7 @@ export class PostulerCvComponent implements OnInit {
       weekHeader: 'Sm',
     });
   }
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    const targetElement = event.target as HTMLElement;
-    const isCategoryOpen = !!targetElement.closest('.select-btn');
-    const isStateOpen = !!targetElement.closest('.select-menu .select-btn');
 
-    if (!isCategoryOpen && !isStateOpen) {
-      this.optionsVisible = false;
-    }
-    if (!this.isDescendant(targetElement, 'select-menu')) {
-      // Close all select menus
-      this.settings.forEach((setting: any) => {
-        setting.optionsVisible = false;
-      });
-    }
-  }
   private isDescendant(element: HTMLElement, className: string): boolean {
     let currentElement: HTMLElement | null = element;
     while (currentElement) {
@@ -1041,13 +1026,15 @@ export class PostulerCvComponent implements OnInit {
       );
     }
   }
+  medias: Array<{ type: string; url: SafeResourceUrl | string; name: string }> =
+    [];
 
   onFileSelected(event: any): void {
-    const maxFilesAllowed = 3;
+    const maxFilesAllowed = 1;
     const files: FileList = event.target.files;
 
     if (files && files.length > 0) {
-      if (this.ad.medias.length + files.length > maxFilesAllowed) {
+      if (this.medias.length + files.length > maxFilesAllowed) {
         this.maxFiles = true;
         return;
       }
@@ -1055,6 +1042,7 @@ export class PostulerCvComponent implements OnInit {
       for (let i = 0; i < files.length; i++) {
         const file: File = files[i];
         const fileType: string = file.type;
+        const fileName: string = file.name;
         let fileCategory: string;
         let fileUrl: SafeResourceUrl;
 
@@ -1062,14 +1050,22 @@ export class PostulerCvComponent implements OnInit {
           const reader: FileReader = new FileReader();
           reader.onload = (e) => {
             const imageDataURL: string = e.target!.result as string;
-            this.ad.medias.push({ type: 'image', url: imageDataURL });
+            this.medias.push({
+              type: 'image',
+              url: imageDataURL,
+              name: fileName,
+            });
           };
           reader.readAsDataURL(file);
         } else if (fileType === 'application/pdf') {
           const url = '../../assets/images/PDF.png'; // Placeholder image for PDF
           fileCategory = 'pdf';
           fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-          this.ad.medias.push({ type: fileCategory, url: fileUrl });
+          this.medias.push({
+            type: fileCategory,
+            url: fileUrl,
+            name: fileName,
+          });
         } else if (
           fileType === 'application/msword' ||
           fileType ===
@@ -1078,16 +1074,85 @@ export class PostulerCvComponent implements OnInit {
           const url = '../../assets/images/WORD.png'; // Placeholder image for Word
           fileCategory = 'doc';
           fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-          this.ad.medias.push({ type: fileCategory, url: fileUrl });
+          this.medias.push({
+            type: fileCategory,
+            url: fileUrl,
+            name: fileName,
+          });
         }
+        this.selectedFiles.push(file); // Add file to selectedFiles array
       }
     }
   }
 
+  // Static options
+  studyLevelOptions = [
+    { value: 'highschool', label: 'Baccalauréat' },
+    { value: 'bachelor', label: 'Licence' },
+    { value: 'master', label: 'Master' },
+    { value: 'doctorate', label: 'Doctorat' },
+  ];
+
+  experienceOptions = [
+    { value: '0-1', label: '0-1 an' },
+    { value: '2-5', label: '2-5 ans' },
+    { value: '6-10', label: '6-10 ans' },
+    { value: '10+', label: '10+ ans' },
+  ];
+
+  // Variables for selected options and visibility
+  selectedStudyLevel: any = null;
+  selectedExperience: any = null;
+  studyLevelOptionsVisible = false;
+  experienceOptionsVisible = false;
+
+  // Methods to handle toggling and selection
+  toggleStudyLevelOptions(event: Event) {
+    event.stopPropagation(); // Prevent click event from bubbling up to the document
+    this.closeOtherMenus('studyLevel');
+    this.studyLevelOptionsVisible = !this.studyLevelOptionsVisible;
+  }
+
+  toggleExperienceOptions(event: Event) {
+    event.stopPropagation(); // Prevent click event from bubbling up to the document
+    this.closeOtherMenus('experience');
+    this.experienceOptionsVisible = !this.experienceOptionsVisible;
+  }
+
+  selectStudyLevel(option: any) {
+    this.selectedStudyLevel = option;
+    this.studyLevelOptionsVisible = false;
+  }
+
+  selectExperience(option: any) {
+    this.selectedExperience = option;
+    this.experienceOptionsVisible = false;
+  }
+
+  // Close other menus based on the current open menu
+  closeOtherMenus(openMenu: 'studyLevel' | 'experience') {
+    if (openMenu === 'studyLevel') {
+      this.experienceOptionsVisible = false;
+    } else if (openMenu === 'experience') {
+      this.studyLevelOptionsVisible = false;
+    }
+  }
+
+  // Close menus when clicking outside the component
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    const selectMenus = document.querySelectorAll('.select-menu');
+    selectMenus.forEach((menu) => {
+      if (!menu.contains(target)) {
+        this.studyLevelOptionsVisible = false;
+        this.experienceOptionsVisible = false;
+      }
+    });
+  }
   deleteFile(index: number) {
-    if (index > -1 && index < this.ad.medias.length) {
-      this.ad.medias.splice(index, 1);
-      this.selectedFiles.splice(index, 1);
+    if (index > -1 && index < this.medias.length) {
+      this.medias.splice(index, 1);
     }
   }
 
@@ -1105,7 +1170,11 @@ export class PostulerCvComponent implements OnInit {
         if (fileType.startsWith('image/')) {
           reader.onload = (e) => {
             const imageDataURL: string = e.target!.result as string;
-            this.ad.medias[index] = { type: 'image', url: imageDataURL };
+            this.medias[index] = {
+              type: 'image',
+              url: imageDataURL,
+              name: file.name,
+            };
           };
           reader.readAsDataURL(file);
         } else if (
@@ -1116,7 +1185,7 @@ export class PostulerCvComponent implements OnInit {
         ) {
           const url = URL.createObjectURL(file);
           const fileType = file.type === 'application/pdf' ? 'pdf' : 'doc';
-          this.ad.medias[index] = { type: fileType, url };
+          this.medias[index] = { type: fileType, url, name: file.name };
         }
       }
     });
@@ -1151,43 +1220,28 @@ export class PostulerCvComponent implements OnInit {
         }
       );
   }
-
+  media: number = 0;
   uploadFilesAndUpdateAnnonce(accessToken: string): void {
-    const mediaIds: string[] = this.uploadedImages
-      .filter((image: any) => image.url)
-      .map((image: any) => image.id);
+    const mediaIds: string[] = [];
 
+    // Upload each selected file
     Promise.all(
       this.selectedFiles.map((file) =>
         this.annonceService.uploadFile(file, accessToken).then((response) => {
-          mediaIds.push(response.data.id);
+          mediaIds.push(response.data.id); // Collect the media ID after uploading
         })
       )
     )
       .then(() => {
+        // Create the ad data using the media IDs
         const annonceData = this.createAnnonceData(mediaIds);
-        this.annonceService
-          .updateAnnonce(this.adId, this.ad.uuid, annonceData, accessToken)
-          .subscribe(
-            () => {
-              const settingADS: { [key: string]: any } =
-                this.buildSettingsData();
+        console.log('annonceData created', annonceData, this.medias);
 
-              this.annonceService
-                .UpdateSetting(this.adId, settingADS, accessToken)
-                .subscribe(
-                  () => {
-                    // Handle successful settings update
-                    window.location.href = '/page-account#orders';
-                  },
-                  (error) => {
-                    console.error('Error updating settings:', error);
-                    if (error.error.message === "This AdBook doesn't exist") {
-                      this.createSetting(settingADS, accessToken);
-                    }
-                  }
-                );
-            },
+        // Update the ad with the new data
+        this.annonceService
+          .CreateAdsJobs(this.adId, annonceData, accessToken)
+          .subscribe(
+            () => {},
             (error) => {
               console.error('Error updating annonce:', error);
             }
@@ -1237,18 +1291,16 @@ export class PostulerCvComponent implements OnInit {
 
   createAnnonceData(mediaIds: string[]): any {
     return {
-      user_id: this.ad.user.id,
-      category_id: this.ad.category.id,
-      title: this.ad.title,
-      description: this.ad.description,
-      state: this.ad.state,
-      urgent: this.ad.urgent,
-      highlighted: this.ad.highlighted,
-      price: parseFloat(this.ad.price),
-      city: this.ad.city,
-      postal_code: this.ad.postal_code,
-      medias: { _ids: mediaIds },
-      validation_status: 'pending',
+      user_id: this.userId,
+      description: this.description,
+      cv_media_id: mediaIds[0],
+      status: 'pending',
+      study_level: this.selectedStudyLevel
+        ? this.selectedStudyLevel.value
+        : null,
+      years_experience: this.selectedExperience
+        ? this.selectedExperience.value
+        : null,
     };
   }
   formatDate(date: Date): string {
@@ -1257,7 +1309,16 @@ export class PostulerCvComponent implements OnInit {
     const day = ('0' + date.getDate()).slice(-2);
     return `${year}-${month}-${day}`;
   }
+  onEdit(media: any): void {
+    // Implement your edit logic here
+    console.log('Edit clicked for media:', media);
+  }
 
+  // Method to handle delete action
+  onDelete(media: any): void {
+    // Implement your delete logic here
+    console.log('Delete clicked for media:', media);
+  }
   parseOptions(
     content: string | StringIndexed
   ): { value: string; label: string }[] {

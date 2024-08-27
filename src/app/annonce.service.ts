@@ -67,7 +67,7 @@ export class AnnonceService {
   uploadFile(file: File, accessToken: string): Promise<any> {
     const formData = new FormData();
     formData.append('media_file', file);
-    //formData.append('media_type','image')
+    formData.append('media_type', 'file');
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${accessToken}`,
@@ -183,6 +183,16 @@ export class AnnonceService {
   ): Observable<any> {
     const url = `${this.apiUrl}/ads/${adId}/${adUuid}`;
     return this.http.patch<any>(url, annonceData, {
+      headers: this.getHeaders(accessToken),
+    });
+  }
+  CreateAdsJobs(
+    adId: string,
+    annonceData: any,
+    accessToken: string
+  ): Observable<any> {
+    const url = `${this.apiUrl}/ads/${adId}/job-appliances`;
+    return this.http.post<any>(url, annonceData, {
       headers: this.getHeaders(accessToken),
     });
   }

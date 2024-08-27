@@ -31918,3 +31918,17 @@ table th {
     color: #3bb77e !important;
     padding-left: 0.5rem;
 }
+
+::ng-deep table td {
+    padding: 10px 20px !important;
+
+}
+
+::ng-deep .delete-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    color: red;
+}
