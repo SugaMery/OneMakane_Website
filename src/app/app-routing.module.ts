@@ -27,6 +27,7 @@ import { FavoisComponent } from './favois/favois.component';
 import { CompteVendorComponent } from './compte-vendor/compte-vendor.component';
 import { MessageComponent } from './message/message.component';
 import { PostulerCvComponent } from './postuler-cv/postuler-cv.component';
+import { MessageApresPostulerComponent } from './message-apres-postuler/message-apres-postuler.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -39,6 +40,8 @@ const routes: Routes = [
   { path: 'account-activation', component: ActivityAccountComponent },
   { path: 'reset-password', component: ForgetPasswordComponent },
   { path: 'reset-password/email', component: ForgetPasswordMessageComponent },
+  { path: 'postuler', component: MessageApresPostulerComponent },
+
   {
     path: 'modifier-annonce/:id',
     component: EditAdsComponent,

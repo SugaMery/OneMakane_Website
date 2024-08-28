@@ -1,4 +1,3 @@
-<p>postuler-cv works!</p>
 <app-header></app-header>
 <main class="main pages">
   <div class="page-header breadcrumb-wrap">
@@ -110,6 +109,7 @@
                           placeholder="Titre"
                           [(ngModel)]="userData.email"
                           required
+                          disabled
                         />
                       </div>
                     </div>
@@ -123,17 +123,19 @@
                           placeholder="Prix"
                           [(ngModel)]="userData.full_name"
                           required
+                          disabled
                         />
                       </div>
                       <div class="form-group col-lg-6">
-                        <label for="postal_code">Téléphone :</label>
+                        <label for="telephone">Téléphone :</label>
                         <input
                           type="text"
                           class="form-control"
-                          name="postal_code"
+                          name="telephone"
                           placeholder="Code Postal"
                           [(ngModel)]="userData.telephone"
                           required
+                          disabled
                         />
                       </div>
                     </div>
@@ -147,17 +149,19 @@
                           placeholder="Ville"
                           [(ngModel)]="userData.city"
                           required
+                          disabled
                         />
                       </div>
                       <div class="form-group col-lg-6">
-                        <label for="price">Code Postal</label>
+                        <label for="postal_code">Code Postal</label>
                         <input
                           type="text"
                           class="form-control"
-                          name="city"
+                          name="postal_code"
                           placeholder="Code Postal"
-                          [(ngModel)]="userData.address"
+                          [(ngModel)]="userData.postal_code"
                           required
+                          disabled
                         />
                       </div>
                     </div>
@@ -198,6 +202,17 @@
                               }}</span>
                             </li>
                           </ul>
+                          <div
+                            *ngIf="studyLevelError"
+                            class="error-message fw-bold"
+                            style="
+                              color: #ff3737;
+                              font-size: small;
+                              margin-bottom: 1rem;
+                            "
+                          >
+                            {{ studyLevelError }}
+                          </div>
                         </div>
                       </div>
 
@@ -237,6 +252,17 @@
                               }}</span>
                             </li>
                           </ul>
+                          <div
+                            *ngIf="experienceError"
+                            class="error-message fw-bold"
+                            style="
+                              color: #ff3737;
+                              font-size: small;
+                              margin-bottom: 1rem;
+                            "
+                          >
+                            {{ experienceError }}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -246,13 +272,21 @@
                         <label for="description">Motivation : </label>
                         <textarea
                           class="form-control"
-                          rows="50"
+                          rows="5"
                           name="description"
                           placeholder="Description"
                           [(ngModel)]="description"
+                          (input)="clearDescriptionError()"
                           required
                           style="padding-top: 1rem"
                         ></textarea>
+                        <div
+                          *ngIf="descriptionError"
+                          class="error-message fw-bold"
+                          style="color: #ff3737; font-size: small"
+                        >
+                          {{ descriptionError }}
+                        </div>
                       </div>
                     </div>
                   </form>
@@ -264,8 +298,6 @@
                     class="d-flex align-items-end justify-content-between mb-30"
                   >
                     <h4>Joindre CV</h4>
-                    <!--                     <h6 class="text-muted">Nombre: {{ ad.medias?.length }}</h6>
- -->
                     <div>
                       <button
                         class="btn btn-primary btn-modifier btn-sm top-0 start-0 m-2"
@@ -275,7 +307,7 @@
                           background-color: #3bb77e !important;
                         "
                       >
-                        Télécharger le cv
+                        Télécharger le CV
                         <i
                           class="fi fi-rr-upload"
                           style="font-size: large; margin-left: 0.5rem"
@@ -299,7 +331,7 @@
                       class="fw-bold"
                       style="color: #ff3737; font-size: small"
                     >
-                      Vous ne pouvez télécharger que un seule fichier.
+                      Vous ne pouvez télécharger qu'un seul fichier.
                     </p>
                   </h6>
                   <div class="divider-2 mb-30"></div>
@@ -309,7 +341,12 @@
                         <tr *ngFor="let media of medias; let i = index">
                           <td>
                             <div class="row" *ngIf="media?.type !== 'image'">
-                              <!-- 4-column layout for the media image -->
+                              <span
+                                class="delete-icon"
+                                (click)="deleteImage(i)"
+                              >
+                                &times;
+                              </span>
                               <div class="col-2">
                                 <div class="position-relative">
                                   <ng-container [ngSwitch]="media?.type">
@@ -345,17 +382,9 @@
                                 </div>
                               </div>
 
-                              <!-- 6-column layout for the file name -->
                               <div class="col-10 d-flex align-items-center">
                                 <span>{{ media?.name }}</span>
                               </div>
-                              <!-- Delete icon -->
-                              <span
-                                class="delete-icon"
-                                (click)="onDelete(media)"
-                              >
-                                &times;
-                              </span>
                             </div>
 
                             <div
@@ -380,12 +409,6 @@
                                 >
                                   <i class="pi pi-pencil"></i>
                                 </button>
-                                <button
-                                  class="btn btn-primary btn-modifier btn-sm position-absolute top-0 start-0 m-2"
-                                  (click)="replaceImage(i)"
-                                >
-                                  <i class="pi pi-pencil"></i>
-                                </button>
                               </div>
                             </div>
                           </td>
@@ -393,14 +416,22 @@
                       </tbody>
                     </table>
                   </div>
+                  <div
+                    *ngIf="cvError"
+                    class="error-message fw-bold"
+                    style="color: #ff3737; font-size: small"
+                  >
+                    {{ cvError }}
+                  </div>
                 </div>
 
                 <div class="payment ml-30">
                   <a
                     (click)="modifier()"
                     class="btn btn-fill-out btn-block mt-30"
-                    >Envoyer<i class="fi-rs-sign-out ml-15"></i
-                  ></a>
+                  >
+                    Envoyer<i class="fi-rs-sign-out ml-15"></i>
+                  </a>
                 </div>
               </div>
             </div>

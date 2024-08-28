@@ -31925,10 +31925,8 @@ table th {
 }
 
 ::ng-deep .delete-icon {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    cursor: pointer;
     font-size: 20px;
-    color: red;
+    color: #ec0319;
+    text-align: right;
+    padding-bottom: -2rem;
 }

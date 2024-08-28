@@ -1036,6 +1036,7 @@ export class PostulerCvComponent implements OnInit {
     if (files && files.length > 0) {
       if (this.medias.length + files.length > maxFilesAllowed) {
         this.maxFiles = true;
+        this.cvError = "Vous ne pouvez télécharger qu'un seul fichier.";
         return;
       }
 
@@ -1082,6 +1083,7 @@ export class PostulerCvComponent implements OnInit {
         }
         this.selectedFiles.push(file); // Add file to selectedFiles array
       }
+      this.cvError = ''; // Clear error if a file is selected
     }
   }
 
@@ -1122,11 +1124,21 @@ export class PostulerCvComponent implements OnInit {
   selectStudyLevel(option: any) {
     this.selectedStudyLevel = option;
     this.studyLevelOptionsVisible = false;
-  }
 
+    // Clear the error message when an option is selected
+    this.studyLevelError = '';
+  }
+  clearDescriptionError() {
+    if (this.description) {
+      this.descriptionError = '';
+    }
+  }
   selectExperience(option: any) {
     this.selectedExperience = option;
     this.experienceOptionsVisible = false;
+
+    // Clear the error message when an option is selected
+    this.experienceError = '';
   }
 
   // Close other menus based on the current open menu
@@ -1195,16 +1207,55 @@ export class PostulerCvComponent implements OnInit {
   description: string | undefined;
   send(): void {}
 
-  modifier(): void {
-    if (typeof localStorage !== 'undefined') {
-      const queryParams = { model: this.selectedOption.model };
-      const accessToken = localStorage.getItem('loggedInUserToken');
+  studyLevelError: string = '';
+  experienceError: string = '';
+  descriptionError: string = '';
+  cvError: string = '';
 
-      if (!accessToken) {
-        console.error('Access token is missing.');
-        return;
+  modifier(): void {
+    let valid = true;
+
+    if (!this.selectedStudyLevel) {
+      this.studyLevelError = "Veuillez sélectionner votre niveau d'étude.";
+      valid = false;
+    } else {
+      this.studyLevelError = '';
+    }
+
+    if (!this.selectedExperience) {
+      this.experienceError = "Veuillez sélectionner vos années d'expérience.";
+      valid = false;
+    } else {
+      this.experienceError = '';
+    }
+
+    if (!this.description || this.description.trim() === '') {
+      this.descriptionError = 'Veuillez remplir le champ de motivation.';
+      valid = false;
+    } else {
+      this.descriptionError = '';
+    }
+
+    if (this.medias.length === 0) {
+      this.cvError = 'Veuillez joindre votre CV.';
+      valid = false;
+    } else {
+      this.cvError = '';
+    }
+
+    if (valid) {
+      if (typeof localStorage !== 'undefined') {
+        const queryParams = { model: this.selectedOption.model };
+        const accessToken = localStorage.getItem('loggedInUserToken');
+
+        if (!accessToken) {
+          console.error('Access token is missing.');
+          return;
+        }
+
+        this.uploadFilesAndUpdateAnnonce(accessToken);
+        window.location.href = '/postuler'; // Redirect to login page
       }
-      this.uploadFilesAndUpdateAnnonce(accessToken);
     }
   }
 
@@ -1528,45 +1579,63 @@ export class PostulerCvComponent implements OnInit {
     // Add any additional logic you need
   }
 
-  deleteImage(index: number) {
-    if (index > -1 && index < this.uploadedImages.length) {
-      const deletedMedia = this.uploadedImages.splice(index, 1)[0];
-      this.selectedFiles = this.selectedFiles.filter((file, i) => i !== index);
-
-      // Check if deletedMedia is already in deletedImages based on its URL
-      const mediaExists = this.deletedImages.some(
-        (media) => media.url === deletedMedia.url
-      );
-
-      if (!mediaExists) {
-        this.deletedImages.push(deletedMedia);
-      }
-    }
-  }
-
-  replaceImage(index: number) {
+  replaceImage(index: number): void {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
-    fileInput.accept = 'image/*,application/pdf,.doc,.docx';
-    fileInput.addEventListener('change', (event: any) => {
-      const files: FileList = event.target.files;
-      if (files && files.length > 0) {
-        const file: File = files[0];
-        const reader: FileReader = new FileReader();
-        reader.onload = (e) => {
-          const mediaDataURL: string = e.target!.result as string;
-          this.uploadedImages[index] = { url: mediaDataURL, type: file.type };
-          const deletedIndex = this.deletedImages.findIndex(
-            (media) => media.url === this.uploadedImages[index].url
-          );
-          if (deletedIndex !== -1) {
-            this.deletedImages.splice(deletedIndex, 1);
-          }
-        };
-        reader.readAsDataURL(file);
-      }
-    });
+    fileInput.accept = '.pdf,.doc,.docx,image/*';
     fileInput.click();
+
+    fileInput.onchange = (event: any) => {
+      const file: File = event.target.files[0];
+
+      if (file) {
+        const fileType: string = file.type;
+        const fileName: string = file.name;
+        let fileCategory: string;
+        let fileUrl: SafeResourceUrl;
+
+        if (fileType.startsWith('image/')) {
+          const reader: FileReader = new FileReader();
+          reader.onload = (e) => {
+            const imageDataURL: string = e.target!.result as string;
+            this.medias[index] = {
+              type: 'image',
+              url: imageDataURL,
+              name: fileName,
+            };
+          };
+          reader.readAsDataURL(file);
+        } else if (fileType === 'application/pdf') {
+          const url = '../../assets/images/PDF.png'; // Placeholder image for PDF
+          fileCategory = 'pdf';
+          fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+          this.medias[index] = {
+            type: fileCategory,
+            url: fileUrl,
+            name: fileName,
+          };
+        } else if (
+          fileType === 'application/msword' ||
+          fileType ===
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ) {
+          const url = '../../assets/images/WORD.png'; // Placeholder image for Word
+          fileCategory = 'doc';
+          fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+          this.medias[index] = {
+            type: fileCategory,
+            url: fileUrl,
+            name: fileName,
+          };
+        }
+        this.selectedFiles[index] = file; // Replace the file in selectedFiles array
+      }
+    };
+  }
+
+  deleteImage(index: number): void {
+    this.medias.splice(index, 1);
+    this.selectedFiles.splice(index, 1);
   }
 
   getStatusClass(status: string): string {
