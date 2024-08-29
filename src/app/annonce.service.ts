@@ -63,7 +63,21 @@ export class AnnonceService {
       headers: this.getHeaders(accessToken),
     });
   }
+  checkAdInJobAppliances(adIds: number[]): Observable<boolean> {
+    const checkObservables = adIds.map((adId) => {
+      return this.http.get(`${this.apiUrl}/ads/${adId}/job-appliances`).pipe(
+        map((response: any) => {
+          // Assuming the API returns a list of job appliances for the given adId
+          return response.length > 0; // True if there are job appliances
+        })
+      );
+    });
 
+    // Combine all the observables using forkJoin and check if any of them returned true
+    return forkJoin(checkObservables).pipe(
+      map((results: boolean[]) => results.some((result) => result === true))
+    );
+  }
   uploadFile(file: File, accessToken: string): Promise<any> {
     const formData = new FormData();
     formData.append('media_file', file);
@@ -175,6 +189,7 @@ export class AnnonceService {
     const url = `${this.apiUrl}/ads/${adId}`;
     return this.http.get<any>(url);
   }
+
   updateAnnonce(
     adId: string,
     adUuid: string,

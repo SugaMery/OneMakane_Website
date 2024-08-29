@@ -444,7 +444,12 @@
 
             <!-- Message Button -->
             <a
-              *ngIf="adDetail.user_id !== userId; else modifyButton"
+              *ngIf="
+                adDetail.user_id !== userId &&
+                adDetail.category.model !== 'ad_jobs' &&
+                adDetail.category.model !== 'ad_house_staff' &&
+                adDetail.category.model !== 'ad_professional_trainings'
+              "
               class="btn"
               href="/chat/{{ adDetail.id }}"
               style="
@@ -458,25 +463,41 @@
               Contacter le vendeur
             </a>
 
-            <ng-template #modifyButton>
-              <a
-                class="btn"
-                [href]="'/modifier-annonce/' + adDetail.id"
-                style="
-                  width: 100%;
-                  border-radius: 2rem;
-                  margin-top: 1rem;
-                  background: linear-gradient(
-                    45deg,
-                    #d58c42,
-                    #fdc040
-                  ) !important;
-                "
-              >
-                <i class="fi fi-rr-edit"></i>
-                Modifier mon annonce
-              </a>
-            </ng-template>
+            <a
+              *ngIf="
+                (adDetail.user_id !== userId &&
+                  adDetail.category.model === 'ad_jobs') ||
+                adDetail.category.model === 'ad_house_staff' ||
+                adDetail.category.model === 'ad_professional_trainings'
+              "
+              class="btn"
+              [href]="'/postuler-annonce/' + adDetail.id"
+              style="
+                width: 100%;
+                border-radius: 2rem;
+                margin-top: 1rem;
+                background: linear-gradient(45deg, #5ed0f2, #1d4ed8) !important;
+              "
+            >
+              <i class="fi fi-rr-messages"></i>
+
+              Postuler à cette offre
+            </a>
+
+            <a
+              *ngIf="adDetail.user_id === userId"
+              class="btn"
+              [href]="'/modifier-annonce/' + adDetail.id"
+              style="
+                width: 100%;
+                border-radius: 2rem;
+                margin-top: 1rem;
+                background: linear-gradient(45deg, #d58c42, #fdc040) !important;
+              "
+            >
+              <i class="fi fi-rr-edit"></i>
+              Modifier mon annonce
+            </a>
           </div>
           <div
             class="col-xl-4 primary-sidebar mt-30"
@@ -530,10 +551,9 @@
                 <a
                   *ngIf="
                     adDetail.user_id !== userId &&
-                      adDetail.category.model !== 'ad_jobs' &&
-                      adDetail.category.model !== 'ad_house_staff' &&
-                      adDetail.category.model !== 'ad_professional_trainings';
-                    else modifyButton
+                    adDetail.category.model !== 'ad_jobs' &&
+                    adDetail.category.model !== 'ad_house_staff' &&
+                    adDetail.category.model !== 'ad_professional_trainings'
                   "
                   class="btn"
                   [href]="'/chat/' + adDetail.id"
@@ -575,25 +595,24 @@
 
                   Postuler à cette offre
                 </a>
-                <ng-template #modifyButton>
-                  <a
-                    class="btn"
-                    [href]="'/modifier-annonce/' + adDetail.id"
-                    style="
-                      width: 100%;
-                      border-radius: 2rem;
-                      margin-top: 1rem;
-                      background: linear-gradient(
-                        45deg,
-                        #d58c42,
-                        #fdc040
-                      ) !important;
-                    "
-                  >
-                    <i class="fi fi-rr-edit"></i>
-                    Modifier mon annonce
-                  </a>
-                </ng-template>
+                <a
+                  *ngIf="adDetail.user_id === userId"
+                  class="btn"
+                  [href]="'/modifier-annonce/' + adDetail.id"
+                  style="
+                    width: 100%;
+                    border-radius: 2rem;
+                    margin-top: 1rem;
+                    background: linear-gradient(
+                      45deg,
+                      #d58c42,
+                      #fdc040
+                    ) !important;
+                  "
+                >
+                  <i class="fi fi-rr-edit"></i>
+                  Modifier mon annonce
+                </a>
               </ul>
             </div>
 

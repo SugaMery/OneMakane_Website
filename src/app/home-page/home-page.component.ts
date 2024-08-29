@@ -426,6 +426,7 @@ export class HomePageComponent implements OnInit {
     this.convertAdsToArray();
     console.log('categorizedAds', this.categorizedAds);
   }
+
   checkScreenWidth() {
     if (isPlatformBrowser(this.platformId)) {
       this.isScreenSmall = window.innerWidth < 1600 && window.innerWidth > 992;
@@ -509,7 +510,7 @@ export class HomePageComponent implements OnInit {
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
-  
+
     if (days > 1) {
       return `${days} jours passés`;
     } else if (days === 1) {
@@ -522,10 +523,11 @@ export class HomePageComponent implements OnInit {
         hour: '2-digit',
         minute: '2-digit',
       });
-      return !this.isScreenphone ? `Aujourd'hui à ${timeString}` : `Auj. à ${timeString}`;
+      return !this.isScreenphone
+        ? `Aujourd'hui à ${timeString}`
+        : `Auj. à ${timeString}`;
     }
   }
-  
 
   getCategories(): void {
     if (this.document.defaultView && this.document.defaultView.localStorage) {

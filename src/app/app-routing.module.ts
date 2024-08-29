@@ -28,6 +28,7 @@ import { CompteVendorComponent } from './compte-vendor/compte-vendor.component';
 import { MessageComponent } from './message/message.component';
 import { PostulerCvComponent } from './postuler-cv/postuler-cv.component';
 import { MessageApresPostulerComponent } from './message-apres-postuler/message-apres-postuler.component';
+import { JobCvsComponent } from './job-cvs/job-cvs.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -47,6 +48,13 @@ const routes: Routes = [
     component: EditAdsComponent,
     canActivate: [AuthGuard],
   },
+
+  {
+    path: 'voir-cvs/:id',
+    component: JobCvsComponent,
+    canActivate: [AuthGuard],
+  },
+
   {
     path: 'postuler-annonce/:id',
     component: PostulerCvComponent,

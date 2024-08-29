@@ -14,11 +14,11 @@ import { SettingService } from '../setting.service';
 type Status = 'approved' | 'pending' | 'draft' | 'rejected';
 
 @Component({
-  selector: 'app-page-account',
-  templateUrl: './page-account.component.html',
-  styleUrl: './page-account.component.css',
+  selector: 'app-job-cvs',
+  templateUrl: './job-cvs.component.html',
+  styleUrl: './job-cvs.component.css',
 })
-export class PageAccountComponent implements OnInit {
+export class JobCvsComponent implements OnInit {
   userInfo: any;
   loggedInUserName: string | undefined;
   userId!: string | null;

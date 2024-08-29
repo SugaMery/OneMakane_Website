@@ -2,6 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
+interface Category {
+  id: string;
+  name: string;
+  children?: Category[];
+}
 
 @Injectable({
   providedIn: 'root',
@@ -115,5 +120,46 @@ export class CategoryService {
   private handleError(error: any): Observable<never> {
     console.error('An error occurred:', error);
     return throwError('Something went wrong');
+  }
+
+  getCategoryTree(): Observable<Category[]> {
+    return this.http
+      .get<{ status: string; message: string; data: any }>(
+        `${this.devApiUrl}/categories/tree-list`
+      )
+      .pipe(
+        map((response) => {
+          if (response.status === 'Success') {
+            return this.transformCategories(response.data);
+          }
+          return [];
+        })
+      );
+  }
+
+  private transformCategories(data: any): Category[] {
+    const categories: Category[] = [];
+    let currentParent: Category | null = null;
+
+    Object.keys(data).forEach((key) => {
+      const value = data[key];
+      if (!value.startsWith('- ')) {
+        // New parent category
+        currentParent = {
+          id: key,
+          name: value,
+          children: [],
+        };
+        categories.push(currentParent);
+      } else if (currentParent) {
+        // Child category
+        currentParent.children!.push({
+          id: key,
+          name: value.replace('- ', ''),
+        });
+      }
+    });
+
+    return categories;
   }
 }

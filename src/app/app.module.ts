@@ -58,6 +58,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { PostulerCvComponent } from './postuler-cv/postuler-cv.component';
 import { SafeUrlPipe } from './safe-url.pipe';
 import { MessageApresPostulerComponent } from './message-apres-postuler/message-apres-postuler.component';
+import { JobCvsComponent } from './job-cvs/job-cvs.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -96,6 +97,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     PostulerCvComponent,
     SafeUrlPipe,
     MessageApresPostulerComponent,
+    JobCvsComponent,
   ],
   imports: [
     BrowserModule,
