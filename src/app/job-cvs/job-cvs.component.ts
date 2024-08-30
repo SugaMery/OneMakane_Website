@@ -11,6 +11,7 @@ import { UserService } from '../user.service';
 import { CategoryService } from '../category.service';
 import { AnnonceService } from '../annonce.service';
 import { SettingService } from '../setting.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 type Status = 'approved' | 'pending' | 'draft' | 'rejected';
 
 @Component({
@@ -30,7 +31,7 @@ export class JobCvsComponent implements OnInit {
   };
   deleteDialog: boolean = false;
   selectedReason: string | null = null;
-
+  cvUrl: SafeResourceUrl;
   constructor(
     private authService: AuthGuard,
     private router: Router,
@@ -38,19 +39,31 @@ export class JobCvsComponent implements OnInit {
     private userService: UserService,
     private categoryService: CategoryService,
     private settingsService: SettingService,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private sanitizer: DomSanitizer
+  ) {
+    // Initialize the iframe with a safe default URL
+    this.cvUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+      '../../assets/Contrat Ecom_V3108 (2).pdf'
+    );
+  }
   settings: any;
   ads: any[] = [];
   itemsPerPage: number = 5;
   currentPage = 1;
   totalPages = 1;
   totalPage = 1;
+  totalPagecv = 1;
 
   ngAfterViewInit() {
     this.route.fragment.subscribe((fragment) => {
       if (fragment === 'orders') {
         this.activateTab('orders-tab', 'orders');
+      }
+    });
+    this.route.fragment.subscribe((fragment) => {
+      if (fragment === 'job-offers') {
+        this.activateTab('job-offers-tab', 'job-offers');
       }
     });
   }
@@ -109,7 +122,30 @@ export class JobCvsComponent implements OnInit {
 
   showJobOffersTab = false;
   categories: any[] = [];
+  jobAppliances: any[] = [];
+  updateCvUrl(url: string) {
+    this.cvUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
   ngOnInit(): void {
+    const adId = this.route.snapshot.paramMap.get('id');
+    const accessToken = localStorage.getItem('loggedInUserToken');
+
+    this.annonceService.getJobAppliances(Number(adId), accessToken!).subscribe(
+      (response) => {
+        this.jobAppliances = response.data; // Assuming the response contains data
+        this.totalPagecv = Math.ceil(
+          this.jobAppliances.length / this.adsPerPage
+        );
+        const startIndex = (this.currentPage - 1) * this.adsPerPage;
+        const endIndex = startIndex + this.adsPerPage;
+        this.paginatedAdsCvs = this.jobAppliances.slice(startIndex, endIndex);
+        console.log('jobAppliances jobAppliances', this.jobAppliances);
+      },
+      (error) => {
+        console.error('Error fetching job appliances:', error);
+      }
+    );
+
     this.categoryService.getCategoryTree().subscribe((data) => {
       this.categories = data;
       console.log('categorient parent', this.categories);
@@ -283,6 +319,8 @@ export class JobCvsComponent implements OnInit {
   }
 
   paginatedAds: any = [];
+  paginatedAdsCvs: any = [];
+
   paginatedAd: any = [];
   filteredAds: any[] = [];
   paginateAds(): void {

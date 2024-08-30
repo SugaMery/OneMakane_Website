@@ -52,6 +52,9 @@ export class PageAccountComponent implements OnInit {
       if (fragment === 'orders') {
         this.activateTab('orders-tab', 'orders');
       }
+      if (fragment === 'job-offers') {
+        this.activateTab('job-offers-tab', 'job-offers');
+      }
     });
   }
 

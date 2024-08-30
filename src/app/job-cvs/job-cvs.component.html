@@ -18,13 +18,28 @@
                 class="tab-content account dashboard-content"
                 [ngClass]="{ 'pl-50': !isPhone() }"
               >
+                <a
+                  href="/page-account#job-offers"
+                  class="btn btn-fill-out btn-block mt-30"
+                  style="
+                    background: linear-gradient(45deg, #6b7280, #6b7280);
+                    width: auto;
+                    margin-bottom: 1rem;
+                  "
+                  ><i class="fi-rs-sign-in ml-15"></i> Retourner</a
+                >
                 <div class="card">
                   <div class="card-header">
-                    <h3 class="mb-0">Ma liste d'offres d'emploi</h3>
+                    <h3 class="mb-0">
+                      Liste des candidats pour cette offre d'emploi
+                    </h3>
                   </div>
                   <div class="card-body">
                     <div class="table-responsive">
                       <div class="table-responsive shopping-summery">
+                        <!-- Message when there are no candidates -->
+
+                        <!-- Table displaying candidates when there are candidates -->
                         <table class="table table-wishlist">
                           <thead>
                             <tr class="main-heading">
@@ -41,178 +56,115 @@
                                   for="exampleCheckbox11"
                                 ></label>
                               </th>
-                              <th scope="col" colspan="2">Annonce</th>
-                              <th scope="col">Prix</th>
-                              <th scope="col">Status</th>
-                              <th scope="col">Action</th>
+                              <th scope="col">Nom Complet</th>
+                              <th scope="col">Email</th>
+                              <th scope="col">Téléphone</th>
+                              <th scope="col">Date de Postulation</th>
+                              <th scope="col">CV</th>
                               <th scope="col" class="end">Supprimé</th>
                             </tr>
                           </thead>
-                          <tbody>
-                            <tr class="pt-30" *ngFor="let ad of paginatedAd">
+                          <tbody *ngIf="paginatedAdsCvs.length > 0">
+                            <tr
+                              *ngFor="let appliance of paginatedAdsCvs"
+                              class="pt-30"
+                            >
                               <td class="custome-checkbox pl-30">
                                 <input
                                   class="form-check-input"
                                   type="checkbox"
                                   name="checkbox"
-                                  id="exampleCheckbox1"
+                                  id="exampleCheckbox{{ appliance.id }}"
                                   value=""
                                 />
                                 <label
                                   class="form-check-label"
-                                  for="exampleCheckbox1"
+                                  for="exampleCheckbox{{ appliance.id }}"
                                 ></label>
                               </td>
-                              <td class="image product-thumbnail pt-40 image">
-                                <img src="{{ ad.medias[0]?.url }}" alt="#" />
-                              </td>
-                              <td class="product-des product-name">
-                                <h6>
-                                  <a
-                                    class="product-name mb-10"
-                                    [href]="'/modifier-annonce/' + ad.id"
-                                  >
-                                    {{ ad.title | slice : 0 : 20
-                                    }}{{ ad.title.length > 20 ? "..." : "" }}
-                                  </a>
-                                </h6>
-                                <span class="font-small text-muted">{{
-                                  extractDate(ad.created_at)
-                                }}</span>
-                              </td>
-                              <td class="price" data-title="Prix">
-                                <h3 class="text-brand">{{ ad.price }} DH</h3>
-                              </td>
-                              <td
-                                class="text-center detail-info"
-                                data-title="Status"
-                              >
-                                <span
-                                  class="stock-status in-stock mb-0"
-                                  [ngClass]="
-                                    getStatusClass(ad.validation_status)
+                              <td>{{ appliance.user.full_name }}</td>
+                              <td>{{ appliance.user.email }}</td>
+                              <td>{{ appliance.user.telephone }}</td>
+                              <td>{{ extractDate(appliance.created_at) }}</td>
+                              <td>
+                                <a
+                                  (click)="
+                                    updateCvUrl(
+                                      'https://medias.onemakan.com/' +
+                                        appliance.c_v.path +
+                                        appliance.c_v.filename +
+                                        '.' +
+                                        appliance.c_v.extension
+                                    )
                                   "
+                                  target="_blank"
+                                  class="appliance"
                                 >
-                                  {{ getStatusInFrench(ad.validation_status) }}
-                                </span>
-                              </td>
-                              <td class="action text-right" data-title="Action">
-                                <a [href]="'/voir-cvs/' + ad.id">
-                                  <button class="btn btn-sm btn-info">
-                                    Voir les CVs
-                                  </button>
+                                  Voir le CV
                                 </a>
                               </td>
                               <td class="text-center" data-title="Supprimer">
-                                <a class="text-body" (click)="showDialog(ad)">
+                                <a
+                                  class="text-body"
+                                  (click)="showDialog(appliance)"
+                                >
                                   <i class="fi-rs-trash"></i>
                                 </a>
                               </td>
                             </tr>
                           </tbody>
+                          <tr *ngIf="paginatedAdsCvs.length === 0">
+                            <td colspan="7" class="text-center">
+                              Aucun candidat n'a postulé pour cette offre
+                              d'emploi.
+                            </td>
+                          </tr>
                         </table>
-                        <p-dialog
-                          [(visible)]="adDialog"
-                          [style]="{ width: '20rem' }"
-                          header="Confirmer la suppression"
-                          [modal]="true"
-                          styleClass="p-fluid"
+
+                        <!-- Pagination -->
+                        <div
+                          class="pagination-area mt-20 mb-20"
+                          *ngIf="paginatedAdsCvs.length > 0"
                         >
-                          <ng-template pTemplate="content">
-                            <div>
-                              <p>
-                                Êtes-vous sûr de vouloir supprimer cette annonce
-                                ?
-                              </p>
-                              <div class="payment_option">
-                                <div *ngIf="reasons.length === 0">
-                                  Aucune raison disponible
-                                </div>
-                                <div
-                                  class="custome-radio"
-                                  *ngFor="let reason of reasons"
+                          <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-start">
+                              <li
+                                class="page-item"
+                                [class.disabled]="currentPage === 1"
+                              >
+                                <a
+                                  class="page-link"
+                                  (click)="changePages(currentPage - 1)"
                                 >
-                                  <input
-                                    class="form-check-input"
-                                    type="radio"
-                                    name="reason"
-                                    [id]="'option' + reason.id"
-                                    [value]="reason.id"
-                                    required
-                                  />
-                                  <label
-                                    class="form-check-label"
-                                    [for]="'option' + reason.id"
-                                    >{{ reason.long_name }}</label
-                                  >
-                                </div>
-                              </div>
-                            </div>
-                          </ng-template>
-
-                          <ng-template pTemplate="footer">
-                            <div style="padding: 1rem !important">
-                              <button
-                                pButton
-                                pRipple
-                                label="Annuler"
-                                icon="pi pi-times"
-                                class="p-button-text"
-                                (click)="adDialog = false"
-                              ></button>
-                              <button
-                                pButton
-                                pRipple
-                                label="Confirmer"
-                                icon="pi pi-check"
-                                class="p-button-danger"
-                                (click)="confirmDeletion(selectedAd)"
-                              ></button>
-                            </div>
-                          </ng-template>
-                        </p-dialog>
+                                  <i class="fi-rs-arrow-small-left"></i>
+                                </a>
+                              </li>
+                              <li
+                                *ngFor="let page of getPagesArrays()"
+                                class="page-item"
+                                [class.active]="page === currentPage"
+                              >
+                                <a
+                                  class="page-link"
+                                  (click)="changePages(page)"
+                                  >{{ page }}</a
+                                >
+                              </li>
+                              <li
+                                class="page-item"
+                                [class.disabled]="currentPage === totalPagecv"
+                              >
+                                <a
+                                  class="page-link"
+                                  (click)="changePages(currentPage + 1)"
+                                >
+                                  <i class="fi-rs-arrow-small-right"></i>
+                                </a>
+                              </li>
+                            </ul>
+                          </nav>
+                        </div>
                       </div>
-                    </div>
-
-                    <div
-                      class="pagination-area mt-20 mb-20"
-                      *ngIf="filteredAds.length > 0"
-                    >
-                      <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-start">
-                          <li
-                            class="page-item"
-                            [class.disabled]="currentPage === 1"
-                          >
-                            <a
-                              class="page-link"
-                              (click)="changePages(currentPage - 1)"
-                            >
-                              <i class="fi-rs-arrow-small-left"></i>
-                            </a>
-                          </li>
-                          <li
-                            *ngFor="let page of getPagesArrays()"
-                            class="page-item"
-                            [class.active]="page === currentPage"
-                          >
-                            <a class="page-link" (click)="changePages(page)">{{
-                              page
-                            }}</a>
-                          </li>
-                          <li
-                            class="page-item"
-                            [class.disabled]="currentPage === totalPages"
-                          >
-                            <a
-                              class="page-link"
-                              (click)="changePages(currentPage + 1)"
-                            >
-                              <i class="fi-rs-arrow-small-right"></i>
-                            </a>
-                          </li>
-                        </ul>
-                      </nav>
                     </div>
                   </div>
                 </div>
@@ -226,12 +178,12 @@
               >
                 <div>
                   <iframe
-                    src="../../assets/Admin_gestion_pages.pdf"
+                    [src]="cvUrl"
                     style="width: 100%; height: 700px"
                   ></iframe>
                 </div>
                 <div>
-                  <!-- I agree button -->
+                  <!-- Additional content if needed -->
                 </div>
               </div>
             </div>

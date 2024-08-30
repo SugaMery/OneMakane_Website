@@ -92,6 +92,15 @@ export class AnnonceService {
       .toPromise();
   }
 
+  getJobAppliances(adId: number, accessToken: string): Observable<any> {
+    const url = `${this.apiUrl}/ads/${adId}/job-appliances`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`,
+    });
+
+    return this.http.get<any>(url, { headers });
+  }
+
   getAds(): Observable<any> {
     const url = `${this.apiUrl}/ads`;
     return this.http.get<any>(url);

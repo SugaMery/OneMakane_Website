@@ -31929,3 +31929,17 @@ label {
         width: 26rem !important;
     }
 }
+
+
+::ng-deep .appliance {
+    color: #22c55e;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+::ng-deep .account .card .card-header {
+    border: 0;
+    background: none;
+    padding-left: 0rem;
+    padding-bottom: 2rem;
+}
