@@ -19,15 +19,17 @@
                 [ngClass]="{ 'pl-50': !isPhone() }"
               >
                 <a
-                  href="/page-account#job-offers"
                   class="btn btn-fill-out btn-block mt-30"
                   style="
                     background: linear-gradient(45deg, #6b7280, #6b7280);
                     width: auto;
                     margin-bottom: 1rem;
                   "
-                  ><i class="fi-rs-sign-in ml-15"></i> Retourner</a
+                  (click)="onRetournerClick()"
                 >
+                  <i class="fi-rs-sign-in ml-15"></i> Retourner
+                </a>
+
                 <div class="card">
                   <div class="card-header">
                     <h3 class="mb-0">

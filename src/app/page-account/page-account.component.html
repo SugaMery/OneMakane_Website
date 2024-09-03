@@ -1,4 +1,5 @@
 <app-header></app-header>
+
 <main class="main pages">
   <div class="page-header breadcrumb-wrap">
     <div class="container">
@@ -49,11 +50,11 @@
                   <li class="nav-item" *ngIf="showJobOffersTab">
                     <a
                       class="nav-link"
-                      id="job-offers-tab"
+                      id="jobs-tab"
                       data-bs-toggle="tab"
-                      href="#job-offers"
+                      href="#jobs"
                       role="tab"
-                      aria-controls="job-offers"
+                      aria-controls="jobs"
                       aria-selected="false"
                       ><i class="fi-rs-briefcase mr-10"></i>Offres d'emploi</a
                     >
@@ -1347,9 +1348,9 @@
                 <!-- Tab Content for Job Offers -->
                 <div
                   class="tab-pane fade"
-                  id="job-offers"
+                  id="jobs"
                   role="tabpanel"
-                  aria-labelledby="job-offers-tab"
+                  aria-labelledby="jobs-tab"
                 >
                   <div class="card">
                     <div class="card-header">
@@ -1591,3 +1592,4 @@
 </main>
 
 <app-footer></app-footer>
+<app-preloader></app-preloader>

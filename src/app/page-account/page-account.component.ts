@@ -52,8 +52,8 @@ export class PageAccountComponent implements OnInit {
       if (fragment === 'orders') {
         this.activateTab('orders-tab', 'orders');
       }
-      if (fragment === 'job-offers') {
-        this.activateTab('job-offers-tab', 'job-offers');
+      if (fragment === 'jobs') {
+        this.activateTab('jobs-tab', 'jobs');
       }
     });
   }
@@ -378,7 +378,7 @@ export class PageAccountComponent implements OnInit {
     city: '',
     civility: '',
     password: '',
-    role_id: 2,
+    role_id: 4,
     repeat_password: '',
     professional: {},
     generatedSecurityCode: this.generateSecurityCode(),

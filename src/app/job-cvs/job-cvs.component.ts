@@ -68,6 +68,10 @@ export class JobCvsComponent implements OnInit {
     });
   }
 
+  onRetournerClick(): void {
+    window.location.href = '/page-account#job-offers';
+  }
+
   activateTab(tabId: string, contentId: string) {
     const tabElement = document.getElementById(tabId);
     const contentElement = document.getElementById(contentId);
