@@ -122,4 +122,17 @@ export class UserService {
       { headers }
     );
   }
+  getJobApplicationsByUser(
+    userId: number,
+    accessToken: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`,
+    });
+
+    return this.http.get<any>(
+      `${this.baseUrl}/users/${userId}/job-appliances`,
+      { headers }
+    );
+  }
 }

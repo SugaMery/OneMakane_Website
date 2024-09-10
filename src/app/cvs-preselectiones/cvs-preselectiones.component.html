@@ -1,0 +1,244 @@
+<app-header></app-header>
+<main class="main pages">
+  <div class="page-header breadcrumb-wrap">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Accueil</a>
+        <span></span> Pages <span></span> Mon Compte
+      </div>
+    </div>
+  </div>
+  <div class="page-content pt-50 pb-50">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 m-auto">
+          <div class="row">
+            <div class="col-md-7">
+              <div
+                class="tab-content account dashboard-content"
+                [ngClass]="{ 'pl-50': !isPhone() }"
+              >
+                <a
+                  class="btn btn-fill-out btn-block mt-30"
+                  style="
+                    background: linear-gradient(45deg, #6b7280, #6b7280);
+                    width: auto;
+                    margin-bottom: 1rem;
+                  "
+                  href="javascript:history.back()"
+                >
+                  <i class="fi-rs-sign-in ml-15"></i> Retourner
+                </a>
+
+                <div class="card">
+                  <div class="card-header">
+                    <h4 class="mb-0">Les candidats pré-sélectionnés</h4>
+                    <div style="text-align: end">
+                      <button
+                        class="btn btn-fill-out btn-block mt-30"
+                        (click)="filterSelected()"
+                      >
+                        Afficher les CV sélectionnés
+                      </button>
+                      <button
+                        class="btn btn-fill-out btn-block mt-30"
+                        (click)="resetFilter()"
+                        style="
+                          background: linear-gradient(45deg, #6b7280, #6b7280);
+                          width: auto;
+                        "
+                      >
+                        Réinitialiser le filtre
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <div class="table-responsive shopping-summery">
+                        <!-- Message when there are no candidates -->
+
+                        <!-- Table displaying candidates when there are candidates -->
+                        <table class="table table-wishlist">
+                          <thead>
+                            <tr class="main-heading">
+                              <th scope="col">Nom Complet</th>
+                              <th scope="col">Email</th>
+                              <th scope="col">Téléphone</th>
+                              <th scope="col">Date de Postulation</th>
+                              <th scope="col">CV</th>
+                              <th scope="col">Sélectionné</th>
+                              <th scope="col">Non Sélectionné</th>
+                            </tr>
+                          </thead>
+                          <tbody *ngIf="filteredAds.length > 0">
+                            <tr
+                              *ngFor="
+                                let appliance of filteredAds;
+                                let i = index
+                              "
+                              class="pt-30"
+                            >
+                              <td>{{ appliance.user.full_name }}</td>
+                              <td>{{ appliance.user.email }}</td>
+                              <td>{{ appliance.user.telephone }}</td>
+                              <td>{{ extractDate(appliance.created_at) }}</td>
+                              <td>
+                                <a
+                                  (click)="
+                                    updateCvUrl(
+                                      'https://medias.onemakan.com/' +
+                                        appliance.c_v.path +
+                                        appliance.c_v.filename +
+                                        '.' +
+                                        appliance.c_v.extension
+                                    )
+                                  "
+                                  target="_blank"
+                                  class="appliance"
+                                >
+                                  Voir le CV
+                                </a>
+                              </td>
+                              <td style="text-align: center">
+                                <input
+                                  style="width: 20%; height: 15px"
+                                  type="radio"
+                                  name="selection-{{ i }}"
+                                  [checked]="appliance.status === 'approved'"
+                                  (change)="toggleSelection(i, 'selected')"
+                                />
+                              </td>
+                              <td style="text-align: center">
+                                <input
+                                  style="width: 20%; height: 15px"
+                                  type="radio"
+                                  name="selection-{{ i }}"
+                                  [checked]="appliance.status === 'rejected'"
+                                  (change)="toggleSelection(i, 'notSelected')"
+                                />
+                              </td>
+                            </tr>
+                          </tbody>
+                          <tr *ngIf="filteredAds.length === 0">
+                            <td colspan="7" class="text-center">
+                              Aucun candidat n'a postulé pour cette offre
+                              d'emploi.
+                            </td>
+                          </tr>
+                        </table>
+
+                        <!-- Pagination -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="pagination-area mt-30 mb-50"
+                  *ngIf="filteredAds.length > 0"
+                >
+                  <nav aria-label="Pagination">
+                    <ul class="pagination justify-content-start">
+                      <!-- Bouton Précédent -->
+                      <li
+                        class="page-item"
+                        [ngClass]="{ disabled: currentPage === 1 }"
+                      >
+                        <a
+                          class="page-link"
+                          (click)="setCurrentPage(currentPage - 1)"
+                          aria-label="Précédent"
+                        >
+                          <span aria-hidden="true">&laquo;</span>
+                        </a>
+                      </li>
+
+                      <!-- Bouton Première Page -->
+                      <li
+                        class="page-item"
+                        [ngClass]="{ disabled: currentPage === 1 }"
+                      >
+                        <a
+                          class="page-link"
+                          (click)="setCurrentPage(1)"
+                          style="width: auto"
+                          >Première</a
+                        >
+                      </li>
+
+                      <!-- Boutons Numéros de Page -->
+                      <li
+                        *ngFor="let page of visiblePages"
+                        class="page-item"
+                        [ngClass]="{ active: currentPage === page }"
+                      >
+                        <a class="page-link" (click)="setCurrentPage(page)">{{
+                          page
+                        }}</a>
+                      </li>
+
+                      <!-- Ellipse pour les Pages au Milieu -->
+                      <li
+                        *ngIf="pages.length > 5 && !isLastPageVisible"
+                        class="page-item disabled"
+                      >
+                        <span class="page-link">...</span>
+                      </li>
+
+                      <!-- Bouton Dernière Page -->
+                      <li
+                        class="page-item"
+                        [ngClass]="{ disabled: currentPage === pages.length }"
+                      >
+                        <a
+                          class="page-link"
+                          style="width: auto"
+                          (click)="setCurrentPage(pages.length)"
+                          >Dernière</a
+                        >
+                      </li>
+
+                      <!-- Bouton Suivant -->
+                      <li
+                        class="page-item"
+                        [ngClass]="{ disabled: currentPage === pages.length }"
+                      >
+                        <a
+                          class="page-link"
+                          (click)="setCurrentPage(currentPage + 1)"
+                          aria-label="Suivant"
+                        >
+                          <span aria-hidden="true">&raquo;</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div
+                class="tab-content account dashboard-content"
+                [ngClass]="{ 'pl-50': !isPhone() }"
+              >
+                <div>
+                  <iframe
+                    [src]="firstelement ? firstelement : cvUrl"
+                    style="width: 100%; height: 700px"
+                  ></iframe>
+                </div>
+                <div>
+                  <!-- Additional content if needed -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<app-footer></app-footer>

@@ -25,7 +25,7 @@
                     width: auto;
                     margin-bottom: 1rem;
                   "
-                  (click)="onRetournerClick()"
+                  href="javascript:history.back()"
                 >
                   <i class="fi-rs-sign-in ml-15"></i> Retourner
                 </a>
@@ -63,7 +63,6 @@
                               <th scope="col">Téléphone</th>
                               <th scope="col">Date de Postulation</th>
                               <th scope="col">CV</th>
-                              <th scope="col" class="end">Supprimé</th>
                             </tr>
                           </thead>
                           <tbody *ngIf="paginatedAdsCvs.length > 0">
@@ -103,14 +102,6 @@
                                   class="appliance"
                                 >
                                   Voir le CV
-                                </a>
-                              </td>
-                              <td class="text-center" data-title="Supprimer">
-                                <a
-                                  class="text-body"
-                                  (click)="showDialog(appliance)"
-                                >
-                                  <i class="fi-rs-trash"></i>
                                 </a>
                               </td>
                             </tr>

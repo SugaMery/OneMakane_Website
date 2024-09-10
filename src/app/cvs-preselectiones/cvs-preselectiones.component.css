@@ -1,0 +1,22 @@
+::ng-deep .shopping-summery table thead th {
+    font-size: smaller;
+
+}
+
+::ng-deep .pagination-area .page-link {
+    font-size: 14px !important;
+}
+
+::ng-deep .pagination-area .page-item.active .page-link,
+.pagination-area .page-item:hover .page-link {
+    color: #fff;
+    background: #3bb77e;
+}
+
+::ng-deep .shopping-summery table thead th:first-child {
+    padding-left: 10px;
+}
+
+::ng-deep .shopping-summery table tbody td:first-child {
+    padding-left: 10px;
+}

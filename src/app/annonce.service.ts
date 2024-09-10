@@ -187,13 +187,6 @@ export class AnnonceService {
     );
   }
 
-  getAdsValidator(validationStatus: string): Observable<any> {
-    const url = `${this.apiUrl}/ads`;
-    let params = new HttpParams().set('validation_status', validationStatus);
-
-    return this.http.get<any>(url, { params });
-  }
-
   getAdById(adId: string): Observable<any> {
     const url = `${this.apiUrl}/ads/${adId}`;
     return this.http.get<any>(url);
@@ -242,6 +235,77 @@ export class AnnonceService {
     return this.http.patch<any>(url, setting, {
       headers: this.getHeaders(accessToken),
     });
+  }
+  getAdsValidator(
+    validationStatus: string,
+    searchTerm?: string,
+    page: number = 1
+  ): Observable<any> {
+    let url = `${this.apiUrl}/ads?validation_status=${validationStatus}&page=${page}`;
+
+    if (searchTerm) {
+      url += `&search_term=${encodeURIComponent(searchTerm)}`;
+    }
+
+    return this.http.get<any>(url);
+  }
+
+  getAllAdsValidator(
+    validationStatus: string,
+    searchTerm?: string
+  ): Observable<any[]> {
+    return this.getAdsValidator(validationStatus, searchTerm).pipe(
+      switchMap((response) => {
+        const totalPages = response.pagination.total_page;
+        const requests: Observable<any>[] = [];
+
+        // Push the first page response
+        requests.push(of(response));
+
+        // Create requests for all other pages
+        for (let page = 2; page <= totalPages; page++) {
+          requests.push(
+            this.getAdsValidator(validationStatus, searchTerm, page)
+          );
+        }
+
+        // Execute all requests and combine results
+        return forkJoin(requests).pipe(
+          map((responses) => responses.flatMap((res) => res.data))
+        );
+      })
+    );
+  }
+  getJobApplianceDetails(
+    jobApplianceId: number,
+    accessToken: string
+  ): Observable<any> {
+    const url = `${this.apiUrl}/job-appliances/${jobApplianceId}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`,
+    });
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  updateJobApplianceStatus(
+    jobApplianceId: number,
+    isSelected: boolean,
+    accessToken: string
+  ): Observable<any> {
+    const url = `${this.apiUrl}/job-appliances/change-status/${jobApplianceId}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    });
+
+    // Determine the status based on the selection
+    const status = isSelected ? 'approved' : 'rejected';
+
+    // Prepare the payload for the PATCH request
+    const body = { status: status };
+
+    return this.http.patch<any>(url, body, { headers });
   }
 
   getDeleteReasons(accessToken: string): Observable<any> {

@@ -29,6 +29,7 @@ import { MessageComponent } from './message/message.component';
 import { PostulerCvComponent } from './postuler-cv/postuler-cv.component';
 import { MessageApresPostulerComponent } from './message-apres-postuler/message-apres-postuler.component';
 import { JobCvsComponent } from './job-cvs/job-cvs.component';
+import { CvsPreselectionesComponent } from './cvs-preselectiones/cvs-preselectiones.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -52,6 +53,11 @@ const routes: Routes = [
   {
     path: 'voir-cvs/:id',
     component: JobCvsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'cvs-pré-sélectionnés/:id',
+    component: CvsPreselectionesComponent,
     canActivate: [AuthGuard],
   },
 

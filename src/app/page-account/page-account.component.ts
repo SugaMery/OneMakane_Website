@@ -46,14 +46,23 @@ export class PageAccountComponent implements OnInit {
   currentPage = 1;
   totalPages = 1;
   totalPage = 1;
+  totalPaged = 1;
 
   ngAfterViewInit() {
     this.route.fragment.subscribe((fragment) => {
-      if (fragment === 'orders') {
-        this.activateTab('orders-tab', 'orders');
-      }
-      if (fragment === 'jobs') {
-        this.activateTab('jobs-tab', 'jobs');
+      switch (fragment) {
+        case 'orders':
+          this.activateTab('orders-tab', 'orders');
+          break;
+        case 'jobs':
+          this.activateTab('jobs-tab', 'jobs');
+          break;
+        case 'applied-ads':
+          this.activateTab('applied-ads-tab', 'applied-ads');
+          break;
+        // Add more cases if needed
+        default:
+          this.activateTab('dashboard-tab', 'dashboard'); // Default tab
       }
     });
   }
@@ -61,8 +70,9 @@ export class PageAccountComponent implements OnInit {
   activateTab(tabId: string, contentId: string) {
     const tabElement = document.getElementById(tabId);
     const contentElement = document.getElementById(contentId);
-
+    console.log('tabElementtabElement', tabElement, tabId, contentElement);
     if (tabElement && contentElement) {
+      // Deactivate currently active tabs and contents
       const activeTabs = document.querySelectorAll(
         '.nav-link.active, .tab-pane.active'
       );
@@ -70,10 +80,12 @@ export class PageAccountComponent implements OnInit {
         tab.classList.remove('active', 'show');
       });
 
+      // Activate the new tab and content
       tabElement.classList.add('active');
       contentElement.classList.add('active', 'show');
     }
   }
+
   reasons: Array<{ id: number; long_name: string }> = [];
   getDeleteReasons() {
     this.annonceService
@@ -111,6 +123,7 @@ export class PageAccountComponent implements OnInit {
   }
 
   showJobOffersTab = false;
+  showJobTab = false;
   categories: any[] = [];
   ngOnInit(): void {
     this.categoryService.getCategoryTree().subscribe((data) => {
@@ -119,6 +132,7 @@ export class PageAccountComponent implements OnInit {
     });
     this.userId = localStorage.getItem('loggedInUserId');
     this.accessToken = localStorage.getItem('loggedInUserToken');
+    // this.loadJobApplications();
     //this.loadAds('pending');
     //this.loadAds('approved');
     //this.loadAds('all');
@@ -187,6 +201,7 @@ export class PageAccountComponent implements OnInit {
         }
       });
   }
+
   checkIfShowJobOffersTab(): void {
     // Find the parent category with id 140
     const parentCategory = this.categories.find(
@@ -285,9 +300,32 @@ export class PageAccountComponent implements OnInit {
     this.paginateAds();
   }
 
+  getPagesArrayed(): number[] {
+    return Array.from({ length: this.totalPaged }, (v, k) => k + 1);
+  }
+
+  changePaged(page: number): void {
+    console.log('Changing to page: ', page); // Debug log
+    if (page < 1 || page > this.totalPaged) {
+      return;
+    }
+    this.currentPage = page;
+    this.paginateAds();
+  }
+
+  changeAdsPerPaged(count: number): void {
+    console.log('Changing ads per page to: ', count); // Debug log
+    this.adsPerPage = count;
+    this.currentPage = 1;
+    this.paginateAds();
+  }
+
   paginatedAds: any = [];
   paginatedAd: any = [];
+  paginatedAded: any = [];
   filteredAds: any[] = [];
+  filteredAded: any[] = [];
+
   paginateAds(): void {
     this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
     console.log('Total pages: ', this.totalPages); // Debug log
@@ -296,8 +334,31 @@ export class PageAccountComponent implements OnInit {
     console.log('Paginating ads from index ', startIndex, ' to ', endIndex); // Debug log
     this.paginatedAds = this.ads.slice(startIndex, endIndex);
     this.paginatedAd = this.filteredAds.slice(startIndex, endIndex);
+    const userId = localStorage.getItem('loggedInUserId');
+    const accessToken = localStorage.getItem('loggedInUserToken');
+
+    this.userService
+      .getJobApplicationsByUser(Number(userId), accessToken!)
+      .subscribe((response: any) => {
+        // Assuming response.data is an array of job applications
+        this.paginatedAded = response.data.map((jobApp: any) => {
+          // Fetch related ad details for each job application
+          this.annonceService.getAdById(jobApp.ad_id).subscribe((res: any) => {
+            // Attach ad data to each job application
+            jobApp.ad = res.data;
+          });
+          return jobApp;
+        });
+        if (this.paginatedAded.length > 0) {
+          this.showJobTab = true;
+        }
+        // Initialize filtered ads if needed for pagination
+        this.filteredAded = this.paginatedAded.slice(startIndex, endIndex);
+        this.totalPaged = Math.ceil(this.filteredAded.length / this.adsPerPage);
+      });
     console.log('Paginated ads: ', this.paginatedAds); // Debug log
   }
+
   extractDate(dateString: string): string {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = {

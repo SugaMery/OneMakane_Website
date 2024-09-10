@@ -46,8 +46,7 @@
                       ><i class="fi fi-rs-list mr-10"></i>Mes annonces</a
                     >
                   </li>
-                  <!-- New Tab for Job Offers -->
-                  <li class="nav-item" *ngIf="showJobOffersTab">
+                  <li class="nav-item">
                     <a
                       class="nav-link"
                       id="jobs-tab"
@@ -59,8 +58,7 @@
                       ><i class="fi-rs-briefcase mr-10"></i>Offres d'emploi</a
                     >
                   </li>
-                  <!-- New Tab for Ads You Applied To -->
-                  <li class="nav-item">
+                  <li class="nav-item" *ngIf="showJobTab">
                     <a
                       class="nav-link"
                       id="applied-ads-tab"
@@ -73,6 +71,7 @@
                       postulées</a
                     >
                   </li>
+
                   <li class="nav-item">
                     <a
                       class="nav-link"
@@ -206,7 +205,7 @@
                                   <h6>
                                     <a
                                       class="product-name mb-10"
-                                      [href]="'/modifier-annonce/' + ad.id"
+                                      [href]="'/ads/' + ad.id"
                                     >
                                       {{ ad.title | slice : 0 : 20
                                       }}{{ ad.title.length > 20 ? "..." : "" }}
@@ -356,320 +355,6 @@
                     </div>
                   </div>
                 </div>
-                <!-- <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h3 class="mb-0">Ajouter une annonce</h3>
-                                        </div>
-                                        <div class="card-body contact-from-area">
-                                            <p>Pour ajouter votre annonce, veuillez remplir le formulaire ci-dessous et cliquer sur le bouton "Ajouter".</p>
-                                            <div class="row">
-
-                                                <form class="" action="#" method="post">
-                                                    <p-stepper  [linear]="isLinear()" [orientation]="isPhone() ? 'vertical' : 'horizontal'">
-                                                        <p-stepperPanel header="Informations sur l'Annonce">
-                                                            <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
-                                                                <div class="flex flex-column">
-                                                                    <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
-                                                                      <div class="container" style="padding: 2rem;">
-                                                                        <div class="input-style mb-20">
-                                                                            <label>Titre</label>
-                                                                            <input id="titre" name="titre" [(ngModel)]="formData.titre" (ngModelChange)="clearError('titre')"  placeholder="Titre de votre annonce" type="text" required maxlength="50">
-                                                                            <div *ngIf="fieldErrors.titre" class="text-danger requisDiv" >
-                                                                                <div>Titre est requis.</div>
-                                                                            </div>
-                                                                            <div class="text-infos requisDiv" *ngIf="formData.titre && formData.titre.length >= 45">
-                                                                                <div>Le titre est proche de la longueur maximale.</div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="input-style mb-20">
-                                                                            <label>Description</label>
-                                                                            <textarea id="description" name="description" (ngModelChange)="clearError('description')"  [(ngModel)]="formData.description" placeholder="Description de votre annonce" required minlength="10"></textarea>
-                                                                            <div *ngIf="fieldErrors.description" class="text-danger requisDiv">
-                                                                                <div>Description est requise.</div>
-                                                                            </div>
-                                                                            <div class="text-infos requisDiv" *ngIf="formData.description && formData.description.length <= 20">
-                                                                                <div>La description est assez courte.</div>
-                                                                            </div>
-                                                                        </div>
-                                                                        
-                                                                        <div class="row">
-                                                                          <div class="form-group col-md-6">
-                                                                            <label>Prix</label>
-                                                                            <input id="prix" name="prix" [(ngModel)]="formData.prix" (ngModelChange)="clearError('prix')" placeholder="Prix de votre annonce" type="number" required>
-                                                                            <div *ngIf="fieldErrors.prix" class="text-danger requisDiv" > 
-                                                                              <div>Prix est requis.</div>
-                                                                            </div>
-                                                                          </div>
-                                                                          <div class="form-group col-md-6" [class.has-error]="fieldErrors.category">
-                                                                            <label>Catégorie</label>
-                                                                            <div class="select-menu">
-                                                                              <div class="select-btn" style="margin-bottom: 1rem; background: #fff; border: 1px solid #ececec; height: 64px; box-shadow: none; padding-left: 20px; font-size: 16px; width: 100%;" (click)="toggleOptions()">
-                                                                                <span class="sBtn-text">{{ selectedOption.name || "Catégorie" }}</span>
-                                                                                <i class="bx bx-chevron-down"></i>
-                                                                              </div>
-                                                                              <ul class="options" [ngClass]="{ active: optionsVisible }">
-                                                                                <li class="option" *ngFor="let category of categories" (click)="selectOption(category)">
-                                                                                  {{ category.name }}
-                                                                                </li>
-                                                                              </ul>
-                                                                            </div>
-                                                                            <div *ngIf="fieldErrors.category" class="text-danger requisDiv">
-                                                                              <div>Catégorie est requise.</div>
-                                                                            </div>
-                                                                          </div>
-                                                                          
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="form-group col-md-6" [class.has-error]="fieldErrors.state">
-                                                                                <label>État</label>
-                                                                                <div class="select-menu">
-                                                                                    <div class="select-btn" style="margin-bottom: 1rem; background: #fff; border: 1px solid #ececec; height: 64px; box-shadow: none; padding-left: 20px; font-size: 16px; width: 100%;" (click)="toggleStateOptions()">
-                                                                                        <span class="sBtn-text">{{ selectedState?.name || "État" }}</span>
-                                                                                        <i class="bx bx-chevron-down"></i>
-                                                                                    </div>
-                                                                                    <ul class="options" [ngClass]="{ active: stateOptionsVisible }">
-                                                                                        <li class="option" *ngFor="let state of states" (click)="selectState(state)">
-                                                                                            {{ state.name }}
-                                                                                        </li>
-                                                                                    </ul>
-                                                                                </div>
-                                                                                <div *ngIf="fieldErrors.state" class="text-danger requisDiv">
-                                                                                    <div>État est requis.</div>
-                                                                                </div>
-                                                                                <div *ngIf="selectedCategoryState" class="text-info">
-                                                                                    Veuillez sélectionner une catégorie pour afficher les données d'état.
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="form-group col-md-6" [class.has-error]="fieldErrors.genre">
-                                                                                <label>Genre</label>
-                                                                                <div class="select-menu">
-                                                                                    <div class="select-btn" style="margin-bottom: 1rem; background: #fff; border: 1px solid #ececec; height: 64px; box-shadow: none; padding-left: 20px; font-size: 16px; width: 100%;" (click)="toggleGenreOptions()">
-                                                                                        <span class="sBtn-text">{{ selectedGenre?.name || "Genre" }}</span>
-                                                                                        <i class="bx bx-chevron-down"></i>
-                                                                                    </div>
-                                                                                    <ul class="options" [ngClass]="{ active: genreOptionsVisible }">
-                                                                                        <li class="option" *ngFor="let genre of genres" (click)="selectGenre(genre)">
-                                                                                            {{ genre.name }}
-                                                                                        </li>
-                                                                                    </ul>
-                                                                                </div>
-                                                                                <div *ngIf="fieldErrors.genre" class="text-danger requisDiv">
-                                                                                    <div>Genre est requis.</div>
-                                                                                </div>
-                                                                                <div *ngIf="selectedCategoryGenre" class="text-info">
-                                                                                    Veuillez sélectionner une catégorie pour afficher les données d'état.
-                                                                                </div>
-                                                                            </div>
-                                                                            
-
-                                                                        </div>
-                                                                        <div class="row justify-content-end">
-                                                                            <div class="form-group col-md-6 payment_option mb-50" style="margin-top: 3rem; margin-bottom: 0 !important;">
-                                                                                <div class="custome-checkbox d-inline-flex align-items-center justify-content-end">
-                                                                                    <input class="form-check-input" type="checkbox" id="urgent" [(ngModel)]="formData.urgent" name="urgent">
-                                                                                    <label class="form-check-label" for="urgent">Urgent</label>
-                                                                                </div>
-                                                                                <div class="custome-checkbox d-inline-flex align-items-center justify-content-end ms-4">
-                                                                                    <input class="form-check-input" type="checkbox" id="highlighted" [(ngModel)]="formData.highlighted" name="highlighted">
-                                                                                    <label class="form-check-label" for="highlighted">Mis en évidence</label>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        
-                                                                      </div>
-                                                                    </div>
-                                                                  </div>
-                                                                  
-                                                                <div class="flex pt-4 justify-content-end">
-                                                                    <p-button label="Suivant" icon="pi pi-arrow-right" iconPos="right" 
-                                                                    (onClick)="emitNextCallback() ? nextCallback.emit() : null"></p-button>
-                                                                                                                          </div>
-                                                            </ng-template>
-                                                            
-                                                        </p-stepperPanel>
-                                                        <p-stepperPanel header="Ajouter des Images">
-                                                            <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">
-                                                                <div class="flex flex-column">
-                                                                    <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
-                                                                        <div class="container" style="padding: 1rem;">
-                                                                            <div class="bg-white p-5 rounded shadow-sm border">
-                                                                                <div class="dropzone d-block">
-                                                                                    <label for="files" class="dropzone-container">
-                                                                                        <div class="file-icon"><i class="pi pi-plus-circle text-succes" style="
-                                                                                            color: #3bb77e;
-                                                                                        "></i></div>
-                                                                                        <div class="text-center pt-3 px-5">
-                                                                                            <p class="w-80 h5 text-dark fw-bold">Glissez vos photos ici pour commencer le téléchargement.</p>
-                                                                                            <div class="hr-sect">ou</div>
-                                                                                            <button class="btn btn-primary mb-2" (click)="fileInput.click()">Parcourir les fichiers</button>
-                                                                                            <input #fileInput id="files" name="files[]" type="file" class="file-input" (change)="onFileSelected($event)" style="display: none;" accept="image/*"/>
-                                                                                        </div>
-                                                                                    </label>
-                                                                                </div>
-                                                                                <div *ngIf="uploadedImages.length > 0" class="mt-3">
-                                                                                    <div class="inline-container" style="margin-bottom: 1rem;">
-                                                                                        <p class="fw-bold">Images téléchargées : </p>
-                                                                                        <p *ngIf="maxImages" class="fw-bold" style="color: #ff3737;">Vous ne pouvez télécharger que jusqu'à 3 images.</p>
-                                                                                    </div>
-                                                                                                                                        
-                                                                                    <div class="row">
-                                                                                        <div class="col-md-4 mb-3" *ngFor="let image of uploadedImages; let i = index">
-                                                                                            <div class="position-relative">
-                                                                                                <img [src]="image" alt="Image téléchargée" class="img-fluid" style="border-top-left-radius: 10px; border-top-right-radius: 10px;"/>
-                                                                                                <div class="image-overlay">
-                                                                                                    <button class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2" (click)="deleteImage(i)">
-                                                                                                        <i class="pi pi-trash"></i>
-                                                                                                    </button>
-                                                                                                    <button class="btn btn-primary btn-modifier btn-sm position-absolute top-0 start-0 m-2" (click)="replaceImage(i)">
-                                                                                                        <i class="pi pi-pencil"></i>
-                                                                                                    </button>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            
-                                                                        </div>
-
-                                                                    </div>
-                                                                </div>
-                                                                <div class="flex pt-4 justify-content-between">
-                                                                    <p-button label="Retour"icon="pi pi-arrow-left" (onClick)="prevCallback.emit()" />
-                                                                   <p-button label="Suivant" icon="pi pi-arrow-right" iconPos="right" (click)="nextCallback.emit()" [disabled]="uploadedImages.length < 1 || uploadedImages.length > 3"></p-button>
-</div
-                                                            ></ng-template>
-                                                        </p-stepperPanel>
-                                                        <p-stepperPanel header="Détails de Localisation">
-                                                            <ng-template pTemplate="content" let-prevCallback="prevCallback" let-index="index">
-                                                                <div class="flex flex-column">
-                                                                    <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
-                                                                        <div class="container" style="padding: 2rem;">
-                                                                            <div class="row">
-                                                                                <div class="form-group col-md-6">
-                                                                                    <label>Ville</label>
-                                                                                    <input name="ville" [(ngModel)]="formData.ville" (ngModelChange)="clearError('ville')" placeholder="Ville de l'annonce" type="text" />
-                                                                                    <div *ngIf="fieldErrors.ville" class="text-danger requisDiv">
-                                                                                        <div>Ville est requise.</div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group col-md-6">
-                                                                                    <label>Code postal</label>
-                                                                                    <input name="code_postal" [(ngModel)]="formData.code_postal" (ngModelChange)="clearError('code_postal')" placeholder="Code postal de l'annonce" type="text" />
-                                                                                    <div *ngIf="fieldErrors.code_postal" class="text-danger requisDiv">
-                                                                                        <div>Code postal est requis.</div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    
-                                                                </div>
-                                                                <div class="flex pt-4 justify-content-between">
-                                                                    <p-button label="Retour"icon="pi pi-arrow-left" (onClick)="prevCallback.emit()" />
-                                                                    
-                                                                    <p-button label="Confirmer" icon="pi pi-check" iconPos="right" (click)="onSubmit()"></p-button>
-                                                                    </div
-                                                            >
-                                                            
-                                                        </ng-template>
-                                                        </p-stepperPanel>
-                                                    </p-stepper>
-                                                </form>
-
-                                                    <style>
-                                                        .dropzone {
-                                                            border: dashed 4px #ddd !important ;
-                                                            background-color: #f2f6fc;
-                                                            border-radius: 15px;
-                                                        }
-                                                    
-                                                        .dropzone .dropzone-container {
-                                                            padding: 2rem 0;
-                                                            width: 100%;
-                                                            height: 100%;
-                                                            position: relative;
-                                                            display: flex;
-                                                            flex-direction: column;
-                                                            justify-content: center;
-                                                            align-items: center;
-                                                            color: #8c96a8;
-                                                            z-index: 20;
-                                                        }
-                                                    
-                                                        .dropzone .file-input {
-                                                            position: absolute;
-                                                            width: 100%;
-                                                            height: 100%;
-                                                            top: 0;
-                                                            left: 0;
-                                                            opacity: 0;
-                                                            visibility: hidden;
-                                                            cursor: pointer;
-                                                        }
-                                                
-                                                        .file-icon{
-                                                            font-size: 60px;
-                                                        }
-                                                        .hr-sect {
-                                                            display: flex;
-                                                            flex-basis: 100%;
-                                                            align-items: center;
-                                                            margin: 8px 0px;
-                                                        }
-                                                        .hr-sect:before,
-                                                        .hr-sect:after {
-                                                            content: "";
-                                                            flex-grow: 1;
-                                                            background: #ddd;
-                                                            height: 1px;
-                                                            font-size: 0px;
-                                                            line-height: 0px;
-                                                            margin: 0px 8px;
-                                                        }
-                                                    </style>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <div class="card mb-3 mb-lg-0">
-                                                <div class="card-header">
-                                                    <h3 class="mb-0">Billing Address</h3>
-                                                </div>
-                                                <div class="card-body">
-                                                    <address>
-                                                        3522 Interstate<br />
-                                                        75 Business Spur,<br />
-                                                        Sault Ste. <br />Marie, MI 49783
-                                                    </address>
-                                                    <p>New York</p>
-                                                    <a href="#" class="btn-small">Edit</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="card">
-                                                <div class="card-header">
-                                                    <h5 class="mb-0">Shipping Address</h5>
-                                                </div>
-                                                <div class="card-body">
-                                                    <address>
-                                                        4299 Express Lane<br />
-                                                        Sarasota, <br />FL 34249 USA <br />Phone: 1.941.227.4444
-                                                    </address>
-                                                    <p>Sarasota</p>
-                                                    <a href="#" class="btn-small">Edit</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
- -->
 
                 <div
                   class="tab-pane fade"
@@ -1378,8 +1063,8 @@
                                 <th scope="col" colspan="2">Annonce</th>
                                 <th scope="col">Prix</th>
                                 <th scope="col">Status</th>
-                                <th scope="col">Action</th>
-                                <th scope="col" class="end">Supprimé</th>
+                                <th scope="col">Cvs</th>
+                                <th scope="col">Préselection</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -1404,7 +1089,7 @@
                                   <h6>
                                     <a
                                       class="product-name mb-10"
-                                      [href]="'/modifier-annonce/' + ad.id"
+                                      [href]="'/ads/' + ad.id"
                                     >
                                       {{ ad.title | slice : 0 : 20
                                       }}{{ ad.title.length > 20 ? "..." : "" }}
@@ -1433,7 +1118,7 @@
                                   </span>
                                 </td>
                                 <td
-                                  class="action text-right"
+                                  class="action text-center"
                                   data-title="Action"
                                 >
                                   <a [href]="'/voir-cvs/' + ad.id">
@@ -1442,10 +1127,178 @@
                                     </button>
                                   </a>
                                 </td>
-                                <td class="text-center" data-title="Supprimer">
-                                  <a class="text-body" (click)="showDialog(ad)">
-                                    <i class="fi-rs-trash"></i>
+                                <td
+                                  class="action text-center"
+                                  data-title="Action"
+                                >
+                                  <a [href]="'/cvs-pré-sélectionnés/' + ad.id">
+                                    <button
+                                      class="btn btn-sm btn-info"
+                                      style="
+                                        background: linear-gradient(
+                                          45deg,
+                                          #fdc040,
+                                          #f97316
+                                        );
+                                      "
+                                    >
+                                      CVs pré-sélectionnés
+                                    </button>
                                   </a>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+
+                      <div
+                        class="pagination-area mt-20 mb-20"
+                        *ngIf="filteredAds.length > 0"
+                      >
+                        <nav aria-label="Page navigation example">
+                          <ul class="pagination justify-content-start">
+                            <li
+                              class="page-item"
+                              [class.disabled]="currentPage === 1"
+                            >
+                              <a
+                                class="page-link"
+                                (click)="changePages(currentPage - 1)"
+                              >
+                                <i class="fi-rs-arrow-small-left"></i>
+                              </a>
+                            </li>
+                            <li
+                              *ngFor="let page of getPagesArrays()"
+                              class="page-item"
+                              [class.active]="page === currentPage"
+                            >
+                              <a
+                                class="page-link"
+                                (click)="changePages(page)"
+                                >{{ page }}</a
+                              >
+                            </li>
+                            <li
+                              class="page-item"
+                              [class.disabled]="currentPage === totalPages"
+                            >
+                              <a
+                                class="page-link"
+                                (click)="changePages(currentPage + 1)"
+                              >
+                                <i class="fi-rs-arrow-small-right"></i>
+                              </a>
+                            </li>
+                          </ul>
+                        </nav>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Tab Content for Ads You Applied To -->
+                <div
+                  class="tab-pane fade"
+                  id="applied-ads"
+                  role="tabpanel"
+                  aria-labelledby="applied-ads-tab"
+                >
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="mb-0">
+                        Liste des annonces auxquelles j'ai postulé
+                      </h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <div class="table-responsive shopping-summery">
+                          <table class="table table-wishlist">
+                            <thead>
+                              <tr class="main-heading">
+                                <th class="custome-checkbox start pl-30">
+                                  <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    name="checkbox"
+                                    id="exampleCheckbox11"
+                                    value=""
+                                  />
+                                  <label
+                                    class="form-check-label"
+                                    for="exampleCheckbox11"
+                                  ></label>
+                                </th>
+                                <th scope="col" colspan="2">Annonce</th>
+                                <th scope="col">Prix</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Date de Postulation</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr
+                                class="pt-30"
+                                *ngFor="let ad of paginatedAded"
+                              >
+                                <td class="custome-checkbox pl-30">
+                                  <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    name="checkbox"
+                                    id="exampleCheckbox1"
+                                    value=""
+                                  />
+                                  <label
+                                    class="form-check-label"
+                                    for="exampleCheckbox1"
+                                  ></label>
+                                </td>
+                                <td class="image product-thumbnail pt-40 image">
+                                  <img
+                                    src="{{ ad.ad.medias[0]?.url }}"
+                                    alt="#"
+                                  />
+                                </td>
+                                <td class="product-des product-name">
+                                  <h6>
+                                    <a
+                                      class="product-name mb-10"
+                                      [href]="'/ads/' + ad.ad.id"
+                                    >
+                                      {{ ad.ad.title | slice : 0 : 20
+                                      }}{{
+                                        ad.ad.title.length > 20 ? "..." : ""
+                                      }}
+                                    </a>
+                                  </h6>
+                                  <span class="font-small text-muted">{{
+                                    extractDate(ad.ad.created_at)
+                                  }}</span>
+                                </td>
+                                <td class="price" data-title="Prix">
+                                  <h3 class="text-brand">
+                                    {{ ad.ad.price }} DH
+                                  </h3>
+                                </td>
+                                <td
+                                  class="text-center detail-info"
+                                  data-title="Status"
+                                >
+                                  <span
+                                    class="stock-status in-stock mb-0"
+                                    [ngClass]="{
+                                      'badge-success': 'postulée'
+                                    }"
+                                  >
+                                    Postulée
+                                  </span>
+                                </td>
+                                <td
+                                  class="action text-left"
+                                  data-title="Action"
+                                >
+                                  {{ extractDate(ad.created_at) }}
                                 </td>
                               </tr>
                             </tbody>
@@ -1515,7 +1368,7 @@
 
                       <div
                         class="pagination-area mt-20 mb-20"
-                        *ngIf="filteredAds.length > 0"
+                        *ngIf="filteredAded.length > 0"
                       >
                         <nav aria-label="Page navigation example">
                           <ul class="pagination justify-content-start">
@@ -1525,13 +1378,13 @@
                             >
                               <a
                                 class="page-link"
-                                (click)="changePages(currentPage - 1)"
+                                (click)="changePaged(currentPage - 1)"
                               >
                                 <i class="fi-rs-arrow-small-left"></i>
                               </a>
                             </li>
                             <li
-                              *ngFor="let page of getPagesArrays()"
+                              *ngFor="let page of getPagesArrayed()"
                               class="page-item"
                               [class.active]="page === currentPage"
                             >
@@ -1547,7 +1400,7 @@
                             >
                               <a
                                 class="page-link"
-                                (click)="changePages(currentPage + 1)"
+                                (click)="changePaged(currentPage + 1)"
                               >
                                 <i class="fi-rs-arrow-small-right"></i>
                               </a>
@@ -1555,30 +1408,6 @@
                           </ul>
                         </nav>
                       </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Tab Content for Ads You Applied To -->
-                <div
-                  class="tab-pane fade"
-                  id="applied-ads"
-                  role="tabpanel"
-                  aria-labelledby="applied-ads-tab"
-                >
-                  <div class="card">
-                    <div class="card-header">
-                      <h3 class="mb-0">
-                        Annonces auxquelles vous avez postulé
-                      </h3>
-                    </div>
-                    <div class="card-body">
-                      <p>
-                        Voici la liste des annonces pour lesquelles vous avez
-                        déjà soumis votre CV. Vous pouvez suivre l'état de votre
-                        candidature ici.
-                      </p>
-                      <!-- Add your dynamic list of applied ads here -->
                     </div>
                   </div>
                 </div>
