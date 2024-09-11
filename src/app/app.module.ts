@@ -60,7 +60,7 @@ import { SafeUrlPipe } from './safe-url.pipe';
 import { MessageApresPostulerComponent } from './message-apres-postuler/message-apres-postuler.component';
 import { JobCvsComponent } from './job-cvs/job-cvs.component';
 import { CvsPreselectionesComponent } from './cvs-preselectiones/cvs-preselectiones.component';
-
+import { CheckboxModule } from 'primeng/checkbox';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -124,6 +124,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     GalleriaModule,
     FormsModule,
     MatSliderModule,
+    CheckboxModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

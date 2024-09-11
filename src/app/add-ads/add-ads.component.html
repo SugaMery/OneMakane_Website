@@ -1289,10 +1289,12 @@
                               </div>
                             </ng-template>
                           </p-stepperPanel>
+
                           <p-stepperPanel header="Détails de Localisation">
                             <ng-template
                               pTemplate="content"
                               let-prevCallback="prevCallback"
+                              let-nextCallback="nextCallback"
                               let-index="index"
                             >
                               <div class="flex flex-column">
@@ -1373,77 +1375,6 @@
                                         <!-- Ajoutez les autres messages d'erreur de validation ici si nécessaire -->
                                       </div>
                                     </div>
-
-                                    <!-- <div class="row">
-                                      <label style="margin-bottom: 1rem"
-                                        >Annonces similaires en vente
-                                      </label>
-                                      <p-carousel
-                                        [numVisible]="6"
-                                        [value]="filteredAds"
-                                        [numScroll]="1"
-                                        [circular]="false"
-                                        [showIndicators]="false"
-                                        class="custom-carousel"
-                                      >
-                                        <ng-template pTemplate="item" let-ad>
-                                          <div class="col-md-6 ColProduct">
-                                            <div
-                                              class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
-                                              data-wow-delay=".1s"
-                                            >
-                                              <div
-                                                class="product-img-action-wrap"
-                                              >
-                                                <div
-                                                  class="product-img product-img-zoom"
-                                                >
-                                                  <a>
-                                                    <img
-                                                      class="default-img"
-                                                      [src]="
-                                                        ad.medias &&
-                                                        ad.medias.length > 0
-                                                          ? ad.medias[0].url
-                                                          : ''
-                                                      "
-                                                      alt=""
-                                                    />
-                                                    <img
-                                                      class="hover-img"
-                                                      [src]="
-                                                        ad.medias &&
-                                                        ad.medias.length > 0
-                                                          ? ad.medias[0].url
-                                                          : ''
-                                                      "
-                                                      alt=""
-                                                    />
-                                                  </a>
-                                                </div>
-                                              </div>
-                                              <div class="product-content-wrap">
-                                                <div
-                                                  class="product-category"
-                                                  style="margin-top: 1rem"
-                                                >
-                                                  <a>{{ ad.category.name }}</a>
-                                                </div>
-                                                <h2 style="margin: 1rem 0 1rem">
-                                                  <a>{{ ad.title }}</a>
-                                                </h2>
-                                                <div class="product-rate-cover">
-                                                  <span
-                                                    class="font-small text-muted"
-                                                    >{{ ad.price }} DH</span
-                                                  >
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </ng-template>
-                                      </p-carousel>
-                                    </div> -->
                                   </div>
                                 </div>
                               </div>
@@ -1453,12 +1384,648 @@
                                   icon="pi pi-arrow-left"
                                   (onClick)="prevCallback.emit()"
                                 />
-
                                 <p-button
-                                  label="Confirmer"
-                                  icon="pi pi-check"
+                                  label="Suivant"
+                                  icon="pi pi-arrow-right"
                                   iconPos="right"
-                                  (click)="onSubmit()"
+                                  (onClick)="nextCallback.emit()"
+                                ></p-button>
+                              </div>
+                            </ng-template>
+                          </p-stepperPanel>
+
+                          <p-stepperPanel header="Options">
+                            <ng-template
+                              pTemplate="content"
+                              let-prevCallback="prevCallback"
+                              let-nextCallback="nextCallback"
+                              let-index="index"
+                            >
+                              <div class="flex flex-column">
+                                <div
+                                  class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium"
+                                >
+                                  <div class="container" style="padding: 2rem">
+                                    <h5 class="section-title style-1 mb-30">
+                                      Veuillez choisir un pack et la durée
+                                      ci-dessous
+                                    </h5>
+
+                                    <div class="container">
+                                      <div class="row">
+                                        <div class="col-8">
+                                          <div class="payment-method">
+                                            <h4>
+                                              Remonter
+                                              <span style="color: #3cba7f"
+                                                >mon annonce</span
+                                              >
+                                              :
+                                            </h4>
+
+                                            <!-- Default option for no selection -->
+                                            <div class="pm-item">
+                                              <input
+                                                id="no-option"
+                                                type="radio"
+                                                name="payment-method"
+                                                value=""
+                                                (change)="
+                                                  onPaidOptionChange(null)
+                                                "
+                                              />
+                                              <label
+                                                class="pm-label"
+                                                for="no-option"
+                                              >
+                                                <div class="pm-text">
+                                                  <h5>Aucune option</h5>
+                                                  <p>
+                                                    Aucune option n'est
+                                                    sélectionnée.
+                                                  </p>
+                                                </div>
+                                                <div class="pm-price">
+                                                  <p
+                                                    style="
+                                                      font-size: 1.5rem;
+                                                      font-weight: 600;
+                                                    "
+                                                  >
+                                                    0 DH
+                                                  </p>
+                                                  0 jours
+                                                </div>
+                                              </label>
+                                            </div>
+
+                                            <!-- Options from paidOptions array -->
+                                            <div
+                                              *ngFor="let option of paidOptions"
+                                              class="pm-item"
+                                            >
+                                              <input
+                                                id="{{ 'pm' + option.id }}"
+                                                type="radio"
+                                                name="payment-method"
+                                                [value]="option.id"
+                                                (change)="
+                                                  onPaidOptionChange(option)
+                                                "
+                                              />
+                                              <label
+                                                class="pm-label"
+                                                [for]="'pm' + option.id"
+                                              >
+                                                <div class="pm-text">
+                                                  <h5>{{ option.name }}</h5>
+                                                  <p>
+                                                    {{ option.description }}
+                                                  </p>
+                                                </div>
+                                                <div class="pm-price">
+                                                  <p
+                                                    style="
+                                                      font-size: 1.5rem;
+                                                      font-weight: 600;
+                                                    "
+                                                  >
+                                                    {{ option.price }} DH
+                                                  </p>
+                                                  {{ option.duration }} jours
+                                                </div>
+                                              </label>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div class="col-4">
+                                          <div class="payment-method">
+                                            <h4>
+                                              Mettre
+                                              <span style="color: #3cba7f"
+                                                >en avant</span
+                                              >
+                                              :
+                                            </h4>
+                                            <div class="py-2">
+                                              <div
+                                                class="first pl-2 d-flex py-2 align-items-center justify-content-between"
+                                                *ngFor="
+                                                  let option of promoteOptions
+                                                "
+                                              >
+                                                <label
+                                                  class="d-flex w-100 align-items-center"
+                                                  [for]="'option' + option.id"
+                                                >
+                                                  <div class="form-check">
+                                                    <p-checkbox
+                                                      [inputId]="
+                                                        'option' + option.id
+                                                      "
+                                                      [(ngModel)]="
+                                                        selectedOptions
+                                                      "
+                                                      [value]="option.id"
+                                                      [binary]="true"
+                                                      name="payment-method"
+                                                      (onChange)="
+                                                        onOptionChange(
+                                                          $event,
+                                                          option
+                                                        )
+                                                      "
+                                                    ></p-checkbox>
+                                                  </div>
+                                                  <div
+                                                    class="border-left pl-2"
+                                                    style="
+                                                      flex-grow: 1;
+                                                      padding-left: 10px;
+                                                    "
+                                                  >
+                                                    <span class="head">{{
+                                                      option.name
+                                                    }}</span>
+                                                  </div>
+                                                  <div
+                                                    style="text-align: right"
+                                                  >
+                                                    <span
+                                                      class="amount"
+                                                      style="font-weight: bold"
+                                                      >{{ option.price }}</span
+                                                    >
+                                                    <span class="dollar"
+                                                      >DH</span
+                                                    >
+                                                  </div>
+                                                </label>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="flex pt-4 justify-content-between">
+                                <p-button
+                                  label="Retour"
+                                  icon="pi pi-arrow-left"
+                                  (onClick)="prevCallback.emit()"
+                                />
+                                <p-button
+                                  label="Suivant"
+                                  icon="pi pi-arrow-right"
+                                  iconPos="right"
+                                  (onClick)="
+                                    emitNextCallbackOptions();
+                                    nextCallback.emit()
+                                  "
+                                ></p-button>
+                              </div>
+                            </ng-template>
+                          </p-stepperPanel>
+
+                          <p-stepperPanel header="Récap">
+                            <ng-template
+                              pTemplate="content"
+                              let-prevCallback="prevCallback"
+                              let-nextCallback="nextCallback"
+                              let-index="index"
+                            >
+                              <!-- Left Column -->
+                              <div
+                                class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium"
+                              >
+                                <div
+                                  class="container"
+                                  style="padding: 2rem 2rem 2rem 2rem"
+                                >
+                                  <h5 class="section-title style-1 mb-30">
+                                    Votre commande
+                                  </h5>
+                                  <div class="row">
+                                    <!-- Left Column -->
+                                    <div class="col-6">
+                                      <!-- Champ de titre -->
+                                      <div class="row">
+                                        <div class="col-12">
+                                          <div class="input-style mb-20">
+                                            <label>Le titre de l'annonce</label>
+                                            <input
+                                              id="titre"
+                                              name="titre"
+                                              [(ngModel)]="formData.titre"
+                                              (ngModelChange)="
+                                                onTitleChange($event)
+                                              "
+                                              placeholder="Titre de votre annonce"
+                                              type="text"
+                                              required
+                                              disabled=""
+                                              maxlength="50"
+                                            />
+                                            <div
+                                              *ngIf="fieldErrors.titre"
+                                              class="text-danger requisDiv"
+                                            >
+                                              <div>Titre est requis.</div>
+                                            </div>
+                                            <div
+                                              class="text-infos requisDiv"
+                                              *ngIf="
+                                                formData.titre &&
+                                                formData.titre.length >= 45
+                                              "
+                                            >
+                                              <div>
+                                                Le titre est proche de la
+                                                longueur maximale.
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <!-- Liste des catégories suggérées -->
+                                      <div *ngIf="isBakingMaterialChecked">
+                                        <!-- Votre chatbox pour la catégorie des ustensiles de cuisine -->
+                                      </div>
+                                      <div
+                                        *ngIf="suggestedCategoryIf"
+                                        class="theiaStickySidebar"
+                                        style="
+                                          padding-top: 0px;
+                                          padding-bottom: 1px;
+                                          position: static;
+                                          transform: none;
+                                        "
+                                      >
+                                        <div class="row">
+                                          <div class="form-group col-md-12">
+                                            <label>Catégorie</label>
+                                            <div class="select-menu">
+                                              <div
+                                                aria-disabled="true"
+                                                class="select-btn"
+                                                style="
+                                                  margin-bottom: 1rem;
+                                                  background: #fff;
+                                                  border: 1px solid #ececec;
+                                                  height: 64px;
+                                                  box-shadow: none;
+                                                  padding-left: 20px;
+                                                  font-size: 16px;
+                                                  width: 100%;
+                                                "
+                                                (click)="toggleOptions()"
+                                              >
+                                                <span class="sBtn-text">
+                                                  <div
+                                                    style="
+                                                      display: flex;
+                                                      align-items: center;
+                                                    "
+                                                  >
+                                                    <img
+                                                      src="{{
+                                                        selectedOption.media
+                                                          ?.url
+                                                      }}"
+                                                      *ngIf="
+                                                        selectedOption.name
+                                                      "
+                                                      alt=""
+                                                      class="iconUrl"
+                                                      [ngStyle]="{
+                                                        width: isPhone()
+                                                          ? '2rem'
+                                                          : '2.5rem',
+                                                        'margin-right': '1rem'
+                                                      }"
+                                                    />
+                                                    <p style="margin: 0">
+                                                      {{
+                                                        selectedOption.name ||
+                                                          "Choisissez"
+                                                      }}
+                                                    </p>
+                                                  </div>
+                                                </span>
+                                                <i
+                                                  class="bx bx-chevron-down"
+                                                ></i>
+                                              </div>
+                                            </div>
+
+                                            <div
+                                              class="select-menu"
+                                              *ngIf="openselect"
+                                            >
+                                              <div
+                                                class="select-btn"
+                                                style="
+                                                  margin-bottom: 1rem;
+                                                  background: #fff;
+                                                  border: 1px solid #ececec;
+                                                  height: 64px;
+                                                  box-shadow: none;
+                                                  padding-left: 20px;
+                                                  font-size: 16px;
+                                                  width: 100%;
+                                                "
+                                                (click)="
+                                                  toggleSubcategoryOptions()
+                                                "
+                                              >
+                                                <span class="sBtn-text">
+                                                  <div
+                                                    style="
+                                                      display: flex;
+                                                      align-items: center;
+                                                    "
+                                                  >
+                                                    <img
+                                                      src="{{
+                                                        selectedOption.media
+                                                          ?.url
+                                                      }}"
+                                                      *ngIf="
+                                                        selectedSubcategory?.name
+                                                      "
+                                                      alt=""
+                                                      class="iconUrl"
+                                                      [ngStyle]="{
+                                                        width: isPhone()
+                                                          ? '2rem'
+                                                          : '2.5rem',
+                                                        'margin-right': '1rem'
+                                                      }"
+                                                    />
+                                                    <p style="margin: 0">
+                                                      {{
+                                                        selectedSubcategory?.name ||
+                                                          "Choisissez"
+                                                      }}
+                                                    </p>
+                                                  </div>
+                                                </span>
+                                                <i
+                                                  class="bx bx-chevron-down"
+                                                ></i>
+                                              </div>
+                                            </div>
+                                            <div
+                                              *ngIf="fieldErrors.category"
+                                              class="text-danger requisDiv"
+                                            >
+                                              <div>Catégorie est requise.</div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div class="row">
+                                        <div class="col-12">
+                                          <div class="input-style mb-20">
+                                            <label
+                                              >Description de l'annonce</label
+                                            >
+                                            <textarea
+                                              id="description"
+                                              name="description"
+                                              (ngModelChange)="
+                                                clearError('description')
+                                              "
+                                              disabled
+                                              [(ngModel)]="formData.description"
+                                              required
+                                              minlength="10"
+                                            ></textarea>
+                                            <div
+                                              *ngIf="fieldErrors.description"
+                                              class="text-danger requisDiv"
+                                            >
+                                              <div>
+                                                Description est requise.
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div class="row">
+                                        <div class="col-12">
+                                          <div class="form-group">
+                                            <label>Ville</label>
+                                            <input
+                                              name="ville"
+                                              [(ngModel)]="formData.ville"
+                                              (ngModelChange)="
+                                                clearError('ville')
+                                              "
+                                              placeholder="Ville de l'annonce"
+                                              type="text"
+                                              disabled
+                                            />
+                                            <div
+                                              *ngIf="fieldErrors.ville"
+                                              class="text-danger requisDiv"
+                                            >
+                                              <div>Ville est requise.</div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div class="row">
+                                        <div class="col-12">
+                                          <div class="form-group">
+                                            <label>Code postal</label>
+                                            <input
+                                              name="code_postal"
+                                              [(ngModel)]="formData.code_postal"
+                                              (ngModelChange)="
+                                                clearError('code_postal')
+                                              "
+                                              disabled
+                                              placeholder="Code postal de l'annonce"
+                                              type="text"
+                                            />
+                                            <div
+                                              *ngIf="fieldErrors.code_postal"
+                                              class="text-danger requisDiv"
+                                            >
+                                              <div>Code postal est requis.</div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div
+                                        class="row"
+                                        style="margin-bottom: 2rem"
+                                      >
+                                        <div class="col-12">
+                                          <div class="form-group">
+                                            <label>Prix</label>
+                                            <input
+                                              id="prix"
+                                              name="prix"
+                                              [(ngModel)]="formData.prix"
+                                              placeholder="Prix de votre annonce"
+                                              type="number"
+                                              required
+                                              disabled
+                                              (ngModelChange)="
+                                                clearError('prix')
+                                              "
+                                            />
+                                            <div
+                                              *ngIf="fieldErrors.prix"
+                                              class="text-danger requisDiv"
+                                            >
+                                              <div>Prix est requis.</div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <!-- Right Column -->
+                                    <div class="col-lg-6">
+                                      <div
+                                        class="border p-md-4 cart-totals ml-30"
+                                        style="background: ghostwhite"
+                                      >
+                                        <div class="table-responsive">
+                                          <table class="table no-border">
+                                            <tbody>
+                                              <tr>
+                                                <td class="cart_total_label">
+                                                  <h6 class="text-muted">
+                                                    {{
+                                                      selectedPaidOptionId.name
+                                                    }}
+                                                  </h6>
+                                                </td>
+                                                <td class="cart_total_amount">
+                                                  <h4
+                                                    class="text-brand text-end"
+                                                  >
+                                                    {{
+                                                      selectedPaidOptionId.price
+                                                    }}
+                                                    DH
+                                                  </h4>
+                                                </td>
+                                              </tr>
+                                              <tr>
+                                                <td scope="col" colspan="2">
+                                                  <div
+                                                    class="divider-2 mt-10 mb-10"
+                                                  ></div>
+                                                </td>
+                                              </tr>
+                                              <tr
+                                                *ngFor="
+                                                  let option of selectedOptions
+                                                "
+                                              >
+                                                <td class="cart_total_label">
+                                                  <h6 class="text-muted">
+                                                    {{ option.name }}
+                                                  </h6>
+                                                </td>
+                                                <td class="cart_total_amount">
+                                                  <h4
+                                                    class="text-brand text-end"
+                                                  >
+                                                    {{ option.price }}
+                                                    DH
+                                                  </h4>
+                                                </td>
+                                              </tr>
+                                              <tr>
+                                                <td class="cart_total_label">
+                                                  <h6 class="text-muted">
+                                                    Shipping
+                                                  </h6>
+                                                </td>
+                                                <td class="cart_total_amount">
+                                                  <h5
+                                                    class="text-heading text-end"
+                                                  >
+                                                    Free
+                                                  </h5>
+                                                </td>
+                                              </tr>
+                                              <tr>
+                                                <td class="cart_total_label">
+                                                  <h6 class="text-muted">
+                                                    Estimate for
+                                                  </h6>
+                                                </td>
+                                                <td class="cart_total_amount">
+                                                  <h5
+                                                    class="text-heading text-end"
+                                                  >
+                                                    United Kingdom
+                                                  </h5>
+                                                </td>
+                                              </tr>
+                                              <tr>
+                                                <td scope="col" colspan="2">
+                                                  <div
+                                                    class="divider-2 mt-10 mb-10"
+                                                  ></div>
+                                                </td>
+                                              </tr>
+                                              <tr>
+                                                <td class="cart_total_label">
+                                                  <h6 class="text-muted">
+                                                    Total
+                                                  </h6>
+                                                </td>
+                                                <td class="cart_total_amount">
+                                                  <h4
+                                                    class="text-brand text-end"
+                                                  >
+                                                    $12.31
+                                                  </h4>
+                                                </td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                        <a href="#" class="btn mb-20 w-100"
+                                          >Proceed To CheckOut<i
+                                            class="fi-rs-sign-out ml-15"
+                                          ></i
+                                        ></a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="flex pt-4 justify-content-between">
+                                <p-button
+                                  label="Retour"
+                                  icon="pi pi-arrow-left"
+                                  (onClick)="prevCallback.emit()"
+                                />
+                                <p-button
+                                  label="Suivant"
+                                  icon="pi pi-arrow-right"
+                                  iconPos="right"
+                                  (onClick)="
+                                    emitNextCallbackOptions();
+                                    nextCallback.emit()
+                                  "
                                 ></p-button>
                               </div>
                             </ng-template>

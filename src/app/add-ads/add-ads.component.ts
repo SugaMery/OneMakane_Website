@@ -13,6 +13,7 @@ import { SettingService } from '../setting.service';
 import { Router } from '@angular/router';
 import { formatDate } from '@angular/common';
 import { PrimeNGConfig } from 'primeng/api';
+import { OptionsService } from '../options.service';
 declare var $: any;
 
 interface Category {
@@ -192,7 +193,8 @@ export class AddAdsComponent implements OnInit {
     private categoryService: CategoryService,
     private settingsService: SettingService,
     private router: Router,
-    private primengConfig: PrimeNGConfig
+    private primengConfig: PrimeNGConfig,
+    private optionsService: OptionsService
   ) {}
 
   // Liste de catégories avec leurs mots-clés associés
@@ -960,6 +962,8 @@ export class AddAdsComponent implements OnInit {
   ngOnInit(): void {
     this.getUserInfo();
     this.fetchCategories();
+    this.loadPaidOptions();
+    this.loadPromoteOptions();
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
     this.annonceService.getAds().subscribe((data) => {
@@ -1401,6 +1405,109 @@ export class AddAdsComponent implements OnInit {
     });
 
     this.formData.category_id = subcategory.id;
+  }
+
+  // In your component class
+
+  // Arrays to hold the options and selected options
+  paidOptions: any[] = [];
+  promoteOptions: any[] = [];
+  selectedOptions: any[] = [];
+  selectedPaidOptionId: any;
+  totalPrice: number = 0; // Variable to store the total price
+
+  // Method to fetch paid options
+  loadPaidOptions(): void {
+    const accessToken = localStorage.getItem('loggedInUserToken');
+
+    this.optionsService.getPaidOptions(accessToken!, 'go-up').subscribe(
+      (response) => {
+        if (response.status === 'Success') {
+          this.paidOptions = response.data;
+          console.log('this.settings', response.data);
+          this.calculateTotalPrice(); // Recalculate price when options are loaded
+        } else {
+          console.error('Failed to load paid options:', response.message);
+        }
+      },
+      (error) => {
+        console.error('Error fetching paid options:', error);
+      }
+    );
+  }
+
+  // Method to fetch promote options
+  loadPromoteOptions(): void {
+    const accessToken = localStorage.getItem('loggedInUserToken');
+
+    this.optionsService.getPaidOptions(accessToken!, 'promote').subscribe(
+      (response) => {
+        if (response.status === 'Success') {
+          this.promoteOptions = response.data;
+        } else {
+          console.error('Failed to load promote options:', response.message);
+        }
+      },
+      (error) => {
+        console.error('Error fetching promote options:', error);
+      }
+    );
+  }
+
+  // Method to handle option change
+  onOptionChange(event: any, option: any): void {
+    if (event.checked) {
+      if (!Array.isArray(this.selectedOptions)) {
+        this.selectedOptions = [];
+      }
+      this.selectedOptions.push(option);
+    } else {
+      this.selectedOptions = this.selectedOptions.filter(
+        (id) => id !== option.id
+      );
+    }
+    this.calculateTotalPrice(); // Recalculate price on option change
+  }
+
+  // Method to handle paid option change
+  onPaidOptionChange(option: any): void {
+    this.selectedPaidOptionId = option;
+    this.calculateTotalPrice(); // Recalculate price on paid option change
+  }
+
+  // Method to calculate the total price based on selected options
+  calculateTotalPrice(): void {
+    this.totalPrice = 0;
+
+    // Calculate total for paid options
+    if (this.selectedPaidOptionId !== null) {
+      const selectedPaidOption = this.paidOptions.find(
+        (option) => option.id === this.selectedPaidOptionId
+      );
+      if (selectedPaidOption) {
+        this.totalPrice += selectedPaidOption.price; // Assuming price is a field in the option object
+      }
+    }
+
+    // Calculate total for promote options
+    for (const optionId of this.selectedOptions) {
+      const selectedOption = this.promoteOptions.find(
+        (option) => option.id === optionId
+      );
+      if (selectedOption) {
+        this.totalPrice += selectedOption.price; // Assuming price is a field in the option object
+      }
+    }
+
+    console.log('Total Price:', this.totalPrice);
+  }
+
+  // Call this method when you need to emit data
+  emitNextCallbackOptions(): void {
+    console.log('Selected paid option ID:', this.selectedPaidOptionId);
+    console.log('Selected promote option IDs:', this.selectedOptions);
+    console.log('Total Price:', this.totalPrice);
+    // You can add additional logic here to handle the collected data
   }
 
   toggleSubcategoryOptions() {

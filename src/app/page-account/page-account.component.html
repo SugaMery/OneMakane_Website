@@ -58,7 +58,7 @@
                       ><i class="fi-rs-briefcase mr-10"></i>Offres d'emploi</a
                     >
                   </li>
-                  <li class="nav-item" *ngIf="showJobTab">
+                  <li class="nav-item">
                     <a
                       class="nav-link"
                       id="applied-ads-tab"
@@ -248,6 +248,12 @@
                                 </td>
                               </tr>
                             </tbody>
+
+                            <tr *ngIf="paginatedAds.length === 0">
+                              <td colspan="7" class="text-center">
+                                Aucune annonce n'a été trouvée.
+                              </td>
+                            </tr>
                           </table>
                           <p-dialog
                             [(visible)]="adDialog"
@@ -1148,6 +1154,12 @@
                                 </td>
                               </tr>
                             </tbody>
+
+                            <tr *ngIf="paginatedAd.length === 0">
+                              <td colspan="7" class="text-center">
+                                Aucune annonce d'offre d'emploi n'a été trouvée.
+                              </td>
+                            </tr>
                           </table>
                         </div>
                       </div>
@@ -1302,67 +1314,14 @@
                                 </td>
                               </tr>
                             </tbody>
-                          </table>
-                          <p-dialog
-                            [(visible)]="adDialog"
-                            [style]="{ width: '20rem' }"
-                            header="Confirmer la suppression"
-                            [modal]="true"
-                            styleClass="p-fluid"
-                          >
-                            <ng-template pTemplate="content">
-                              <div>
-                                <p>
-                                  Êtes-vous sûr de vouloir supprimer cette
-                                  annonce ?
-                                </p>
-                                <div class="payment_option">
-                                  <div *ngIf="reasons.length === 0">
-                                    Aucune raison disponible
-                                  </div>
-                                  <div
-                                    class="custome-radio"
-                                    *ngFor="let reason of reasons"
-                                  >
-                                    <input
-                                      class="form-check-input"
-                                      type="radio"
-                                      name="reason"
-                                      [id]="'option' + reason.id"
-                                      [value]="reason.id"
-                                      required
-                                    />
-                                    <label
-                                      class="form-check-label"
-                                      [for]="'option' + reason.id"
-                                      >{{ reason.long_name }}</label
-                                    >
-                                  </div>
-                                </div>
-                              </div>
-                            </ng-template>
 
-                            <ng-template pTemplate="footer">
-                              <div style="padding: 1rem !important">
-                                <button
-                                  pButton
-                                  pRipple
-                                  label="Annuler"
-                                  icon="pi pi-times"
-                                  class="p-button-text"
-                                  (click)="adDialog = false"
-                                ></button>
-                                <button
-                                  pButton
-                                  pRipple
-                                  label="Confirmer"
-                                  icon="pi pi-check"
-                                  class="p-button-danger"
-                                  (click)="confirmDeletion(selectedAd)"
-                                ></button>
-                              </div>
-                            </ng-template>
-                          </p-dialog>
+                            <tr *ngIf="paginatedAded.length === 0">
+                              <td colspan="7" class="text-center">
+                                Aucune annonce à laquelle vous avez postulé n'a
+                                été trouvée.
+                              </td>
+                            </tr>
+                          </table>
                         </div>
                       </div>
 

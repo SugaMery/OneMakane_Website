@@ -31846,3 +31846,860 @@ table th {
 ::ng-deep .error-message.ng-star-inserted {
   COLOR: RED;
 }
+
+::ng-deep span.p-stepper-title {
+  font-size: small;
+}
+
+
+
+
+body {
+  background-color: #e6ebf4
+}
+
+.card {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 5px 6px 6px 2px #e9ecef
+}
+
+.heading {
+  font-size: 23px;
+  font-weight: 00
+}
+
+.text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #b1b6bd
+}
+
+.pricing {
+  border: 2px solid #304FFE;
+  background-color: #f2f5ff
+}
+
+.business {
+  font-size: 20px;
+  font-weight: 500
+}
+
+.plan {
+  color: #aba4a4
+}
+
+.dollar {
+  font-size: 16px;
+  color: #6b6b6f
+}
+
+.amount {
+  font-size: 50px;
+  font-weight: 500
+}
+
+.year {
+  font-size: 20px;
+  color: #6b6b6f;
+  margin-top: 19px
+}
+
+.detail {
+  font-size: 22px;
+  font-weight: 500
+}
+
+.cvv {
+  height: 44px;
+  width: 73px;
+  border: 2px solid #eee
+}
+
+.cvv:focus {
+  box-shadow: none;
+  border: 2px solid #304FFE
+}
+
+.email-text {
+  height: 55px;
+  border: 2px solid #eee
+}
+
+.email-text:focus {
+  box-shadow: none;
+  border: 2px solid #304FFE
+}
+
+.payment-button {
+  height: 70px;
+  font-size: 20px
+}
+
+
+
+.checkbox-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-check-input {
+  position: absolute;
+  opacity: 0;
+  /* Hide the default checkbox appearance */
+  cursor: pointer;
+}
+
+.checkmark-label {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ccc;
+  /* Border color for the checkbox */
+  border-radius: 4px;
+  /* Make it rounded */
+  background-color: #fff;
+  /* Background color when unchecked */
+  cursor: pointer;
+}
+
+.form-check-input:checked+.checkmark-label {
+  background-color: green;
+  /* Background color when checked */
+  border-color: green;
+  /* Border color when checked */
+}
+
+.checkmark-label::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  display: none;
+  /* Hide checkmark initially */
+}
+
+.form-check-input:checked+.checkmark-label::after {
+  display: block;
+  /* Show checkmark when checked */
+}
+
+
+
+.checkmark-label::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  display: none;
+  /* Hide checkmark initially */
+}
+
+
+
+.payment {
+  max-width: 36em;
+  margin: 0 auto;
+  background-color: white;
+  color: #5e6977;
+  border-radius: 0.3em;
+  box-shadow: 0.2em 0.3em 0.8em -0.45em rgba(0, 0, 0, 0.2), 0 0.2em 0.5em 0 rgba(0, 0, 0, 0.08);
+}
+
+.payment-tabs {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 2em;
+  padding-right: 2em;
+  border-bottom: 1px solid #e1e8ee;
+  counter-reset: section;
+}
+
+.payment-tabs>a {
+  padding: 1.35em 0;
+  color: #bdc6cf;
+  font-size: 0.9em;
+  position: relative;
+  transition: all 200ms ease-in-out;
+}
+
+.payment-tabs>a:before {
+  counter-increment: section;
+  content: counter(section);
+  display: inline-block;
+  width: 1.65em;
+  height: 1.65em;
+  margin-right: 0.5em;
+  border: 0.15em solid #e1e8ee;
+  color: #bdc6cf;
+  font-size: 0.85em;
+  text-align: center;
+  line-height: 1.45em;
+  border-radius: 50%;
+  transition: all 300ms ease-in-out;
+}
+
+.payment-tabs>a:after {
+  content: "";
+  display: block;
+  border-bottom: 2px solid transparent;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+}
+
+.payment-tabs>a:hover {
+  text-decoration: none;
+  color: #91a0af;
+}
+
+.payment-tabs>a:hover:before {
+  border-color: #91a0af;
+  color: #91a0af;
+}
+
+.payment-tabs>a.active {
+  color: #358ed7;
+  font-weight: 500;
+}
+
+.payment-tabs>a.active:before {
+  border-color: #358ed7;
+  color: inherit;
+}
+
+.payment-tabs>a.active:after {
+  border-bottom: 2px solid #358ed7;
+}
+
+.payment-customer {
+  display: none;
+}
+
+.payment-method h2 {
+  margin: 0;
+  font-size: 1.5em;
+  line-height: 1.2;
+  padding-bottom: 2rem;
+  color: #3cba7f;
+  font-weight: 700;
+}
+
+.payment-method .pm-item {
+  position: relative;
+}
+
+.payment-method .pm-item:last-child:after {
+  content: "";
+  display: block;
+  height: 0.125em;
+  position: absolute;
+  left: 2em;
+  right: 2em;
+}
+
+.payment-method .pm-label {
+  display: flex;
+  margin-bottom: 0;
+  padding: 1.5rem 2rem;
+  cursor: pointer;
+  border-radius: 1rem;
+
+
+  border: 1.5px solid #78b9ff;
+
+  background-color: #eaf4ff;
+}
+
+.payment-method .pm-text {
+  padding-left: 2.5em;
+  position: relative;
+}
+
+.payment-method .pm-text:before {
+  content: "";
+  display: block;
+  width: 1.5em;
+  height: 1.5em;
+  background: white;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  box-shadow: 0 0.08rem 0 rgba(20, 28, 35, 0.25) inset;
+}
+
+.payment-method .pm-text h5 {
+  padding-top: 0.25em;
+  font-size: 1em;
+}
+
+.payment-method .pm-text p {
+  margin-bottom: 0;
+  color: #253d4e;
+}
+
+.payment-method .pm-thumb {
+  padding-left: 0.9em;
+}
+
+.payment-method input[type=radio] {
+  display: none;
+}
+
+.payment-method input[type=radio]:checked+.pm-label {
+  background: #22c55e30;
+  border: 1.5px solid #3BB77E;
+}
+
+.payment-method input[type=radio]:checked+.pm-label .pm-text:before {
+  background: radial-gradient(white 0%, white 33%, #3bb77e 38%, #3bb77e 100%);
+}
+
+.payment-input {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 2em;
+}
+
+.payment-input label {
+  margin-bottom: 0.3em;
+  color: #697685;
+  font-size: 0.9em;
+}
+
+.payment-input select {
+  height: 2.5rem !important;
+  padding-right: 2em;
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAGCAYAAAARx7TFAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpCQTA3RjE4NkQ0NkExMUU3QTM3RkRFQjFEOEY3MDM4RSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpCQTA3RjE4N0Q0NkExMUU3QTM3RkRFQjFEOEY3MDM4RSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkJBMDdGMTg0RDQ2QTExRTdBMzdGREVCMUQ4RjcwMzhFIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkJBMDdGMTg1RDQ2QTExRTdBMzdGREVCMUQ4RjcwMzhFIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+OpMgKgAAAGJJREFUeNpijMssz2VgYDAB4m9AzMiAAP+BmAuIz7AAiWAgtmfADeSYgEQGED/EoQAknglSdAOII4D4C5qCL1DxG0xQgRNA7AHEn6D8T1A+SJyBCUnnUaj7dkPpozAJgAADABogEzO2aGVBAAAAAElFTkSuQmCC");
+  background-color: #e1e8ee;
+  background-repeat: no-repeat;
+  background-position: calc(100% - 1em) center;
+  -webkit-appearance: none;
+}
+
+.payment-input .form-control {
+  border-width: 2px;
+}
+
+.payment-input .form-control:not(.is-valid):not(.is-invalid) {
+  border-color: #e1e8ee;
+}
+
+.payment-input .form-control:focus {
+  box-shadow: none;
+}
+
+.payment-input .form-control.is-valid,
+.payment-input .form-control.is-invalid {
+  background-position: calc(100% - 1.1em) center;
+  background-repeat: no-repeat;
+}
+
+.payment-input .form-control.is-valid {
+  border-color: #7dc855;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAJCAYAAADpeqZqAAAABGdBTUEAALGPC/xhBQAAAQ5JREFUGBmNUDtOw0AQnTcBiS4n4BgxVEh0NDQg2xUdFQoFEkIoks064IaKJhSkoAAJbN+AE9jbcg6OkJ3MGhwZKUJMMfvmze/Ngv5paR2eCJATcMy+p5Rw8FdvasNYiJ5JZJucqzito/1PS19pE92sazQ2PiJHr5prBwM0ZyF5IaGhiJikiSb9xtRGhwuRd92y4Xkm3E13qpwH4AkA1xaL5EkdXXpsbHiggyqVtOljBu6z3TLxGN6ZJj5dkHvSjW2s/gOCPVWx5fPMeMiC8sJjb99FChIbn+mRs5btOTBm06Ac9yiV+WO3QfGoM1fTPA3CPBsV511N9642dUTShGOVea2S3syouNJ79R9+2xLcA1oZPdllOgAAAABJRU5ErkJggg==");
+}
+
+.payment-input .form-control.is-invalid {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAALCAIAAAAmzuBxAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDowOUZFMTU2OUQ0NjcxMUU3ODREMjk0RUU3NzEwMEVENCIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDowOUZFMTU2QUQ0NjcxMUU3ODREMjk0RUU3NzEwMEVENCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjA5RkUxNTY3RDQ2NzExRTc4NEQyOTRFRTc3MTAwRUQ0IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjA5RkUxNTY4RDQ2NzExRTc4NEQyOTRFRTc3MTAwRUQ0Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+eFdNEwAAASBJREFUeNpi+HH91vOi2g+rN/1HBUARoDhQluXj8nVfD5/4evQkExcHr5crAxh83rr7Tc8Uhn//mXi4mXj9PFhEhYGc1819Xw8eA0oDydctfUARoDhQlhFo4M9rN58X1/99+w6ogy/Q+9P6rf++fGUWFpLsbWTXUgepAOr7fv7ym85Jv+49hNjCpiQvUp7HaagLZDNBhIAcXm83BhgAsiHSCBVAMz5v3QVXAWQDRRAqfl69+bKqFWgF0B0CsWFAEsgGigDFQUq+nb143zP8jqnrXQuPLweOAp0FJIFsoAhQHCjLnCep+OPiVQYmRrHaYh5XB5AzFWRZJMW/Hj7+/+t3hn//WPgjAv9+/Mxlbcbr7YrkUtd/3398O3oKKAsQYABi9qDVgBM2nAAAAABJRU5ErkJggg==");
+}
+
+.payment-input .form-group {
+  flex: 1 1 100%;
+}
+
+.payment-input .form-group.half {
+  flex: 1 1 50%;
+}
+
+.payment-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid #e1e8ee;
+}
+
+.payment-actions>a {
+  flex: 1 1 50%;
+  padding: 1em;
+  color: #86939e;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+}
+
+.payment-actions>a+a {
+  border-left: 1px solid #e1e8ee;
+}
+
+.payment-actions>a.finish {
+  color: #7dc855;
+}
+
+@media (max-width: 479px) {
+  .payment {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+
+  .payment-tabs {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .payment-tabs>a {
+    font-size: 0.725rem;
+  }
+
+  .payment-tabs>a:before {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .payment-method h2 {
+    padding: 0.75rem;
+    font-size: 1em;
+  }
+
+  .payment-method .pm-label {
+    flex-wrap: wrap;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .payment-method .pm-text,
+  .payment-method .pm-thumb {
+    padding-left: 2.25em;
+  }
+
+  .payment-method .pm-text {
+    flex: 1 1 100%;
+  }
+
+  .payment-method .pm-thumb {
+    flex: 0 0 auto;
+    align-self: center;
+    margin-top: 0.35em;
+  }
+
+  .payment-method .pm-thumb+.pm-thumb {
+    padding-left: 1.25em;
+  }
+
+  .payment-input {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .payment-input .form-group.half {
+    flex: 1 1 100%;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+
+
+
+.payment-method {
+  /* Styles généraux pour la méthode de paiement */
+}
+
+.pm-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.pm-label {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.pm-text {
+  flex: 1;
+  /* Prend tout l'espace disponible sauf celui du prix */
+}
+
+.pm-price {
+  text-align: right;
+  /* Aligne le texte à droite */
+  margin-left: 1rem;
+  /* Ajoute un espacement entre le texte et le prix */
+}
+
+.pm-price p {
+  margin: 0;
+  /* Supprime la marge par défaut du paragraphe */
+}
+
+
+
+.container form .category {
+  margin-top: 10px;
+  padding-top: 20px;
+
+  display: grid;
+  grid-gap: 15px;
+}
+
+.category label {
+  /* width: 100%; */
+  /* height: 65px; */
+  height: 145px;
+  padding: 20px;
+  box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2);
+  display: flex;
+  /* justify-content: space-between; */
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 5px;
+  position: relative;
+}
+
+/* label:nth-child(2), label:nth-child(3){
+  margin: 15px 0;
+} */
+
+
+#promote:checked~.category .visaMethod,
+#mastercard:checked~.category .mastercardMethod,
+#paypal:checked~.category .paypalMethod,
+#AMEX:checked~.category .amexMethod {
+  box-shadow: 0px 0px 0px 1px #6064b6;
+}
+
+
+#promote:checked~.category .visaMethod .check,
+#mastercard:checked~.category .mastercardMethod .check,
+#paypal:checked~.category .paypalMethod .check,
+#AMEX:checked~.category .amexMethod .check {
+  display: block;
+}
+
+
+label .imgName {
+  display: flex;
+  /* justify-content: space-between;
+   */
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.imgName span {
+  /* margin-left: 20px; */
+  font-family: Arial, Helvetica, sans-serif;
+
+  position: absolute;
+  top: 72%;
+  transform: translateY(-72%);
+}
+
+.imgName .imgContainer {
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+  top: 35%;
+  transform: translateY(-35%);
+}
+
+img {
+  width: 50px;
+  height: auto;
+}
+
+.promote img {
+  width: 80px;
+  /* margin-left: 5px; */
+}
+
+.mastercard img {
+  width: 65px;
+}
+
+.paypal img {
+  width: 80px;
+}
+
+.AMEX img {
+  width: 50px;
+}
+
+.check {
+  display: none;
+  position: absolute;
+  top: -4px;
+  right: -4px;
+}
+
+.check i {
+  font-size: 18px;
+}
+
+.name {
+  font-size: 15px;
+  color: #403f3f;
+  font-weight: bold;
+}
+
+.cross {
+  font-size: 11px;
+  color: #b0aeb7;
+}
+
+.pin {
+  font-size: 14px;
+  color: #b0aeb7;
+}
+
+.first {
+  border-radius: 8px;
+  border: 1.5px solid #78b9ff;
+  color: #000;
+  background-color: #eaf4ff;
+}
+
+.second {
+  border-radius: 8px;
+  border: 1px solid #acacb0;
+  color: #000;
+  background-color: #fff;
+}
+
+.dot {}
+
+.head {
+  color: #137ff3;
+  font-size: 12px;
+}
+
+.dollar {
+  font-size: 18px;
+  color: #097bf7;
+}
+
+.amount {
+  color: #007bff;
+  font-weight: bold;
+  font-size: 18px;
+
+}
+
+.form-control {
+  font-size: 18px;
+  font-weight: bold;
+  width: 60px;
+  height: 28px;
+
+}
+
+.back {
+  color: #aba4a4;
+  font-size: 15px;
+  line-height: 73px;
+  font-weight: 400;
+}
+
+.button {
+  width: 150px;
+  height: 60px;
+  border-radius: 8px;
+  font-size: 17px;
+}
+
+
+.card {
+  background-color: #fff;
+  width: 300px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+
+
+
+
+
+
+
+
+
+.payment-method {
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.payment-method h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.form-check {
+  position: relative;
+  padding-left: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-check-input {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 1.5em;
+  height: 1.5em;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.form-check-input:checked {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.form-check-label {
+  font-size: 1.25rem;
+  color: #555;
+}
+
+.pm-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.pm-price {
+  font-weight: bold;
+  font-size: 1.25rem;
+  color: #28a745;
+}
+
+
+
+.price-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  /* Push the price to the right */
+  align-items: center;
+}
+
+.amount {
+  margin-left: 5px;
+  font-weight: 600;
+}
+
+.dollar {
+  font-size: 1.2rem;
+}
+
+
+
+
+
+.first {
+  border-radius: 8px;
+  border: 1.5px solid #78b9ff;
+  color: #000;
+  background-color: #eaf4ff;
+}
+
+.py-2 {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+
+.pl-2 {
+  padding-right: 1rem !important;
+}
+
+.form-check {
+  position: relative;
+  padding-left: 1rem;
+  margin-bottom: 0rem;
+}
+
+
+/* Base style for checkboxes */
+.form-check-input {
+  /* Ensure default appearance is styled */
+}
+
+/* Custom style for checked state */
+.form-check-input:checked~.form-check-label::before {
+  background-color: #3cba7f;
+  /* Green color */
+  border-color: #3cba7f;
+  /* Optional: matching border color */
+}
+
+
+::ng-deep .p-checkbox-box.p-highlight {
+
+  background: #3bb77e;
+
+
+}
+
+
+/* ::ng-deep .p-checkbox-box {
+
+  content: "";
+  display: block;
+  width: 1.5em;
+  height: 1.5em;
+  background: white;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  box-shadow: 0 0.08rem 0 rgba(20, 28, 35, 0.25) inset;
+
+}
+ */
+
+.first.checked {
+  background-color: red;
+  /* Change background color when checked */
+  color: white;
+  /* Optional: Change text color for better contrast */
+}
+
+
+/* .container form input {
+  display: none;
+} */
+
+
+::ng-deep .table>:not(caption)>*>* {
+  padding: 1rem 1rem;
+
+
+}
