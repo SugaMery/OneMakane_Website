@@ -143,7 +143,7 @@ export class PageAccountComponent implements OnInit {
       .subscribe((data) => {
         this.ads = data;
         this.checkIfShowJobOffersTab();
-        console.log('Ads loaded: ', this.ads); // Debug log
+        console.log('Ads loaded: ', this.ads, this.userId); // Debug log
         this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
         this.paginateAds();
       });

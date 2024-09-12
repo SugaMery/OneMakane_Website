@@ -32703,3 +32703,19 @@ img {
 
 
 }
+
+.payment-method .pm-label.checked .pm-text:before {
+  background: radial-gradient(white 0%, white 33%, #3bb77e 38%, #3bb77e 100%);
+}
+
+
+label.pm-label.checked {
+  background: #22c55e30 !important;
+  border: 1.5px solid #3BB77E !important;
+
+}
+
+.selected {
+  background: #22c55e30 !important;
+  border: 1.5px solid #3BB77E !important;
+}

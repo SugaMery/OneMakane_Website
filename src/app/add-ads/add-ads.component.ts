@@ -1109,7 +1109,7 @@ export class AddAdsComponent implements OnInit {
     }
     this.selectedFiles.forEach((file) => {
       this.annonceService
-        .uploadFile(file, accessToken)
+        .uploadImage(file, accessToken)
         .then((response) => {})
         .catch((error) => {
           console.error('Error uploading file:', error);
@@ -1408,14 +1408,39 @@ export class AddAdsComponent implements OnInit {
   }
 
   // In your component class
-
-  // Arrays to hold the options and selected options
+  onOptionChange(event: any, option: any): void {
+    if (option.bool) {
+      if (!Array.isArray(this.selectedOptions)) {
+        this.selectedOptions = [];
+      }
+      // Add the option if it's not already in the selectedOptions array
+      if (!this.selectedOptions.some((opt) => opt.id === option.id)) {
+        this.selectedOptions.push(option);
+      }
+    } else {
+      // Remove the option if option.bool is false
+      this.selectedOptions = this.selectedOptions.filter(
+        (opt) => opt.id !== option.id
+      );
+    }
+    this.updateButtonLabel();
+    this.calculateTotalPrice(); // Recalculate price on option change
+  }
   paidOptions: any[] = [];
   promoteOptions: any[] = [];
   selectedOptions: any[] = [];
-  selectedPaidOptionId: any;
+  selectedPaidOptionId: any = null; // Initialize to null
   totalPrice: number = 0; // Variable to store the total price
+  selectedPaidOption: any = null; // Initialize to null
+  buttonLabel: string = 'Suivant';
 
+  updateButtonLabel() {
+    if (this.selectedPaidOptionId === 0 && this.selectedOptions.length === 0) {
+      this.buttonLabel = 'Confirmer';
+    } else {
+      this.buttonLabel = 'Suivant';
+    }
+  }
   // Method to fetch paid options
   loadPaidOptions(): void {
     const accessToken = localStorage.getItem('loggedInUserToken');
@@ -1424,7 +1449,13 @@ export class AddAdsComponent implements OnInit {
       (response) => {
         if (response.status === 'Success') {
           this.paidOptions = response.data;
-          console.log('this.settings', response.data);
+          this.paidOptions.forEach((option) => {
+            option.bool = false;
+            // Set the option as selected if it matches selectedPaidOptionId
+            if (option.id === this.selectedPaidOptionId) {
+              option.bool = true;
+            }
+          });
           this.calculateTotalPrice(); // Recalculate price when options are loaded
         } else {
           console.error('Failed to load paid options:', response.message);
@@ -1444,6 +1475,9 @@ export class AddAdsComponent implements OnInit {
       (response) => {
         if (response.status === 'Success') {
           this.promoteOptions = response.data;
+          this.promoteOptions.forEach((option) => {
+            option.bool = false;
+          });
         } else {
           console.error('Failed to load promote options:', response.message);
         }
@@ -1454,56 +1488,39 @@ export class AddAdsComponent implements OnInit {
     );
   }
 
-  // Method to handle option change
-  onOptionChange(event: any, option: any): void {
-    if (event.checked) {
-      if (!Array.isArray(this.selectedOptions)) {
-        this.selectedOptions = [];
-      }
-      this.selectedOptions.push(option);
-    } else {
-      this.selectedOptions = this.selectedOptions.filter(
-        (id) => id !== option.id
-      );
-    }
-    this.calculateTotalPrice(); // Recalculate price on option change
-  }
-
   // Method to handle paid option change
-  onPaidOptionChange(option: any): void {
-    this.selectedPaidOptionId = option;
+  onPaidOptionChange(optionId: number | null, option?: any): void {
+    this.selectedPaidOptionId = optionId; // Update selectedPaidOptionId
+    this.selectedPaidOption = option;
+    console.log('Selected paid option ID:', this.selectedPaidOptionId);
+
     this.calculateTotalPrice(); // Recalculate price on paid option change
+    this.updateButtonLabel();
   }
 
-  // Method to calculate the total price based on selected options
+  // Method to calculate total price
+  // Method to calculate total price
   calculateTotalPrice(): void {
-    this.totalPrice = 0;
+    let paidOptionPrice = this.selectedPaidOption
+      ? this.selectedPaidOption.price
+      : 0;
+    let optionsPrice = this.selectedOptions.reduce(
+      (total, option) => total + option.price,
+      0
+    );
 
-    // Calculate total for paid options
-    if (this.selectedPaidOptionId !== null) {
-      const selectedPaidOption = this.paidOptions.find(
-        (option) => option.id === this.selectedPaidOptionId
-      );
-      if (selectedPaidOption) {
-        this.totalPrice += selectedPaidOption.price; // Assuming price is a field in the option object
-      }
-    }
+    this.totalPrice = Number(paidOptionPrice) + Number(optionsPrice);
+  }
 
-    // Calculate total for promote options
-    for (const optionId of this.selectedOptions) {
-      const selectedOption = this.promoteOptions.find(
-        (option) => option.id === optionId
-      );
-      if (selectedOption) {
-        this.totalPrice += selectedOption.price; // Assuming price is a field in the option object
-      }
-    }
-
-    console.log('Total Price:', this.totalPrice);
+  // Add this method to your component
+  isValidNumber(value: any): boolean {
+    return !isNaN(value) && typeof value === 'number';
   }
 
   // Call this method when you need to emit data
   emitNextCallbackOptions(): void {
+    this.calculateTotalPrice();
+
     console.log('Selected paid option ID:', this.selectedPaidOptionId);
     console.log('Selected promote option IDs:', this.selectedOptions);
     console.log('Total Price:', this.totalPrice);
@@ -1783,8 +1800,288 @@ export class AddAdsComponent implements OnInit {
       setting.selectedOptions.push(option); // Select option
     }
   }
+  // Add this method to your component class
+
+  // Modify this method in your component class
+  handleButtonClick(nextCallback: Function) {
+    if (this.buttonLabel === 'Confirmer') {
+      this.onSubmit();
+    } else {
+      this.emitNextCallbackOptions();
+      nextCallback(); // Call nextCallback to proceed to the next step
+    }
+  }
+
+  payment(): void {
+    console.log('responsee meeeeeeeee');
+    let isValid = true;
+    if (!this.formData.ville) {
+      this.fieldErrors.ville = true;
+      isValid = false;
+    } else {
+      this.fieldErrors.ville = false;
+    }
+
+    if (!this.formData.code_postal) {
+      this.fieldErrors.code_postal = true;
+      isValid = false;
+    } else {
+      this.fieldErrors.code_postal = false;
+    }
+
+    if (!this.formData.prix) {
+      this.fieldErrors.prix = true;
+      isValid = false;
+    } else {
+      this.fieldErrors.prix = false;
+    }
+
+    if (!isValid) {
+      return;
+    }
+
+    const accessToken = localStorage.getItem('loggedInUserToken');
+    const userId = localStorage.getItem('loggedInUserId');
+
+    const mediaIds: string[] = [];
+    Promise.all(
+      this.selectedFiles.map((file) => {
+        console.log('console', accessToken);
+        return this.annonceService
+          .uploadImage(file, accessToken!)
+          .then((response) => {
+            console.log('responsee', response);
+            mediaIds.push(response.data.id);
+          })
+          .catch((error) => {
+            throw error;
+          });
+      })
+    ).then(() => {
+      const annonceData = {
+        user_id: userId,
+        category_id: this.selectedSubcategory.id,
+        title: this.formData.titre,
+        description: this.formData.description,
+        state: this.formData.state,
+        urgent: this.formData.urgent,
+        highlighted: this.formData.highlighted,
+        price: parseFloat(this.formData.prix),
+        city: this.formData.ville,
+        postal_code: this.formData.code_postal,
+        medias: {
+          _ids: mediaIds,
+        },
+        validation_status: 'pending',
+      };
+      console.log('mediiiiEEEEEEEEEEEEE', this.selectedFiles);
+
+      this.annonceService.createAnnonce(annonceData, accessToken!).subscribe(
+        (response) => {
+          const addressTabLink = document.querySelector(
+            '#orders-tab'
+          ) as HTMLAnchorElement;
+          if (addressTabLink) {
+            addressTabLink.click();
+          }
+          const settingADS: { [key: string]: any } = {};
+          for (let i = 0; i < this.settings.length; i++) {
+            const setting = this.settings[i];
+            if (
+              setting.type === 'text' ||
+              setting.type === 'number' ||
+              setting.type === 'select' ||
+              setting.type === 'options' ||
+              setting.type === 'int'
+            ) {
+              if (setting.selectedOption) {
+                settingADS[setting.key] = setting.selectedOption.value;
+              } else {
+                settingADS[setting.key] = setting.content;
+              }
+            } else if (setting.type === 'table') {
+              settingADS[setting.key] = setting.selectedOption?.id;
+            } else if (setting.type === 'bool') {
+              settingADS[setting.key] =
+                setting.selectedOption?.value === 'true' ? 1 : 0;
+            } else if (setting.type === 'multiple') {
+              const list: any[] = [];
+              setting.selectedOptions.forEach((element) => {
+                list.push(element.value);
+              });
+              console.log('listtttttttttteee', list);
+              settingADS[setting.key] = list;
+            } else if (setting.type === 'date') {
+              const date = new Date(this.date);
+              setting.content = this.formatDate(date);
+              settingADS[setting.key] = setting.content;
+            }
+          }
+          console.log('settingADS', settingADS);
+
+          const adId = response.data.id;
+
+          // Post order
+          this.optionsService
+            .postOrder(accessToken!, Number(userId), adId)
+            .subscribe(
+              (orderResponse) => {
+                const orderId = orderResponse.data.id;
+                // Post order items for selected paid option
+                const paidOptionId = this.selectedPaidOptionId;
+                const orderItemsObservables = [];
+
+                if (paidOptionId) {
+                  orderItemsObservables.push(
+                    this.optionsService
+                      .postOrderItem(accessToken!, orderId, paidOptionId)
+                      .subscribe((response) =>
+                        console.log(
+                          'postOrderItem cretaed ',
+                          paidOptionId,
+                          response
+                        )
+                      )
+                  );
+                }
+                console.log('orderId', orderId, paidOptionId);
+
+                // Add selectedOptions IDs to order items
+                this.selectedOptions.forEach((option) => {
+                  if (option.id) {
+                    orderItemsObservables.push(
+                      this.optionsService
+                        .postOrderItem(accessToken!, orderId, option.id)
+                        .subscribe((response) =>
+                          console.log(
+                            'postOrderItem cretaed ',
+                            option.id,
+                            response
+                          )
+                        )
+                    );
+                  }
+                  console.log('orderIdrrr', orderId, option);
+                });
+
+                // Wait for all order items requests to complete
+                Promise.all(orderItemsObservables)
+                  .then(() => {
+                    console.log('All order items created successfully.');
+                    this.userService
+                      .getUserInfoById(Number(userId), accessToken!)
+                      .subscribe(
+                        (userResponse: any) => {
+                          const user = userResponse.data;
+                          const paymentData = {
+                            order_id: orderId,
+                            user_id: userId,
+                            email: user.email,
+                            full_name: `${user.first_name} ${user.last_name}`,
+                            provider: 'cmi',
+                            amount: this.totalPrice,
+                          };
+                          console.log('Payment paymentData:', paymentData);
+                          // Post payment
+                          this.optionsService
+                            .postPayment(paymentData, accessToken!)
+                            .subscribe(
+                              (paymentResponse) => {
+                                console.log(
+                                  'Payment response:',
+                                  paymentResponse
+                                );
+                                const { url, postParams } =
+                                  paymentResponse.data;
+
+                                // Redirect with POST data
+                                this.redirectToPaymentUrl(url, postParams);
+                                // Handle success, e.g., navigate to a confirmation page
+                              },
+                              (error) => {
+                                console.error(
+                                  'Error processing payment:',
+                                  error
+                                );
+                              }
+                            );
+                        },
+                        (error) => {
+                          console.error('Error fetching user details:', error);
+                        }
+                      );
+                  })
+                  .catch((error) => {
+                    console.error('Error creating order items:', error);
+                  });
+              },
+              (error) => {
+                console.error('Error creating order:', error);
+              }
+            );
+          this.annonceService
+            .insertSetting(
+              response.data.id,
+              'ad-models',
+              settingADS,
+              accessToken!
+            )
+
+            .subscribe(
+              (response) => {
+                // this.resetFormData();
+                // window.location.href = '/annonce_in_progress';
+                /*                 this.selectedOption = {
+                  active: false,
+                  created_at: '',
+                  id: 0,
+                  model: null,
+                  name: '',
+                  parent_id: null,
+                  slug: null,
+                  url: null,
+                  route: null,
+                  icon_path: '',
+                }; */
+                console.log('Annonce créée avec succès !', response);
+              },
+              (error) => {
+                console.error(
+                  'Error inserting state and genre:',
+                  error,
+                  settingADS
+                );
+              }
+            );
+        },
+        (error) => {
+          console.error("Erreur lors de la création de l'annonce :", error);
+        }
+      );
+      this.selectedFiles = [];
+    });
+  }
+  redirectToPaymentUrl(url: string, postParams: any): void {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = url;
+
+    for (const key in postParams) {
+      if (postParams.hasOwnProperty(key)) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = postParams[key];
+        form.appendChild(input);
+      }
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+  }
 
   onSubmit(): void {
+    console.log('responsee meeeeeeeee');
     let isValid = true;
     if (!this.formData.ville) {
       this.fieldErrors.ville = true;
@@ -1820,9 +2117,11 @@ export class AddAdsComponent implements OnInit {
     const mediaIds: string[] = [];
     Promise.all(
       this.selectedFiles.map((file) => {
+        console.log('console', accessToken);
         return this.annonceService
-          .uploadFile(file, accessToken)
+          .uploadImage(file, accessToken)
           .then((response) => {
+            console.log('responsee', response);
             mediaIds.push(response.data.id);
           })
           .catch((error) => {
