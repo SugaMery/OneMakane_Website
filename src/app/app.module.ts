@@ -62,6 +62,8 @@ import { JobCvsComponent } from './job-cvs/job-cvs.component';
 import { CvsPreselectionesComponent } from './cvs-preselectiones/cvs-preselectiones.component';
 import { CheckboxModule } from 'primeng/checkbox';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { PaymentSuccessComponent } from './payment-success/payment-success.component';
+import { PaymentFaildComponent } from './payment-faild/payment-faild.component';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -101,6 +103,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     MessageApresPostulerComponent,
     JobCvsComponent,
     CvsPreselectionesComponent,
+    PaymentSuccessComponent,
+    PaymentFaildComponent,
   ],
   imports: [
     BrowserModule,

@@ -30,6 +30,8 @@ import { PostulerCvComponent } from './postuler-cv/postuler-cv.component';
 import { MessageApresPostulerComponent } from './message-apres-postuler/message-apres-postuler.component';
 import { JobCvsComponent } from './job-cvs/job-cvs.component';
 import { CvsPreselectionesComponent } from './cvs-preselectiones/cvs-preselectiones.component';
+import { PaymentSuccessComponent } from './payment-success/payment-success.component';
+import { PaymentFaildComponent } from './payment-faild/payment-faild.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -47,6 +49,16 @@ const routes: Routes = [
   {
     path: 'modifier-annonce/:id',
     component: EditAdsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'payment/success',
+    component: PaymentSuccessComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'payment/failed',
+    component: PaymentFaildComponent,
     canActivate: [AuthGuard],
   },
 

@@ -648,7 +648,7 @@ export class AddAdsComponent implements OnInit {
 
   onTitleChange(title: string) {
     this.fieldErrors['titre'] = false;
-    this.suggestedCategory = this.suggestCategory(title);
+    //this.suggestedCategory = this.suggestCategory(title);
     if (title) {
       this.suggestedCategoryIf = true;
     } else {
@@ -962,8 +962,7 @@ export class AddAdsComponent implements OnInit {
   ngOnInit(): void {
     this.getUserInfo();
     this.fetchCategories();
-    this.loadPaidOptions();
-    this.loadPromoteOptions();
+
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
     this.annonceService.getAds().subscribe((data) => {
@@ -1032,6 +1031,9 @@ export class AddAdsComponent implements OnInit {
       dateFormat: 'dd/mm/yy',
       weekHeader: 'Sm',
     });
+
+    this.loadPaidOptions();
+    this.loadPromoteOptions();
   }
   get locale() {
     return this.primengConfig.translation;

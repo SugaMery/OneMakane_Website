@@ -1411,161 +1411,199 @@
                                     </h5>
 
                                     <div class="container">
-                                      <div class="row">
-                                        <div class="col-8">
-                                          <div class="payment-method">
-                                            <h4>Remonter mon annonce :</h4>
-
-                                            <!-- Default option for no selection -->
-                                            <div class="pm-item">
-                                              <input
-                                                id="no-option"
-                                                type="radio"
-                                                name="payment-method"
-                                                value=""
-                                                (change)="onPaidOptionChange(0)"
-                                                [(ngModel)]="
-                                                  selectedPaidOptionId
-                                                "
-                                              />
-                                              <label
-                                                class="pm-label"
-                                                [ngClass]="{
-                                                  checked:
-                                                    selectedPaidOptionId === 0
-                                                }"
-                                                for="no-option"
-                                              >
-                                                <div class="pm-text">
-                                                  <h5>Aucune option</h5>
-                                                  <p>
-                                                    Aucune option n'est
-                                                    sélectionnée.
-                                                  </p>
-                                                </div>
-                                                <div class="pm-price">
-                                                  <p
-                                                    style="
-                                                      font-size: 1.5rem;
-                                                      font-weight: 600;
-                                                    "
-                                                  >
-                                                    0 DH
-                                                  </p>
-                                                  0 jours
-                                                </div>
-                                              </label>
-                                            </div>
-
-                                            <!-- Options from paidOptions array -->
+                                      <div class="container">
+                                        <div class="row">
+                                          <!-- First Column: Remonter mon annonce - Stacked on mobile -->
+                                          <div class="form-group col-md-8">
                                             <div
-                                              *ngFor="let option of paidOptions"
-                                              class="pm-item"
+                                              class="payment-method p-3 border rounded shadow-sm"
                                             >
-                                              <input
-                                                id="{{ 'pm' + option.id }}"
-                                                type="radio"
-                                                name="payment-method"
-                                                [value]="option.id"
-                                                [(ngModel)]="
-                                                  selectedPaidOptionId
-                                                "
-                                                (change)="
-                                                  onPaidOptionChange(
-                                                    option.id,
-                                                    option
-                                                  )
-                                                "
-                                              />
-                                              <label
-                                                class="pm-label"
-                                                [ngClass]="{
-                                                  checked:
-                                                    selectedPaidOptionId ===
-                                                    option.id
-                                                }"
-                                                [for]="'pm' + option.id"
-                                              >
-                                                <div class="pm-text">
-                                                  <h5>{{ option.name }}</h5>
-                                                  <p>
-                                                    {{ option.description }}
-                                                  </p>
-                                                </div>
-                                                <div class="pm-price">
-                                                  <p
-                                                    style="
-                                                      font-size: 1.5rem;
-                                                      font-weight: 600;
-                                                    "
+                                              <h4 class="mb-3">
+                                                Remonter mon annonce :
+                                              </h4>
+
+                                              <!-- Default option for no selection -->
+                                              <div class="pm-item mb-3">
+                                                <input
+                                                  id="no-option"
+                                                  type="radio"
+                                                  name="payment-method"
+                                                  value=""
+                                                  (change)="
+                                                    onPaidOptionChange(0)
+                                                  "
+                                                  [(ngModel)]="
+                                                    selectedPaidOptionId
+                                                  "
+                                                  class="form-check-input"
+                                                />
+                                                <label
+                                                  class="pm-label d-flex justify-content-between align-items-center border rounded p-3"
+                                                  [ngClass]="{
+                                                    checked:
+                                                      selectedPaidOptionId === 0
+                                                  }"
+                                                  for="no-option"
+                                                  style="cursor: pointer"
+                                                >
+                                                  <div class="pm-text">
+                                                    <h5>Aucune option</h5>
+                                                    <p class="mb-0 text-muted">
+                                                      Aucune option n'est
+                                                      sélectionnée.
+                                                    </p>
+                                                  </div>
+                                                  <div
+                                                    class="pm-price text-right"
                                                   >
-                                                    {{ option.price }} DH
-                                                  </p>
-                                                  {{ option.duration }} jours
-                                                </div>
-                                              </label>
+                                                    <p
+                                                      class="price mb-0"
+                                                      style="
+                                                        font-size: 1.5rem;
+                                                        font-weight: 600;
+                                                      "
+                                                    >
+                                                      0 DH
+                                                    </p>
+                                                    <small class="text-muted"
+                                                      >0 jours</small
+                                                    >
+                                                  </div>
+                                                </label>
+                                              </div>
+
+                                              <!-- Loop through paidOptions array -->
+                                              <div
+                                                *ngFor="
+                                                  let option of paidOptions
+                                                "
+                                                class="mb-3"
+                                              >
+                                                <input
+                                                  id="{{ 'pm' + option?.id }}"
+                                                  type="radio"
+                                                  name="payment-method"
+                                                  [value]="option?.id"
+                                                  [(ngModel)]="
+                                                    selectedPaidOptionId
+                                                  "
+                                                  (change)="
+                                                    onPaidOptionChange(
+                                                      option?.id,
+                                                      option
+                                                    )
+                                                  "
+                                                  class="form-check-input"
+                                                />
+                                                <label
+                                                  class="pm-label d-flex justify-content-between align-items-center border rounded p-3"
+                                                  [ngClass]="{
+                                                    checked:
+                                                      selectedPaidOptionId ===
+                                                      option?.id
+                                                  }"
+                                                  [for]="'pm' + option?.id"
+                                                  style="cursor: pointer"
+                                                >
+                                                  <div class="pm-text">
+                                                    <h5>{{ option?.name }}</h5>
+                                                    <p class="mb-0 text-muted">
+                                                      {{ option?.description }}
+                                                    </p>
+                                                  </div>
+                                                  <div
+                                                    class="pm-price text-right"
+                                                  >
+                                                    <p
+                                                      class="price mb-0"
+                                                      style="
+                                                        font-size: 1.5rem;
+                                                        font-weight: 600;
+                                                      "
+                                                    >
+                                                      {{ option?.price }} DH
+                                                    </p>
+                                                    <small class="text-muted"
+                                                      >{{
+                                                        option?.duration
+                                                      }}
+                                                      jours</small
+                                                    >
+                                                  </div>
+                                                </label>
+                                              </div>
                                             </div>
                                           </div>
-                                        </div>
 
-                                        <div class="col-4">
-                                          <div class="payment-method">
-                                            <h4>Mettre en avant :</h4>
-                                            <div class="py-2">
+                                          <!-- Second Column: Mettre en avant - Stacked below on mobile -->
+                                          <div class="form-group col-md-4">
+                                            <div
+                                              class="payment-method p-3 border rounded shadow-sm"
+                                            >
+                                              <h4 class="mb-3">
+                                                Mettre en avant :
+                                              </h4>
+
                                               <div
-                                                class="first pl-2 d-flex py-2 align-items-center justify-content-between"
                                                 *ngFor="
                                                   let option of promoteOptions
                                                 "
-                                                [ngClass]="{
-                                                  selected: option.bool
-                                                }"
+                                                class="py-2"
                                               >
-                                                <label
-                                                  class="d-flex w-100 align-items-center"
-                                                  [for]="'option' + option.id"
+                                                <div
+                                                  class="first pl-2 d-flex py-2 align-items-center justify-content-between border rounded p-2"
+                                                  [ngClass]="{
+                                                    selected: option?.bool
+                                                  }"
+                                                  style="cursor: pointer"
                                                 >
-                                                  <div class="form-check">
-                                                    <p-checkbox
-                                                      [inputId]="
-                                                        'option' + option.id
-                                                      "
-                                                      [(ngModel)]="option.bool"
-                                                      [value]="option.id"
-                                                      [binary]="true"
-                                                      name="payment-method"
-                                                      (onChange)="
-                                                        onOptionChange(
-                                                          $event,
-                                                          option
-                                                        )
-                                                      "
-                                                    ></p-checkbox>
-                                                  </div>
-                                                  <div
-                                                    class="border-left pl-2"
-                                                    style="
-                                                      flex-grow: 1;
-                                                      padding-left: 10px;
+                                                  <label
+                                                    class="d-flex w-100 align-items-center"
+                                                    [for]="
+                                                      'option' + option?.id
                                                     "
                                                   >
-                                                    <span>{{
-                                                      option.name
-                                                    }}</span>
-                                                  </div>
-                                                  <div
-                                                    style="text-align: right"
-                                                  >
-                                                    <span
-                                                      style="
-                                                        font-weight: bold;
-                                                        font-size: large;
-                                                      "
-                                                      >{{ option.price }}
-                                                    </span>
-                                                    <span>DH</span>
-                                                  </div>
-                                                </label>
+                                                    <div class="form-check">
+                                                      <p-checkbox
+                                                        [inputId]="
+                                                          'option' + option?.id
+                                                        "
+                                                        [(ngModel)]="
+                                                          option.bool
+                                                        "
+                                                        [value]="option?.id"
+                                                        [binary]="true"
+                                                        name="payment-method"
+                                                        (onChange)="
+                                                          onOptionChange(
+                                                            $event,
+                                                            option
+                                                          )
+                                                        "
+                                                      ></p-checkbox>
+                                                    </div>
+                                                    <div
+                                                      class="pl-3"
+                                                      style="flex-grow: 1"
+                                                    >
+                                                      <span
+                                                        class="option-name"
+                                                        >{{
+                                                          option?.name
+                                                        }}</span
+                                                      >
+                                                    </div>
+                                                    <div class="text-right">
+                                                      <span
+                                                        class="font-weight-bold price"
+                                                        >{{
+                                                          option?.price
+                                                        }}
+                                                        DH</span
+                                                      >
+                                                    </div>
+                                                  </label>
+                                                </div>
                                               </div>
                                             </div>
                                           </div>
@@ -1627,36 +1665,14 @@
                                           <div class="input-style mb-20">
                                             <label>Le titre de l'annonce</label>
                                             <input
-                                              id="titre"
-                                              name="titre"
-                                              [(ngModel)]="formData.titre"
-                                              (ngModelChange)="
-                                                onTitleChange($event)
-                                              "
+                                              id="titre1"
+                                              name="titre1"
+                                              [(ngModel)]="formData!.titre"
                                               placeholder="Titre de votre annonce"
                                               type="text"
-                                              required
-                                              disabled=""
+                                              disabled
                                               maxlength="50"
                                             />
-                                            <div
-                                              *ngIf="fieldErrors.titre"
-                                              class="text-danger requisDiv"
-                                            >
-                                              <div>Titre est requis.</div>
-                                            </div>
-                                            <div
-                                              class="text-infos requisDiv"
-                                              *ngIf="
-                                                formData.titre &&
-                                                formData.titre.length >= 45
-                                              "
-                                            >
-                                              <div>
-                                                Le titre est proche de la
-                                                longueur maximale.
-                                              </div>
-                                            </div>
                                           </div>
                                         </div>
                                       </div>
@@ -1806,8 +1822,8 @@
                                               >Description de l'annonce</label
                                             >
                                             <textarea
-                                              id="description"
-                                              name="description"
+                                              id="description1"
+                                              name="description1"
                                               (ngModelChange)="
                                                 clearError('description')
                                               "
@@ -1816,14 +1832,6 @@
                                               required
                                               minlength="10"
                                             ></textarea>
-                                            <div
-                                              *ngIf="fieldErrors.description"
-                                              class="text-danger requisDiv"
-                                            >
-                                              <div>
-                                                Description est requise.
-                                              </div>
-                                            </div>
                                           </div>
                                         </div>
                                       </div>
@@ -1833,21 +1841,12 @@
                                           <div class="form-group">
                                             <label>Ville</label>
                                             <input
-                                              name="ville"
+                                              name="ville1"
                                               [(ngModel)]="formData.ville"
-                                              (ngModelChange)="
-                                                clearError('ville')
-                                              "
                                               placeholder="Ville de l'annonce"
                                               type="text"
                                               disabled
                                             />
-                                            <div
-                                              *ngIf="fieldErrors.ville"
-                                              class="text-danger requisDiv"
-                                            >
-                                              <div>Ville est requise.</div>
-                                            </div>
                                           </div>
                                         </div>
                                       </div>
@@ -1857,21 +1856,12 @@
                                           <div class="form-group">
                                             <label>Code postal</label>
                                             <input
-                                              name="code_postal"
+                                              name="code_postal1"
                                               [(ngModel)]="formData.code_postal"
-                                              (ngModelChange)="
-                                                clearError('code_postal')
-                                              "
                                               disabled
                                               placeholder="Code postal de l'annonce"
                                               type="text"
                                             />
-                                            <div
-                                              *ngIf="fieldErrors.code_postal"
-                                              class="text-danger requisDiv"
-                                            >
-                                              <div>Code postal est requis.</div>
-                                            </div>
                                           </div>
                                         </div>
                                       </div>
@@ -1884,23 +1874,14 @@
                                           <div class="form-group">
                                             <label>Prix</label>
                                             <input
-                                              id="prix"
-                                              name="prix"
+                                              id="prix1"
+                                              name="prix1"
                                               [(ngModel)]="formData.prix"
                                               placeholder="Prix de votre annonce"
                                               type="number"
                                               required
                                               disabled
-                                              (ngModelChange)="
-                                                clearError('prix')
-                                              "
                                             />
-                                            <div
-                                              *ngIf="fieldErrors.prix"
-                                              class="text-danger requisDiv"
-                                            >
-                                              <div>Prix est requis.</div>
-                                            </div>
                                           </div>
                                         </div>
                                       </div>
@@ -1928,7 +1909,7 @@
                                                     "
                                                   >
                                                     {{
-                                                      selectedPaidOption.name
+                                                      selectedPaidOption?.name
                                                     }}
                                                   </h6>
                                                 </td>
@@ -1937,7 +1918,7 @@
                                                     class="text-brand text-end"
                                                   >
                                                     {{
-                                                      selectedPaidOption.price
+                                                      selectedPaidOption?.price
                                                     }}
                                                     DH
                                                   </h4>

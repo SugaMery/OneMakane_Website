@@ -31710,7 +31710,40 @@ table th {
     transform: scale(0.7);
     /* Adjust the scale to your desired value */
   }
+
+
 }
+
+
+
+@media (max-width: 500px) {
+  ::ng-deep .select-menu .options {
+    padding: 10px !important;
+
+  }
+
+  ::ng-deep img {
+
+    transition: none !important;
+
+
+  }
+
+  ::ng-deep .container {
+    padding: 1rem 1rem 1rem 1rem !important;
+  }
+
+  ::ng-deep .payment-method {
+    padding: 0 !important;
+  }
+
+  ::ng-deep .col-8.col8 {
+    flex: 0 0 auto;
+    padding: .5rem;
+    width: 100%;
+  }
+}
+
 
 .ui-carousel-dots-container {
   display: none !important;
@@ -32718,4 +32751,23 @@ label.pm-label.checked {
 .selected {
   background: #22c55e30 !important;
   border: 1.5px solid #3BB77E !important;
+}
+
+::ng-deep .img-fluid {
+  height: 350px !important;
+  object-fit: cover !important;
+}
+
+::ng-deep .payment-method .pm-label {
+  display: flex;
+  margin-bottom: 0;
+  padding: 1.5rem 2rem;
+  cursor: pointer;
+  border-radius: 1rem;
+  border: 1.5px solid #78b9ff !important;
+  background-color: #bfdbfe54 !important;
+}
+
+::ng-deep small.text-muted {
+  color: #3cba7f !important;
 }

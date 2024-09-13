@@ -1,0 +1,47 @@
+<app-header></app-header>
+
+<main class="main pages">
+  <div class="page-header breadcrumb-wrap">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Accueil</a>
+        <span></span> <a href="/account" rel="nofollow">Compte</a>
+        <span></span> Paiement Échoué
+      </div>
+    </div>
+  </div>
+
+  <div class="page-content pt-50">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 mx-auto text-center">
+          <h1 class="title heading-1 style-3 mb-40">
+            <span class="text-danger">
+              Paiement Échoué !
+              <img
+                src="../../assets/imgs/error.gif"
+                alt="Error"
+                style="width: 10%"
+              />
+            </span>
+          </h1>
+          <p class="font-xl mb-80">
+            Votre paiement a échoué. Veuillez vérifier les informations fournies
+            et réessayer. Si le problème persiste, contactez notre support
+            client.
+            <br />
+            <a href="/page-account#orders" class="btn btn-secondary mt-4"
+              >Retour à mon compte</a
+            >
+            <a href="/retry-payment" class="btn btn-primary mt-4"
+              >Réessayer le paiement</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<app-footer></app-footer>
+<app-preloader></app-preloader>
