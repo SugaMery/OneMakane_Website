@@ -50,11 +50,16 @@ export class MessageComponent {
       }
     });
     this.getConversationsByUser();
+    if(this.isMobileView){
+      this.divHidden = true;
+      }else{
+        this.divHidden=false;
+      }
   }
   toggleShowMore() {
     this.showMore = !this.showMore;
   }
-  
+
   private initializeChat(): void {
     const userId = this.getFromLocalStorage('loggedInUserId');
     const accessToken = this.getFromLocalStorage('loggedInUserToken');
@@ -414,9 +419,19 @@ export class MessageComponent {
     this.isMobileView = window.innerWidth <= 768;
   }
 
+
+  goToConversation(){
+    this.hidden = false;
+  }
+hidden = false;
+divHidden = false ;
   onConversationClick(conversation: any): void {
     this.ad_id = conversation;
-
+if(this.isMobileView){
+this.hidden = true;
+}else{
+  this.hidden=false;
+}
     const accessToken = this.getFromLocalStorage('loggedInUserToken');
     this.ad_conversation = conversation;
     this.activeConversation = conversation; // Set the clicked conversation as active

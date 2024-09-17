@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
 import { UserService } from '../user.service';
-import { MessageService } from 'primeng/api';
 import { CategoryService } from '../category.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
-  providers: [MessageService],
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
   email: string = '';
@@ -18,6 +16,7 @@ export class LoginComponent {
     private userService: UserService,
     private categoryService: CategoryService
   ) {}
+
   categories: any[] = [];
   Souscategories: any[] = [];
 
@@ -25,7 +24,6 @@ export class LoginComponent {
     this.fetchCategories();
   }
 
-  allcategories: any[] = [];
   fetchCategories(): void {
     if (typeof localStorage === 'undefined') {
       console.error('localStorage is not available.');
@@ -43,14 +41,6 @@ export class LoginComponent {
           (category: any) =>
             category.active === true && category.parent_id !== null
         );
-        for (let i = 0; i < this.categories.length; i++) {
-          const parentId = this.categories[i].parent_id?.toString();
-          const Id = this.categories[i].id?.toString();
-          if (!parentId) {
-            continue;
-          }
-          // Additional logic here if needed
-        }
       },
       (error) => {
         console.error('Error fetching categories: ', error);
@@ -121,12 +111,13 @@ export class LoginComponent {
             response.data.refresh_token
           );
 
-          // Redirect to the dashboard
-          window.location.href = '/';
+          // Redirect to the stored URL or default to home page
+          const redirectUrl = localStorage.getItem('redirectUrl') || '/';
+          localStorage.removeItem('redirectUrl'); // Clear redirect URL
+          window.location.href = redirectUrl;
         },
         (error) => {
           // Handle login error
-
           this.error = error;
           console.error(error);
         }

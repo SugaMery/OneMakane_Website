@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 import { formatDate } from '@angular/common';
 import { PrimeNGConfig } from 'primeng/api';
 import { OptionsService } from '../options.service';
+import * as CryptoJS from 'crypto-js';
 declare var $: any;
 
 interface Category {
@@ -196,6 +197,18 @@ export class AddAdsComponent implements OnInit {
     private primengConfig: PrimeNGConfig,
     private optionsService: OptionsService
   ) {}
+// Save the form data to localStorage
+saveFormDataToLocalStorage() {
+  localStorage.setItem('formData', JSON.stringify(this.formData));
+}
+
+// Retrieve form data from localStorage on page load
+loadFormDataFromLocalStorage() {
+  const savedFormData = localStorage.getItem('formData');
+  if (savedFormData) {
+    this.formData = JSON.parse(savedFormData);
+  }
+}
 
   // Liste de catégories avec leurs mots-clés associés
   Customcategories: CustomCategory[] = [
@@ -673,6 +686,7 @@ export class AddAdsComponent implements OnInit {
         }
       }
     }
+     //this.saveFormDataToLocalStorage();
   }
 
   hasKeywords(subcategory: SubCategory): boolean {
@@ -958,11 +972,23 @@ export class AddAdsComponent implements OnInit {
     }
     return null;
   }
+// Load uploaded images from localStorage on page load
+loadUploadedImagesFromLocalStorage() {
+  const savedImages = localStorage.getItem('uploadedImages');
+  if (savedImages) {
+    this.uploadedImages = JSON.parse(savedImages);
+  }
+}
+// Save uploaded images to localStorage
+saveUploadedImagesToLocalStorage() {
+  localStorage.setItem('uploadedImages', JSON.stringify(this.uploadedImages));
+}
 
   ngOnInit(): void {
     this.getUserInfo();
     this.fetchCategories();
-
+    //this.loadFormDataFromLocalStorage();
+    //this.loadUploadedImagesFromLocalStorage();
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
     this.annonceService.getAds().subscribe((data) => {
@@ -1148,7 +1174,7 @@ export class AddAdsComponent implements OnInit {
         reader.readAsDataURL(file);
       }
     }
-
+    //this.saveUploadedImagesToLocalStorage();
     console.log('Images téléchargées', this.uploadedImages);
   }
 
@@ -1343,6 +1369,43 @@ export class AddAdsComponent implements OnInit {
     }
     return true;
   }
+
+
+
+  emitNextCallbackPrix(): boolean {
+    //this.getAds('pending');
+    let isValid = true;
+
+    if (!this.formData.ville) {
+      this.fieldErrors.ville = true;
+      isValid = false;
+    } else {
+      this.fieldErrors.ville = false;
+    }
+
+    if (!this.formData.code_postal) {
+      this.fieldErrors.code_postal = true;
+      isValid = false;
+    } else {
+      this.fieldErrors.code_postal = false;
+    }
+
+    if (!this.formData.prix) {
+      this.fieldErrors.prix = true;
+      isValid = false;
+    } else {
+      this.fieldErrors.prix = false;
+    }
+
+
+
+    if (!isValid) {
+      return false;
+    }
+    return true;
+  }
+
+
   openselect = false;
   selectOption(category: Category): void {
     this.filteredSubcategories = [];
@@ -1520,13 +1583,14 @@ export class AddAdsComponent implements OnInit {
   }
 
   // Call this method when you need to emit data
-  emitNextCallbackOptions(): void {
+  emitNextCallbackOptions(): boolean {
     this.calculateTotalPrice();
 
     console.log('Selected paid option ID:', this.selectedPaidOptionId);
     console.log('Selected promote option IDs:', this.selectedOptions);
     console.log('Total Price:', this.totalPrice);
     // You can add additional logic here to handle the collected data
+    return true;
   }
 
   toggleSubcategoryOptions() {
@@ -1997,7 +2061,11 @@ export class AddAdsComponent implements OnInit {
                                   paymentResponse.data;
 
                                 // Redirect with POST data
-                                this.redirectToPaymentUrl(url, postParams);
+                                this.saveToLocalStorage(url, postParams);
+
+                                // Call the redirect after saving
+                                this.redirectToPayment();
+                                //this.redirectToPaymentUrl(url, postParams);
                                 // Handle success, e.g., navigate to a confirmation page
                               },
                               (error) => {
@@ -2063,6 +2131,48 @@ export class AddAdsComponent implements OnInit {
       this.selectedFiles = [];
     });
   }
+
+
+  secretKey: string = 'your-secret-key'; // Use a secret key for encryption/decryption
+
+  // Method to encrypt data
+  encryptData(data: any): string {
+    return CryptoJS.AES.encrypt(JSON.stringify(data), this.secretKey).toString();
+  }
+
+  // Method to decrypt data
+  decryptData(encryptedData: string): any {
+    const bytes = CryptoJS.AES.decrypt(encryptedData, this.secretKey);
+    return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+  }
+
+  // Save the encrypted data to localStorage
+  saveToLocalStorage(url: string, postParams: any): void {
+    const dataToSave = { url, postParams };
+    const encryptedData = this.encryptData(dataToSave);
+    localStorage.setItem('paymentData', encryptedData);
+  }
+
+  // Retrieve and decrypt the data from localStorage
+  getFromLocalStorage(): { url: string; postParams: any } | null {
+    const encryptedData = localStorage.getItem('paymentData');
+    if (encryptedData) {
+      return this.decryptData(encryptedData);
+    }
+    return null;
+  }
+
+  // Redirect method
+  redirectToPayment(): void {
+    const savedData = this.getFromLocalStorage();
+    if (savedData) {
+      this.redirectToPaymentUrl(savedData.url, savedData.postParams);
+    } else {
+      console.error('No payment data found in localStorage');
+    }
+  }
+
+  // Method to redirect with POST
   redirectToPaymentUrl(url: string, postParams: any): void {
     const form = document.createElement('form');
     form.method = 'POST';
@@ -2081,6 +2191,7 @@ export class AddAdsComponent implements OnInit {
     document.body.appendChild(form);
     form.submit();
   }
+
 
   onSubmit(): void {
     console.log('responsee meeeeeeeee');
@@ -2294,7 +2405,17 @@ export class AddAdsComponent implements OnInit {
   logout(): void {
     this.authService.logout();
   }
-
+  handleNextClick(): void {
+    if (this.buttonLabel === 'Confirmer') {
+      this.onSubmit();
+    } else {
+      const shouldEmitNext = this.emitNextCallbackOptions();
+      if (shouldEmitNext!) {
+        this.nextCallback?.emit();
+      }
+    }
+  }
+  
   fieldErrors: {
     [key: string]: boolean;
     titre: boolean;

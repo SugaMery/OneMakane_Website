@@ -332,5 +332,103 @@ display: none !important;
   
 
 
+  @media (max-width: 500.98px) {
+   ::ng-deep  .user-chat-topbar {
+    position: relative !important;
+    }
+
+
+    ::ng-deep .chat-input-section {
+        position: relative !important;
+    }
+
+    ::ng-deep .chat-conversation {
+        margin-top: 0px !important;
+        margin-bottom: 0px !important;
+    }
+
+    ::ng-deep .chat-leftsidebar {
+     /*    height: auto !important; */
+    }
+
+    ::ng-deep  .chat-conversation {
+/*         height: max-content !important;
+       height: 400px !important;*/  
+    }
+
+    ::ng-deep .side-menu {
+        margin-left: -0.5rem !important;
+    }
+    
+    ::ng-deep .chat-conversation .list-unstyled .right .conversation-list .ctext-wrap .ctext-wrap-content{
+        background: #e6ebf5 !important;
+    }
+
+    ::ng-deep .conversation-name {
+        color: black !important;
+        font-family: 'Quicksand';
+    }
+
+    ::ng-deep .chat-conversation .conversation-list .conversation-name {
+        font-weight: 600 !important;
+        font-size: 14px;
+    }
+    ::ng-deep .chat-input-section {
+        background-color: #f5f7fb !important;
+    }
+
+    ::ng-deep input.form-control.form-control-lg.bg-light.border-light.ng-untouched.ng-pristine.ng-valid {
+        background-color: white !important;
+    }
+
+    ::ng-deep .user-chat-topbar {
+        background-color: #ffffff !important;
+    }
+}
+  
+
+@media (min-width: 992px) {
+    .me-lg-1 {
+        margin-right: 0rem !important;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   

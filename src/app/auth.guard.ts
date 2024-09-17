@@ -1,5 +1,5 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { UserService } from './user.service';
 
@@ -13,37 +13,27 @@ export class AuthGuard implements CanActivate {
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
-  canActivate(): boolean {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     if (!isPlatformBrowser(this.platformId)) {
-      // Handle the case where the code is not running in the browser
       return false;
     }
 
     const token = localStorage.getItem('loggedInUserRefreshToken');
     if (token) {
-      // User is logged in, allow access to the route
       this.userService.refreshToken(token).subscribe(
         (response) => {
-          // Handle the response from refreshToken
-          console.log('Token refreshed successfully');
-          localStorage.setItem(
-            'loggedInUserRefreshToken',
-            response.data.refresh_token
-          );
+          // Met à jour le token de rafraîchissement dans le stockage local
+          localStorage.setItem('loggedInUserRefreshToken', response.data.refresh_token);
         },
         (error) => {
-          // Handle any error that occurs during the token refresh
-          console.error('Error refreshing token:', error);
-          localStorage.removeItem('loggedInUserToken');
-          localStorage.removeItem('loggedInUserId');
-          localStorage.removeItem('loggedInUserRefreshToken');
-
-          this.logout(); // This will also redirect to login
+          // En cas d'erreur, déconnecte l'utilisateur
+          this.handleLogout();
         }
       );
-      return true; // Allow access while token is being refreshed
+      return true; // Permet l'accès à la route
     } else {
-      // User is not logged in, redirect to the login page
+      // Stocke l'URL de la page demandée pour redirection après connexion
+      localStorage.setItem('redirectUrl', state.url);
       this.logout();
       return false;
     }
@@ -52,7 +42,7 @@ export class AuthGuard implements CanActivate {
   logout(): void {
     const token = localStorage.getItem('loggedInUserToken');
 
-    // Clear local storage
+    // Supprime les informations de connexion du stockage local
     localStorage.removeItem('loggedInUserToken');
     localStorage.removeItem('loggedInUserId');
     localStorage.removeItem('loggedInUserRefreshToken');
@@ -60,15 +50,25 @@ export class AuthGuard implements CanActivate {
     if (token) {
       this.userService.logout(token).subscribe(
         () => {
+          // Redirige vers la page de connexion
           window.location.href = '/login';
         },
         (error) => {
-          console.error('Error during logout:', error);
-          window.location.href = '/login'; // Navigate to login even if logout API call fails
+          console.error('Erreur lors de la déconnexion:', error);
+          // Redirige vers la page de connexion même en cas d'échec de la déconnexion
+          window.location.href = '/login';
         }
       );
     } else {
+      // Redirige vers la page de connexion si aucun token n'est trouvé
       window.location.href = '/login';
     }
+  }
+
+  handleLogout(): void {
+    localStorage.removeItem('loggedInUserToken');
+    localStorage.removeItem('loggedInUserRefreshToken');
+    localStorage.removeItem('loggedInUserId');
+    window.location.href = '/login';
   }
 }

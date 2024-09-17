@@ -32324,9 +32324,7 @@ body {
     padding-left: 2.25em;
   }
 
-  .payment-method .pm-text {
-    flex: 1 1 100%;
-  }
+
 
   .payment-method .pm-thumb {
     flex: 0 0 auto;
@@ -32348,9 +32346,27 @@ body {
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
+
+
+
+  ::ng-deep .text-right {
+    text-align: right !important;
+    flex: auto;
 }
 
 
+}
+
+::ng-deep textarea:focus {
+  background: #ffffff !important;
+  border: 1px solid #BCE3C9;
+}
+
+
+::ng-deep .form-group input:focus {
+  background: #ffffff !important;
+  border-color: #BCE3C9;
+}
 
 
 .payment-method {
@@ -32387,6 +32403,15 @@ body {
 }
 
 
+::ng-deep .select-menu .select-btn:hover {
+  background: white !important;
+  border-color: #BCE3C9 !important;
+}
+
+
+::ng-deep input ::after {
+  background-color: light-dark(rgb(255 87 28), rgb(255 87 28)) !important;
+}
 
 .container form .category {
   margin-top: 10px;
@@ -32514,9 +32539,9 @@ img {
 
 .first {
   border-radius: 8px;
-  border: 1.5px solid #78b9ff;
   color: #000;
-  background-color: #eaf4ff;
+  border: 1.5px solid #78b9ff !important;
+  background-color: #bfdbfe54 !important;
 }
 
 .second {

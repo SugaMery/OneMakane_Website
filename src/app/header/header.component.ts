@@ -75,11 +75,19 @@ export class HeaderComponent {
               this.loggedInUserName = `${userInfo.data.first_name} ${userInfo.data.last_name}`;
             } else {
               this.status = false;
+              localStorage.removeItem('loggedInUserToken');
+              localStorage.removeItem('loggedInUserId');
+              localStorage.removeItem('loggedInUserRefreshToken');
+              window.location.href = '/login';
             }
           },
           (error) => {
             console.error('Error fetching user info:', error);
             this.status = false;
+            localStorage.removeItem('loggedInUserToken');
+            localStorage.removeItem('loggedInUserId');
+            localStorage.removeItem('loggedInUserRefreshToken');
+            window.location.href = '/login';
           }
         );
       } else {

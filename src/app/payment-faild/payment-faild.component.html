@@ -18,11 +18,7 @@
           <h1 class="title heading-1 style-3 mb-40">
             <span class="text-danger">
               Paiement Échoué !
-              <img
-                src="../../assets/imgs/error.gif"
-                alt="Error"
-                style="width: 10%"
-              />
+              <img src="../../assets/imgs/error.gif" alt="Error" style="width: 10%" />
             </span>
           </h1>
           <p class="font-xl mb-80">
@@ -30,12 +26,13 @@
             et réessayer. Si le problème persiste, contactez notre support
             client.
             <br />
-            <a href="/page-account#orders" class="btn btn-secondary mt-4"
-              >Retour à mon compte</a
-            >
-            <a href="/retry-payment" class="btn btn-primary mt-4"
-              >Réessayer le paiement</a
-            >
+            <a href="/page-account#orders" style="
+            margin-right: 1.5rem !important;
+        " class="btn btn-secondary mt-4">Retour à mon compte</a>
+            <!-- Retry Payment Button -->
+            <button (click)="retryPayment()" class="btn btn-primary mt-4">
+              Réessayer le paiement
+            </button>
           </p>
         </div>
       </div>
