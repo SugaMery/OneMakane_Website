@@ -10,6 +10,7 @@ import { CategoryService } from '../category.service';
 import { AnnonceService } from '../annonce.service';
 import { ActivatedRoute } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import { interval, Subscription } from 'rxjs';
 interface Option {
   key: string; // Unique identifier for the option
   value: string; // Display value of the option
@@ -90,6 +91,7 @@ export class AdsGridComponent {
   matchingFiltered: Filter[] = [];
 
   ads: any[] = [];
+  adsPromote: any[] = [];
   currentPage = 1;
   totalPages = 1;
   filteredAds: any[] = [];
@@ -122,14 +124,14 @@ export class AdsGridComponent {
   }
   setPriceRange(): void {
     if (this.ads.length > 0) {
-      this.minPrice = Math.min(...this.ads.map(ad => ad.price));
-      this.maxPrice = Math.max(...this.ads.map(ad => ad.price));
+      this.minPrice = Math.min(...this.ads.map((ad) => ad.price));
+      this.maxPrice = Math.max(...this.ads.map((ad) => ad.price));
       this.price1 = this.minPrice;
       this.price2 = this.maxPrice;
     }
   }
   changePage(page: number): void {
-    console.log("Changing to page: ", page); // Debug log
+    console.log('Changing to page: ', page); // Debug log
     if (page < 1 || page > this.totalPages) {
       return;
     }
@@ -138,20 +140,20 @@ export class AdsGridComponent {
   }
 
   changeAdsPerPage(count: number): void {
-    console.log("Changing ads per page to: ", count); // Debug log
+    console.log('Changing ads per page to: ', count); // Debug log
     this.adsPerPage = count;
     this.currentPage = 1;
     this.paginateAds();
   }
-  paginatedAds :any = [];
+  paginatedAds: any = [];
   paginateAds(): void {
     this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
-    console.log("Total pages: ", this.totalPages); // Debug log
+    console.log('Total pages: ', this.totalPages); // Debug log
     const startIndex = (this.currentPage - 1) * this.adsPerPage;
     const endIndex = startIndex + this.adsPerPage;
-    console.log("Paginating ads from index ", startIndex, " to ", endIndex); // Debug log
+    console.log('Paginating ads from index ', startIndex, ' to ', endIndex); // Debug log
     this.paginatedAds = this.ads.slice(startIndex, endIndex);
-    console.log("Paginated ads: ", this.paginatedAds); // Debug log
+    console.log('Paginated ads: ', this.paginatedAds); // Debug log
   }
   mobileHeaderActive(): void {
     console.log('rrrrrrtttttt');
@@ -204,7 +206,9 @@ export class AdsGridComponent {
     const minValue = Math.min(this.price1, this.price2);
     const maxValue = Math.max(this.price1, this.price2);
 
-    this.ads = this.originalAds.filter(ad => ad.price >= minValue && ad.price <= maxValue);
+    this.ads = this.originalAds.filter(
+      (ad) => ad.price >= minValue && ad.price <= maxValue
+    );
     this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
     this.currentPage = 1;
     this.paginateAds();
@@ -371,6 +375,15 @@ export class AdsGridComponent {
     }
     this.mobileHeaderActive();
     //this.getVals();
+
+    this.annonceService
+      .getAdsPromote(Number(this.categoryId))
+      .subscribe((ads) => {
+        console.log('Call getAdsByCategory with categoryId and params', ads);
+        this.adsPromote = ads.data;
+        this.updateAdsToShow();
+        this.startAdsRotation();
+      });
   }
   isFilterDrawerOpen = false;
   isDropdownOpen = false;
@@ -394,6 +407,43 @@ export class AdsGridComponent {
   closeFilterDrawer() {
     this.isFilterDrawerOpen = false;
   }
+
+  private adsRefreshSubscription: Subscription | undefined;
+  adsToShow: any[] = [];
+
+  private currentIndex: number = 0;
+  private adsInterval: any;
+  ngOnDestroy(): void {
+    if (this.adsInterval) {
+      clearInterval(this.adsInterval);
+    }
+  }
+
+  startAdsRotation(): void {
+    // Rotate the ads every minute (60000ms)
+    this.adsInterval = setInterval(() => {
+      this.currentIndex += 5;
+      if (this.currentIndex >= this.adsPromote.length) {
+        this.currentIndex = 0; // Start from the beginning if we reach the end
+      }
+      this.updateAdsToShow();
+    }, 6000);
+  }
+
+  updateAdsToShow(): void {
+    // Show the next 5 ads, starting from currentIndex
+    this.adsToShow = this.adsPromote.slice(
+      this.currentIndex,
+      this.currentIndex + 5
+    );
+
+    // If fewer than 5 ads are left at the end, show the remaining ads
+    if (this.adsToShow.length < 5) {
+      this.adsToShow = this.adsToShow.concat(
+        this.adsPromote.slice(0, 5 - this.adsToShow.length)
+      );
+    }
+  }
   getAdsList(): void {
     //console.log('adsff', this.allCategoriesSameParent);
     const userId = localStorage.getItem('loggedInUserId');
@@ -408,7 +458,9 @@ export class AdsGridComponent {
             (ad: { category_id: number }) => ad.category_id === this.categoryId
           );
           let adsProcessed = 0;
-          console.log('gogoogoggogoff ads', ads);
+          console.log('getAdsByCategory ads');
+
+          console.log('gogoogoggogoff ads', ads, this.categoryId);
 
           this.originalAds = [];
 
@@ -426,38 +478,37 @@ export class AdsGridComponent {
               this.paginateAds();
               this.originalAds.push(detailedAd);
             });
- 
           });
         });
     } else {
       this.categoryService
-      .getAdsWithFavoris(Number(userId), Number(this.categoryId))
-      .subscribe((datas) => {
-        console.log('gogoogoggogo',this.categoryId,datas);
+        .getAdsWithFavoris(Number(userId), Number(this.categoryId))
+        .subscribe((datas) => {
+          console.log('gogoogoggogo', this.categoryId, datas);
 
-        let ads = datas.data;
-        let adsProcessed = 0;
+          let ads = datas.data;
+          let adsProcessed = 0;
 
-        this.originalAds = [];
+          this.originalAds = [];
 
-        ads.forEach((element: { id: string }) => {
-          this.annonceService.getAdById(element.id).subscribe((data) => {
-            adsProcessed++;
-            const detailedAd = data.data;
-            console.log('gogoogoggogofftttttiii');
+          ads.forEach((element: { id: string }) => {
+            this.annonceService.getAdById(element.id).subscribe((data) => {
+              adsProcessed++;
+              const detailedAd = data.data;
+              console.log('gogoogoggogofftttttiii');
 
-            this.ads.push(detailedAd);
-            this.originalAds.push(detailedAd);
-            this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
-            this.setPriceRange();
-            this.paginateAds();
-            // console.log('adssss', this.ads, this.originalAds);
-            if (this.searchTitle) {
-              this.filterAdsByTitle(this.searchTitle);
-            }
+              this.ads.push(detailedAd);
+              this.originalAds.push(detailedAd);
+              this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
+              this.setPriceRange();
+              this.paginateAds();
+              // console.log('adssss', this.ads, this.originalAds);
+              if (this.searchTitle) {
+                this.filterAdsByTitle(this.searchTitle);
+              }
+            });
           });
         });
-      });
     }
   }
 
@@ -506,7 +557,7 @@ export class AdsGridComponent {
         }
         //this.applyFilter();
       }
-      this.parentCategory();
+      //this.parentCategory();
       // console.log('greeeet in ', datas);
       if (datas.data.parent_id == null) {
         this.vissibleCategory = true;
@@ -772,8 +823,10 @@ export class AdsGridComponent {
     this.categoryService.getAdsByCategory(categoryId, params).subscribe(
       (response) => {
         // Handle the response here
+        console.log('Handle the response here');
         console.log('Ads:', response);
         this.ads = response.data;
+
         console.log('Filtered ads:', this.ads);
         this.totalPages = Math.ceil(this.ads.length / this.adsPerPage);
         this.setPriceRange();
@@ -1051,7 +1104,6 @@ export class AdsGridComponent {
     }
   }
 
-
   changeSortOption(option: string): void {
     this.sortOption = option;
     this.applyFilters();
@@ -1096,6 +1148,4 @@ export class AdsGridComponent {
   getSortOptionLabel(option: string): string {
     return this.sortOptionsTranslation[option] || option;
   }
-
-
 }

@@ -5,7 +5,7 @@
       <div class="breadcrumb">
         <a><i class="fi-rs-home mr-5"></i>Accueil</a>
         <span></span>
-        <a [href]="'/ads-category/' + adDetail.category?.id">{{
+        <a [href]="'/ads-category/' + adDetail?.id + '/' + adDetail?.slug">{{
           adDetail.category?.name
         }}</a>
         <span></span> {{ adDetail.title }}
@@ -396,9 +396,15 @@
                             class="product-category"
                             style="margin-top: 1rem"
                           >
-                            <a [href]="'/ads-category/' + ad.category?.id">{{
-                              ad.category.name
-                            }}</a>
+                            <a
+                              [href]="
+                                '/ads-category/' +
+                                ad.category?.id +
+                                '/' +
+                                ad.category?.slug
+                              "
+                              >{{ ad.category.name }}</a
+                            >
                           </div>
                           <h2>
                             <a [href]="'/ads/' + ad.id">

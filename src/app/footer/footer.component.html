@@ -181,7 +181,7 @@
           <h4 class="widget-title">Catégories en Vedette</h4>
           <ul class="footer-list mb-sm-5 mb-md-0">
             <li *ngFor="let category of categoriesFooter.slice(0, 5)">
-              <a (click)="navigateToCategory(category.id)">{{
+              <a (click)="navigateToCategory(category.id, category.slug)">{{
                 category.name
               }}</a>
             </li>
@@ -209,6 +209,12 @@
             class=""
             src="../../assets/imgs/theme/payment-method.png"
             alt=""
+          />
+          <img
+            class=""
+            src="../../assets/imgs/theme/logo_cmi.png"
+            alt=""
+            style="width: 32px; height: 32px; margin-left: 1rem"
           />
         </div>
       </div>

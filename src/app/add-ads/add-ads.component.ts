@@ -197,18 +197,18 @@ export class AddAdsComponent implements OnInit {
     private primengConfig: PrimeNGConfig,
     private optionsService: OptionsService
   ) {}
-// Save the form data to localStorage
-saveFormDataToLocalStorage() {
-  localStorage.setItem('formData', JSON.stringify(this.formData));
-}
-
-// Retrieve form data from localStorage on page load
-loadFormDataFromLocalStorage() {
-  const savedFormData = localStorage.getItem('formData');
-  if (savedFormData) {
-    this.formData = JSON.parse(savedFormData);
+  // Save the form data to localStorage
+  saveFormDataToLocalStorage() {
+    localStorage.setItem('formData', JSON.stringify(this.formData));
   }
-}
+
+  // Retrieve form data from localStorage on page load
+  loadFormDataFromLocalStorage() {
+    const savedFormData = localStorage.getItem('formData');
+    if (savedFormData) {
+      this.formData = JSON.parse(savedFormData);
+    }
+  }
 
   // Liste de catégories avec leurs mots-clés associés
   Customcategories: CustomCategory[] = [
@@ -686,7 +686,7 @@ loadFormDataFromLocalStorage() {
         }
       }
     }
-     //this.saveFormDataToLocalStorage();
+    //this.saveFormDataToLocalStorage();
   }
 
   hasKeywords(subcategory: SubCategory): boolean {
@@ -972,17 +972,17 @@ loadFormDataFromLocalStorage() {
     }
     return null;
   }
-// Load uploaded images from localStorage on page load
-loadUploadedImagesFromLocalStorage() {
-  const savedImages = localStorage.getItem('uploadedImages');
-  if (savedImages) {
-    this.uploadedImages = JSON.parse(savedImages);
+  // Load uploaded images from localStorage on page load
+  loadUploadedImagesFromLocalStorage() {
+    const savedImages = localStorage.getItem('uploadedImages');
+    if (savedImages) {
+      this.uploadedImages = JSON.parse(savedImages);
+    }
   }
-}
-// Save uploaded images to localStorage
-saveUploadedImagesToLocalStorage() {
-  localStorage.setItem('uploadedImages', JSON.stringify(this.uploadedImages));
-}
+  // Save uploaded images to localStorage
+  saveUploadedImagesToLocalStorage() {
+    localStorage.setItem('uploadedImages', JSON.stringify(this.uploadedImages));
+  }
 
   ngOnInit(): void {
     this.getUserInfo();
@@ -1370,8 +1370,6 @@ saveUploadedImagesToLocalStorage() {
     return true;
   }
 
-
-
   emitNextCallbackPrix(): boolean {
     //this.getAds('pending');
     let isValid = true;
@@ -1397,14 +1395,11 @@ saveUploadedImagesToLocalStorage() {
       this.fieldErrors.prix = false;
     }
 
-
-
     if (!isValid) {
       return false;
     }
     return true;
   }
-
 
   openselect = false;
   selectOption(category: Category): void {
@@ -1482,11 +1477,15 @@ saveUploadedImagesToLocalStorage() {
       if (!this.selectedOptions.some((opt) => opt.id === option.id)) {
         this.selectedOptions.push(option);
       }
+
+      this.fieldErrors['options'] = false;
     } else {
       // Remove the option if option.bool is false
       this.selectedOptions = this.selectedOptions.filter(
         (opt) => opt.id !== option.id
       );
+
+      this.fieldErrors['options'] = true;
     }
     this.updateButtonLabel();
     this.calculateTotalPrice(); // Recalculate price on option change
@@ -1561,6 +1560,7 @@ saveUploadedImagesToLocalStorage() {
 
     this.calculateTotalPrice(); // Recalculate price on paid option change
     this.updateButtonLabel();
+    this.fieldErrors['options'] = false;
   }
 
   // Method to calculate total price
@@ -1589,8 +1589,18 @@ saveUploadedImagesToLocalStorage() {
     console.log('Selected paid option ID:', this.selectedPaidOptionId);
     console.log('Selected promote option IDs:', this.selectedOptions);
     console.log('Total Price:', this.totalPrice);
+
+    if (
+      this.selectedPaidOptionId === null &&
+      this.selectedOptions.length == 0
+    ) {
+      this.fieldErrors['options'] = true;
+      return false;
+    } else {
+      this.fieldErrors['options'] = false;
+      return true;
+    }
     // You can add additional logic here to handle the collected data
-    return true;
   }
 
   toggleSubcategoryOptions() {
@@ -1902,6 +1912,13 @@ saveUploadedImagesToLocalStorage() {
       this.fieldErrors.prix = false;
     }
 
+    if (!this.termsAccepted) {
+      this.fieldErrors.termsAccepted = true;
+      isValid = false;
+    } else {
+      this.fieldErrors.termsAccepted = false;
+    }
+
     if (!isValid) {
       return;
     }
@@ -2132,12 +2149,14 @@ saveUploadedImagesToLocalStorage() {
     });
   }
 
-
   secretKey: string = 'your-secret-key'; // Use a secret key for encryption/decryption
 
   // Method to encrypt data
   encryptData(data: any): string {
-    return CryptoJS.AES.encrypt(JSON.stringify(data), this.secretKey).toString();
+    return CryptoJS.AES.encrypt(
+      JSON.stringify(data),
+      this.secretKey
+    ).toString();
   }
 
   // Method to decrypt data
@@ -2191,7 +2210,6 @@ saveUploadedImagesToLocalStorage() {
     document.body.appendChild(form);
     form.submit();
   }
-
 
   onSubmit(): void {
     console.log('responsee meeeeeeeee');
@@ -2415,7 +2433,7 @@ saveUploadedImagesToLocalStorage() {
       }
     }
   }
-  
+
   fieldErrors: {
     [key: string]: boolean;
     titre: boolean;
@@ -2426,6 +2444,8 @@ saveUploadedImagesToLocalStorage() {
     category: boolean;
     ville: boolean;
     code_postal: boolean;
+    options: boolean;
+    termsAccepted: boolean;
   } = {
     titre: false,
     description: false,
@@ -2435,8 +2455,10 @@ saveUploadedImagesToLocalStorage() {
     category: false,
     ville: false,
     code_postal: false,
+    options: false,
+    termsAccepted: false,
   };
-
+  termsAccepted = false;
   clearError(fieldName: string): void {
     this.fieldErrors[fieldName] = false;
   }

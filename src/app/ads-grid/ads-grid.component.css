@@ -670,3 +670,37 @@ width: 100% !important;
 .slider input[type=range]:focus::-webkit-slider-runnable-track {
     background: #ccc;
 }
+
+.promote-border {
+    border-color: #f39c12;
+    border-style: solid;
+}
+
+
+
+::ng-deep .premium-badge {
+    position: absolute;
+    top: 10px;
+    /* Adjust this as needed */
+    right: 10px;
+    /* Adjust this as needed */
+    background-color: #f39c12;
+    /* Badge background color */
+    color: #fff;
+    /* Text color */
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 10;
+    border-radius: 5rem;
+    /* Ensure it is above other content */
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px !important;
+}

@@ -104,8 +104,8 @@ export class HeaderComponent {
   }
   preFilterValues: any[] = [];
 
-  navigateToCategory(categoryId: number) {
-    window.location.href = `/ads-category/${categoryId}`;
+  navigateToCategory(categoryId: number, slug: string) {
+    window.location.href = `/ads-category/${categoryId}/${slug}`;
   }
   /*   fetchCategories(): void {
     const accessToken = localStorage.getItem('loggedInUserToken');

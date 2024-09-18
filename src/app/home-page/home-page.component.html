@@ -64,7 +64,11 @@
             <div class="d-flex categori-dropdown-inner">
               <ul>
                 <li *ngFor="let category of displayedCategories">
-                  <a [href]="'/ads-category/' + category.id">
+                  <a
+                    [href]="
+                      '/ads-category/' + category?.id + '/' + category?.slug
+                    "
+                  >
                     <img
                       [src]="category.media?.url"
                       alt="{{ category.name }}"
@@ -81,7 +85,11 @@
               <div class="d-flex categori-dropdown-inner">
                 <ul>
                   <li *ngFor="let category of hiddenCategories">
-                    <a [href]="'/ads-category/' + category.id">
+                    <a
+                      [href]="
+                        '/ads-category/' + category?.id + '/' + category?.slug
+                      "
+                    >
                       <img
                         [src]="category.icon_path"
                         alt="{{ category.name }}"
@@ -204,9 +212,11 @@
               class="list-inline-item nav-item"
               *ngFor="let category of categories.slice(0, 6)"
             >
-              <a class="nav-link" [href]="'/ads-category/' + category?.id">{{
-                category.name
-              }}</a>
+              <a
+                class="nav-link"
+                [href]="'/ads-category/' + category?.id + '/' + category?.slug"
+                >{{ category.name }}</a
+              >
             </li>
           </ul>
 
@@ -218,9 +228,11 @@
               class="list-inline-item nav-item"
               *ngFor="let category of categories.slice(0, 3)"
             >
-              <a class="nav-link" [href]="'/ads-category/' + category?.id">{{
-                category.name
-              }}</a>
+              <a
+                class="nav-link"
+                [href]="'/ads-category/' + category?.id + '/' + category?.slug"
+                >{{ category.name }}</a
+              >
             </li>
           </ul>
         </div>
@@ -249,12 +261,12 @@
               data-wow-delay=".1s"
             >
               <figure class="img-hover-scale overflow-hidden">
-                <a (click)="navigateToCategory(category.id)"
+                <a (click)="navigateToCategory(category.id, category.slug)"
                   ><img [src]="category?.media?.url" alt=""
                 /></a>
               </figure>
               <h6>
-                <a (click)="navigateToCategory(category.id)">{{
+                <a (click)="navigateToCategory(category.id, category.slug)">{{
                   category.name
                 }}</a>
               </h6>
@@ -266,10 +278,105 @@
     </div>
   </section>
 
-  <!--End category slider-->
   <!--End banners-->
   <section class="product-tabs section-padding position-relative">
     <div class="container">
+      <!--End category slider-->
+      <div class="col-12">
+        <div class="col-12">
+          <h4 class="section-title">
+            📢 Annonces qui pourraient vous intéresser
+          </h4>
+        </div>
+
+        <div class="row">
+          <div
+            [ngClass]="{
+              'col-lg-2 col-md-6 col-12': !isScreenphone,
+              'col-6': isScreenphone
+            }"
+            *ngFor="let ad of adsPromote"
+          >
+            <div
+              class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
+            >
+              <div class="product-img-action-wrap">
+                <div class="product-img product-img-zoom" style="height: 240px">
+                  <a [href]="'/ads/' + ad.id" style="height: 100%">
+                    <img class="default-img" [src]="ad.medias[0]?.url" alt="" />
+                    <img
+                      class="hover-img"
+                      [src]="ad.medias[1]?.url || ad.medias[0]?.url"
+                      alt=""
+                      style="height: 100%"
+                    />
+                  </a>
+                </div>
+
+                <div class="product-action-1">
+                  <a
+                    aria-label="Ajouter à la liste de souhaits"
+                    class="action-btn"
+                    (click)="addToFavorites(ad)"
+                  >
+                    <img
+                      *ngIf="ad.favorites?.length > 0"
+                      src="../../assets/imgs/coeur.png"
+                      style="width: 15px; margin-left: 1px"
+                    />
+                    <i
+                      *ngIf="ad.favorites?.length === 0 || !ad.favorites"
+                      class="fi fi-rs-heart"
+                    ></i>
+                  </a>
+                </div>
+                <!--               
+            <div class="premium-badge">
+              <i class="fi fi-rr-sparkles"></i> Annonce Premium
+            </div> -->
+              </div>
+              <div class="product-content-wrap">
+                <div class="product-category" style="margin-top: 1rem">
+                  <a
+                    [href]="
+                      '/ads-category/' +
+                      ad.category?.id +
+                      '/' +
+                      ad.category?.slug
+                    "
+                    >{{ ad.category.name }}</a
+                  >
+                </div>
+                <h2>
+                  <a [href]="'/ads/' + ad.id" style="font-size: large">
+                    {{ ad.title | slice : 0 : 17
+                    }}{{ ad.title.length > 17 ? "..." : "" }}
+                  </a>
+                </h2>
+                <div class="product-rate-cover">
+                  <div
+                    class=""
+                    style="
+                      width: 100%;
+                      font-weight: 800;
+                      font-size: large;
+                      color: black;
+                    "
+                  >
+                    {{ ad.price }} DH
+                  </div>
+                </div>
+
+                <div>
+                  <span class="font-small text-muted">
+                    {{ getRelativeTime(ad.created_at) }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="section-title style-2 wow animate__animated animate__fadeIn">
         <h3>En ce moment sur OneMakene</h3>
         <!--         <ul class="nav nav-tabs links" id="myTab" role="tablist">
@@ -341,6 +448,7 @@
                   <div class="row product-grid-4" style="margin: 0.5rem">
                     <div
                       class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
+                      [ngClass]="{ 'promote-border': adsfirst.promote }"
                       data-wow-delay=".1s"
                     >
                       <div class="product-img-action-wrap">
@@ -449,7 +557,10 @@
                   *ngFor="let ad of category.value"
                   class="col-lg-2 col-md-4 col-12 col-sm-6"
                 >
-                  <div class="product-cart-wrap mb-30">
+                  <div
+                    class="product-cart-wrap mb-30"
+                    [ngClass]="{ 'promote-border': ad.promote }"
+                  >
                     <div class="product-img-action-wrap">
                       <div
                         class="product-img product-img-zoom"
@@ -504,21 +615,21 @@
                         }}</a>
                       </div>
                       <h2>
-                        <a [href]="'/ads/' + ad.id"
-                          >{{ ad.title | slice : 0 : 17
-                          }}{{ ad.title.length > 17 ? "..." : "" }}</a
-                        >
+                        <a [href]="'/ads/' + ad.id">
+                          {{ ad.title | slice : 0 : 17
+                          }}{{ ad.title.length > 17 ? "..." : "" }}
+                        </a>
                       </h2>
                       <div class="product-price">
-                        <span
-                          >{{ ad.price | slice : 0 : 10
-                          }}{{ ad.price.length > 10 ? "..." : "" }} DH</span
-                        >
+                        <span>
+                          {{ ad.price | slice : 0 : 10
+                          }}{{ ad.price.length > 10 ? "..." : "" }} DH
+                        </span>
                       </div>
                       <div>
-                        <span class="font-small text-muted"
-                          >{{ getRelativeTime(ad.updated_at) }}
-                        </span>
+                        <span class="font-small text-muted">{{
+                          getRelativeTime(ad.updated_at)
+                        }}</span>
                       </div>
                     </div>
                   </div>
@@ -799,6 +910,7 @@
                         <div
                           class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
                           data-wow-delay=".1s"
+                          [ngClass]="{ 'promote-border': adsfirst.promote }"
                         >
                           <div class="product-img-action-wrap">
                             <div
@@ -853,7 +965,14 @@
                               style="margin-top: 1rem"
                               *ngIf="!isScreenphone"
                             >
-                              <a href="">{{ adsfirst.category.name }}</a>
+                              <a href="">
+                                {{ adsfirst.category.name | slice : 0 : 17
+                                }}{{
+                                  adsfirst.category.name.length > 17
+                                    ? "..."
+                                    : ""
+                                }}</a
+                              >
                             </div>
                             <div
                               class="product-category"

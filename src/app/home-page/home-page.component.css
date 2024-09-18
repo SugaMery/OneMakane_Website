@@ -254,6 +254,26 @@ width: 100% !important;
     padding-right: 3rem;
 }
 
+::ng-deep .carouseled .p-carousel-container .p-carousel-items-content {
+    margin-left: -1.5rem !important;
+}
+
+
+::ng-deep .carouseled .p-carousel-container .p-carousel-items-container {
+    margin-left: 0rem !important;
+}
+
+
+::ng-deep .carouseled .p-carousel-container .p-carousel-items-content {
+    margin-right: 0.5rem !important;
+
+}
+
+::ng-deep .carouseled .p-carousel-container .p-carousel-items-container {
+    margin-left: 0rem !important;
+}
+
+
 @media only screen and (min-width: 1024px) {
     ::ng-deep .product-cart-wrap .product-content-wrap .product-category {
         margin-top: 10px;
@@ -307,6 +327,10 @@ width: 100% !important;
         margin-left: -0.5rem !important;
 
     }
+
+    ::ng-deep .carouseled .p-carousel-container .p-carousel-items-content {
+        margin-left: 0rem !important;
+    }
 }
 
 @media only screen and (max-width: 768px) {
@@ -351,21 +375,41 @@ width: 100% !important;
 }
 
 
-::ng-deep .carouseled .p-carousel-container .p-carousel-items-content {
-    margin-left: -1.5rem !important;
+
+
+::ng-deep .product-cart-wrap {
+    position: relative;
+}
+
+::ng-deep .premium-badge {
+    position: absolute;
+    top: 10px;
+    /* Adjust this as needed */
+    right: 10px;
+    /* Adjust this as needed */
+    background-color: #f39c12;
+    /* Badge background color */
+    color: #fff;
+    /* Text color */
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 10;
+    border-radius: 5rem;
+    /* Ensure it is above other content */
+}
+
+.promote-border {
+    border-color: #f39c12;
+    border-style: solid;
 }
 
 
-::ng-deep .carouseled .p-carousel-container .p-carousel-items-container {
-    margin-left: 0rem !important;
-}
-
-
-::ng-deep .carouseled .p-carousel-container .p-carousel-items-content {
-    margin-right: 0.5rem !important;
-
-}
-
-::ng-deep .carouseled .p-carousel-container .p-carousel-items-container {
-    margin-left: 0rem !important;
+.section-title {
+    display: flex;
+    align-items: end;
+    margin-bottom: 20px !important;
+    position: relative;
+    justify-content: space-between;
 }

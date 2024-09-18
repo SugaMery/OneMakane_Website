@@ -11,6 +11,7 @@ import { AnnonceService } from '../annonce.service';
 import { Console } from 'console';
 import { SettingService } from '../setting.service';
 import { Carousel } from 'primeng/carousel';
+import { interval, Subscription } from 'rxjs';
 interface Product {
   id: number;
   category: { id: number; name: string; route: string | null };
@@ -32,7 +33,7 @@ interface Product {
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
 })
-export class HomePageComponent implements OnInit {
+export class HomePageComponent {
   categories: any[] = [];
   Souscategories: any[] = [];
   Souscategorie: any[] = [];
@@ -108,8 +109,71 @@ export class HomePageComponent implements OnInit {
   isScreenSmall!: boolean;
   isScreenphone: boolean = false;
 
-  navigateToCategory(categoryId: number) {
-    window.location.href = `/ads-category/${categoryId}`;
+  private adsRefreshSubscription: Subscription | undefined;
+  adsToShow: any[] = [];
+  private currentInde: number = 0;
+  adsPromote: any[] = [];
+  private adsInterval: any;
+  adsSubscription: Subscription | undefined;
+  ngOnDestroy(): void {
+    // Unsubscribe from interval when component is destroyed to prevent memory leaks
+    if (this.adsSubscription) {
+      this.adsSubscription.unsubscribe();
+    }
+  }
+
+  // Fetch the ads data from the service
+  loadAds(): void {
+    this.annonceService.getAdsPromoteAll().subscribe((response) => {
+      console.log('Fetched ads:', response);
+
+      if (Array.isArray(response.data)) {
+        // Shuffle the response array to get random ads
+        this.adsPromote = this.getRandomAds(response.data, 6);
+        console.log('Random ads:', this.adsPromote);
+      }
+    });
+  }
+
+  // Function to shuffle the array and return a specific number of random elements
+  getRandomAds(ads: any[], count: number): any[] {
+    // Shuffle array using Fisher-Yates shuffle algorithm
+    for (let i = ads.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [ads[i], ads[j]] = [ads[j], ads[i]]; // Swap elements
+    }
+    // Return the first 'count' elements
+    return ads.slice(0, count);
+  }
+
+  // Start rotating the ads every 60 seconds (60000 milliseconds)
+  startAdsRotation(): void {
+    this.adsSubscription = interval(60000).subscribe(() => {
+      this.currentInde += 2; // Move to the next set of ads
+      if (this.currentInde >= this.adsPromote.length) {
+        this.currentIndex = 0; // Reset to the beginning if we reach the end
+      }
+      this.updateAdsToShow(); // Update the ads to be shown
+    });
+  }
+
+  // Update the ads that are being displayed
+  updateAdsToShow(): void {
+    // Show the next 2 ads starting from the currentIndex
+    this.adsToShow = this.adsPromote.slice(
+      this.currentInde,
+      this.currentInde + 2
+    );
+
+    // If fewer than 2 ads are available at the end, wrap around to the beginning
+    if (this.adsToShow.length < 2 && this.adsPromote.length > 2) {
+      this.adsToShow = this.adsToShow.concat(
+        this.adsPromote.slice(0, 2 - this.adsToShow.length)
+      );
+    }
+  }
+  navigateToCategory(categoryId: number, slug: string) {
+    window.location.href = `/ads-category/${categoryId}/${slug}`;
   }
   addToFavorites(ad: any): void {
     const userId = localStorage.getItem('loggedInUserId');
@@ -170,6 +234,7 @@ export class HomePageComponent implements OnInit {
     this.getAdsForCarousel();
     this.fetchCategories();
     this.getCategories();
+
     this.responsiveOptions = [
       {
         breakpoint: '1024px',
@@ -424,6 +489,8 @@ export class HomePageComponent implements OnInit {
 
     //this.categoryService.getAdsByCategory()
     this.convertAdsToArray();
+    this.loadAds();
+
     console.log('categorizedAds', this.categorizedAds);
   }
 

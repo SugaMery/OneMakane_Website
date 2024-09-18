@@ -255,9 +255,15 @@
                 </div>
                 <div class="product-content-wrap">
                   <div class="product-category" style="margin-top: 1rem">
-                    <a [href]="'/ads-category/' + ad.category?.id">{{
-                      ad.category.name
-                    }}</a>
+                    <a
+                      [href]="
+                        '/ads-category/' +
+                        ad.category?.id +
+                        '/' +
+                        ad.category?.slug
+                      "
+                      >{{ ad.category.name }}</a
+                    >
                   </div>
                   <h2>
                     <a [href]="'/ads/' + ad.id">

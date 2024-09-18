@@ -390,6 +390,63 @@ export class PageAccountComponent implements OnInit {
   submitted: boolean = false;
 
   statuses!: any[];
+  display: boolean = false;
+  adIdToDuplicate: number | null = null;
+
+  showConfirmDialog(adId: number) {
+    this.adIdToDuplicate = adId;
+    this.display = true;
+  }
+  // Method to get the array of page numbers
+  // Méthode pour obtenir les pages visibles
+  getVisiblePages(): number[] {
+    const range = 2; // Nombre de pages autour de la page actuelle
+    const pages = [];
+
+    // Ajouter les pages avant la page actuelle
+    for (
+      let i = Math.max(2, this.currentPage - range);
+      i < this.currentPage;
+      i++
+    ) {
+      pages.push(i);
+    }
+
+    // Ajouter la page actuelle
+    pages.push(this.currentPage);
+
+    // Ajouter les pages après la page actuelle
+    for (
+      let i = this.currentPage + 1;
+      i <= Math.min(this.totalPages - 1, this.currentPage + range);
+      i++
+    ) {
+      pages.push(i);
+    }
+
+    return pages;
+  }
+
+  // Déterminer si les ellipses avant doivent être affichées
+  shouldShowEllipsesBefore(): boolean {
+    return this.currentPage > 3;
+  }
+
+  // Déterminer si les ellipses après doivent être affichées
+  shouldShowEllipsesAfter(): boolean {
+    return this.currentPage < this.totalPages - 2;
+  }
+  duplicateAd() {
+    if (this.adIdToDuplicate !== null) {
+      // Implement your duplication logic here
+      console.log('Duplicating ad with ID:', this.adIdToDuplicate);
+
+      // Reset after action
+      this.adIdToDuplicate = null;
+      this.display = false;
+    }
+  }
+
   showDialog(ad: any) {
     this.selectedAd = ad; // Set the selected ad object
     this.adDialog = true;

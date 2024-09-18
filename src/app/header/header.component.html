@@ -427,7 +427,7 @@
               <div class="d-flex categori-dropdown-inner">
                 <ul>
                   <li *ngFor="let category of categories.slice(0, 5)">
-                    <a (click)="navigateToCategory(category.id)">
+                    <a (click)="navigateToCategory(category.id, category.slug)">
                       <img [src]="category?.media?.url" alt="" />{{
                         category.name
                       }}
@@ -436,7 +436,7 @@
                 </ul>
                 <ul class="end">
                   <li *ngFor="let category of categories.slice(5, 10)">
-                    <a (click)="navigateToCategory(category.id)">
+                    <a (click)="navigateToCategory(category.id, category.slug)">
                       <img [src]="category?.media?.url" alt="" />{{
                         category.name
                       }}
@@ -480,7 +480,9 @@
                         <a
                           class="menu-title"
                           href="javascript:void(0)"
-                          (click)="navigateToCategory(subcategory.id)"
+                          (click)="
+                            navigateToCategory(subcategory.id, subcategory.slug)
+                          "
                         >
                           {{ subcategory.name }}
                         </a>
@@ -552,7 +554,9 @@
                         <a
                           class="menu-title"
                           href="javascript:void(0)"
-                          (click)="navigateToCategory(category.id)"
+                          (click)="
+                            navigateToCategory(category.id, category.slug)
+                          "
                         >
                           {{ category.name }}
                         </a>
@@ -563,7 +567,12 @@
                           >
                             <a
                               href="javascript:void(0)"
-                              (click)="navigateToCategory(subcategory.id)"
+                              (click)="
+                                navigateToCategory(
+                                  subcategory.id,
+                                  subcategory.slug
+                                )
+                              "
                             >
                               {{ subcategory.name }}
                             </a>
@@ -778,7 +787,7 @@
               <span class="menu-expand"
                 ><i class="fi-rs-angle-small-down"></i
               ></span>
-              <a (click)="navigateToCategory(category.id)">
+              <a (click)="navigateToCategory(category.id, category.slug)">
                 {{ category.name }}</a
               >
               <ul class="dropdown" style="display: none">
@@ -789,9 +798,12 @@
                   <span class="menu-expand"
                     ><i class="fi-rs-angle-small-down"></i
                   ></span>
-                  <a (click)="navigateToCategory(subcategory.id)">{{
-                    subcategory.name
-                  }}</a>
+                  <a
+                    (click)="
+                      navigateToCategory(subcategory.id, subcategory.slug)
+                    "
+                    >{{ subcategory.name }}</a
+                  >
                   <ul
                     class="dropdown"
                     style="display: none"

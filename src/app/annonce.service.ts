@@ -177,6 +177,16 @@ export class AnnonceService {
     const url = `${this.apiUrl}/users/${user_id}/ads?page=${page}`;
     return this.http.get<any>(url);
   }
+  getAdsPromote(categoryId: number): Observable<any> {
+    const url = `${this.apiUrl}/ads/go-up-ads?category_id=${categoryId}`;
+
+    return this.http.get<any>(url); // Using GET as you only have query parameters
+  }
+  getAdsPromoteAll(): Observable<any> {
+    const url = `${this.apiUrl}/ads/go-up-ads`;
+
+    return this.http.get<any>(url); // Using GET as you only have query parameters
+  }
 
   getAllAdsWithUser(user_id: number): Observable<any[]> {
     return this.getAdsWithUser(user_id).pipe(

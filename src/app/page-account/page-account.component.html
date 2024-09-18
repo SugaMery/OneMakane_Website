@@ -179,7 +179,7 @@
                                 <th scope="col" colspan="2">Annonce</th>
                                 <th scope="col">Prix</th>
                                 <th scope="col">Status</th>
-                                <th scope="col">Action</th>
+                                <th scope="col" class="text-center">Action</th>
                                 <th scope="col" class="end">Supprimé</th>
                               </tr>
                             </thead>
@@ -238,9 +238,21 @@
                                   data-title="Action"
                                 >
                                   <a [href]="'/modifier-annonce/' + ad.id">
-                                    <button class="btn btn-sm">Modifier</button>
+                                    <button class="btn btn-sm btn-primary">
+                                      Modifier
+                                    </button>
+                                  </a>
+                                  <a class="ml-2">
+                                    <button
+                                      class="btn btn-sm"
+                                      style="background: #1943b7"
+                                      (click)="showConfirmDialog(ad.id)"
+                                    >
+                                      Dupliquer
+                                    </button>
                                   </a>
                                 </td>
+
                                 <td class="text-center" data-title="Supprimer">
                                   <a class="text-body" (click)="showDialog(ad)">
                                     <i class="fi-rs-trash"></i>
@@ -255,9 +267,45 @@
                               </td>
                             </tr>
                           </table>
+
+                          <p-dialog
+                            [(visible)]="display"
+                            [style]="{ width: '20rem' }"
+                            header="Confirmation"
+                            [modal]="true"
+                            styleClass="p-fluid"
+                          >
+                            <ng-template pTemplate="content">
+                              <div>
+                                <p>Voulez-vous dupliquer cette annonce ?</p>
+                              </div>
+                            </ng-template>
+
+                            <ng-template pTemplate="footer">
+                              <div style="padding: 1rem !important">
+                                <button
+                                  pButton
+                                  pRipple
+                                  label="Annuler"
+                                  icon="pi pi-times"
+                                  class="p-button-text"
+                                  (click)="display = false"
+                                ></button>
+                                <button
+                                  pButton
+                                  pRipple
+                                  label="Confirmer"
+                                  icon="pi pi-check"
+                                  class="p-button-danger"
+                                  (click)="adDialog = false"
+                                ></button>
+                              </div>
+                            </ng-template>
+                          </p-dialog>
+
                           <p-dialog
                             [(visible)]="adDialog"
-                            [style]="{ width: '20rem' }"
+                            [style]="{ width: '30rem' }"
                             header="Confirmer la suppression"
                             [modal]="true"
                             styleClass="p-fluid"
@@ -317,42 +365,94 @@
                           </p-dialog>
                         </div>
                       </div>
-
                       <div
-                        class="pagination-area mt-20 mb-20"
-                        *ngIf="ads.length > 0"
+                        class="pagination-area mt-30 mb-50"
+                        *ngIf="totalPages > 1"
                       >
-                        <nav aria-label="Page navigation example">
+                        <nav aria-label="Pagination">
                           <ul class="pagination justify-content-start">
+                            <!-- Bouton Précédent -->
                             <li
                               class="page-item"
-                              [class.disabled]="currentPage === 1"
+                              [ngClass]="{ disabled: currentPage === 1 }"
                             >
                               <a
                                 class="page-link"
                                 (click)="changePage(currentPage - 1)"
+                                aria-label="Précédent"
                               >
-                                <i class="fi-rs-arrow-small-left"></i>
+                                <span aria-hidden="true">&laquo;</span>
                               </a>
                             </li>
+
+                            <!-- Bouton Première Page -->
                             <li
-                              *ngFor="let page of getPagesArray()"
                               class="page-item"
-                              [class.active]="page === currentPage"
+                              [ngClass]="{ disabled: currentPage === 1 }"
+                            >
+                              <a
+                                class="page-link"
+                                (click)="changePage(1)"
+                                style="width: auto"
+                                >Première</a
+                              >
+                            </li>
+
+                            <!-- Ellipse pour les Pages au Début -->
+                            <li
+                              *ngIf="shouldShowEllipsesBefore()"
+                              class="page-item disabled"
+                            >
+                              <span class="page-link">...</span>
+                            </li>
+
+                            <!-- Boutons Numéros de Page -->
+                            <li
+                              *ngFor="let page of getVisiblePages()"
+                              class="page-item"
+                              [ngClass]="{ active: currentPage === page }"
                             >
                               <a class="page-link" (click)="changePage(page)">{{
                                 page
                               }}</a>
                             </li>
+
+                            <!-- Ellipse pour les Pages à la Fin -->
+                            <li
+                              *ngIf="shouldShowEllipsesAfter()"
+                              class="page-item disabled"
+                            >
+                              <span class="page-link">...</span>
+                            </li>
+
+                            <!-- Bouton Dernière Page -->
                             <li
                               class="page-item"
-                              [class.disabled]="currentPage === totalPages"
+                              [ngClass]="{
+                                disabled: currentPage === totalPages
+                              }"
+                            >
+                              <a
+                                class="page-link"
+                                (click)="changePage(totalPages)"
+                                style="width: auto"
+                                >Dernière</a
+                              >
+                            </li>
+
+                            <!-- Bouton Suivant -->
+                            <li
+                              class="page-item"
+                              [ngClass]="{
+                                disabled: currentPage === totalPages
+                              }"
                             >
                               <a
                                 class="page-link"
                                 (click)="changePage(currentPage + 1)"
+                                aria-label="Suivant"
                               >
-                                <i class="fi-rs-arrow-small-right"></i>
+                                <span aria-hidden="true">&raquo;</span>
                               </a>
                             </li>
                           </ul>

@@ -39,8 +39,8 @@ export class FooterComponent implements OnInit {
       this.titrePage2 = data.data.title;
     });
   }
-  navigateToCategory(categoryId: number) {
-    window.location.href = `/ads-category/${categoryId}`;
+  navigateToCategory(categoryId: number, slug: string) {
+    window.location.href = `/ads-category/${categoryId}/${slug}`;
   }
   checkScreenWidth() {
     if (isPlatformBrowser(this.platformId)) {
