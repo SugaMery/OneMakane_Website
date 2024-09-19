@@ -1,0 +1,677 @@
+<app-header></app-header>
+<main class="main pages">
+  <div class="page-header breadcrumb-wrap">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Accueil</a>
+        <span></span> Mon Compte <span></span> Duplication de l'annonce
+      </div>
+    </div>
+  </div>
+  <div class="page-content pb-15">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-10 m-auto">
+          <div class="container mb-80 mt-10">
+            <!--     <div class="row">
+              <div class="col-lg-8 mb-40">
+                <h1 class="heading-2 mb-10"></h1>
+                      <div class="d-flex justify-content-between">
+                  <h6 class="text-body">
+                    There are <span class="text-brand">3</span> products in your cart
+                  </h6>
+                </div> 
+              </div>
+            </div> -->
+            <div class="row">
+              <div class="col-lg-8">
+                <div class="row">
+                  <div class="col-lg-8 mb-sm-15 mb-lg-0 mb-md-3">
+                    <!--             <div class="toggle_info">
+                      <span
+                        ><i class="fi-rs-user mr-10"></i
+                        ><span class="text-muted font-lg"
+                          >Already have an account?</span
+                        >
+                        <a
+                          href="#loginform"
+                          data-bs-toggle="collapse"
+                          class="collapsed font-lg"
+                          aria-expanded="false"
+                          >Click here to login</a
+                        ></span
+                      >
+                    </div> -->
+                    <div
+                      class="panel-collapse collapse login_form"
+                      id="loginform"
+                    >
+                      <div class="panel-body">
+                        <p class="mb-30 font-sm">
+                          If you have shopped with us before, please enter your
+                          details below. If you are a new customer, please
+                          proceed to the Billing &amp; Shipping section.
+                        </p>
+                        <form method="post">
+                          <div class="form-group">
+                            <input
+                              type="text"
+                              name="email"
+                              placeholder="Username Or Email"
+                            />
+                          </div>
+                          <div class="form-group">
+                            <input
+                              type="password"
+                              name="password"
+                              placeholder="Password"
+                            />
+                          </div>
+                          <div class="login_footer form-group">
+                            <div class="chek-form">
+                              <div class="custome-checkbox">
+                                <input
+                                  class="form-check-input"
+                                  type="checkbox"
+                                  name="checkbox"
+                                  id="remember"
+                                  value=""
+                                />
+                                <label class="form-check-label" for="remember"
+                                  ><span>Remember me</span></label
+                                >
+                              </div>
+                            </div>
+                            <a href="#">Forgot password?</a>
+                          </div>
+                          <div class="form-group">
+                            <button class="btn btn-md" name="login">
+                              Log in
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <a
+                    href="/page-account#orders"
+                    class="btn btn-fill-out btn-block mt-30"
+                    style="
+                      background: linear-gradient(45deg, #6b7280, #6b7280);
+                      width: auto;
+                      margin-bottom: 1rem;
+                    "
+                    ><i class="fi-rs-sign-in ml-15"></i> Retourner</a
+                  >
+                  <h4>Les informations de l'annonce</h4>
+                  <form (ngSubmit)="onSubmit()">
+                    <div class="row">
+                      <div class="form-group col-lg-12">
+                        <label for="title">Titre</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="title"
+                          placeholder="Titre"
+                          [(ngModel)]="ad.title"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-lg-6">
+                        <label for="price">Ville</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="price"
+                          placeholder="Prix"
+                          [(ngModel)]="ad.city"
+                          required
+                        />
+                      </div>
+                      <div class="form-group col-lg-6">
+                        <label for="postal_code">Code Postal</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="postal_code"
+                          placeholder="Code Postal"
+                          [(ngModel)]="ad.postal_code"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="row shipping_calculator">
+                      <div class="form-group col-lg-6">
+                        <label for="category">Catégorie</label>
+                        <div class="select-menu">
+                          <!--                           <div
+                            class="select-btn"
+                            style="
+                              margin-bottom: 1rem;
+                              background: #fff;
+                              border: 1px solid #ececec;
+                              height: 64px;
+                              box-shadow: none;
+                              padding-left: 20px;
+                              font-size: 16px;
+                              width: 100%;
+                            "
+                            (click)="toggleOptions()"
+                          > -->
+                          <div
+                            class="select-btn"
+                            style="
+                              margin-bottom: 1rem;
+                              background: #fff;
+                              border: 1px solid #ececec;
+                              height: 64px;
+                              box-shadow: none;
+                              padding-left: 20px;
+                              font-size: 16px;
+                              width: 100%;
+                            "
+                          >
+                            <span class="sBtn-text" style="font-size: 13px">
+                              <div style="display: flex; align-items: center">
+                                <img
+                                  src="{{
+                                    selectedOption.parentCategoy?.media?.url
+                                  }}"
+                                  *ngIf="selectedOption.name"
+                                  alt=""
+                                  class="iconUrl"
+                                  style="max-width: 2rem; margin-right: 1rem"
+                                />
+                                <p style="margin: 0; color: black">
+                                  {{
+                                    selectedOption.parentCategoy?.name ||
+                                      "Choisissez"
+                                  }}
+                                  <i
+                                    class="fi-rs-angle-right"
+                                    *ngIf="selectedOption.name"
+                                    style="
+                                      padding-left: 1rem;
+                                      padding-right: 0.5rem;
+                                      font-size: 15px;
+                                    "
+                                  ></i>
+                                  {{ selectedOption.name }}
+                                </p>
+                              </div>
+                            </span>
+                            <i class="bx bx-chevron-down"></i>
+                          </div>
+                          <ul
+                            class="options"
+                            [ngClass]="{
+                              active: optionsVisible
+                            }"
+                            style="font-size: smaller"
+                          >
+                            <li
+                              class="option"
+                              *ngFor="let category of categories"
+                              (click)="selectOption(category)"
+                            >
+                              <span
+                                class="d-inline-flex align-items-center"
+                                style="font-size: 13px"
+                              >
+                                <img
+                                  src="{{ category.parentCategoy?.media?.url }}"
+                                  alt=""
+                                  class="iconUrl"
+                                  style="max-width: 2rem; margin-right: 1rem"
+                                />
+                                {{ category.parentCategoy?.name }}
+                                <i
+                                  class="fi-rs-angle-right"
+                                  style="
+                                    padding-left: 1rem;
+                                    padding-right: 0.5rem;
+                                    font-size: 15px;
+                                  "
+                                ></i>
+                                {{ category.name }}
+                              </span>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="form-group col-lg-6">
+                        <label for="price">Prix</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="city"
+                          placeholder="Ville"
+                          [(ngModel)]="ad.price"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="form-group col-lg-12">
+                        <label for="description">Description</label>
+                        <textarea
+                          class="form-control"
+                          rows="50"
+                          name="description"
+                          placeholder="Description"
+                          [(ngModel)]="ad.description"
+                          required
+                        ></textarea>
+                      </div>
+                    </div>
+
+                    <div
+                      class="theiaStickySidebar"
+                      style="
+                        padding-top: 0px;
+                        padding-bottom: 1px;
+                        position: static;
+                        transform: none;
+                      "
+                    >
+                      <!-- Titre avant les critères -->
+                      <h3>Critères de l'annonce</h3>
+
+                      <div class="row">
+                        <div
+                          class="col-md-6 col-sm-12"
+                          *ngFor="let setting of settings"
+                          [ngClass]="{
+                            'display-contents': setting.depend === false
+                          }"
+                        >
+                          <div class="select-menu">
+                            <label
+                              *ngIf="
+                                setting.depend === null ||
+                                setting.depend === true
+                              "
+                              >{{ setting.label }}</label
+                            >
+
+                            <!-- Display Select Button for non-dependant select type -->
+                            <div
+                              *ngIf="
+                                setting.type === 'select' &&
+                                setting.dependant === undefined
+                              "
+                              class="select-btn"
+                              style="margin-bottom: 1rem"
+                              (click)="toggledOptions(setting)"
+                            >
+                              <span class="sBtn-text">
+                                <div style="display: flex; align-items: center">
+                                  {{
+                                    setting.selectedOption
+                                      ? setting.selectedOption.label
+                                      : "Choisissez"
+                                  }}
+                                </div>
+                              </span>
+                              <i class="bx bx-chevron-down"></i>
+                            </div>
+
+                            <!-- Display Select Options for non-dependant select type -->
+                            <ul
+                              *ngIf="
+                                setting.type === 'select' &&
+                                setting.dependant === undefined
+                              "
+                              class="options"
+                              [class.active]="setting.optionsVisible"
+                              style="font-size: smaller"
+                            >
+                              <li
+                                class="option"
+                                *ngFor="
+                                  let option of parseOptions(setting.content)
+                                "
+                                [value]="option.value"
+                                (click)="selectdOptiond(option, setting)"
+                              >
+                                <span
+                                  class="d-inline-flex align-items-center"
+                                  >{{ option.label }}</span
+                                >
+                              </li>
+                            </ul>
+
+                            <!-- Display dependant select button -->
+                            <div
+                              *ngIf="
+                                setting.type === 'select' &&
+                                setting.dependant !== undefined &&
+                                setting.depend === true
+                              "
+                              class="select-btn"
+                              style="
+                                margin-bottom: 1rem;
+                                background: #fff;
+                                border: 1px solid #ececec;
+                                height: 55px;
+                                box-shadow: none;
+                                padding-left: 20px;
+                                font-size: 15px;
+                                width: 100%;
+                              "
+                              (click)="toggledOptionsDepend(setting)"
+                            >
+                              <span class="sBtn-text">
+                                <div style="display: flex; align-items: center">
+                                  {{
+                                    setting.selectedOption
+                                      ? setting.selectedOption.label
+                                      : "Choisissez "
+                                  }}
+                                </div>
+                              </span>
+                              <i class="bx bx-chevron-down"></i>
+                            </div>
+
+                            <!-- Display Select Options for dependant select type -->
+                            <ul
+                              *ngIf="
+                                setting.type === 'select' &&
+                                setting.dependant !== undefined &&
+                                setting.depend === true
+                              "
+                              class="options"
+                              [class.active]="setting.optionsVisible"
+                              style="font-size: smaller"
+                            >
+                              <li
+                                class="option"
+                                *ngFor="
+                                  let option of parseOptions(
+                                    setting.contentDepend![setting.dependValue!]
+                                  )
+                                "
+                                [value]="option.value"
+                                (click)="selectdOptiondDepend(option, setting)"
+                              >
+                                <span
+                                  class="d-inline-flex align-items-center"
+                                  >{{ option.label }}</span
+                                >
+                              </li>
+                            </ul>
+
+                            <!-- Display multiple select button -->
+                            <div
+                              *ngIf="setting.type === 'multiple'"
+                              class="select-btn"
+                              style="margin-bottom: 1rem"
+                              (click)="toggleOptionsGO(setting)"
+                            >
+                              <span class="sBtn-text">
+                                <div style="display: flex; align-items: center">
+                                  {{
+                                    setting.selectedOptions.length > 0
+                                      ? getSelectedLabels(setting)
+                                      : "Choisissez"
+                                  }}
+                                </div>
+                              </span>
+                              <i class="bx bx-chevron-down"></i>
+                            </div>
+                            <div
+                              *ngIf="setting.type === 'options'"
+                              class="select-btn"
+                              style="
+                                margin-bottom: 1rem;
+                                background: #fff;
+                                border: 1px solid #ececec;
+                                height: 55px;
+                                box-shadow: none;
+                                padding-left: 20px;
+                                font-size: 15px;
+                                width: 100%;
+                              "
+                              (click)="toggledOptions(setting)"
+                            >
+                              <span class="sBtn-text">
+                                <div style="display: flex; align-items: center">
+                                  {{
+                                    setting.selectedOption
+                                      ? setting.selectedOption.label
+                                      : "Choisissez"
+                                  }}
+                                </div>
+                              </span>
+                              <i class="bx bx-chevron-down"></i>
+                            </div>
+                            <!-- Display Select Options for multiple select type -->
+                            <ul
+                              *ngIf="setting.type === 'multiple'"
+                              class="options"
+                              [class.active]="setting.optionsVisible"
+                              style="font-size: smaller"
+                            >
+                              <li
+                                class="option"
+                                *ngFor="
+                                  let option of parseOptions(setting.content)
+                                "
+                                [class.selected]="
+                                  isOptionSelected(option, setting)
+                                "
+                                (click)="selectOptionGO(option, setting)"
+                              >
+                                <div class="checkbox-container">
+                                  <input
+                                    class="checkbox"
+                                    type="checkbox"
+                                    id="{{ option.value }}"
+                                    name="{{ option.label }}"
+                                    [checked]="
+                                      isOptionSelected(option, setting)
+                                    "
+                                    (change)="toggleOption(option, setting)"
+                                  />
+                                  <label for="{{ option.value }}">{{
+                                    option.label
+                                  }}</label>
+                                </div>
+                              </li>
+                            </ul>
+
+                            <!-- Handle text, number, int, bool, and other types similarly -->
+                            <div *ngIf="setting.type === 'text'">
+                              <input
+                                id="{{ setting.key }}"
+                                name="{{ setting.key }}"
+                                [(ngModel)]="setting.content"
+                                placeholder="{{ setting.label }}"
+                                type="text"
+                                required
+                                maxlength="50"
+                              />
+                            </div>
+
+                            <div *ngIf="setting.type === 'number'">
+                              <input
+                                id="{{ setting.key }}"
+                                name="{{ setting.key }}"
+                                [(ngModel)]="setting.content"
+                                placeholder="{{ setting.label }}"
+                                type="number"
+                                required
+                                maxlength="50"
+                              />
+                            </div>
+
+                            <div
+                              *ngIf="
+                                setting.type === 'int' &&
+                                setting.depend === true
+                              "
+                            >
+                              <input
+                                id="{{ setting.key }}"
+                                name="{{ setting.key }}"
+                                [(ngModel)]="setting.content"
+                                placeholder="{{ setting.label }}"
+                                type="number"
+                                required
+                                maxlength="50"
+                              />
+                            </div>
+
+                            <div *ngIf="setting.type === 'bool'">
+                              <div
+                                class="custome-radio d-inline-flex align-items-center"
+                                style="margin-right: 2rem"
+                              >
+                                <input
+                                  class="form-check-input"
+                                  type="radio"
+                                  name="{{ setting.name }}"
+                                  id="{{ setting.name }}True"
+                                  value="true"
+                                  [checked]="setting.content === 'true'"
+                                  (change)="updateSetting(setting, true)"
+                                />
+                                <label
+                                  class="form-check-label"
+                                  for="{{ setting.name }}True"
+                                  >Oui</label
+                                >
+                              </div>
+                              <div
+                                class="custome-radio d-inline-flex align-items-center"
+                              >
+                                <input
+                                  class="form-check-input"
+                                  type="radio"
+                                  name="{{ setting.name }}"
+                                  id="{{ setting.name }}False"
+                                  value="false"
+                                  [checked]="setting.content === 'false'"
+                                  (change)="updateSetting(setting, false)"
+                                />
+                                <label
+                                  class="form-check-label"
+                                  for="{{ setting.name }}False"
+                                  >Non</label
+                                >
+                              </div>
+                            </div>
+
+                            <!-- Add other type handlers as needed -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="border p-40 cart-totals ml-30 mb-50">
+                  <div
+                    class="d-flex align-items-end justify-content-between mb-30"
+                  >
+                    <h4>Les images</h4>
+                    <h6 class="text-muted">Nombre: {{ ad.medias?.length }}</h6>
+                    <div class="">
+                      <button
+                        class="btn btn-primary btn-modifier btn-sm top-0 start-0 m-2"
+                        (click)="fileInput.click()"
+                        style="
+                          border-radius: 1rem;
+                          background-color: #3bb77e !important;
+                        "
+                      >
+                        <i
+                          class="fi fi-rr-plus-small"
+                          style="font-size: large"
+                        ></i>
+                      </button>
+                      <input
+                        #fileInput
+                        id="files"
+                        name="files[]"
+                        type="file"
+                        class="file-input"
+                        (change)="onFileSelected($event)"
+                        style="display: none"
+                        accept="image/*"
+                      />
+                    </div>
+                  </div>
+                  <h6>
+                    <p
+                      *ngIf="maxImages"
+                      class="fw-bold"
+                      style="color: #ff3737; font-size: small"
+                    >
+                      Vous ne pouvez télécharger que jusqu'à 3 images.
+                    </p>
+                  </h6>
+                  <div class="divider-2 mb-30"></div>
+                  <div class="table-responsive order_table checkout">
+                    <table class="table no-border">
+                      <tbody>
+                        <tr *ngFor="let media of ad.medias; let i = index">
+                          <td>
+                            <div class="position-relative">
+                              <img
+                                [src]="media?.url || media"
+                                alt="Image de l'annonce"
+                                style="width: 100%"
+                              />
+                              <div class="image-overlay">
+                                <button
+                                  class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2"
+                                  (click)="deleteImage(i)"
+                                >
+                                  <i class="pi pi-trash"></i>
+                                </button>
+                                <button
+                                  class="btn btn-primary btn-modifier btn-sm position-absolute top-0 start-0 m-2"
+                                  (click)="replaceImage(i)"
+                                >
+                                  <i class="pi pi-pencil"></i>
+                                </button>
+                                <button
+                                  class="btn btn-primary btn-modifier btn-sm position-absolute top-0 start-0 m-2"
+                                  (click)="replaceImage(i)"
+                                >
+                                  <i class="pi pi-pencil"></i>
+                                </button>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="payment ml-30">
+                  <a
+                    (click)="modifier()"
+                    class="btn btn-fill-out btn-block mt-30"
+                    >Dupliquer l'annonce<i class="fi-rs-sign-out ml-15"></i
+                  ></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<app-footer></app-footer>
+<app-preloader></app-preloader>

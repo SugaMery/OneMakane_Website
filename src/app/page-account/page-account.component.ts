@@ -391,11 +391,15 @@ export class PageAccountComponent implements OnInit {
 
   statuses!: any[];
   display: boolean = false;
-  adIdToDuplicate: number | null = null;
+  adIdToDuplicate: any;
 
   showConfirmDialog(adId: number) {
     this.adIdToDuplicate = adId;
     this.display = true;
+  }
+
+  confirmDuplication(adId: number) {
+    window.location.href = '/duplicate-annonce/' + adId;
   }
   // Method to get the array of page numbers
   // Méthode pour obtenir les pages visibles

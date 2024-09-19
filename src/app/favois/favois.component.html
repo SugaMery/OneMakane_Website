@@ -299,29 +299,79 @@
           <p>Aucune annonce trouvée pour cette catégorie.</p>
         </ng-template>
 
-        <!--product grid-->
-        <div class="pagination-area mt-20 mb-20" *ngIf="ads.length > 0">
-          <nav aria-label="Page navigation example">
+        <!-- Updated Pagination Grid -->
+        <div class="pagination-area mt-30 mb-50" *ngIf="totalPages > 1">
+          <nav aria-label="Pagination">
             <ul class="pagination justify-content-start">
-              <li class="page-item" [class.disabled]="currentPage === 1">
-                <a class="page-link" (click)="changePage(currentPage - 1)"
-                  ><i class="fi-rs-arrow-small-left"></i
-                ></a>
+              <!-- Previous Button -->
+              <li class="page-item" [ngClass]="{ disabled: currentPage === 1 }">
+                <a
+                  class="page-link"
+                  (click)="changePage(currentPage - 1)"
+                  aria-label="Précédent"
+                >
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
               </li>
+
+              <!-- First Page Button -->
+              <li class="page-item" [ngClass]="{ disabled: currentPage === 1 }">
+                <a
+                  class="page-link"
+                  (click)="changePage(1)"
+                  aria-label="Première"
+                  style="width: auto"
+                >
+                  Première
+                </a>
+              </li>
+
+              <!-- Ellipsis for Initial Page Range -->
+              <li *ngIf="shouldShowEllipsesBefore()" class="page-item disabled">
+                <span class="page-link">...</span>
+              </li>
+
+              <!-- Page Number Buttons -->
               <li
-                *ngFor="let page of getPagesArray()"
+                *ngFor="let page of getVisiblePages()"
                 class="page-item"
-                [class.active]="page === currentPage"
+                [ngClass]="{ active: currentPage === page }"
               >
                 <a class="page-link" (click)="changePage(page)">{{ page }}</a>
               </li>
+
+              <!-- Ellipsis for Ending Page Range -->
+              <li *ngIf="shouldShowEllipsesAfter()" class="page-item disabled">
+                <span class="page-link">...</span>
+              </li>
+
+              <!-- Last Page Button -->
               <li
                 class="page-item"
-                [class.disabled]="currentPage === totalPages"
+                [ngClass]="{ disabled: currentPage === totalPages }"
               >
-                <a class="page-link" (click)="changePage(currentPage + 1)"
-                  ><i class="fi-rs-arrow-small-right"></i
-                ></a>
+                <a
+                  class="page-link"
+                  (click)="changePage(totalPages)"
+                  aria-label="Dernière"
+                  style="width: auto"
+                >
+                  Dernière
+                </a>
+              </li>
+
+              <!-- Next Button -->
+              <li
+                class="page-item"
+                [ngClass]="{ disabled: currentPage === totalPages }"
+              >
+                <a
+                  class="page-link"
+                  (click)="changePage(currentPage + 1)"
+                  aria-label="Suivant"
+                >
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
               </li>
             </ul>
           </nav>

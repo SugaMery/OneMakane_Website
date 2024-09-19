@@ -1,14 +1,35 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import * as CryptoJS from 'crypto-js';
 
 @Component({
   selector: 'app-payment-faild',
   templateUrl: './payment-faild.component.html',
-  styleUrl: './payment-faild.component.css'
+  styleUrls: ['./payment-faild.component.css'],
 })
-export class PaymentFaildComponent {
-  secretKey: string = 'your-secret-key'; // Ensure this matches the key used when saving
-
+export class PaymentFaildComponent implements OnInit {
+  secretKey: string = 'your-secret-key'; // Assurez-vous que cela correspond à la clé utilisée lors de l'enregistrement
+  public oid: string | null = null;
+  public storageItems: { key: string; value: string }[] = [];
+  ngOnInit(): void {
+    // Get payment data and extract the 'oid'
+    const paymentData = this.getPaymentData();
+    if (paymentData) {
+      this.oid = paymentData.postParams['oid'];
+      console.log('OID:', this.oid);
+    }
+    this.loadLocalStorageItems();
+  }
+  loadLocalStorageItems(): void {
+    this.storageItems = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key) {
+        const value = localStorage.getItem(key);
+        this.storageItems.push({ key, value: value || 'null' });
+      }
+    }
+    console.log('Storage Items:', this.storageItems);
+  }
   // Method to decrypt data
   decryptData(encryptedData: string): any {
     const bytes = CryptoJS.AES.decrypt(encryptedData, this.secretKey);

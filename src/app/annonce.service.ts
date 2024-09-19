@@ -57,6 +57,13 @@ export class AnnonceService {
     });
   }
 
+  duplicateAnnonce(annonceData: any, accessToken: string): Observable<any> {
+    const url = `${this.apiUrl}/ads/duplicate`;
+    return this.http.post<any>(url, annonceData, {
+      headers: this.getHeaders(accessToken),
+    });
+  }
+
   uploadImages(mediaData: any, accessToken: string): Observable<any> {
     const url = `${this.apiUrl}/medias`;
     return this.http.post<any>(url, mediaData, {

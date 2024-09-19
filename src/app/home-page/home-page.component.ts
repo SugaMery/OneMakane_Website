@@ -124,25 +124,78 @@ export class HomePageComponent {
 
   // Fetch the ads data from the service
   loadAds(): void {
-    this.annonceService.getAdsPromoteAll().subscribe((response) => {
-      console.log('Fetched ads:', response);
+    const userId = localStorage.getItem('loggedInUserId');
 
-      if (Array.isArray(response.data)) {
-        // Shuffle the response array to get random ads
-        this.adsPromote = this.getRandomAds(response.data, 6);
-        console.log('Random ads:', this.adsPromote);
+    this.annonceService.getAdsPromoteAll().subscribe(
+      (response) => {
+        console.log('Fetched ads:', response);
+
+        if (!response.data || !Array.isArray(response.data)) {
+          console.error('Invalid data format from response');
+          return;
+        }
+
+        const categoryIdsSet = new Set<number>();
+        const uniqueAdsSet = new Set<number>(); // Set to store unique ad IDs
+        const uniqueAdsList: any[] = []; // Array to store unique ads
+
+        // Collect unique category IDs and store unique ads by ID
+        response.data.forEach((ad: any) => {
+          if (ad.category && ad.category.id) {
+            categoryIdsSet.add(ad.category.id);
+          }
+
+          // If the ad ID is not already in the Set, add the ad to the list
+          if (!uniqueAdsSet.has(ad.id)) {
+            uniqueAdsSet.add(ad.id); // Add the ad ID to the Set
+            uniqueAdsList.push(ad); // Add the ad to the unique ads list
+          }
+        });
+
+        const uniqueCategoryIds = Array.from(categoryIdsSet);
+        console.log('Unique Category IDs:', uniqueCategoryIds);
+
+        // For each unique category ID, get ads with favoris
+        uniqueCategoryIds.forEach((uniqueCategoryId) => {
+          this.categoryService
+            .getAllAdsWithFavoris(Number(userId), uniqueCategoryId)
+            .subscribe((adsWithFavoris) => {
+              console.log(
+                'Ads with favoris for category:',
+                uniqueCategoryId,
+                adsWithFavoris
+              );
+
+              adsWithFavoris.forEach((adFavoris) => {
+                const ad = uniqueAdsList.find(
+                  (rep: any) => rep.id === adFavoris.id
+                );
+                if (ad) {
+                  ad.favorites = adFavoris.favorites || [];
+                  console.log('Updated ad with favorites:', ad);
+                }
+              });
+            });
+        });
+
+        // Shuffle and select random ads without duplicates
+        this.adsPromote = this.getRandomAds(uniqueAdsList, 6);
+        console.log('Random ads without duplicates:', this.adsPromote);
+      },
+      (error) => {
+        console.error('Error fetching promoted ads:', error);
       }
-    });
+    );
   }
 
-  // Function to shuffle the array and return a specific number of random elements
+  // Function to shuffle the array and return a specific number of random elements without duplicates
   getRandomAds(ads: any[], count: number): any[] {
     // Shuffle array using Fisher-Yates shuffle algorithm
     for (let i = ads.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [ads[i], ads[j]] = [ads[j], ads[i]]; // Swap elements
     }
-    // Return the first 'count' elements
+    // Return the first 'count' unique elements
     return ads.slice(0, count);
   }
 
@@ -282,9 +335,11 @@ export class HomePageComponent {
         this.document.defaultView.localStorage.getItem('loggedInUserId');
       //this.ads = data.data;
       console.log('userid', userId);
-      this.annonceService.getAds().subscribe((dt) => {
-        this.adsAll = dt.data;
-      });
+      this.annonceService
+        .getAllAdsWithFavoris(Number(userId))
+        .subscribe((dt) => {
+          this.adsAll = dt;
+        });
       let listCategory = [
         141, // Offres d'emploi
         142, // Personnel de maison
@@ -316,6 +371,7 @@ export class HomePageComponent {
             .getAllAdsWithFavoris(Number(userId), listCategory[i])
             .subscribe((dataFilter) => {
               this.ads = dataFilter;
+
               console.log('ggg dataFilter', dataFilter);
 
               dataFilter.forEach((element: any) => {

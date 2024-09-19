@@ -74,4 +74,24 @@ export class OptionsService {
     const url = `${this.baseUrl}/payments`;
     return this.http.post<any>(url, paymentData, { headers });
   }
+
+  // New method to update payment details
+  updatePayment(
+    paymentId: number,
+    accessToken: string,
+    data: any
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.baseUrl}/payments/${paymentId}`;
+    return this.http.patch<any>(url, data, { headers });
+  }
+
+  getPaymentById(id: number, accessToken: string): Observable<any> {
+    const headers = { Authorization: `Bearer ${accessToken}` };
+    return this.http.get<any>(`${this.baseUrl}/payments/${id}`, { headers });
+  }
 }

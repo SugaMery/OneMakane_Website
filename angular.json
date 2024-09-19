@@ -29,7 +29,9 @@
             "polyfills": [
               "zone.js"
             ],
-            "allowedCommonJsDependencies": ["crypto-js"],
+            "allowedCommonJsDependencies": [
+              "crypto-js"
+            ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
@@ -57,8 +59,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "9mb",
-                  "maximumError": "10mb"
+                  "maximumWarning": "10mb",
+                  "maximumError": "11mb"
                 },
                 {
                   "type": "anyComponentStyle",

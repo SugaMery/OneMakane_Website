@@ -109,6 +109,30 @@ export class FavoisComponent {
   getPagesArray(): number[] {
     return Array.from({ length: this.totalPages }, (v, k) => k + 1);
   }
+  shouldShowEllipsesBefore(): boolean {
+    return this.currentPage > 3; // Adjust as needed
+  }
+
+  shouldShowEllipsesAfter(): boolean {
+    return this.currentPage < this.totalPages - 2; // Adjust as needed
+  }
+
+  getVisiblePages(): number[] {
+    // Logic to return an array of visible page numbers, e.g., [1, 2, 3, ..., totalPages]
+    const pages = [];
+    const maxVisiblePages = 5; // Adjust the number of pages to show
+    const startPage = Math.max(
+      1,
+      this.currentPage - Math.floor(maxVisiblePages / 2)
+    );
+    const endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  }
 
   getRelativeTime(createdAt: string): string {
     const currentDate = new Date();
@@ -235,7 +259,7 @@ export class FavoisComponent {
       this.annonceService
         .getAllAdsWithFavoris(Number(userId))
         .subscribe((datas) => {
-          console.log('favoriririris',datas)
+          console.log('favoriririris', datas);
           const ads = datas.filter((ad: any) => ad.favorites.length > 0);
           let adsProcessed = 0;
 

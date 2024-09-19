@@ -379,13 +379,15 @@
                               (click)="addToFavorites(ad)"
                             >
                               <img
-                                *ngIf="ad.favorites.length > 0"
+                                *ngIf="ad.favorites?.length > 0"
                                 src="../../assets/imgs/coeur.png"
                                 alt="Filled Heart Icon"
                                 style="width: 15px; margin-left: 1px"
                               />
                               <i
-                                *ngIf="ad.favorites.length === 0"
+                                *ngIf="
+                                  ad.favorites?.length === 0 || !ad.favorites
+                                "
                                 class="fi fi-rs-heart"
                               ></i>
                             </a>

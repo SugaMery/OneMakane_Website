@@ -102,7 +102,7 @@ export class CategoryService {
 
         // Create requests for all other pages
         for (let page = 2; page <= totalPages; page++) {
-          requests.push(this.getAdsWithFavoris(user_id, page));
+          requests.push(this.getAdsWithFavoris(user_id, categoryId, page));
         }
 
         // Execute all requests and combine results

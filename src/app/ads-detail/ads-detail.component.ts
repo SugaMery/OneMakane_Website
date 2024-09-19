@@ -80,9 +80,8 @@ export class AdsDetailComponent implements OnInit {
       this.isScreenphone = window.innerWidth < 500;
     }
   }
-  userId: number | null = null;  
+  userId: number | null = null;
   addToFavorites(ad: any): void {
-    
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
 
@@ -485,11 +484,11 @@ export class AdsDetailComponent implements OnInit {
             const userId = localStorage.getItem('loggedInUserId');
 
             this.categoryService
-              .getAdsWithFavoris(Number(userId),this.adDetail.category_id)
+              .getAdsWithFavoris(Number(userId), this.adDetail.category_id)
               .subscribe((adsData) => {
                 let relatedAdsTemp: any[] = [];
                 let count = 0;
-
+                console.log('adsData Parcourt ', adsData);
                 // Parcourt chaque annonce
                 adsData.data.forEach((ad: { id: any; favorites: any }) => {
                   // Ajoute chaque observable interne au tableau

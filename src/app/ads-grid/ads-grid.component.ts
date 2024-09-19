@@ -375,16 +375,36 @@ export class AdsGridComponent {
     }
     this.mobileHeaderActive();
     //this.getVals();
-
-    this.annonceService
-      .getAdsPromote(Number(this.categoryId))
-      .subscribe((ads) => {
-        console.log('Call getAdsByCategory with categoryId and params', ads);
-        this.adsPromote = ads.data;
-        this.updateAdsToShow();
-        this.startAdsRotation();
-      });
+    this.isMobile = this.checkIfMobile();
+    this.loadAds();
   }
+
+  shouldShowEllipsesBefore(): boolean {
+    return this.currentPage > 3; // Adjust as needed
+  }
+
+  shouldShowEllipsesAfter(): boolean {
+    return this.currentPage < this.totalPages - 2; // Adjust as needed
+  }
+
+  getVisiblePages(): number[] {
+    // Logic to return an array of visible page numbers, e.g., [1, 2, 3, ..., totalPages]
+    const pages = [];
+    const maxVisiblePages = 5; // Adjust the number of pages to show
+    const startPage = Math.max(
+      1,
+      this.currentPage - Math.floor(maxVisiblePages / 2)
+    );
+    const endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  }
+
+  private isMobile: boolean = false;
   isFilterDrawerOpen = false;
   isDropdownOpen = false;
 
@@ -408,42 +428,64 @@ export class AdsGridComponent {
     this.isFilterDrawerOpen = false;
   }
 
-  private adsRefreshSubscription: Subscription | undefined;
   adsToShow: any[] = [];
-
   private currentIndex: number = 0;
   private adsInterval: any;
-  ngOnDestroy(): void {
+
+  ngOnDestroy(): void {}
+
+  private clearAdsInterval(): void {
     if (this.adsInterval) {
       clearInterval(this.adsInterval);
+      this.adsInterval = null; // Clear the reference
     }
   }
+  loadAds(): void {
+    this.annonceService
+      .getAdsPromote(Number(this.categoryId))
+      .subscribe((response) => {
+        console.log('Fetched ads:', response);
 
-  startAdsRotation(): void {
-    // Rotate the ads every minute (60000ms)
-    this.adsInterval = setInterval(() => {
-      this.currentIndex += 5;
-      if (this.currentIndex >= this.adsPromote.length) {
-        this.currentIndex = 0; // Start from the beginning if we reach the end
-      }
-      this.updateAdsToShow();
-    }, 6000);
+        if (Array.isArray(response.data)) {
+          // Determine the number of ads to show based on device type
+          const adsCount = this.isMobile ? 2 : 5;
+          this.adsPromote = this.getRandomAds(response.data, adsCount);
+          console.log('Random ads:', this.adsPromote);
+        }
+      });
   }
+
+  // Function to shuffle the array and return a specific number of random elements
+  getRandomAds(ads: any[], count: number): any[] {
+    // Shuffle array using Fisher-Yates shuffle algorithm
+    for (let i = ads.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [ads[i], ads[j]] = [ads[j], ads[i]]; // Swap elements
+    }
+    // Return the first 'count' elements
+    return ads.slice(0, count);
+  }
+
+  // Function to determine if the device is mobile
+  checkIfMobile(): boolean {
+    return window.innerWidth <= 768; // Example breakpoint for mobile devices
+  }
+  startAdsRotation(): void {}
 
   updateAdsToShow(): void {
-    // Show the next 5 ads, starting from currentIndex
-    this.adsToShow = this.adsPromote.slice(
-      this.currentIndex,
-      this.currentIndex + 5
-    );
+    const adsToShowCount = this.isScreenphone ? 2 : 5;
+    const endIndex =
+      (this.currentIndex + adsToShowCount) % this.adsPromote.length;
 
-    // If fewer than 5 ads are left at the end, show the remaining ads
-    if (this.adsToShow.length < 5) {
-      this.adsToShow = this.adsToShow.concat(
-        this.adsPromote.slice(0, 5 - this.adsToShow.length)
-      );
+    if (endIndex > this.currentIndex) {
+      this.adsToShow = this.adsPromote.slice(this.currentIndex, endIndex);
+    } else {
+      this.adsToShow = this.adsPromote
+        .slice(this.currentIndex)
+        .concat(this.adsPromote.slice(0, endIndex));
     }
   }
+
   getAdsList(): void {
     //console.log('adsff', this.allCategoriesSameParent);
     const userId = localStorage.getItem('loggedInUserId');

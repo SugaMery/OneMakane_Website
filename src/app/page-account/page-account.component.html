@@ -246,7 +246,7 @@
                                     <button
                                       class="btn btn-sm"
                                       style="background: #1943b7"
-                                      (click)="showConfirmDialog(ad.id)"
+                                      (click)="showConfirmDialog(ad)"
                                     >
                                       Dupliquer
                                     </button>
@@ -297,7 +297,9 @@
                                   label="Confirmer"
                                   icon="pi pi-check"
                                   class="p-button-danger"
-                                  (click)="adDialog = false"
+                                  (click)="
+                                    confirmDuplication(adIdToDuplicate.id)
+                                  "
                                 ></button>
                               </div>
                             </ng-template>

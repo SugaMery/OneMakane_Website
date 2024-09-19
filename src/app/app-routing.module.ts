@@ -32,6 +32,7 @@ import { JobCvsComponent } from './job-cvs/job-cvs.component';
 import { CvsPreselectionesComponent } from './cvs-preselectiones/cvs-preselectiones.component';
 import { PaymentSuccessComponent } from './payment-success/payment-success.component';
 import { PaymentFaildComponent } from './payment-faild/payment-faild.component';
+import { DuplicateAdsComponent } from './duplicate-ads/duplicate-ads.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -91,6 +92,12 @@ const routes: Routes = [
     path: 'favoris',
     canActivate: [AuthGuard],
     component: FavoisComponent,
+  },
+
+  {
+    path: 'duplicate-annonce/:id',
+    canActivate: [AuthGuard],
+    component: DuplicateAdsComponent,
   },
   {
     path: 'mentions_legales',

@@ -18,11 +18,215 @@
               </ng-template>
             </div>
           </div>
+          <!--           <div
+            class="col-xl-12 text-end d-none d-xl-block"
+            style="margin-top: 2rem"
+            *ngIf="filters !== null"
+          >
+            <div class="shop-product-fillter">
+              <div class="totall-product"></div>
+              <div class="sort-by-product-area">
+                <div
+                  class="sort-by-cover mr-10"
+                  *ngFor="let key of getFiltersKeys()"
+                >
+                  <div
+                    class="sort-by-product-wrap"
+                    style="width: max-content"
+                    *ngIf="
+                      filters[key].type === 'select' && !filters[key].dependant
+                    "
+                  >
+                    <div class="sort-by">
+                      <span
+                        ><i class="fi-rs-apps"></i
+                        >{{ filters[key].label }} :</span
+                      >
+                    </div>
+                    <div class="sort-by-dropdown-wrap">
+                      {{ filters[key].selectedOption?.substring(0, 7) }}
+                      <span><i class="fi-rs-angle-small-down"></i></span>
+                    </div>
+                  </div>
+                  <div class="sort-by-dropdown">
+                    <ul style="max-height: 185px; overflow-y: auto">
+                      <li (click)="selectOption(key, 'all')">
+                        <a [class.active]="!filters[key].selectedOption"
+                          >Tous</a
+                        >
+                      </li>
+                      <ng-container *ngIf="!filters[key].route">
+                        <li
+                          *ngFor="let option of filters[key].options | keyvalue"
+                          (click)="selectOptioneds(key, option.key)"
+                        >
+                          <a [class.active]="isSelected(key, option.key)">{{
+                            option.value
+                          }}</a>
+                        </li>
+                      </ng-container>
+                      <ng-container *ngIf="filters[key].route">
+                        <ng-container
+                          *ngFor="
+                            let optionKey of getNestedKeys(filters[key].options)
+                          "
+                        >
+                          <li>
+                            <strong>{{ optionKey }}</strong>
+                          </li>
+                          <li
+                            *ngFor="
+                              let option of getNestedOptions(
+                                filters[key].options[optionKey]
+                              )
+                            "
+                            (click)="selectOption(key, option.key)"
+                          >
+                            <a [class.active]="isSelected(key, option.key)">{{
+                              option.value
+                            }}</a>
+                          </li>
+                        </ng-container>
+                      </ng-container>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="shop-product-fillter"
+              [ngClass]="{ 'display-contents': matchingFilters === null }"
+              *ngIf="matchingFilters !== null"
+            >
+              <div class="totall-product"></div>
+              <div class="sort-by-product-area">
+                <div
+                  class="sort-by-cover mr-10"
+                  *ngFor="let filter of getFiltersWitoutCheck()"
+                >
+                  <div
+                    class="sort-by-product-wrap"
+                    *ngIf="filter.type === 'int'"
+                  >
+                    <div class="form-group">
+                      <label style="float: left">
+                        <i
+                          class="fi fi-rr-settings-sliders"
+                          style="margin-right: 1rem"
+                        ></i>
+                        {{ filter.label }}</label
+                      >
+                      <input
+                        type="number"
+                        class="form-control"
+                        [(ngModel)]="filter.selectedOption"
+                        (input)="filterOption($event, filter)"
+                        style="height: revert"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
         </div>
       </div>
     </div>
   </div>
   <div class="container mb-30">
+    <div class="col-12" *ngIf="adsPromote.length > 0">
+      <div class="col-12">
+        <h2 class="section-title">
+          📢 Annonces qui pourraient vous intéresser
+        </h2>
+      </div>
+
+      <div class="row">
+        <div
+          [ngClass]="{
+            'col-lg-2 col-md-6 col-12': !isScreenphone,
+            'col-6': isScreenphone
+          }"
+          *ngFor="let ad of adsPromote"
+        >
+          <div
+            class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
+          >
+            <div class="product-img-action-wrap">
+              <div class="product-img product-img-zoom" style="height: 240px">
+                <a [href]="'/ads/' + ad.id" style="height: 100%">
+                  <img class="default-img" [src]="ad.medias[0]?.url" alt="" />
+                  <img
+                    class="hover-img"
+                    [src]="ad.medias[1]?.url || ad.medias[0]?.url"
+                    alt=""
+                    style="height: 100%"
+                  />
+                </a>
+              </div>
+
+              <div class="product-action-1">
+                <a
+                  aria-label="Ajouter à la liste de souhaits"
+                  class="action-btn"
+                  (click)="addToFavorites(ad)"
+                >
+                  <img
+                    *ngIf="ad.favorites?.length > 0"
+                    src="../../assets/imgs/coeur.png"
+                    style="width: 15px; margin-left: 1px"
+                  />
+                  <i
+                    *ngIf="ad.favorites?.length === 0 || !ad.favorites"
+                    class="fi fi-rs-heart"
+                  ></i>
+                </a>
+              </div>
+              <!--               
+              <div class="premium-badge">
+                <i class="fi fi-rr-sparkles"></i> Annonce Premium
+              </div> -->
+            </div>
+            <div class="product-content-wrap">
+              <div class="product-category" style="margin-top: 1rem">
+                <a
+                  [href]="
+                    '/ads-category/' + category?.id + '/' + category?.slug
+                  "
+                  >{{ ad.category.name }}</a
+                >
+              </div>
+              <h2>
+                <a [href]="'/ads/' + ad.id" style="font-size: large">
+                  {{ ad.title | slice : 0 : 17
+                  }}{{ ad.title.length > 17 ? "..." : "" }}
+                </a>
+              </h2>
+              <div class="product-rate-cover">
+                <div
+                  class=""
+                  style="
+                    width: 100%;
+                    font-weight: 800;
+                    font-size: large;
+                    color: black;
+                  "
+                >
+                  {{ ad.price }} DH
+                </div>
+              </div>
+
+              <div>
+                <span class="font-small text-muted">
+                  {{ getRelativeTime(ad.created_at) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="row">
       <div
         class="col-lg-1-5 primary-sidebar sticky-sidebar"
@@ -74,11 +278,7 @@
               <div>
                 <ul>
                   <li *ngFor="let category of displayedCategoriesMobile">
-                    <a
-                      [href]="
-                        '/ads-category/' + category?.id + '/' + category?.slug
-                      "
-                    >
+                    <a [href]="'/ads-category/' + category.id">
                       <img
                         [src]="category.media?.url"
                         alt="{{ category.name }}"
@@ -98,11 +298,7 @@
                       class="mylist"
                       *ngFor="let category of hiddenCategoriesMobile"
                     >
-                      <a
-                        [href]="
-                          '/ads-category/' + category?.id + '/' + category?.slug
-                        "
-                      >
+                      <a [href]="'/ads-category/' + category.id">
                         <img
                           [src]="category.icon_path"
                           alt="{{ category.name }}"
@@ -131,11 +327,7 @@
               <div>
                 <ul>
                   <li *ngFor="let categorys of displayedCategoriesParentMobile">
-                    <a
-                      [href]="
-                        '/ads-category/' + category?.id + '/' + category?.slug
-                      "
-                    >
+                    <a [href]="'/ads-category/' + categorys.id">
                       <img
                         [src]="category.media?.url"
                         alt="{{ categorys.name }}"
@@ -155,11 +347,7 @@
                       class="mylist"
                       *ngFor="let categorys of hiddenCategoriesParentMobile"
                     >
-                      <a
-                        [href]="
-                          '/ads-category/' + category?.id + '/' + category?.slug
-                        "
-                      >
+                      <a [href]="'/ads-category/' + category.id">
                         <img
                           [src]="category.media?.url"
                           alt="{{ categorys.name }}"
@@ -180,99 +368,6 @@
           </div>
         </div>
       </div>
-      <div class="col-12" *ngIf="adsToShow.length > 0">
-        <div class="col-12">
-          <h2 class="section-title">
-            📢 Annonces qui pourraient vous intéresser
-          </h2>
-        </div>
-
-        <div class="row">
-          <div
-            [ngClass]="{
-              'col-lg-2 col-md-6 col-12': !isScreenphone,
-              'col-6': isScreenphone
-            }"
-            *ngFor="let ad of adsToShow"
-          >
-            <div
-              class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
-            >
-              <div class="product-img-action-wrap">
-                <div class="product-img product-img-zoom" style="height: 240px">
-                  <a [href]="'/ads/' + ad.id" style="height: 100%">
-                    <img class="default-img" [src]="ad.medias[0]?.url" alt="" />
-                    <img
-                      class="hover-img"
-                      [src]="ad.medias[1]?.url || ad.medias[0]?.url"
-                      alt=""
-                      style="height: 100%"
-                    />
-                  </a>
-                </div>
-
-                <div class="product-action-1">
-                  <a
-                    aria-label="Ajouter à la liste de souhaits"
-                    class="action-btn"
-                    (click)="addToFavorites(ad)"
-                  >
-                    <img
-                      *ngIf="ad.favorites?.length > 0"
-                      src="../../assets/imgs/coeur.png"
-                      style="width: 15px; margin-left: 1px"
-                    />
-                    <i
-                      *ngIf="ad.favorites?.length === 0 || !ad.favorites"
-                      class="fi fi-rs-heart"
-                    ></i>
-                  </a>
-                </div>
-                <!--               
-                <div class="premium-badge">
-                  <i class="fi fi-rr-sparkles"></i> Annonce Premium
-                </div> -->
-              </div>
-              <div class="product-content-wrap">
-                <div class="product-category" style="margin-top: 1rem">
-                  <a
-                    [href]="
-                      '/ads-category/' + category?.id + '/' + category?.slug
-                    "
-                    >{{ ad.category.name }}</a
-                  >
-                </div>
-                <h2>
-                  <a [href]="'/ads/' + ad.id" style="font-size: large">
-                    {{ ad.title | slice : 0 : 17
-                    }}{{ ad.title.length > 17 ? "..." : "" }}
-                  </a>
-                </h2>
-                <div class="product-rate-cover">
-                  <div
-                    class=""
-                    style="
-                      width: 100%;
-                      font-weight: 800;
-                      font-size: large;
-                      color: black;
-                    "
-                  >
-                    {{ ad.price }} DH
-                  </div>
-                </div>
-
-                <div>
-                  <span class="font-small text-muted">
-                    {{ getRelativeTime(ad.created_at) }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div
         class="col-lg-4-5"
         style="
@@ -532,12 +627,9 @@
                 </div>
                 <div class="product-content-wrap">
                   <div class="product-category" style="margin-top: 1rem">
-                    <a
-                      [href]="
-                        '/ads-category/' + category?.id + '/' + category?.slug
-                      "
-                      >{{ ad.category.name }}</a
-                    >
+                    <a [href]="'/ads-category/' + ad.category?.id">{{
+                      ad.category.name
+                    }}</a>
                   </div>
                   <h2>
                     <a [href]="'/ads/' + ad.id">
@@ -618,12 +710,9 @@
               </div>
               <div class="product-content-wrap">
                 <div class="product-category">
-                  <a
-                    [href]="
-                      '/ads-category/' + category?.id + '/' + category?.slug
-                    "
-                    >{{ ad.category.name }}</a
-                  >
+                  <a [href]="'/ads-category/' + ad.category?.id">{{
+                    ad.category.name
+                  }}</a>
                 </div>
                 <h2>
                   <a [href]="'/ads/' + ad.id"
@@ -650,29 +739,79 @@
           <p>Aucune annonce trouvée pour cette catégorie.</p>
         </ng-template>
 
-        <!--product grid-->
-        <div class="pagination-area mt-20 mb-20" *ngIf="ads.length > 0">
-          <nav aria-label="Page navigation example">
+        <!-- Updated Pagination Grid -->
+        <div class="pagination-area mt-30 mb-50" *ngIf="totalPages > 1">
+          <nav aria-label="Pagination">
             <ul class="pagination justify-content-start">
-              <li class="page-item" [class.disabled]="currentPage === 1">
-                <a class="page-link" (click)="changePage(currentPage - 1)"
-                  ><i class="fi-rs-arrow-small-left"></i
-                ></a>
+              <!-- Previous Button -->
+              <li class="page-item" [ngClass]="{ disabled: currentPage === 1 }">
+                <a
+                  class="page-link"
+                  (click)="changePage(currentPage - 1)"
+                  aria-label="Précédent"
+                >
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
               </li>
+
+              <!-- First Page Button -->
+              <li class="page-item" [ngClass]="{ disabled: currentPage === 1 }">
+                <a
+                  class="page-link"
+                  (click)="changePage(1)"
+                  aria-label="Première"
+                  style="width: auto"
+                >
+                  Première
+                </a>
+              </li>
+
+              <!-- Ellipsis for Initial Page Range -->
+              <li *ngIf="shouldShowEllipsesBefore()" class="page-item disabled">
+                <span class="page-link">...</span>
+              </li>
+
+              <!-- Page Number Buttons -->
               <li
-                *ngFor="let page of getPagesArray()"
+                *ngFor="let page of getVisiblePages()"
                 class="page-item"
-                [class.active]="page === currentPage"
+                [ngClass]="{ active: currentPage === page }"
               >
                 <a class="page-link" (click)="changePage(page)">{{ page }}</a>
               </li>
+
+              <!-- Ellipsis for Ending Page Range -->
+              <li *ngIf="shouldShowEllipsesAfter()" class="page-item disabled">
+                <span class="page-link">...</span>
+              </li>
+
+              <!-- Last Page Button -->
               <li
                 class="page-item"
-                [class.disabled]="currentPage === totalPages"
+                [ngClass]="{ disabled: currentPage === totalPages }"
               >
-                <a class="page-link" (click)="changePage(currentPage + 1)"
-                  ><i class="fi-rs-arrow-small-right"></i
-                ></a>
+                <a
+                  class="page-link"
+                  (click)="changePage(totalPages)"
+                  aria-label="Dernière"
+                  style="width: auto"
+                >
+                  Dernière
+                </a>
+              </li>
+
+              <!-- Next Button -->
+              <li
+                class="page-item"
+                [ngClass]="{ disabled: currentPage === totalPages }"
+              >
+                <a
+                  class="page-link"
+                  (click)="changePage(currentPage + 1)"
+                  aria-label="Suivant"
+                >
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
               </li>
             </ul>
           </nav>
@@ -793,11 +932,7 @@
             <div>
               <ul>
                 <li *ngFor="let category of displayedCategories">
-                  <a
-                    [href]="
-                      '/ads-category/' + category?.id + '/' + category?.slug
-                    "
-                  >
+                  <a [href]="'/ads-category/' + category.id">
                     <img
                       [src]="category.media?.url"
                       alt="{{ category.name }}"
@@ -814,11 +949,7 @@
               <div class="d-flex categori-dropdown-inner">
                 <ul>
                   <li class="mylist" *ngFor="let category of hiddenCategories">
-                    <a
-                      [href]="
-                        '/ads-category/' + category?.id + '/' + category?.slug
-                      "
-                    >
+                    <a [href]="'/ads-category/' + category.id">
                       <img
                         [src]="category.icon_path"
                         alt="{{ category.name }}"
@@ -847,11 +978,7 @@
             <div>
               <ul>
                 <li *ngFor="let categorys of displayedCategoriesParent">
-                  <a
-                    [href]="
-                      '/ads-category/' + category?.id + '/' + category?.slug
-                    "
-                  >
+                  <a [href]="'/ads-category/' + categorys.id">
                     <img
                       [src]="category.media?.url"
                       alt="{{ categorys.name }}"
@@ -871,11 +998,7 @@
                     class="mylist"
                     *ngFor="let categorys of hiddenCategoriesParent"
                   >
-                    <a
-                      [href]="
-                        '/ads-category/' + category?.id + '/' + category?.slug
-                      "
-                    >
+                    <a [href]="'/ads-category/' + category.id">
                       <img
                         [src]="category.media?.url"
                         alt="{{ categorys.name }}"
