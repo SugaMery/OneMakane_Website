@@ -94,4 +94,8 @@ export class OptionsService {
     const headers = { Authorization: `Bearer ${accessToken}` };
     return this.http.get<any>(`${this.baseUrl}/payments/${id}`, { headers });
   }
+
+  getPaymentFailed(): Observable<any> {
+    return this.http.get<any>(`https://dev.onemakan.ma/payment/failed`);
+  }
 }
