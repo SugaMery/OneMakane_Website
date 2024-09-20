@@ -58,8 +58,9 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'payment/failed/',
+    path: 'payment/failed',
     component: PaymentFaildComponent,
+    canActivate: [AuthGuard],
   },
 
   {
