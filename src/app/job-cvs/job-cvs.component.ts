@@ -779,7 +779,7 @@ export class JobCvsComponent implements OnInit {
         .updateUser(this.userId!, this.accessToken!, this.userDataPassword)
         .subscribe(
           (data) => {
-            window.location.href = '/page-account'; // Redirect to login page
+            window.location.href = '/page-account/'; // Redirect to login page
           },
           (error) => {
             console.error('Failed to password user', error);
@@ -882,7 +882,7 @@ export class JobCvsComponent implements OnInit {
             (data) => {
               // Handle successful registration
               //this.location.reload();
-              window.location.href = '/page-account'; // Redirect to login page
+              window.location.href = '/page-account/'; // Redirect to login page
             },
             (error) => {
               // Handle registration error

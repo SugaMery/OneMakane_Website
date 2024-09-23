@@ -1,26 +1,32 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { PaymentService } from '../payment.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-payment-faild',
   templateUrl: './payment-faild.component.html',
   styleUrls: ['./payment-faild.component.css'],
 })
-export class PaymentFaildComponent implements OnInit {
-  paymentData: any;
+export class PaymentFaildComponent {
+  transactionResult: any = {};
+  errorMessage: string = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    // Effectuer une requête POST pour récupérer les données du serveur
-    this.http.get<any>('https://dev.onemakan.ma/payment/failed', {}).subscribe(
-      (data) => {
-        this.paymentData = data;
-        console.log(this.paymentData); // Afficher les données récupérées
-      },
-      (error) => {
-        console.error('Erreur lors de la récupération des données POST', error);
+    this.route.queryParams.subscribe((params) => {
+      if (params['transactionId']) {
+        this.transactionResult = {
+          transactionId: params['transactionId'],
+          status: params['status'],
+          message: params['message'],
+          date: new Date(params['date']), // Make sure to parse it correctly
+        };
+        console.log('correctly params', params);
+      } else {
+        this.errorMessage = 'No transaction data available.';
       }
-    );
+    });
   }
 }

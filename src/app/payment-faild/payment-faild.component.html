@@ -11,6 +11,24 @@
     </div>
   </div>
 </main>
+<div *ngIf="transactionResult.transactionId; else errorTemplate">
+  <h2>Transaction Failed</h2>
+  <p>We are sorry, but your transaction was not successful.</p>
+  <ul>
+    <li>
+      <strong>Transaction ID:</strong> {{ transactionResult.transactionId }}
+    </li>
+    <li><strong>Status:</strong> {{ transactionResult.status }}</li>
+    <li><strong>Message:</strong> {{ transactionResult.message }}</li>
+    <li>
+      <strong>Date:</strong> {{ transactionResult.date | date : "dd/MM/yyyy" }}
+    </li>
+  </ul>
+</div>
+
+<ng-template #errorTemplate>
+  <p>{{ errorMessage }}</p>
+</ng-template>
 
 <app-footer></app-footer>
 <app-preloader></app-preloader>

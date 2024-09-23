@@ -65,6 +65,8 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { PaymentSuccessComponent } from './payment-success/payment-success.component';
 import { PaymentFaildComponent } from './payment-faild/payment-faild.component';
 import { DuplicateAdsComponent } from './duplicate-ads/duplicate-ads.component';
+import { TrailingSlashUrlSerializer } from './TrailingSlashUrlSerializer';
+import { UrlSerializer } from '@angular/router';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -149,7 +151,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [provideClientHydration()],
+  providers: [{ provide: UrlSerializer, useClass: TrailingSlashUrlSerializer }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
