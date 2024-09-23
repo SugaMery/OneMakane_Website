@@ -13,7 +13,7 @@ export class PaymentFaildComponent implements OnInit {
 
   ngOnInit(): void {
     // Effectuer une requête POST pour récupérer les données du serveur
-    this.http.post<any>('https://dev.onemakan.ma/payment/failed', {}).subscribe(
+    this.http.get<any>('https://dev.onemakan.ma/payment/failed', {}).subscribe(
       (data) => {
         this.paymentData = data;
         console.log(this.paymentData); // Afficher les données récupérées

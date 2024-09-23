@@ -278,7 +278,11 @@
               <div>
                 <ul>
                   <li *ngFor="let category of displayedCategoriesMobile">
-                    <a [href]="'/ads-category/' + category.id">
+                    <a
+                      [href]="
+                        '/ads-category/' + category?.id + '/' + category?.slug
+                      "
+                    >
                       <img
                         [src]="category.media?.url"
                         alt="{{ category.name }}"
@@ -298,7 +302,11 @@
                       class="mylist"
                       *ngFor="let category of hiddenCategoriesMobile"
                     >
-                      <a [href]="'/ads-category/' + category.id">
+                      <a
+                        [href]="
+                          '/ads-category/' + category?.id + '/' + category?.slug
+                        "
+                      >
                         <img
                           [src]="category.icon_path"
                           alt="{{ category.name }}"
@@ -327,7 +335,11 @@
               <div>
                 <ul>
                   <li *ngFor="let categorys of displayedCategoriesParentMobile">
-                    <a [href]="'/ads-category/' + categorys.id">
+                    <a
+                      [href]="
+                        '/ads-category/' + categorys?.id + '/' + categorys?.slug
+                      "
+                    >
                       <img
                         [src]="category.media?.url"
                         alt="{{ categorys.name }}"
@@ -347,7 +359,14 @@
                       class="mylist"
                       *ngFor="let categorys of hiddenCategoriesParentMobile"
                     >
-                      <a [href]="'/ads-category/' + category.id">
+                      <a
+                        [href]="
+                          '/ads-category/' +
+                          categorys?.id +
+                          '/' +
+                          categorys?.slug
+                        "
+                      >
                         <img
                           [src]="category.media?.url"
                           alt="{{ categorys.name }}"
@@ -932,7 +951,11 @@
             <div>
               <ul>
                 <li *ngFor="let category of displayedCategories">
-                  <a [href]="'/ads-category/' + category.id">
+                  <a
+                    [href]="
+                      '/ads-category/' + category?.id + '/' + category?.slug
+                    "
+                  >
                     <img
                       [src]="category.media?.url"
                       alt="{{ category.name }}"
@@ -949,7 +972,11 @@
               <div class="d-flex categori-dropdown-inner">
                 <ul>
                   <li class="mylist" *ngFor="let category of hiddenCategories">
-                    <a [href]="'/ads-category/' + category.id">
+                    <a
+                      [href]="
+                        '/ads-category/' + category?.id + '/' + category?.slug
+                      "
+                    >
                       <img
                         [src]="category.icon_path"
                         alt="{{ category.name }}"
@@ -978,7 +1005,11 @@
             <div>
               <ul>
                 <li *ngFor="let categorys of displayedCategoriesParent">
-                  <a [href]="'/ads-category/' + categorys.id">
+                  <a
+                    [href]="
+                      '/ads-category/' + category?.id + '/' + category?.slug
+                    "
+                  >
                     <img
                       [src]="category.media?.url"
                       alt="{{ categorys.name }}"
@@ -998,7 +1029,11 @@
                     class="mylist"
                     *ngFor="let categorys of hiddenCategoriesParent"
                   >
-                    <a [href]="'/ads-category/' + category.id">
+                    <a
+                      [href]="
+                        '/ads-category/' + category?.id + '/' + category?.slug
+                      "
+                    >
                       <img
                         [src]="category.media?.url"
                         alt="{{ categorys.name }}"
