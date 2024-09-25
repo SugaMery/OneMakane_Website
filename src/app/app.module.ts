@@ -151,7 +151,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [{ provide: UrlSerializer, useClass: TrailingSlashUrlSerializer }],
+  providers: [provideClientHydration()],
+
   bootstrap: [AppComponent],
 })
 export class AppModule {}

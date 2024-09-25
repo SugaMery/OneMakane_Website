@@ -12,6 +12,7 @@ import { Console } from 'console';
 import { SettingService } from '../setting.service';
 import { Carousel } from 'primeng/carousel';
 import { interval, Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 interface Product {
   id: number;
   category: { id: number; name: string; route: string | null };
@@ -58,6 +59,7 @@ export class HomePageComponent {
     | { breakpoint: string; numVisible: number; numScroll: number }[]
     | undefined;
   constructor(
+    private route: ActivatedRoute,
     private categoryService: CategoryService,
     private annonceService: AnnonceService,
     private settingService: SettingService,
@@ -284,6 +286,19 @@ export class HomePageComponent {
     return ad.favorites && ad.favorites.length > 0;
   }
   ngOnInit(): void {
+    // Get the query parameters (which contain the POST data)
+    this.route.queryParams.subscribe((params) => {
+      console.log('Received Data from localhost:5000:', params);
+
+      // Example: you could display the data on the page
+      // or use it for other purposes in your Angular app
+      for (const key in params) {
+        if (params.hasOwnProperty(key)) {
+          console.log(`${key}: ${params[key]}`);
+        }
+      }
+    });
+
     this.getAdsForCarousel();
     this.fetchCategories();
     this.getCategories();

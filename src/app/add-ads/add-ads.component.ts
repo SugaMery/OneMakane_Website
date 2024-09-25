@@ -2210,7 +2210,6 @@ export class AddAdsComponent implements OnInit {
     document.body.appendChild(form);
     form.submit();
   }
-
   onSubmit(): void {
     console.log('responsee meeeeeeeee');
     let isValid = true;
