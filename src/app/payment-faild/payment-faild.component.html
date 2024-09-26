@@ -10,7 +10,43 @@
       </div>
     </div>
   </div>
+
+  <div class="page-content pt-50">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 mx-auto text-center">
+          <h1 class="title heading-1 style-3 mb-40">
+            <span class="text-danger">
+              Paiement Échoué !
+              <img
+                src="../../assets/imgs/error.gif"
+                alt="Error"
+                style="width: 10%"
+              />
+            </span>
+          </h1>
+          <p class="font-xl mb-80">
+            Votre paiement a échoué. Veuillez vérifier les informations fournies
+            et réessayer. Si le problème persiste, contactez notre support
+            client.
+            <br />
+            <a
+              href="/page-account#orders"
+              style="margin-right: 1.5rem !important"
+              class="btn btn-secondary mt-4"
+              >Retour à mon compte</a
+            >
+            <!-- Retry Payment Button -->
+            <button (click)="retryPayment()" class="btn btn-primary mt-4">
+              Réessayer le paiement
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
+
 <div *ngIf="errorMessage">
   <p>{{ errorMessage }}</p>
 </div>

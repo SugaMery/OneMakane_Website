@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   HttpClient,
   HttpErrorResponse,
+  HttpHeaders,
   HttpResponse,
 } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
@@ -26,6 +27,24 @@ export class PaymentService {
     return throwError('Une erreur est survenue; veuillez réessayer plus tard.');
   }
 
+  private apiUrls = 'https://devapi.onemakan.com/v1/payments';
+
+
+  // Function to get the headers with Authorization token
+  private getHeaders(accessToken: string): HttpHeaders {
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`, // Sending Bearer Token in header
+    });
+  }
+
+  // Method to update the payment data
+  updatePayment(paymentId: string, updateData: any, accessToken: string): Observable<any> {
+    const url = `${this.apiUrls}/${paymentId}`; // URL with payment ID
+    return this.http.put<any>(url, updateData, {
+      headers: this.getHeaders(accessToken),
+    });
+  }
   private paymentFailedUrl = 'https://dev.onemakan.ma/payment/failed/'; // Your backend URL
 
   getFailedTransactionData(): Observable<HttpResponse<any>> {
