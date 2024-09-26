@@ -1,5 +1,10 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import {
+  CanActivate,
+  Router,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+} from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { UserService } from './user.service';
 
@@ -13,7 +18,10 @@ export class AuthGuard implements CanActivate {
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): boolean {
     if (!isPlatformBrowser(this.platformId)) {
       return false;
     }
@@ -23,7 +31,10 @@ export class AuthGuard implements CanActivate {
       this.userService.refreshToken(token).subscribe(
         (response) => {
           // Met à jour le token de rafraîchissement dans le stockage local
-          localStorage.setItem('loggedInUserRefreshToken', response.data.refresh_token);
+          localStorage.setItem(
+            'loggedInUserRefreshToken',
+            response.data.refresh_token
+          );
         },
         (error) => {
           // En cas d'erreur, déconnecte l'utilisateur

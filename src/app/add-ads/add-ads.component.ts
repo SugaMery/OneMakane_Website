@@ -12,7 +12,7 @@ import { AnnonceService } from '../annonce.service';
 import { SettingService } from '../setting.service';
 import { Router } from '@angular/router';
 import { formatDate } from '@angular/common';
-import { PrimeNGConfig } from 'primeng/api';
+import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { OptionsService } from '../options.service';
 import * as CryptoJS from 'crypto-js';
 declare var $: any;
@@ -104,6 +104,7 @@ interface SubCategory {
   selector: 'app-add-ads',
   templateUrl: './add-ads.component.html',
   styleUrl: './add-ads.component.css',
+  providers: [MessageService], // Fournir MessageService ici
 })
 export class AddAdsComponent implements OnInit {
   userInfo: any;
@@ -195,18 +196,98 @@ export class AddAdsComponent implements OnInit {
     private settingsService: SettingService,
     private router: Router,
     private primengConfig: PrimeNGConfig,
-    private optionsService: OptionsService
+    private optionsService: OptionsService,
+    private messageService: MessageService
   ) {}
   // Save the form data to localStorage
   saveFormDataToLocalStorage() {
     localStorage.setItem('formData', JSON.stringify(this.formData));
+    localStorage.setItem('settings', JSON.stringify(this.settings));
+    localStorage.setItem('selectedOption', JSON.stringify(this.selectedOption));
+    localStorage.setItem(
+      'selectedSubcategory',
+      JSON.stringify(this.selectedSubcategory)
+    );
+    localStorage.setItem(
+      'selectedPaidOptionId',
+      JSON.stringify(this.selectedPaidOptionId)
+    );
+    localStorage.setItem('promoteOptions', JSON.stringify(this.promoteOptions));
+    console.log('ave the form data to localStorage', this.formData);
+
+    localStorage.setItem(
+      'selectedPaidOption',
+      JSON.stringify(this.selectedPaidOption)
+    );
+    localStorage.setItem(
+      'selectedOptions',
+      JSON.stringify(this.selectedOptions)
+    );
   }
 
   // Retrieve form data from localStorage on page load
-  loadFormDataFromLocalStorage() {
+  loadFormDataFromLocalStorage(): void {
+    // Retrieve formData and settings from localStorage
     const savedFormData = localStorage.getItem('formData');
+    const savedSettings = localStorage.getItem('settings');
+    const savedSelectedOption = localStorage.getItem('selectedOption');
+
+    const savedSelectedPaidOption = localStorage.getItem('selectedPaidOption');
+    const savedSelectedOptions = localStorage.getItem('selectedOptions');
+
+    const savedSelectedPaidOptionId = localStorage.getItem(
+      'selectedPaidOptionId'
+    );
+    const savedPromoteOptions = localStorage.getItem('promoteOptions');
+
+    const savedSelectedSubcategory = localStorage.getItem(
+      'selectedSubcategory'
+    );
+    // If data exists in localStorage, parse and set it to the component's properties
     if (savedFormData) {
       this.formData = JSON.parse(savedFormData);
+      this.suggestedCategoryIf = true;
+      this.openselect = true;
+      console.log('Loaded formData from localStorage:', this.formData);
+    }
+
+    if (savedSettings) {
+      this.settings = JSON.parse(savedSettings);
+      console.log('Loaded settings from localStorage:', this.settings);
+    }
+
+    if (savedSelectedPaidOption) {
+      this.selectedPaidOption = JSON.parse(savedSelectedPaidOption);
+      console.log('Loaded settings from localStorage:', this.settings);
+    }
+    if (savedSelectedOptions) {
+      this.selectedOptions = JSON.parse(savedSelectedOptions);
+      console.log('Loaded settings from localStorage:', this.settings);
+    }
+
+    if (savedSelectedPaidOptionId) {
+      this.selectedPaidOptionId = JSON.parse(savedSelectedPaidOptionId);
+      console.log(
+        'Loaded settings from localStorage:',
+        this.selectedPaidOptionId
+      );
+    }
+
+    if (savedPromoteOptions) {
+      this.promoteOptions = JSON.parse(savedPromoteOptions);
+      console.log('Loaded settings from localStorage:', this.promoteOptions);
+    }
+
+    if (savedSelectedOption) {
+      this.selectedOption = JSON.parse(savedSelectedOption);
+      console.log('Loaded settings from localStorage:', this.selectedOption);
+    }
+    if (savedSelectedSubcategory) {
+      this.selectedSubcategory = JSON.parse(savedSelectedSubcategory);
+      console.log(
+        'Loaded settings from localStorage:',
+        this.selectedSubcategory
+      );
     }
   }
 
@@ -975,20 +1056,32 @@ export class AddAdsComponent implements OnInit {
   // Load uploaded images from localStorage on page load
   loadUploadedImagesFromLocalStorage() {
     const savedImages = localStorage.getItem('uploadedImages');
+    const savedselectedFiles = localStorage.getItem('selectedFiles');
+
     if (savedImages) {
       this.uploadedImages = JSON.parse(savedImages);
+    }
+
+    if (savedselectedFiles) {
+      this.selectedFiles = JSON.parse(savedselectedFiles);
+      console.log(
+        'Loaded settings from localStorage file',
+        savedselectedFiles,
+        this.selectedFiles
+      );
     }
   }
   // Save uploaded images to localStorage
   saveUploadedImagesToLocalStorage() {
     localStorage.setItem('uploadedImages', JSON.stringify(this.uploadedImages));
+    //localStorage.setItem('selectedFiles', JSON.stringify(this.selectedFiles));
   }
 
   ngOnInit(): void {
     this.getUserInfo();
     this.fetchCategories();
-    //this.loadFormDataFromLocalStorage();
-    //this.loadUploadedImagesFromLocalStorage();
+    this.loadFormDataFromLocalStorage();
+    this.loadUploadedImagesFromLocalStorage();
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
     this.annonceService.getAds().subscribe((data) => {
@@ -1166,7 +1259,10 @@ export class AddAdsComponent implements OnInit {
         }
 
         const reader: FileReader = new FileReader();
+        localStorage.setItem('selectedFiles', JSON.stringify(file));
         this.selectedFiles.push(file);
+
+        console.log('this slelet', this.selectedFiles);
         reader.onload = (e) => {
           const imageDataURL: string = e.target!.result as string;
           this.uploadedImages.push(imageDataURL);
@@ -1337,6 +1433,7 @@ export class AddAdsComponent implements OnInit {
     }
     return true;
   }
+
   formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-based
@@ -1887,6 +1984,7 @@ export class AddAdsComponent implements OnInit {
       nextCallback(); // Call nextCallback to proceed to the next step
     }
   }
+  selectedFileds: File[] = [];
 
   payment(): void {
     console.log('responsee meeeeeeeee');
@@ -1927,12 +2025,34 @@ export class AddAdsComponent implements OnInit {
     const userId = localStorage.getItem('loggedInUserId');
 
     const mediaIds: string[] = [];
+    console.log('Loaded selectedFiles', this.selectedFiles);
+    const filesToStore = this.selectedFiles.map((file: File) => ({
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      lastModified: file.lastModified,
+
+      // You can add more properties if needed
+    }));
+
+    console.log('selectedFiles saved to localStorage', filesToStore);
+    //localStorage.setItem('selectedFiles', JSON.stringify(this.selectedFiles));
     Promise.all(
       this.selectedFiles.map((file) => {
-        console.log('console', accessToken);
+        console.log('console', this.selectedFiles);
+
+        this.selectedFileds.push(file);
+        console.log('console selectedFiles', this.selectedFileds);
+
         return this.annonceService
           .uploadImage(file, accessToken!)
           .then((response) => {
+            if (response.status === 'Error') {
+              this.saveUploadedImagesToLocalStorage();
+              this.saveFormDataToLocalStorage();
+
+              //this.redirectToLogin();
+            }
             console.log('responsee', response);
             mediaIds.push(response.data.id);
           })
@@ -2148,68 +2268,6 @@ export class AddAdsComponent implements OnInit {
       this.selectedFiles = [];
     });
   }
-
-  secretKey: string = 'your-secret-key'; // Use a secret key for encryption/decryption
-
-  // Method to encrypt data
-  encryptData(data: any): string {
-    return CryptoJS.AES.encrypt(
-      JSON.stringify(data),
-      this.secretKey
-    ).toString();
-  }
-
-  // Method to decrypt data
-  decryptData(encryptedData: string): any {
-    const bytes = CryptoJS.AES.decrypt(encryptedData, this.secretKey);
-    return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-  }
-
-  // Save the encrypted data to localStorage
-  saveToLocalStorage(url: string, postParams: any): void {
-    const dataToSave = { url, postParams };
-    const encryptedData = this.encryptData(dataToSave);
-    localStorage.setItem('paymentData', encryptedData);
-  }
-
-  // Retrieve and decrypt the data from localStorage
-  getFromLocalStorage(): { url: string; postParams: any } | null {
-    const encryptedData = localStorage.getItem('paymentData');
-    if (encryptedData) {
-      return this.decryptData(encryptedData);
-    }
-    return null;
-  }
-
-  // Redirect method
-  redirectToPayment(): void {
-    const savedData = this.getFromLocalStorage();
-    if (savedData) {
-      this.redirectToPaymentUrl(savedData.url, savedData.postParams);
-    } else {
-      console.error('No payment data found in localStorage');
-    }
-  }
-
-  // Method to redirect with POST
-  redirectToPaymentUrl(url: string, postParams: any): void {
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = url;
-
-    for (const key in postParams) {
-      if (postParams.hasOwnProperty(key)) {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        input.value = postParams[key];
-        form.appendChild(input);
-      }
-    }
-
-    document.body.appendChild(form);
-    form.submit();
-  }
   onSubmit(): void {
     console.log('responsee meeeeeeeee');
     let isValid = true;
@@ -2247,11 +2305,12 @@ export class AddAdsComponent implements OnInit {
     const mediaIds: string[] = [];
     Promise.all(
       this.selectedFiles.map((file) => {
-        console.log('console', accessToken);
+        console.log('console', accessToken, this.selectedFiles);
         return this.annonceService
           .uploadImage(file, accessToken)
           .then((response) => {
             console.log('responsee', response);
+
             mediaIds.push(response.data.id);
           })
           .catch((error) => {
@@ -2361,6 +2420,75 @@ export class AddAdsComponent implements OnInit {
       );
       this.selectedFiles = [];
     });
+  }
+  secretKey: string = 'your-secret-key'; // Use a secret key for encryption/decryption
+
+  // Method to encrypt data
+  encryptData(data: any): string {
+    return CryptoJS.AES.encrypt(
+      JSON.stringify(data),
+      this.secretKey
+    ).toString();
+  }
+
+  // Method to decrypt data
+  decryptData(encryptedData: string): any {
+    const bytes = CryptoJS.AES.decrypt(encryptedData, this.secretKey);
+    return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+  }
+
+  // Save the encrypted data to localStorage
+  saveToLocalStorage(url: string, postParams: any): void {
+    const dataToSave = { url, postParams };
+    const encryptedData = this.encryptData(dataToSave);
+    localStorage.setItem('paymentData', encryptedData);
+  }
+
+  // Retrieve and decrypt the data from localStorage
+  getFromLocalStorage(): { url: string; postParams: any } | null {
+    const encryptedData = localStorage.getItem('paymentData');
+    if (encryptedData) {
+      return this.decryptData(encryptedData);
+    }
+    return null;
+  }
+
+  // Redirect method
+  redirectToPayment(): void {
+    const savedData = this.getFromLocalStorage();
+    if (savedData) {
+      this.redirectToPaymentUrl(savedData.url, savedData.postParams);
+    } else {
+      console.error('No payment data found in localStorage');
+    }
+  }
+
+  // Method to redirect with POST
+  redirectToPaymentUrl(url: string, postParams: any): void {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = url;
+
+    for (const key in postParams) {
+      if (postParams.hasOwnProperty(key)) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = postParams[key];
+        form.appendChild(input);
+      }
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+  }
+
+  redirectToLogin(): void {
+    // Store the current URL to return after successful login
+    localStorage.setItem('redirectUrl', window.location.pathname);
+
+    // Redirect the user to the login page
+    window.location.href = '/login';
   }
 
   @HostListener('document:click', ['$event'])

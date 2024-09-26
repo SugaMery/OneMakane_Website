@@ -32352,7 +32352,7 @@ body {
   ::ng-deep .text-right {
     text-align: right !important;
     flex: auto;
-}
+  }
 
 
 }
@@ -32795,4 +32795,31 @@ label.pm-label.checked {
 
 ::ng-deep small.text-muted {
   color: #3cba7f !important;
+}
+
+
+::ng-deep .p-toast .p-toast-message .p-toast-message-content {
+  padding: 0.75rem !important;
+  border-width: 1px !important;
+}
+
+
+::ng-deep .p-toast .p-toast-message .p-toast-message-content .p-toast-summary {
+  font-weight: 500 !important;
+}
+
+::ng-deep .p-toast .p-toast-message.p-toast-message-info .p-toast-detail {
+  color: #334155 !important;
+}
+
+::ng-deep .p-toast .p-toast-message .p-toast-message-content .p-toast-detail {
+  font-size: 0.875rem !important;
+}
+
+::ng-deep .p-toast .p-toast-message .p-toast-message-content .p-toast-detail {
+  margin: 0.5rem 0 0 0 !important;
+}
+
+::ng-deep .p-toast .p-toast-message .p-toast-message-content .p-toast-message-text {
+  margin: 0 0 0 0.5rem !important;
 }
