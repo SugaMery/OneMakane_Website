@@ -31943,3 +31943,22 @@ label {
   transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
   border-radius: 6px;
 }
+
+
+::ng-deep .image {
+  position: relative !important;
+  /* Ensure the parent element is positioned relative */
+}
+
+::ng-deep .promoted-star {
+  width: 20px !important;
+  /* Set the size of the star image */
+  height: auto !important;
+  /* Maintain aspect ratio */
+}
+
+::ng-deep .p-tag.p-tag-info {
+  background: #3b82f654 !important;
+  color: #1d4ed8 !important;
+
+}

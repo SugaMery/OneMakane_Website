@@ -98,6 +98,14 @@ export class HeaderComponent {
     }
   }
 
+  isPhones(): boolean {
+    const screenWidth = window.innerWidth;
+    if (screenWidth <= 1300 && screenWidth >= 800) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   logout(): void {
     this.status = false;
     this.authGuard.logout();

@@ -95,6 +95,31 @@ export class OptionsService {
     return this.http.get<any>(`${this.baseUrl}/payments/${id}`, { headers });
   }
 
+  getOrderById(id: number, accessToken: string): Observable<any> {
+    const headers = { Authorization: `Bearer ${accessToken}` };
+    return this.http.get<any>(`${this.baseUrl}/orders/${id}`, { headers });
+  }
+
+  getOrderByUser(
+    userId: number,
+    accessToken: string,
+    status?: string
+  ): Observable<any> {
+    const headers = { Authorization: `Bearer ${accessToken}` };
+
+    // Create the URL with the userId
+    let url = `${this.baseUrl}/users/${userId}/orders`;
+
+    // Append the query parameter if status is provided
+    if (status) {
+      url += `?status=${encodeURIComponent(status)}`;
+    }
+
+    return this.http.get<any>(url, {
+      headers,
+    });
+  }
+
   getPaymentFailed(): Observable<any> {
     return this.http.get<any>(`https://dev.onemakan.ma/payment/failed`);
   }

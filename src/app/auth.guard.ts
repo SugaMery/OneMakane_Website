@@ -26,28 +26,34 @@ export class AuthGuard implements CanActivate {
       return false;
     }
 
-    const token = localStorage.getItem('loggedInUserRefreshToken');
-    if (token) {
-      this.userService.refreshToken(token).subscribe(
-        (response) => {
-          // Met à jour le token de rafraîchissement dans le stockage local
-          localStorage.setItem(
-            'loggedInUserRefreshToken',
-            response.data.refresh_token
-          );
-        },
-        (error) => {
-          // En cas d'erreur, déconnecte l'utilisateur
-          this.handleLogout();
-        }
-      );
-      return true; // Permet l'accès à la route
-    } else {
-      // Stocke l'URL de la page demandée pour redirection après connexion
+    const token = localStorage.getItem('loggedInUserToken');
+    const refreshToken = localStorage.getItem('loggedInUserRefreshToken');
+
+    // Vérifie si le token est expiré
+    if (token && this.userService.isTokenExpired(token)) {
+      if (refreshToken) {
+        this.userService.refreshToken(refreshToken).subscribe(
+          (response) => {
+            // Stocke le nouveau token
+            localStorage.setItem('loggedInUserToken', response.data.token);
+            return true; // Permet l'accès car le token a été rafraîchi
+          },
+          (error) => {
+            this.handleLogout(); // Échec du rafraîchissement, déconnexion
+            return false;
+          }
+        );
+      } else {
+        localStorage.setItem('redirectUrl', state.url);
+        this.logout(); // Pas de refresh token, déconnexion
+        return false;
+      }
+    } else if (!token) {
       localStorage.setItem('redirectUrl', state.url);
-      this.logout();
+      this.logout(); // Pas de token, déconnexion
       return false;
     }
+    return true; // Token valide, permet l'accès
   }
 
   logout(): void {
@@ -61,18 +67,15 @@ export class AuthGuard implements CanActivate {
     if (token) {
       this.userService.logout(token).subscribe(
         () => {
-          // Redirige vers la page de connexion
-          window.location.href = '/login';
+          window.location.href = '/login'; // Redirection vers la page de login
         },
         (error) => {
           console.error('Erreur lors de la déconnexion:', error);
-          // Redirige vers la page de connexion même en cas d'échec de la déconnexion
           window.location.href = '/login';
         }
       );
     } else {
-      // Redirige vers la page de connexion si aucun token n'est trouvé
-      window.location.href = '/login';
+      window.location.href = '/login'; // Redirection si aucun token
     }
   }
 

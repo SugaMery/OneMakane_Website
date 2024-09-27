@@ -30,7 +30,7 @@
                       <form class="" action="#" method="post">
                         <p-stepper
                           [linear]="isLinear()"
-                          [orientation]="isPhone() ? 'vertical' : 'horizontal'"
+                          [orientation]="isPhones() ? 'vertical' : 'horizontal'"
                         >
                           <p-stepperPanel header="Informations de base">
                             <ng-template
@@ -1361,7 +1361,7 @@
                                             name="prix"
                                             [(ngModel)]="formData.prix"
                                             placeholder="Prix de votre annonce"
-                                            type="number"
+                                            type="text"
                                             required
                                             (ngModelChange)="clearError('prix')"
                                           />
@@ -1582,7 +1582,7 @@
                                                       [(ngModel)]="option.bool"
                                                       [value]="option?.id"
                                                       [binary]="true"
-                                                      name="payment-method"
+                                                      name="payment-methods"
                                                       (onChange)="
                                                         onOptionChange(
                                                           $event,
@@ -1649,6 +1649,7 @@
                               </div>
                             </ng-template>
                           </p-stepperPanel>
+
                           <p-stepperPanel header="Récap">
                             <ng-template
                               pTemplate="content"
@@ -2161,9 +2162,7 @@
                                               <tbody>
                                                 <!-- Selected Paid Option -->
                                                 <tr
-                                                  *ngIf="
-                                                    selectedPaidOptionId !== 0
-                                                  "
+                                                  *ngIf="selectedPaidOptionId"
                                                 >
                                                   <td class="cart_total_label">
                                                     <h6

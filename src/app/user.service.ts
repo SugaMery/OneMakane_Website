@@ -19,9 +19,6 @@ export class UserService {
     });
     return this.http.get<any>(`${this.baseUrl}/users`, { headers });
   }
-  login(userDetails: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/auth/login`, userDetails);
-  }
 
   getUserInfoById(userId: number, accessToken: string): Observable<any> {
     const headers = new HttpHeaders({
@@ -29,6 +26,27 @@ export class UserService {
     });
 
     return this.http.get(`${this.baseUrl}/users/${userId}`, { headers });
+  }
+
+  private apiUrl = 'https://devapi.onemakan.com/v1';
+  login(userData: { email: string; password: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/login`, userData);
+  }
+
+  refreshToken(refreshToken: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/refresh-token`, {
+      refreshToken,
+    });
+  }
+
+  logout(token: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/logout`, { token });
+  }
+
+  isTokenExpired(token: string): boolean {
+    // Décodez et vérifiez l'expiration du token JWT
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return Math.floor(new Date().getTime() / 1000) >= payload.exp;
   }
 
   getUserInfoByIdVendor(
@@ -43,19 +61,6 @@ export class UserService {
     return this.http.get(`${this.baseUrl}/users/profile/${userId}/${uuid}`, {
       headers,
     });
-  }
-
-  logout(accessToken: string): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${accessToken}`,
-    });
-
-    return this.http.get(`${this.baseUrl}/auth/logout`, { headers });
-  }
-
-  refreshToken(accessToken: string): Observable<any> {
-    const body = { refresh_token: accessToken };
-    return this.http.post(`${this.baseUrl}/auth/refresh-token`, body);
   }
 
   getConversationsByUser(userId: number, accessToken: string): Observable<any> {

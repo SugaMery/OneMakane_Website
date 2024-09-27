@@ -31,6 +31,8 @@ import { CvsPreselectionesComponent } from './cvs-preselectiones/cvs-preselectio
 import { PaymentSuccessComponent } from './payment-success/payment-success.component';
 import { PaymentFaildComponent } from './payment-faild/payment-faild.component';
 import { DuplicateAdsComponent } from './duplicate-ads/duplicate-ads.component';
+import { OptionAdsComponent } from './option-ads/option-ads.component';
+import { FactureComponent } from './facture/facture.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -46,6 +48,16 @@ const routes: Routes = [
   {
     path: 'modifier-annonce/:id',
     component: EditAdsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'option-annonce/:id',
+    component: OptionAdsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'facture-option/:id',
+    component: FactureComponent,
     canActivate: [AuthGuard],
   },
   {

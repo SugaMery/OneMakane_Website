@@ -12,7 +12,12 @@
   <div class="page-content pt-50 pb-50">
     <div class="container">
       <div class="row">
-        <div class="col-lg-10 m-auto">
+        <div
+          [ngClass]="{
+            'col-lg-12 m-auto': isPhones,
+            'col-lg-10 m-auto': !isPhones
+          }"
+        >
           <div class="row">
             <div class="col-md-3">
               <div class="dashboard-menu">
@@ -82,6 +87,19 @@
                       aria-selected="false"
                       ><i class="fi-rr-square-plus mr-10"></i> Ajouter une
                       annonce</a
+                    >
+                  </li>
+
+                  <li class="nav-item">
+                    <a
+                      class="nav-link"
+                      id="commandes-tab"
+                      data-bs-toggle="tab"
+                      href="#mes-commandes"
+                      role="tab"
+                      aria-controls="mes-commandes"
+                      aria-selected="false"
+                      ><i class="fi-rs-shopping-bag mr-10"></i>Mes commandes</a
                     >
                   </li>
 
@@ -200,7 +218,20 @@
                                 </td>
                                 <td class="image product-thumbnail pt-40 image">
                                   <img src="{{ ad.medias[0]?.url }}" alt="#" />
+                                  <!-- Conditionally display the star image if ad.promote is true -->
+                                  <img
+                                    *ngIf="ad.promote"
+                                    src="../../assets/imgs/icons/star.png"
+                                    alt="Promoted"
+                                    class="promoted-star"
+                                    style="
+                                      position: absolute;
+                                      top: 10px;
+                                      right: 10px;
+                                    "
+                                  />
                                 </td>
+
                                 <td class="product-des product-name">
                                   <h6>
                                     <a
@@ -240,6 +271,17 @@
                                   <a [href]="'/modifier-annonce/' + ad.id">
                                     <button class="btn btn-sm btn-primary">
                                       Modifier
+                                    </button>
+                                  </a>
+                                  <a
+                                    class="ml-2"
+                                    [href]="'/option-annonce/' + ad.id"
+                                  >
+                                    <button
+                                      class="btn btn-sm"
+                                      style="background: #fdc040"
+                                    >
+                                      Options
                                     </button>
                                   </a>
                                   <a class="ml-2">
@@ -452,6 +494,334 @@
                               <a
                                 class="page-link"
                                 (click)="changePage(currentPage + 1)"
+                                aria-label="Suivant"
+                              >
+                                <span aria-hidden="true">&raquo;</span>
+                              </a>
+                            </li>
+                          </ul>
+                        </nav>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="tab-pane fade"
+                  id="mes-commandes"
+                  role="tabpanel"
+                  aria-labelledby="commandes-tab"
+                >
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="mb-0">Ma liste des commandes</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <div class="table-responsive shopping-summery">
+                          <table class="table table-wishlist">
+                            <thead>
+                              <tr class="main-heading">
+                                <th class="custome-checkbox start pl-30">
+                                  <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    name="checkbox"
+                                    id="exampleCheckbox11"
+                                    value=""
+                                  />
+                                  <label
+                                    class="form-check-label"
+                                    for="exampleCheckbox11"
+                                  ></label>
+                                </th>
+                                <th scope="col" colspan="1">Annonce</th>
+                                <th scope="col">Prix de commande</th>
+                                <th scope="col">Status de transaction</th>
+                                <th scope="col" class="text-center">Action</th>
+                                <!--                                 <th scope="col" class="end">Supprimé</th> -->
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr
+                                class="pt-30"
+                                *ngFor="let ad of paginatedOrders"
+                              >
+                                <td class="custome-checkbox pl-30">
+                                  <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    name="checkbox"
+                                    id="exampleCheckbox1"
+                                    value=""
+                                  />
+                                  <label
+                                    class="form-check-label"
+                                    for="exampleCheckbox1"
+                                  ></label>
+                                </td>
+
+                                <td class="product-des product-name">
+                                  <h6>
+                                    <a
+                                      class="product-name mb-10"
+                                      [href]="'/ads/' + ad.ad.id"
+                                    >
+                                      {{ ad.ad.title | slice : 0 : 20
+                                      }}{{
+                                        ad.ad.title.length > 20 ? "..." : ""
+                                      }}
+                                    </a>
+                                  </h6>
+                                  <span class="font-small text-muted">{{
+                                    extractDate(ad.created_at)
+                                  }}</span>
+                                </td>
+                                <td class="price" data-title="Prix">
+                                  <h3 class="text-brand">{{ ad.total }} DH</h3>
+                                </td>
+                                <td
+                                  class="text-center detail-info"
+                                  data-title="Status"
+                                >
+                                  <span
+                                    class="stock-status in-stock mb-0"
+                                    [ngClass]="getStatusClasss(ad.status)"
+                                  >
+                                    {{ getStatusInFrenchs(ad.status) }}
+                                  </span>
+                                </td>
+                                <td
+                                  class="action text-left"
+                                  data-title="Action"
+                                >
+                                  <a [href]="'/modifier-annonce/' + ad.ad.id">
+                                    <button class="btn btn-sm btn-primary">
+                                      Modifier
+                                    </button>
+                                  </a>
+
+                                  <a class="ml-2">
+                                    <button
+                                      class="btn btn-sm"
+                                      style="background: #1943b7"
+                                      (click)="showConfirmDialog(ad.ad)"
+                                    >
+                                      Dupliquer
+                                    </button>
+                                  </a>
+                                  <a
+                                    class="ml-2"
+                                    *ngIf="ad.status === 'success'"
+                                    [href]="
+                                      '/facture-option/' +
+                                      ad.payments[0].order_id
+                                    "
+                                  >
+                                    <button
+                                      class="btn btn-sm"
+                                      style="background: #fdc040"
+                                    >
+                                      Facture
+                                    </button>
+                                  </a>
+                                </td>
+                              </tr>
+                            </tbody>
+
+                            <tr *ngIf="paginatedOrders.length === 0">
+                              <td colspan="7" class="text-center">
+                                Aucune annonce n'a été trouvée.
+                              </td>
+                            </tr>
+                          </table>
+
+                          <p-dialog
+                            [(visible)]="display"
+                            [style]="{ width: '20rem' }"
+                            header="Confirmation"
+                            [modal]="true"
+                            styleClass="p-fluid"
+                          >
+                            <ng-template pTemplate="content">
+                              <div>
+                                <p>Voulez-vous dupliquer cette annonce ?</p>
+                              </div>
+                            </ng-template>
+
+                            <ng-template pTemplate="footer">
+                              <div style="padding: 1rem !important">
+                                <button
+                                  pButton
+                                  pRipple
+                                  label="Annuler"
+                                  icon="pi pi-times"
+                                  class="p-button-text"
+                                  (click)="display = false"
+                                ></button>
+                                <button
+                                  pButton
+                                  pRipple
+                                  label="Confirmer"
+                                  icon="pi pi-check"
+                                  class="p-button-danger"
+                                  (click)="
+                                    confirmDuplication(adIdToDuplicate.id)
+                                  "
+                                ></button>
+                              </div>
+                            </ng-template>
+                          </p-dialog>
+
+                          <p-dialog
+                            [(visible)]="adDialog"
+                            [style]="{ width: '30rem' }"
+                            header="Confirmer la suppression"
+                            [modal]="true"
+                            styleClass="p-fluid"
+                          >
+                            <ng-template pTemplate="content">
+                              <div>
+                                <p>
+                                  Êtes-vous sûr de vouloir supprimer cette
+                                  annonce ?
+                                </p>
+                                <div class="payment_option">
+                                  <div *ngIf="reasons.length === 0">
+                                    Aucune raison disponible
+                                  </div>
+                                  <div
+                                    class="custome-radio"
+                                    *ngFor="let reason of reasons"
+                                  >
+                                    <input
+                                      class="form-check-input"
+                                      type="radio"
+                                      name="reason"
+                                      [id]="'option' + reason.id"
+                                      [value]="reason.id"
+                                      required
+                                    />
+                                    <label
+                                      class="form-check-label"
+                                      [for]="'option' + reason.id"
+                                      >{{ reason.long_name }}</label
+                                    >
+                                  </div>
+                                </div>
+                              </div>
+                            </ng-template>
+
+                            <ng-template pTemplate="footer">
+                              <div style="padding: 1rem !important">
+                                <button
+                                  pButton
+                                  pRipple
+                                  label="Annuler"
+                                  icon="pi pi-times"
+                                  class="p-button-text"
+                                  (click)="adDialog = false"
+                                ></button>
+                                <button
+                                  pButton
+                                  pRipple
+                                  label="Confirmer"
+                                  icon="pi pi-check"
+                                  class="p-button-danger"
+                                  (click)="confirmDeletion(selectedAd)"
+                                ></button>
+                              </div>
+                            </ng-template>
+                          </p-dialog>
+                        </div>
+                      </div>
+                      <div
+                        class="pagination-area mt-30 mb-50"
+                        *ngIf="totalPagesOrders > 1"
+                      >
+                        <nav aria-label="Pagination">
+                          <ul class="pagination justify-content-start">
+                            <!-- Bouton Précédent -->
+                            <li
+                              class="page-item"
+                              [ngClass]="{ disabled: currentPage === 1 }"
+                            >
+                              <a
+                                class="page-link"
+                                (click)="changePageOrders(currentPage - 1)"
+                                aria-label="Précédent"
+                              >
+                                <span aria-hidden="true">&laquo;</span>
+                              </a>
+                            </li>
+
+                            <!-- Bouton Première Page -->
+                            <li
+                              class="page-item"
+                              [ngClass]="{ disabled: currentPage === 1 }"
+                            >
+                              <a
+                                class="page-link"
+                                (click)="changePageOrders(1)"
+                                style="width: auto"
+                                >Première</a
+                              >
+                            </li>
+
+                            <!-- Ellipse pour les Pages au Début -->
+                            <li
+                              *ngIf="shouldShowEllipsesBefore()"
+                              class="page-item disabled"
+                            >
+                              <span class="page-link">...</span>
+                            </li>
+
+                            <!-- Boutons Numéros de Page -->
+                            <li
+                              *ngFor="let page of getVisiblePagesOrders()"
+                              class="page-item"
+                              [ngClass]="{ active: currentPage === page }"
+                            >
+                              <a
+                                class="page-link"
+                                (click)="changePageOrders(page)"
+                                >{{ page }}</a
+                              >
+                            </li>
+
+                            <!-- Ellipse pour les Pages à la Fin -->
+                            <li
+                              *ngIf="shouldShowEllipsesAfter()"
+                              class="page-item disabled"
+                            >
+                              <span class="page-link">...</span>
+                            </li>
+
+                            <!-- Bouton Dernière Page -->
+                            <li
+                              class="page-item"
+                              [ngClass]="{
+                                disabled: currentPage === totalPagesOrders
+                              }"
+                            >
+                              <a
+                                class="page-link"
+                                (click)="changePageOrders(totalPagesOrders)"
+                                style="width: auto"
+                                >Dernière</a
+                              >
+                            </li>
+
+                            <!-- Bouton Suivant -->
+                            <li
+                              class="page-item"
+                              [ngClass]="{
+                                disabled: currentPage === totalPagesOrders
+                              }"
+                            >
+                              <a
+                                class="page-link"
+                                (click)="changePageOrders(currentPage + 1)"
                                 aria-label="Suivant"
                               >
                                 <span aria-hidden="true">&raquo;</span>

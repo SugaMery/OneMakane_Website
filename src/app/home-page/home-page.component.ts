@@ -230,6 +230,16 @@ export class HomePageComponent {
   navigateToCategory(categoryId: number, slug: string) {
     window.location.href = `/ads-category/${categoryId}/${slug}`;
   }
+
+  isPhones(): boolean {
+    const screenWidth = window.innerWidth;
+    if (screenWidth <= 1300 && screenWidth >= 800) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   addToFavorites(ad: any): void {
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
@@ -307,6 +317,12 @@ export class HomePageComponent {
       {
         breakpoint: '1024px',
         numVisible: 3,
+        numScroll: 3,
+      },
+
+      {
+        breakpoint: '1300px',
+        numVisible: 4,
         numScroll: 3,
       },
       {

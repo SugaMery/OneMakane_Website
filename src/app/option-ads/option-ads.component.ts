@@ -10,7 +10,7 @@ import { UserService } from '../user.service';
 import { CategoryService } from '../category.service';
 import { AnnonceService } from '../annonce.service';
 import { SettingService } from '../setting.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { formatDate } from '@angular/common';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { OptionsService } from '../options.service';
@@ -101,12 +101,11 @@ interface SubCategory {
   model?: string;
 }
 @Component({
-  selector: 'app-add-ads',
-  templateUrl: './add-ads.component.html',
-  styleUrl: './add-ads.component.css',
-  providers: [MessageService], // Fournir MessageService ici
+  selector: 'app-option-ads',
+  templateUrl: './option-ads.component.html',
+  styleUrl: './option-ads.component.css',
 })
-export class AddAdsComponent implements OnInit {
+export class OptionAdsComponent implements OnInit {
   userInfo: any;
   loggedInUserName: string | undefined;
   deletedImages: string[] = [];
@@ -197,7 +196,7 @@ export class AddAdsComponent implements OnInit {
     private router: Router,
     private primengConfig: PrimeNGConfig,
     private optionsService: OptionsService,
-    private messageService: MessageService
+    private route: ActivatedRoute
   ) {}
   // Save the form data to localStorage
   saveFormDataToLocalStorage() {
@@ -1310,7 +1309,7 @@ export class AddAdsComponent implements OnInit {
 
   isPhones(): boolean {
     const screenWidth = window.innerWidth;
-    if (screenWidth <= 1500 && screenWidth > 768) {
+    if (screenWidth <= 1300) {
       return true;
     } else {
       return false;
@@ -1975,26 +1974,6 @@ export class AddAdsComponent implements OnInit {
   payment(): void {
     console.log('responsee meeeeeeeee');
     let isValid = true;
-    if (!this.formData.ville) {
-      this.fieldErrors.ville = true;
-      isValid = false;
-    } else {
-      this.fieldErrors.ville = false;
-    }
-
-    if (!this.formData.code_postal) {
-      this.fieldErrors.code_postal = true;
-      isValid = false;
-    } else {
-      this.fieldErrors.code_postal = false;
-    }
-
-    if (!this.formData.prix) {
-      this.fieldErrors.prix = true;
-      isValid = false;
-    } else {
-      this.fieldErrors.prix = false;
-    }
 
     if (!this.termsAccepted) {
       this.fieldErrors.termsAccepted = true;
@@ -2022,237 +2001,95 @@ export class AddAdsComponent implements OnInit {
     }));
 
     console.log('selectedFiles saved to localStorage', filesToStore);
-    //localStorage.setItem('selectedFiles', JSON.stringify(this.selectedFiles));
-    Promise.all(
-      this.selectedFiles.map((file) => {
-        console.log('console', this.selectedFiles);
+    const adId = this.route.snapshot.paramMap.get('id');
 
-        this.selectedFileds.push(file);
-        console.log('console selectedFiles', this.selectedFileds);
+    // Post order
+    this.optionsService
+      .postOrder(accessToken!, Number(userId), Number(adId))
+      .subscribe(
+        (orderResponse) => {
+          const orderId = orderResponse.data.id;
+          // Post order items for selected paid option
+          const paidOptionId = this.selectedPaidOptionId;
+          const orderItemsObservables = [];
 
-        return this.annonceService
-          .uploadImage(file, accessToken!)
-          .then((response) => {
-            if (response.status === 'Error') {
-              //this.saveUploadedImagesToLocalStorage();
-              this.saveFormDataToLocalStorage();
+          if (paidOptionId) {
+            orderItemsObservables.push(
+              this.optionsService
+                .postOrderItem(accessToken!, orderId, paidOptionId)
+                .subscribe((response) =>
+                  console.log('postOrderItem cretaed ', paidOptionId, response)
+                )
+            );
+          }
+          console.log('orderId', orderId, paidOptionId);
 
-              this.redirectToLogin();
+          // Add selectedOptions IDs to order items
+          this.selectedOptions.forEach((option) => {
+            if (option.id) {
+              orderItemsObservables.push(
+                this.optionsService
+                  .postOrderItem(accessToken!, orderId, option.id)
+                  .subscribe((response) =>
+                    console.log('postOrderItem cretaed ', option.id, response)
+                  )
+              );
             }
-            console.log('responsee', response);
-            mediaIds.push(response.data.id);
-          })
-          .catch((error) => {
-            throw error;
+            console.log('orderIdrrr', orderId, option);
           });
-      })
-    ).then(() => {
-      const annonceData = {
-        user_id: userId,
-        category_id: this.selectedSubcategory.id,
-        title: this.formData.titre,
-        description: this.formData.description,
-        state: this.formData.state,
-        urgent: this.formData.urgent,
-        highlighted: this.formData.highlighted,
-        price: parseFloat(this.formData.prix),
-        city: this.formData.ville,
-        postal_code: this.formData.code_postal,
-        medias: {
-          _ids: mediaIds,
-        },
-        validation_status: 'pending',
-      };
-      console.log('mediiiiEEEEEEEEEEEEE', this.selectedFiles);
 
-      this.annonceService.createAnnonce(annonceData, accessToken!).subscribe(
-        (response) => {
-          const addressTabLink = document.querySelector(
-            '#orders-tab'
-          ) as HTMLAnchorElement;
-          if (addressTabLink) {
-            addressTabLink.click();
-          }
-          const settingADS: { [key: string]: any } = {};
-          for (let i = 0; i < this.settings.length; i++) {
-            const setting = this.settings[i];
-            if (
-              setting.type === 'text' ||
-              setting.type === 'number' ||
-              setting.type === 'select' ||
-              setting.type === 'options' ||
-              setting.type === 'int'
-            ) {
-              if (setting.selectedOption) {
-                settingADS[setting.key] = setting.selectedOption.value;
-              } else {
-                settingADS[setting.key] = setting.content;
-              }
-            } else if (setting.type === 'table') {
-              settingADS[setting.key] = setting.selectedOption?.id;
-            } else if (setting.type === 'bool') {
-              settingADS[setting.key] =
-                setting.selectedOption?.value === 'true' ? 1 : 0;
-            } else if (setting.type === 'multiple') {
-              const list: any[] = [];
-              setting.selectedOptions.forEach((element) => {
-                list.push(element.value);
-              });
-              console.log('listtttttttttteee', list);
-              settingADS[setting.key] = list;
-            } else if (setting.type === 'date') {
-              const date = new Date(this.date);
-              setting.content = this.formatDate(date);
-              settingADS[setting.key] = setting.content;
-            }
-          }
-          console.log('settingADS', settingADS);
-
-          const adId = response.data.id;
-
-          // Post order
-          this.optionsService
-            .postOrder(accessToken!, Number(userId), adId)
-            .subscribe(
-              (orderResponse) => {
-                const orderId = orderResponse.data.id;
-                // Post order items for selected paid option
-                const paidOptionId = this.selectedPaidOptionId;
-                const orderItemsObservables = [];
-
-                if (paidOptionId) {
-                  orderItemsObservables.push(
+          // Wait for all order items requests to complete
+          Promise.all(orderItemsObservables)
+            .then(() => {
+              console.log('All order items created successfully.');
+              this.userService
+                .getUserInfoById(Number(userId), accessToken!)
+                .subscribe(
+                  (userResponse: any) => {
+                    const user = userResponse.data;
+                    const paymentData = {
+                      order_id: orderId,
+                      user_id: userId,
+                      email: user.email,
+                      full_name: `${user.first_name} ${user.last_name}`,
+                      provider: 'cmi',
+                      amount: this.totalPrice,
+                    };
+                    console.log('Payment paymentData:', paymentData);
+                    // Post payment
                     this.optionsService
-                      .postOrderItem(accessToken!, orderId, paidOptionId)
-                      .subscribe((response) =>
-                        console.log(
-                          'postOrderItem cretaed ',
-                          paidOptionId,
-                          response
-                        )
-                      )
-                  );
-                }
-                console.log('orderId', orderId, paidOptionId);
-
-                // Add selectedOptions IDs to order items
-                this.selectedOptions.forEach((option) => {
-                  if (option.id) {
-                    orderItemsObservables.push(
-                      this.optionsService
-                        .postOrderItem(accessToken!, orderId, option.id)
-                        .subscribe((response) =>
-                          console.log(
-                            'postOrderItem cretaed ',
-                            option.id,
-                            response
-                          )
-                        )
-                    );
-                  }
-                  console.log('orderIdrrr', orderId, option);
-                });
-
-                // Wait for all order items requests to complete
-                Promise.all(orderItemsObservables)
-                  .then(() => {
-                    console.log('All order items created successfully.');
-                    this.userService
-                      .getUserInfoById(Number(userId), accessToken!)
+                      .postPayment(paymentData, accessToken!)
                       .subscribe(
-                        (userResponse: any) => {
-                          const user = userResponse.data;
-                          const paymentData = {
-                            order_id: orderId,
-                            user_id: userId,
-                            email: user.email,
-                            full_name: `${user.first_name} ${user.last_name}`,
-                            provider: 'cmi',
-                            amount: this.totalPrice,
-                          };
-                          console.log('Payment paymentData:', paymentData);
-                          // Post payment
-                          this.optionsService
-                            .postPayment(paymentData, accessToken!)
-                            .subscribe(
-                              (paymentResponse) => {
-                                console.log(
-                                  'Payment response:',
-                                  paymentResponse
-                                );
-                                const { url, postParams } =
-                                  paymentResponse.data;
+                        (paymentResponse) => {
+                          console.log('Payment response:', paymentResponse);
+                          const { url, postParams } = paymentResponse.data;
 
-                                // Redirect with POST data
-                                this.saveToLocalStorage(url, postParams);
-                                this.deleteFormDataFromLocalStorage();
-                                // Call the redirect after saving
-                                this.redirectToPayment();
-                                //this.redirectToPaymentUrl(url, postParams);
-                                // Handle success, e.g., navigate to a confirmation page
-                              },
-                              (error) => {
-                                console.error(
-                                  'Error processing payment:',
-                                  error
-                                );
-                              }
-                            );
+                          // Redirect with POST data
+                          this.saveToLocalStorage(url, postParams);
+                          this.deleteFormDataFromLocalStorage();
+                          // Call the redirect after saving
+                          this.redirectToPayment();
+                          //this.redirectToPaymentUrl(url, postParams);
+                          // Handle success, e.g., navigate to a confirmation page
                         },
                         (error) => {
-                          console.error('Error fetching user details:', error);
+                          console.error('Error processing payment:', error);
                         }
                       );
-                  })
-                  .catch((error) => {
-                    console.error('Error creating order items:', error);
-                  });
-              },
-              (error) => {
-                console.error('Error creating order:', error);
-              }
-            );
-          this.annonceService
-            .insertSetting(
-              response.data.id,
-              'ad-models',
-              settingADS,
-              accessToken!
-            )
-
-            .subscribe(
-              (response) => {
-                // this.resetFormData();
-                // window.location.href = '/annonce_in_progress';
-                /*                 this.selectedOption = {
-                  active: false,
-                  created_at: '',
-                  id: 0,
-                  model: null,
-                  name: '',
-                  parent_id: null,
-                  slug: null,
-                  url: null,
-                  route: null,
-                  icon_path: '',
-                }; */
-                console.log('Annonce créée avec succès !', response);
-              },
-              (error) => {
-                console.error(
-                  'Error inserting state and genre:',
-                  error,
-                  settingADS
+                  },
+                  (error) => {
+                    console.error('Error fetching user details:', error);
+                  }
                 );
-              }
-            );
+            })
+            .catch((error) => {
+              console.error('Error creating order items:', error);
+            });
         },
         (error) => {
-          console.error("Erreur lors de la création de l'annonce :", error);
+          console.error('Error creating order:', error);
         }
       );
-      this.selectedFiles = [];
-    });
   }
   onSubmit(): void {
     console.log('responsee meeeeeeeee');

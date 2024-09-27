@@ -25,11 +25,6 @@ export class LoginComponent {
   }
 
   fetchCategories(): void {
-    if (typeof localStorage === 'undefined') {
-      console.error('localStorage is not available.');
-      return;
-    }
-
     const accessToken = localStorage.getItem('loggedInUserToken');
     if (!accessToken) {
       return;
@@ -46,19 +41,14 @@ export class LoginComponent {
         console.error('Error fetching categories: ', error);
       }
     );
-
-    console.log('categories categories', this.categories);
   }
 
   userData = {
     email: '',
     password: '',
   };
-  fieldErrors: {
-    [key: string]: boolean;
-    email: boolean;
-    password: boolean;
-  } = {
+
+  fieldErrors: { [key: string]: boolean; email: boolean; password: boolean } = {
     password: false,
     email: false,
   };
@@ -98,12 +88,10 @@ export class LoginComponent {
     if (this.validateForm()) {
       this.userService.login(this.userData).subscribe(
         (response) => {
-          // Clear local storage
           localStorage.removeItem('loggedInUserToken');
           localStorage.removeItem('loggedInUser');
           localStorage.removeItem('loggedInUserRefreshToken');
 
-          // Store user ID and token in local storage
           localStorage.setItem('loggedInUserId', response.data.id);
           localStorage.setItem('loggedInUserToken', response.data.token);
           localStorage.setItem(
@@ -111,13 +99,11 @@ export class LoginComponent {
             response.data.refresh_token
           );
 
-          // Redirect to the stored URL or default to home page
           const redirectUrl = localStorage.getItem('redirectUrl') || '/';
-          localStorage.removeItem('redirectUrl'); // Clear redirect URL
+          localStorage.removeItem('redirectUrl');
           window.location.href = redirectUrl;
         },
         (error) => {
-          // Handle login error
           this.error = error;
           console.error(error);
         }

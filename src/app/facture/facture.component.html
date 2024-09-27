@@ -10,35 +10,6 @@
       </div>
     </div>
   </div>
-
-  <div class="page-content pt-50">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-6 mx-auto text-center">
-          <h1 class="title heading-1 style-3 mb-40">
-            <span class="text-success">
-              Paiement Réussi !
-              <img
-                src="../../assets/imgs/success.gif"
-                alt="Success"
-                style="width: 10%"
-              />
-            </span>
-          </h1>
-
-          <p class="font-xl mb-80">
-            Votre paiement a été traité avec succès. Merci pour votre achat !
-            <br />
-            Vous pouvez maintenant suivre l'état de votre annonce dans votre
-            compte.
-            <a href="/page-account#orders" class="btn btn-primary mt-4"
-              >Aller à mon compte</a
-            >
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
   <div class="invoice invoice-content invoice-1 mb-50">
     <div class="container">
       <div class="row">
@@ -62,10 +33,10 @@
                   <div class="col-sm-6">
                     <div class="invoice-numb">
                       <h6 class="text-end mb-10 mt-20">
-                        Date: {{ today | date : "dd MMM yyyy" }}
+                        Date: {{ order.created_at | date : "dd MMM yyyy" }}
                       </h6>
                       <h6 class="text-end invoice-header-1">
-                        TRANS ID : #{{ transactionResult.TransId }}
+                        TRANS ID : #{{ order.valid_payment.transaction_id }}
                       </h6>
                     </div>
                   </div>
@@ -77,13 +48,13 @@
                   <div class="col-lg-9 col-md-6">
                     <h4 class="invoice-title-1 mb-10">Date de la facture :</h4>
                     <p class="invoice-from-1">
-                      {{ today | date : "dd MMMM yyyy" }}
+                      {{ order.created_at | date : "dd MMMM yyyy" }}
                     </p>
                   </div>
                   <div class="col-lg-3 col-md-6">
                     <h4 class="invoice-title-1 mb-10">Méthode de paiement</h4>
                     <p class="invoice-from-1">
-                      Via {{ transactionResult.paymentType }}
+                      Via {{ order.payments[0].payment_type }}
                     </p>
                   </div>
                 </div>
@@ -122,7 +93,7 @@
                           Total
                         </td>
                         <td class="text-right price-column">
-                          <strong>{{ transactionResult.amount }} DH</strong>
+                          <strong>{{ order.valid_payment.amount }} DH</strong>
                         </td>
                       </tr>
                     </tbody>

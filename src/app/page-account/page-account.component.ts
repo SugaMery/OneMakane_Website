@@ -11,7 +11,9 @@ import { UserService } from '../user.service';
 import { CategoryService } from '../category.service';
 import { AnnonceService } from '../annonce.service';
 import { SettingService } from '../setting.service';
+import { OptionsService } from '../options.service';
 type Status = 'approved' | 'pending' | 'draft' | 'rejected';
+type Status1 = 'success' | 'awaiting_payment' | 'new' | 'rejected';
 
 @Component({
   selector: 'app-page-account',
@@ -38,13 +40,16 @@ export class PageAccountComponent implements OnInit {
     private userService: UserService,
     private categoryService: CategoryService,
     private settingsService: SettingService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private optionsService: OptionsService
   ) {}
   settings: any;
   ads: any[] = [];
   itemsPerPage: number = 5;
   currentPage = 1;
   totalPages = 1;
+  totalPagesOrders = 1;
+
   totalPage = 1;
   totalPaged = 1;
 
@@ -121,7 +126,7 @@ export class PageAccountComponent implements OnInit {
     // Close the dialog
     this.adDialog = false;
   }
-
+  orders: any[] = [];
   showJobOffersTab = false;
   showJobTab = false;
   categories: any[] = [];
@@ -131,7 +136,15 @@ export class PageAccountComponent implements OnInit {
       console.log('categorient parent', this.categories);
     });
     this.userId = localStorage.getItem('loggedInUserId');
+
     this.accessToken = localStorage.getItem('loggedInUserToken');
+    this.optionsService
+      .getOrderByUser(Number(this.userId), this.accessToken!, 'success')
+      .subscribe((data) => {
+        this.orders = data.data;
+        this.totalPagesOrders = Math.ceil(this.orders.length / this.adsPerPage);
+        this.paginateAds();
+      });
     // this.loadJobApplications();
     //this.loadAds('pending');
     //this.loadAds('approved');
@@ -271,6 +284,15 @@ export class PageAccountComponent implements OnInit {
     this.paginateAds();
   }
 
+  changePageOrders(page: number): void {
+    console.log('Changing to page: ', page); // Debug log
+    if (page < 1 || page > this.totalPagesOrders) {
+      return;
+    }
+    this.currentPage = page;
+    this.paginateAds();
+  }
+
   changeAdsPerPage(count: number): void {
     console.log('Changing ads per page to: ', count); // Debug log
     this.adsPerPage = count;
@@ -321,6 +343,7 @@ export class PageAccountComponent implements OnInit {
   }
 
   paginatedAds: any = [];
+  paginatedOrders: any = [];
   paginatedAd: any = [];
   paginatedAded: any = [];
   filteredAds: any[] = [];
@@ -334,6 +357,9 @@ export class PageAccountComponent implements OnInit {
     console.log('Paginating ads from index ', startIndex, ' to ', endIndex); // Debug log
     this.paginatedAds = this.ads.slice(startIndex, endIndex);
     this.paginatedAd = this.filteredAds.slice(startIndex, endIndex);
+
+    this.paginatedOrders = this.orders.slice(startIndex, endIndex);
+
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
 
@@ -397,6 +423,14 @@ export class PageAccountComponent implements OnInit {
     this.adIdToDuplicate = adId;
     this.display = true;
   }
+  isPhones(): boolean {
+    const screenWidth = window.innerWidth;
+    if (screenWidth <= 1300 && screenWidth >= 800) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   confirmDuplication(adId: number) {
     window.location.href = '/duplicate-annonce/' + adId;
@@ -423,6 +457,34 @@ export class PageAccountComponent implements OnInit {
     for (
       let i = this.currentPage + 1;
       i <= Math.min(this.totalPages - 1, this.currentPage + range);
+      i++
+    ) {
+      pages.push(i);
+    }
+
+    return pages;
+  }
+
+  getVisiblePagesOrders(): number[] {
+    const range = 2; // Nombre de pages autour de la page actuelle
+    const pages = [];
+
+    // Ajouter les pages avant la page actuelle
+    for (
+      let i = Math.max(2, this.currentPage - range);
+      i < this.currentPage;
+      i++
+    ) {
+      pages.push(i);
+    }
+
+    // Ajouter la page actuelle
+    pages.push(this.currentPage);
+
+    // Ajouter les pages après la page actuelle
+    for (
+      let i = this.currentPage + 1;
+      i <= Math.min(this.totalPagesOrders - 1, this.currentPage + range);
       i++
     ) {
       pages.push(i);
@@ -483,6 +545,34 @@ export class PageAccountComponent implements OnInit {
         return 'p-tag p-tag-warning';
       case 'approved':
         return 'p-tag p-tag-success';
+      case 'rejected':
+        return 'p-tag p-tag-danger';
+      default:
+        return '';
+    }
+  }
+
+  statusMappings = {
+    success: 'Approuvé',
+    awaiting_payment: 'En attente de paiement',
+    new: 'Nouveau',
+    rejected: 'Rejeté',
+  };
+
+  getStatusInFrenchs(status: Status1): string {
+    return this.statusMappings[status];
+  }
+
+  getStatusClasss(status: string): string {
+    switch (status) {
+      case 'draft':
+        return 'p-tag p-tag-draft';
+      case 'awaiting_payment':
+        return 'p-tag p-tag-warning';
+      case 'success':
+        return 'p-tag p-tag-success';
+      case 'new':
+        return 'p-tag p-tag-info';
       case 'rejected':
         return 'p-tag p-tag-danger';
       default:

@@ -67,6 +67,8 @@ import { PaymentFaildComponent } from './payment-faild/payment-faild.component';
 import { DuplicateAdsComponent } from './duplicate-ads/duplicate-ads.component';
 import { TrailingSlashUrlSerializer } from './TrailingSlashUrlSerializer';
 import { UrlSerializer } from '@angular/router';
+import { OptionAdsComponent } from './option-ads/option-ads.component';
+import { FactureComponent } from './facture/facture.component';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -109,6 +111,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     PaymentSuccessComponent,
     PaymentFaildComponent,
     DuplicateAdsComponent,
+    OptionAdsComponent,
+    FactureComponent,
   ],
   imports: [
     BrowserModule,
