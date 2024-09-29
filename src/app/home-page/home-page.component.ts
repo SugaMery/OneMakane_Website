@@ -58,6 +58,9 @@ export class HomePageComponent {
   responsiveOptions2:
     | { breakpoint: string; numVisible: number; numScroll: number }[]
     | undefined;
+  responsiveOptions3:
+    | { breakpoint: string; numVisible: number; numScroll: number }[]
+    | undefined;
   constructor(
     private route: ActivatedRoute,
     private categoryService: CategoryService,
@@ -130,7 +133,7 @@ export class HomePageComponent {
 
     this.annonceService.getAdsPromoteAll().subscribe(
       (response) => {
-        console.log('Fetched ads:', response);
+        //console.log('Fetched ads:', response);
 
         if (!response.data || !Array.isArray(response.data)) {
           console.error('Invalid data format from response');
@@ -155,18 +158,18 @@ export class HomePageComponent {
         });
 
         const uniqueCategoryIds = Array.from(categoryIdsSet);
-        console.log('Unique Category IDs:', uniqueCategoryIds);
+        //console.log('Unique Category IDs:', uniqueCategoryIds);
 
         // For each unique category ID, get ads with favoris
         uniqueCategoryIds.forEach((uniqueCategoryId) => {
           this.categoryService
             .getAllAdsWithFavoris(Number(userId), uniqueCategoryId)
             .subscribe((adsWithFavoris) => {
-              console.log(
+/*               console.log(
                 'Ads with favoris for category:',
                 uniqueCategoryId,
                 adsWithFavoris
-              );
+              ); */
 
               adsWithFavoris.forEach((adFavoris) => {
                 const ad = uniqueAdsList.find(
@@ -174,7 +177,7 @@ export class HomePageComponent {
                 );
                 if (ad) {
                   ad.favorites = adFavoris.favorites || [];
-                  console.log('Updated ad with favorites:', ad);
+                  //console.log('Updated ad with favorites:', ad);
                 }
               });
             });
@@ -182,7 +185,7 @@ export class HomePageComponent {
 
         // Shuffle and select random ads without duplicates
         this.adsPromote = this.getRandomAds(uniqueAdsList, 6);
-        console.log('Random ads without duplicates:', this.adsPromote);
+        //console.log('Random ads without duplicates:', this.adsPromote);
       },
       (error) => {
         console.error('Error fetching promoted ads:', error);
@@ -232,14 +235,41 @@ export class HomePageComponent {
   }
 
   isPhones(): boolean {
-    const screenWidth = window.innerWidth;
-    if (screenWidth <= 1300 && screenWidth >= 800) {
+    const screenWidth = window!.innerWidth;
+    if (screenWidth <= 1331 && screenWidth > 1254) {
       return true;
     } else {
       return false;
     }
   }
 
+  isPhones1245(): boolean {
+    const screenWidth = window!.innerWidth;
+    if (screenWidth <= 1254 && screenWidth >= 800 ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isPhones12(): boolean {
+    const screenWidth = window!.innerWidth;
+    if (screenWidth <= 1339  ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isPhones1158(): boolean {
+    const screenWidth = window!.innerWidth;
+    if (screenWidth <= 1158  ) {
+      return true;
+    } else {
+      return false;
+    }
+  
+  }
   addToFavorites(ad: any): void {
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
@@ -263,7 +293,7 @@ export class HomePageComponent {
           (response) => {
             // Remove favorite locally
             ad.favorites = [];
-            console.log('Removed from favorites successfully:', response);
+            //console.log('Removed from favorites successfully:', response);
           },
           (error) => {
             console.error('Failed to remove from favorites:', error);
@@ -283,7 +313,7 @@ export class HomePageComponent {
                 created_at: response.data.created_at,
               },
             ];
-            console.log('Added to favorites successfully:', response);
+           // console.log('Added to favorites successfully:', response);
           },
           (error) => {
             console.error('Failed to add to favorites:', error);
@@ -298,13 +328,13 @@ export class HomePageComponent {
   ngOnInit(): void {
     // Get the query parameters (which contain the POST data)
     this.route.queryParams.subscribe((params) => {
-      console.log('Received Data from localhost:5000:', params);
+      //console.log('Received Data from localhost:5000:', params);
 
       // Example: you could display the data on the page
       // or use it for other purposes in your Angular app
       for (const key in params) {
         if (params.hasOwnProperty(key)) {
-          console.log(`${key}: ${params[key]}`);
+          //console.log(`${key}: ${params[key]}`);
         }
       }
     });
@@ -321,8 +351,42 @@ export class HomePageComponent {
       },
 
       {
-        breakpoint: '1300px',
+        breakpoint: '1331px',
         numVisible: 4,
+        numScroll: 3,
+      },
+      {
+        breakpoint: '1331px',
+        numVisible: 4,
+        numScroll: 3,
+      },
+      {
+        breakpoint: '768px',
+        numVisible: 2,
+        numScroll: 2,
+      },
+      {
+        breakpoint: '560px',
+        numVisible: 2,
+        numScroll: 1,
+      },
+    ];
+
+    this.responsiveOptions3 = [
+      {
+        breakpoint: '1024px',
+        numVisible: 3,
+        numScroll: 3,
+      },
+
+      {
+        breakpoint: '1331px',
+        numVisible: 4,
+        numScroll: 3,
+      },
+      {
+        breakpoint: '1199px',
+        numVisible: 5,
         numScroll: 3,
       },
       {
@@ -365,7 +429,7 @@ export class HomePageComponent {
       const userId =
         this.document.defaultView.localStorage.getItem('loggedInUserId');
       //this.ads = data.data;
-      console.log('userid', userId);
+      //console.log('userid', userId);
       this.annonceService
         .getAllAdsWithFavoris(Number(userId))
         .subscribe((dt) => {
@@ -380,7 +444,7 @@ export class HomePageComponent {
         this.categoryService
           .getAllAdsWithFavoris(Number(userId), listCategory[i])
           .subscribe((dataFilter) => {
-            console.log('ads_jobs', dataFilter);
+            //console.log('ads_jobs', dataFilter);
             dataFilter.forEach((jobs) => {
               this.annonceService.getAdById(jobs.id).subscribe((jobsData) => {
                 this.ads_jobs.push(jobsData.data);
@@ -403,7 +467,7 @@ export class HomePageComponent {
             .subscribe((dataFilter) => {
               this.ads = dataFilter;
 
-              console.log('ggg dataFilter', dataFilter);
+              //console.log('ggg dataFilter', dataFilter);
 
               dataFilter.forEach((element: any) => {
                 this.annonceService
@@ -422,7 +486,7 @@ export class HomePageComponent {
                       this.categorizedAds[element.category.name] = [];
                     }
                     adData.data.favorites = element.favorites;
-                    console.log('adData.data.length', adData.data);
+                    //console.log('adData.data.length', adData.data);
 
                     this.categorizedAds[element.category.name].push(
                       adData.data
@@ -445,7 +509,7 @@ export class HomePageComponent {
             .getAllAdsWithFavoris(Number(userId), listCategory[i])
             .subscribe((data) => {
               this.ads = data;
-              console.log('ggg dataFilter', data);
+              ////console.log('ggg dataFilter', data);
 
               data.forEach((element: any) => {
                 this.annonceService
@@ -578,7 +642,7 @@ export class HomePageComponent {
     this.convertAdsToArray();
     this.loadAds();
 
-    console.log('categorizedAds', this.categorizedAds);
+    //console.log('categorizedAds', this.categorizedAds);
   }
 
   checkScreenWidth() {
@@ -607,7 +671,7 @@ export class HomePageComponent {
         console.error('Error fetching categories: ', error);
       }
     );
-    console.log('categories categories', this.categories);
+    //console.log('categories categories', this.categories);
   }
   ngOnChanges() {}
   isPhone(): boolean {
@@ -710,14 +774,14 @@ export class HomePageComponent {
           this.Souscategories[0].media
         ) {
           if (this.Souscategories[0].media.url) {
-            console.log(this.Souscategories[0].media.url);
+            //console.log(this.Souscategories[0].media.url);
           } else {
-            console.log('URL property does not exist in media object');
+           // console.log('URL property does not exist in media object');
           }
         } else {
-          console.log(
+/*           console.log(
             'Media property or Souscategories array does not exist or is empty'
-          );
+          ); */
         }
 
         this.displayedCategories = this.categories.slice(0, 11);

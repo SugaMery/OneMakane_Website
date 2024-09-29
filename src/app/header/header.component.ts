@@ -68,7 +68,7 @@ export class HeaderComponent {
         console.log('userrr', userId);
         this.userService.getUserInfoById(Number(userId), accessToken).subscribe(
           (userInfo) => {
-            console.log('userrrrrrre userInfo', userInfo);
+            //console.log('userrrrrrre userInfo', userInfo);
 
             if (userInfo.data) {
               this.status = true;
@@ -99,8 +99,44 @@ export class HeaderComponent {
   }
 
   isPhones(): boolean {
-    const screenWidth = window.innerWidth;
-    if (screenWidth <= 1300 && screenWidth >= 800) {
+    const screenWidth = window!.innerWidth;
+    if (screenWidth <= 1331 && screenWidth > 1254) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isPhones1245(): boolean {
+    const screenWidth = window!.innerWidth;
+    if (screenWidth <= 1254 && screenWidth >= 800 ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isPhones12(): boolean {
+    const screenWidth = window!.innerWidth;
+    if (screenWidth <= 1339  ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isPhones1145(): boolean {
+    const screenWidth = window!.innerWidth;
+    if (screenWidth <= 1145  ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isPhones1158(): boolean {
+    const screenWidth = window!.innerWidth;
+    if (screenWidth <= 1158  ) {
       return true;
     } else {
       return false;
@@ -301,12 +337,12 @@ export class HeaderComponent {
       this.selectedCategoryId = selectedOptionValue;
 
       // Display the selected option's value in the console
-      console.log('yyyyyyyyyyy', selectedOptionValue);
+      //console.log('yyyyyyyyyyy', selectedOptionValue);
     } else {
-      console.log('Select element not found');
+     // console.log('Select element not found');
     }
 
-    console.log('zzzzz', this.selectedCategoryId, this.searchQuery);
+    //console.log('zzzzz', this.selectedCategoryId, this.searchQuery);
     window.location.href = `/ads-category/${this.selectedCategoryId}?search=${this.searchQuery}`;
     //this.navigateToCategory1(this.selectedCategoryId, this.searchQuery);
   }

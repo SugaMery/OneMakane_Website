@@ -16,7 +16,14 @@ export class FooterComponent implements OnInit {
   slugPage2: string = '';
   titrePage2: string = '';
   isScreenSmall: boolean = false;
-
+  isPhones(): boolean {
+    const screenWidth = window!.innerWidth;
+    if (screenWidth <= 1331 && screenWidth >= 800) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   constructor(
     private pageService: PageService,
     private categoryService: CategoryService,

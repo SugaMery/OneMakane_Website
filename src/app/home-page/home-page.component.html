@@ -4,7 +4,7 @@
     *ngIf="isScreenSmall == true"
     class="home-slider position-relative mb-30"
   >
-    <div class="container">
+    <div class="container test1">
       <div class="home-slide-cover mt-30">
         <div class="hero-slider-1 style-5 dot-style-1 dot-style-1-position-2">
           <div
@@ -200,7 +200,7 @@
 
   <!--End hero slider-->
   <section class="popular-categories section-padding">
-    <div class="container wow animate__animated animate__fadeIn">
+    <div class="container test1 wow animate__animated animate__fadeIn">
       <div class="section-title">
         <div class="title">
           <h3>Catégories en Vedette</h3>
@@ -247,7 +247,7 @@
         [numVisible]="7"
         [numScroll]="1"
         [circular]="false"
-        [responsiveOptions]="responsiveOptions"
+        [responsiveOptions]="responsiveOptions3"
         [showIndicators]="false"
         class="custom-carousel first"
         [autoplayInterval]="3000"
@@ -280,7 +280,7 @@
 
   <!--End banners-->
   <section class="product-tabs section-padding position-relative">
-    <div class="container">
+    <div class="container test1">
       <!--End category slider-->
       <div class="col-12" *ngIf="adsPromote.length > 0">
         <div class="col-12">
@@ -289,7 +289,7 @@
           </h4>
         </div>
 
-        <div class="row">
+        <!--         <div class="row">
           <div
             [ngClass]="{
               'col-lg-2 col-md-6 col-12': !isScreenphone,
@@ -330,10 +330,7 @@
                     ></i>
                   </a>
                 </div>
-                <!--               
-            <div class="premium-badge">
-              <i class="fi fi-rr-sparkles"></i> Annonce Premium
-            </div> -->
+
               </div>
               <div class="product-content-wrap">
                 <div class="product-category" style="margin-top: 1rem">
@@ -375,7 +372,206 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
+
+        <ng-container
+          *ngIf="isScreenphone || adsPromote.length > 6; else lessThanSixAds"
+        >
+          <p-carousel
+            #carousel
+            [value]="adsPromote | slice : 0 : 8"
+            [numVisible]="6"
+            [numScroll]="1"
+            [circular]="false"
+            [responsiveOptions]="responsiveOptions"
+            [showIndicators]="false"
+            class="custom-carousels carouseled second"
+          >
+            <ng-template let-adsfirst pTemplate="item">
+              <div class="row product-grid-4" style="margin: 0.5rem">
+                <div
+                  class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
+                  [ngClass]="{ 'promote-border': adsfirst.promote }"
+                  data-wow-delay=".1s"
+                >
+                  <div class="product-img-action-wrap">
+                    <div
+                      class="product-img product-img-zoom"
+                      style="height: 240px"
+                    >
+                      <a [href]="'/ads/' + adsfirst.id" style="height: 100%">
+                        <img
+                          class="default-img"
+                          [src]="adsfirst.medias[0]?.url"
+                          alt=""
+                        />
+                        <img
+                          class="hover-img"
+                          [src]="
+                            adsfirst.medias[1]?.url || adsfirst.medias[0]?.url
+                          "
+                          alt=""
+                          style="height: 100%"
+                        />
+                      </a>
+                    </div>
+
+                    <div class="product-action-1">
+                      <a
+                        aria-label="Ajouter à la liste de souhaits"
+                        class="action-btn"
+                        (click)="addToFavorites(adsfirst)"
+                      >
+                        <img
+                          *ngIf="adsfirst.favorites?.length > 0"
+                          src="../../assets/imgs/coeur.png"
+                          style="width: 15px; margin-left: 1px"
+                        />
+                        <i
+                          *ngIf="
+                            adsfirst.favorites?.length === 0 ||
+                            !adsfirst.favorites
+                          "
+                          class="fi fi-rs-heart"
+                        ></i>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="product-content-wrap">
+                    <div class="product-category" style="margin-top: 1rem">
+                      <a [href]="'/ads-category/' + adsfirst.category?.id">{{
+                        adsfirst.category.name
+                      }}</a>
+                    </div>
+                    <h2>
+                      <a [href]="'/ads/' + adsfirst.id"
+                        >{{ adsfirst.title | slice : 0 : 17
+                        }}{{ adsfirst.title.length > 17 ? "..." : "" }}</a
+                      >
+                    </h2>
+                    <div class="product-rate-cover">
+                      <div
+                        class=""
+                        style="
+                          width: 100%;
+                          font-weight: 800;
+                          font-size: medium;
+                          color: black;
+                        "
+                        *ngIf="isScreenphone"
+                      >
+                        {{ adsfirst.price | slice : 0 : 6
+                        }}{{ adsfirst.price.length > 7 ? "..." : "" }} DH
+                      </div>
+                      <div
+                        class=""
+                        style="
+                          width: 100%;
+                          font-weight: 800;
+                          font-size: medium;
+                          color: black;
+                        "
+                        *ngIf="!isScreenphone"
+                      >
+                        {{ adsfirst.price }} DH
+                      </div>
+                    </div>
+                    <div>
+                      <span class="font-small text-muted"
+                        >{{ getRelativeTime(adsfirst.created_at) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </p-carousel>
+        </ng-container>
+        <ng-template #lessThanSixAds>
+          <div class="row product-grid">
+            <div
+              *ngFor="let ad of adsPromote"
+              class="col-lg-2 col-md-4 col-12 col-sm-6"
+            >
+              <div
+                class="product-cart-wrap mb-30"
+                [ngClass]="{ 'promote-border': ad.promote }"
+              >
+                <div class="product-img-action-wrap">
+                  <div
+                    class="product-img product-img-zoom"
+                    style="height: 240px"
+                  >
+                    <a [href]="'/ads/' + ad.id" style="height: 100%">
+                      <img
+                        class="default-img"
+                        [src]="
+                          ad.medias[0]?.url ||
+                          'assets/imgs/shop/default-img.jpg'
+                        "
+                        alt="{{ ad.title }}"
+                      />
+                      <img
+                        class="hover-img"
+                        [src]="ad.medias[1]?.url || ad.medias[0]?.url"
+                        alt=""
+                        style="height: 100%"
+                      />
+                    </a>
+                  </div>
+
+                  <div class="product-action-1">
+                    <a
+                      aria-label="Ajouter à la liste de souhaits"
+                      class="action-btn"
+                      (click)="addToFavorites(ad)"
+                    >
+                      <img
+                        *ngIf="ad.favorites?.length > 0"
+                        src="../../assets/imgs/coeur.png"
+                        style="width: 15px; margin-left: 1px"
+                      />
+                      <i
+                        *ngIf="ad.favorites?.length === 0 || !ad.favorites"
+                        class="fi fi-rs-heart"
+                      ></i>
+                    </a>
+                  </div>
+
+                  <div
+                    class="product-badges product-badges-position product-badges-mrg"
+                  >
+                    <span *ngIf="ad.urgent" class="hot">Urgent</span>
+                  </div>
+                </div>
+                <div class="product-content-wrap">
+                  <div class="product-category">
+                    <a [href]="'/ads-category/' + ad.category?.id">{{
+                      ad.category.name
+                    }}</a>
+                  </div>
+                  <h2>
+                    <a [href]="'/ads/' + ad.id">
+                      {{ ad.title | slice : 0 : 17
+                      }}{{ ad.title.length > 17 ? "..." : "" }}
+                    </a>
+                  </h2>
+                  <div class="product-price">
+                    <span>
+                      {{ ad.price | slice : 0 : 10
+                      }}{{ ad.price.length > 10 ? "..." : "" }} DH
+                    </span>
+                  </div>
+                  <div>
+                    <span class="font-small text-muted">{{
+                      getRelativeTime(ad.updated_at)
+                    }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
       </div>
       <div class="section-title style-2 wow animate__animated animate__fadeIn">
         <h3>En ce moment sur OneMakene</h3>
@@ -424,7 +620,9 @@
           *ngFor="let category of categorizedAds | keyvalue"
         >
           <ng-container>
-            <h4 class="mb-20">{{ category.key }}</h4>
+            <h4 class="mb-20" *ngIf="category.value.length > 6">
+              {{ category.key }}
+            </h4>
             <!-- Display category name as title -->
 
             <!-- Check if it's a screenphone or if the category has more than 6 ads -->
@@ -440,7 +638,7 @@
                 [numVisible]="6"
                 [numScroll]="1"
                 [circular]="false"
-                [responsiveOptions]="responsiveOptions"
+                [responsiveOptions]="responsiveOptions3"
                 [showIndicators]="false"
                 class="custom-carousels carouseled second"
               >
@@ -648,7 +846,7 @@
 
   <!--Products Tabs-->
   <section class="section-padding">
-    <div class="container">
+    <div class="container test1">
       <div class="row">
         <div class="col-lg-3 col-md-6">
           <div
@@ -765,7 +963,7 @@
   </section>
   <!--End 4 banners-->
   <section class="section-padding pb-5">
-    <div class="container">
+    <div class="container test1">
       <div class="section-title wow animate__animated animate__fadeIn">
         <h3 class="">Annonces Populaires</h3>
         <!--         <ul class="nav nav-tabs links" id="myTab-2" role="tablist">
@@ -819,7 +1017,8 @@
         >
           <div class="banner-img style-2" style="height: 490px">
             <div class="banner-text">
-              <h2 class="mb-10">Qu'attendez-vous ?</h2>
+              <h2 class="mb-10" *ngIf="!isPhones">Qu'attendez-vous ?</h2>
+              <h3 class="mb-10" *ngIf="isPhones">Qu'attendez-vous ?</h3>
               <h4 style="color: white">
                 Déposez votre annonce dès maintenant !
               </h4>
@@ -1051,7 +1250,7 @@
   </section>
   <!--End Best Sales-->
   <section class="section-padding pb-5">
-    <div class="container">
+    <div class="container test1">
       <div
         class="section-title wow animate__animated animate__fadeIn"
         data-wow-delay="0"

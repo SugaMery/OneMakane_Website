@@ -11181,7 +11181,7 @@ footer .hotline img {
 }
 
 /*Desktop*/
-@media only screen and (min-width: 992px) and (max-width: 1199px) {
+@media only screen and (min-width: 992px) and (max-width: 1000px) {
   .totall-product h2 {
     font-size: 28px;
   }
@@ -12133,3 +12133,5 @@ footer .hotline img {
 }
 
 /*# sourceMappingURL=main.css.map */
+
+

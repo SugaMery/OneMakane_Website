@@ -244,6 +244,13 @@ width: 100% !important;
 
 }
 
+
+@media only screen and (min-width: 800px) and (max-width: 1331px) {
+    ::ng-deep .banner-img .banner-text {
+        padding: 0 30px !important;
+    }
+  }
+  
 ::ng-deep .p-carousel-items-container {
     margin-left: 1rem !important;
 }
@@ -413,3 +420,16 @@ width: 100% !important;
     position: relative;
     justify-content: space-between;
 }
+
+@media only screen and (max-width: 1199px) {
+
+  ::ng-deep .container.test1{
+    max-width: none !important;
+  }
+
+  ::ng-deep 
+    .col-lg-2 {
+
+        width: 20% !important;
+    }
+  }

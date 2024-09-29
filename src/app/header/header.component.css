@@ -327,3 +327,19 @@ nav>ul>li {
     width: 50%;
   }
 }
+
+
+@media only screen and (max-width: 1199px) {
+  ::ng-deep .banner-text.favorit {
+display: none !important;
+  }
+
+::ng-deep .header-action-right.right1 {
+  display: contents !important;
+}
+
+::ng-deep .container.test{
+  max-width: none !important;
+}
+}
+

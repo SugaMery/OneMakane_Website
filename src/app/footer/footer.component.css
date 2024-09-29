@@ -10,7 +10,16 @@
     padding-left: 3rem;
     padding-right: 3rem;
 }
+@media only screen and (min-width: 800px) and (max-width: 1331px) {
+    ::ng-deep h4 {
+        font-size: 18px !important;
+    }
 
+    ::ng-deep img.images {
+        width: 70% !important;
+    }
+  }
+  
 
 ::ng-deep .banner-left-icon .banner-text h3 {
     color: #242424;
@@ -24,3 +33,10 @@
         font-size: 1.3rem !important;
     }
 }
+
+
+@media only screen and (max-width: 1199px) {
+
+    ::ng-deep .container.test1{
+      max-width: none !important;
+    }}

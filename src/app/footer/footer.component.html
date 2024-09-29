@@ -1,6 +1,6 @@
 <footer class="main" [class.padding-left-right]="isScreenSmall">
   <section class="newsletter mb-15 wow animate__animated animate__fadeIn">
-    <div class="container">
+    <div class="container test1">
       <div class="row">
         <div class="col-lg-12">
           <div class="position-relative newsletter-inner">
@@ -22,8 +22,8 @@
     </div>
   </section>
   <section class="featured section-padding">
-    <div class="container">
-      <div class="row">
+    <div class="container test1">
+      <div class="row" *ngIf="!isPhones()">
         <div class="col-lg-1-5 col-md-4 col-12 col-sm-6 mb-md-4 mb-xl-0">
           <div
             class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp"
@@ -95,10 +95,55 @@
           </div>
         </div>
       </div>
+
+      <div class="row" *ngIf="isPhones()">
+        <div class="col-lg-1-3 col-md-4 col-12 col-sm-6 mb-md-4 mb-xl-0">
+          <div
+            class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp"
+            data-wow-delay="0"
+          >
+            <div class="banner-icon">
+              <img src="../../assets/imgs/theme/icons/icon-1.png" alt="" />
+            </div>
+            <div class="banner-text">
+              <h3 class="icon-box-title">Annonces pour tous</h3>
+              <p>Publiez vos annonces</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-1-3 col-md-4 col-12 col-sm-6">
+          <div
+            class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp"
+            data-wow-delay=".1s"
+          >
+            <div class="banner-icon">
+              <img src="../../assets/imgs/theme/icons/icon-2.png" alt="" />
+            </div>
+            <div class="banner-text">
+              <h3 class="icon-box-title">Facile et rapide</h3>
+              <p>Publiez en quelques clics</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-1-3 col-md-4 col-12 col-sm-6">
+          <div
+            class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp"
+            data-wow-delay=".4s"
+          >
+            <div class="banner-icon">
+              <img src="../../assets/imgs/theme/icons/icon-5.png" alt="" />
+            </div>
+            <div class="banner-text">
+              <h3 class="icon-box-title">Support réactif</h3>
+              <p>Assistance dédiée</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
   <section class="section-padding footer-mid">
-    <div class="container pt-15 pb-20">
+    <div class="container test1 pt-15 pb-20">
       <div class="row">
         <div class="col">
           <div
@@ -107,7 +152,10 @@
           >
             <div class="logo mb-30">
               <a class="mb-15" href="/"
-                ><img src="../../assets/imgs/theme/logo.png" alt="logo"
+                ><img
+                  class="images"
+                  src="../../assets/imgs/theme/logo.png"
+                  alt="logo"
               /></a>
               <p class="font-lg text-heading">Site d'annonces</p>
             </div>
@@ -221,7 +269,7 @@
     </div>
   </section>
   <div
-    class="container pb-30 wow animate__animated animate__fadeInUp"
+    class="container test1 pb-30 wow animate__animated animate__fadeInUp"
     data-wow-delay="0"
   >
     <div class="row align-items-center">
