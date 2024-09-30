@@ -57,7 +57,7 @@
     *ngIf="isScreenSmall == false"
     class="home-slider position-relative mb-30"
   >
-    <div class="container">
+    <div class="container test2">
       <div class="row">
         <div class="col-lg-2 d-none d-lg-flex">
           <div class="categories-dropdown-wrap style-2 font-heading mt-30">
@@ -159,7 +159,7 @@
           </div>
         </div>
 
-        <div class="col-lg-3">
+        <div class="col-lg-3" *ngIf="isScreenphone">
           <div class="row">
             <div class="col-md-6 col-lg-12" *ngIf="!isScreenphone">
               <div class="banner-img style-4 mt-30">
@@ -175,6 +175,7 @@
                 </div>
               </div>
             </div>
+
             <div class="col-md-6 col-lg-12">
               <div class="banner-img style-5 mt-5 mt-md-30">
                 <img src="../../assets/imgs/banner/bannar-2.png" alt="" />
@@ -497,7 +498,7 @@
                 class="product-cart-wrap mb-30"
                 [ngClass]="{ 'promote-border': ad.promote }"
               >
-                <div class="product-img-action-wrap">
+                <div class="product-img-action-wrap test">
                   <div
                     class="product-img product-img-zoom"
                     style="height: 240px"
@@ -759,7 +760,7 @@
                     class="product-cart-wrap mb-30"
                     [ngClass]="{ 'promote-border': ad.promote }"
                   >
-                    <div class="product-img-action-wrap">
+                    <div class="product-img-action-wrap test">
                       <div
                         class="product-img product-img-zoom"
                         style="height: 240px"

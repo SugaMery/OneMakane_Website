@@ -118,6 +118,16 @@ export class HeaderComponent {
 
   isPhones12(): boolean {
     const screenWidth = window!.innerWidth;
+    if (screenWidth <= 992    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+
+  isPhones1223(): boolean {
+    const screenWidth = window!.innerWidth;
     if (screenWidth <= 1339  ) {
       return true;
     } else {
@@ -125,9 +135,29 @@ export class HeaderComponent {
     }
   }
 
+  isScreen1137(): boolean {
+    const screenWidth = window!.innerWidth;
+    if (screenWidth <= 1137  ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+
   isPhones1145(): boolean {
     const screenWidth = window!.innerWidth;
     if (screenWidth <= 1145  ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+
+  isPhones1056(): boolean {
+    const screenWidth = window!.innerWidth;
+    if (screenWidth <= 1056  ) {
       return true;
     } else {
       return false;

@@ -343,3 +343,36 @@ display: none !important;
 }
 }
 
+@media only screen and (max-width: 1057px) {
+
+  ::ng-deep .logo.logo-width-1{
+    margin-right: 50px !important;
+  }
+  
+}
+
+
+@media only screen and (max-width: 1037px) {
+
+  ::ng-deep .logo.logo-width-1{
+    margin-right: 30px !important;
+  }
+  
+}
+
+@media only screen and (max-width: 991px) {
+  ::ng-deep .logo.logo-width-1 {
+  margin-right: 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+::ng-deep .header-bottom {
+  padding: 20px 0 !important;
+}
+
+
+}
+
+
+  

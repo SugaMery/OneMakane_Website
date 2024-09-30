@@ -375,13 +375,13 @@ export class HomePageComponent {
     this.responsiveOptions3 = [
       {
         breakpoint: '1024px',
-        numVisible: 3,
+        numVisible: 5,
         numScroll: 3,
       },
 
       {
         breakpoint: '1331px',
-        numVisible: 4,
+        numVisible: 5,
         numScroll: 3,
       },
       {
@@ -647,10 +647,21 @@ export class HomePageComponent {
 
   checkScreenWidth() {
     if (isPlatformBrowser(this.platformId)) {
-      this.isScreenSmall = window.innerWidth < 1600 && window.innerWidth > 992;
+      this.isScreenSmall = window.innerWidth < 1600 && window.innerWidth > 990;
       this.isScreenphone = window.innerWidth < 500;
     }
   }
+
+
+  isPhones991(): boolean {
+    const screenWidth = window!.innerWidth;
+    if (screenWidth <= 992    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   allcategories: any[] = [];
   fetchCategories(): void {
     this.categoryService.getCategoriesFrom().subscribe(

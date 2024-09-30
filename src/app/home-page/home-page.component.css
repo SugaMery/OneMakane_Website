@@ -433,3 +433,21 @@ width: 100% !important;
         width: 20% !important;
     }
   }
+
+
+  @media only screen and (max-width: 991px) {
+
+  
+  ::ng-deep .container.test2{
+    max-width: none !important;  }
+  }
+  
+  @media only screen and (max-width: 1024px) {
+    ::ng-deep  .product-cart-wrap .product-img-action-wrap.test {
+         padding-left: 1rem !important; 
+        padding-top: 1rem !important;
+        padding-right: 1rem !important; 
+    }
+
+}
+    
