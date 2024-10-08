@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ContactService {
-  private apiUrl = 'https://devapi.onemakan.com/v1/contacts';
+  private apiUrl = 'https://api.onemakan.com/v1/contacts';
 
   constructor(private http: HttpClient) {}
 

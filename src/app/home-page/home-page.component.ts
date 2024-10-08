@@ -165,7 +165,7 @@ export class HomePageComponent {
           this.categoryService
             .getAllAdsWithFavoris(Number(userId), uniqueCategoryId)
             .subscribe((adsWithFavoris) => {
-/*               console.log(
+              /*               console.log(
                 'Ads with favoris for category:',
                 uniqueCategoryId,
                 adsWithFavoris
@@ -245,7 +245,7 @@ export class HomePageComponent {
 
   isPhones1245(): boolean {
     const screenWidth = window!.innerWidth;
-    if (screenWidth <= 1254 && screenWidth >= 800 ) {
+    if (screenWidth <= 1254 && screenWidth >= 800) {
       return true;
     } else {
       return false;
@@ -254,7 +254,7 @@ export class HomePageComponent {
 
   isPhones12(): boolean {
     const screenWidth = window!.innerWidth;
-    if (screenWidth <= 1339  ) {
+    if (screenWidth <= 1339) {
       return true;
     } else {
       return false;
@@ -263,13 +263,22 @@ export class HomePageComponent {
 
   isPhones1158(): boolean {
     const screenWidth = window!.innerWidth;
-    if (screenWidth <= 1158  ) {
+    if (screenWidth <= 1158) {
       return true;
     } else {
       return false;
     }
-  
   }
+
+  isPhones768(): boolean {
+    const screenWidth = window!.innerWidth;
+    if (screenWidth <= 768) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   addToFavorites(ad: any): void {
     const userId = localStorage.getItem('loggedInUserId');
     const accessToken = localStorage.getItem('loggedInUserToken');
@@ -313,7 +322,7 @@ export class HomePageComponent {
                 created_at: response.data.created_at,
               },
             ];
-           // console.log('Added to favorites successfully:', response);
+            // console.log('Added to favorites successfully:', response);
           },
           (error) => {
             console.error('Failed to add to favorites:', error);
@@ -389,9 +398,20 @@ export class HomePageComponent {
         numVisible: 5,
         numScroll: 3,
       },
+
+      {
+        breakpoint: '960px',
+        numVisible: 4,
+        numScroll: 3,
+      },
       {
         breakpoint: '768px',
-        numVisible: 2,
+        numVisible: 4,
+        numScroll: 2,
+      },
+      {
+        breakpoint: '700px',
+        numVisible: 3,
         numScroll: 2,
       },
       {
@@ -647,15 +667,14 @@ export class HomePageComponent {
 
   checkScreenWidth() {
     if (isPlatformBrowser(this.platformId)) {
-      this.isScreenSmall = window.innerWidth < 1600 && window.innerWidth > 990;
-      this.isScreenphone = window.innerWidth < 500;
+      this.isScreenSmall = window.innerWidth < 1600 && window.innerWidth > 500;
+      this.isScreenphone = window.innerWidth <= 960;
     }
   }
 
-
   isPhones991(): boolean {
     const screenWidth = window!.innerWidth;
-    if (screenWidth <= 992    ) {
+    if (screenWidth <= 992) {
       return true;
     } else {
       return false;
@@ -787,10 +806,10 @@ export class HomePageComponent {
           if (this.Souscategories[0].media.url) {
             //console.log(this.Souscategories[0].media.url);
           } else {
-           // console.log('URL property does not exist in media object');
+            // console.log('URL property does not exist in media object');
           }
         } else {
-/*           console.log(
+          /*           console.log(
             'Media property or Souscategories array does not exist or is empty'
           ); */
         }

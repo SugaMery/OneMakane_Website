@@ -249,8 +249,8 @@ width: 100% !important;
     ::ng-deep .banner-img .banner-text {
         padding: 0 30px !important;
     }
-  }
-  
+}
+
 ::ng-deep .p-carousel-items-container {
     margin-left: 1rem !important;
 }
@@ -423,31 +423,37 @@ width: 100% !important;
 
 @media only screen and (max-width: 1199px) {
 
-  ::ng-deep .container.test1{
-    max-width: none !important;
-  }
+    ::ng-deep .container.test1 {
+        max-width: none !important;
+    }
 
-  ::ng-deep 
-    .col-lg-2 {
+    ::ng-deep .col-lg-2 {
 
         width: 20% !important;
     }
-  }
+}
 
 
-  @media only screen and (max-width: 991px) {
+@media only screen and (max-width: 991px) {
 
-  
-  ::ng-deep .container.test2{
-    max-width: none !important;  }
-  }
-  
-  @media only screen and (max-width: 1024px) {
-    ::ng-deep  .product-cart-wrap .product-img-action-wrap.test {
-         padding-left: 1rem !important; 
+
+    ::ng-deep .container.test2 {
+        max-width: none !important;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    ::ng-deep .product-cart-wrap .product-img-action-wrap.test {
+        padding-left: 1rem !important;
         padding-top: 1rem !important;
-        padding-right: 1rem !important; 
+        padding-right: 1rem !important;
     }
 
 }
-    
+
+
+@media (max-width: 576px) {
+    ::ng-deep .container {
+        max-width: none !important;
+    }
+}

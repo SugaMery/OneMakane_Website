@@ -651,6 +651,7 @@
                                                   "
                                                 />
                                                 <label
+                                                  style="font-size: medium"
                                                   class="form-check-label"
                                                   for="{{ setting.name }}True"
                                                   >Oui</label
@@ -682,7 +683,63 @@
                                                 >
                                               </div>
                                             </div>
-
+                                            <div
+                                              *ngIf="
+                                                setting.type === 'bool' &&
+                                                setting.depend === null
+                                              "
+                                              class="payment_option"
+                                            >
+                                              <div
+                                                class="custome-radio d-inline-flex align-items-center"
+                                                style="margin-right: 2rem"
+                                              >
+                                                <input
+                                                  class="form-check-input"
+                                                  type="radio"
+                                                  name="{{ setting.name }}"
+                                                  id="{{ setting.name }}True"
+                                                  value="true"
+                                                  [checked]="
+                                                    setting.content === 'true'
+                                                  "
+                                                  (change)="
+                                                    updateSetting(setting, true)
+                                                  "
+                                                />
+                                                <label
+                                                  style="font-size: medium"
+                                                  class="form-check-label"
+                                                  for="{{ setting.name }}True"
+                                                  >Oui</label
+                                                >
+                                              </div>
+                                              <div
+                                                class="custome-radio d-inline-flex align-items-center"
+                                              >
+                                                <input
+                                                  class="form-check-input"
+                                                  type="radio"
+                                                  name="{{ setting.name }}"
+                                                  id="{{ setting.name }}False"
+                                                  value="false"
+                                                  [checked]="
+                                                    setting.content === 'false'
+                                                  "
+                                                  (change)="
+                                                    updateSetting(
+                                                      setting,
+                                                      false
+                                                    )
+                                                  "
+                                                />
+                                                <label
+                                                  class="form-check-label"
+                                                  for="{{ setting.name }}False"
+                                                  >Non</label
+                                                >
+                                              </div>
+                                            </div>
                                             <div
                                               *ngIf="setting.type === 'radio'"
                                               class="payment_option"
@@ -1609,6 +1666,67 @@
                                                     >
                                                   </div>
                                                 </label>
+                                              </div>
+                                            </div>
+                                          </div>
+
+                                          <div
+                                            class="payment-method p-3 border rounded shadow-sm mt-30"
+                                          >
+                                            <h4 class="mb-3">
+                                              Pré-sélection des candidatures :
+                                            </h4>
+
+                                            <div
+                                              *ngFor="let option of candidacy"
+                                              class="py-2"
+                                            >
+                                              <div
+                                                class="first pl-2 d-flex py-2 align-items-center justify-content-between border rounded p-2"
+                                                [ngClass]="{
+                                                  selected: option?.bool
+                                                }"
+                                                style="cursor: pointer"
+                                              >
+                                                <label
+                                                  class="d-flex w-100 align-items-center"
+                                                  [for]="'option' + option?.id"
+                                                >
+                                                  <div class="form-check">
+                                                    <p-checkbox
+                                                      [inputId]="
+                                                        'option' + option?.id
+                                                      "
+                                                      [(ngModel)]="option.bool"
+                                                      [value]="option?.id"
+                                                      [binary]="true"
+                                                      name="payment-methods"
+                                                      (onChange)="
+                                                        onOptionChanges(
+                                                          $event,
+                                                          option
+                                                        )
+                                                      "
+                                                    ></p-checkbox>
+                                                  </div>
+                                                  <div
+                                                    class="pl-3"
+                                                    style="flex-grow: 1"
+                                                  >
+                                                    <span class="option-name">{{
+                                                      option?.description
+                                                    }}</span>
+                                                  </div>
+                                                </label>
+                                                <div class="text-right">
+                                                  <span
+                                                    class="font-weight-bold price"
+                                                    >{{
+                                                      option?.price
+                                                    }}
+                                                    DH</span
+                                                  >
+                                                </div>
                                               </div>
                                             </div>
                                           </div>

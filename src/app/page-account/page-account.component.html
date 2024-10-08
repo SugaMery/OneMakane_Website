@@ -1609,7 +1609,10 @@
                                   class="action text-center"
                                   data-title="Action"
                                 >
-                                  <a [href]="'/cvs-pré-sélectionnés/' + ad.id">
+                                  <a
+                                    [href]="'/cvs-pré-sélectionnés/' + ad.id"
+                                    *ngIf="ad.candidacy_pre_selection == true"
+                                  >
                                     <button
                                       class="btn btn-sm btn-info"
                                       style="
@@ -1621,6 +1624,24 @@
                                       "
                                     >
                                       CVs pré-sélectionnés
+                                    </button>
+                                  </a>
+
+                                  <a
+                                    [href]="'/option-annonce/' + ad.id"
+                                    *ngIf="ad.candidacy_pre_selection != true"
+                                  >
+                                    <button
+                                      class="btn btn-sm btn-info"
+                                      style="
+                                        background: linear-gradient(
+                                          45deg,
+                                          #fdc040,
+                                          #f97316
+                                        );
+                                      "
+                                    >
+                                      Options pré-sélectionnés
                                     </button>
                                   </a>
                                 </td>

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class OptionsService {
-  private baseUrl = 'https://devapi.onemakan.com/v1';
+  private baseUrl = 'https://api.onemakan.com/v1';
 
   constructor(private http: HttpClient) {}
 

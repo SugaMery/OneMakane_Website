@@ -30,6 +30,12 @@
               "zone.js"
             ],
             "allowedCommonJsDependencies": [
+              "core-js",
+              "@babel/runtime",
+              "canvg",
+              "jspdf",
+              "rgbcolor",
+              "raf",
               "crypto-js"
             ],
             "tsConfig": "tsconfig.app.json",

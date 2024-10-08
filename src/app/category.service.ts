@@ -13,7 +13,7 @@ interface Category {
 })
 export class CategoryService {
   private apiUrl = 'http://localhost:3000/categories';
-  private devApiUrl = 'https://devapi.onemakan.com/v1';
+  private devApiUrl = 'https://api.onemakan.com/v1';
   private headers = new HttpHeaders();
 
   constructor(private http: HttpClient) {

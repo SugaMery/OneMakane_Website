@@ -59,43 +59,67 @@ export class HeaderComponent {
   checkLoggedInUser(): void {
     const localStorage = this.document?.defaultView?.localStorage;
 
-    if (localStorage) {
-      const userId = localStorage.getItem('loggedInUserId');
-      const accessToken = localStorage.getItem('loggedInUserToken');
-      const refreshToken = localStorage.getItem('loggedInUserRefreshToken');
+    if (!localStorage) {
+      this.status = false;
+      return;
+    }
 
-      if (userId && accessToken && refreshToken) {
-        console.log('userrr', userId);
-        this.userService.getUserInfoById(Number(userId), accessToken).subscribe(
-          (userInfo) => {
-            //console.log('userrrrrrre userInfo', userInfo);
+    const userId = localStorage.getItem('loggedInUserId');
+    const accessToken = localStorage.getItem('loggedInUserToken');
+    const refreshToken = localStorage.getItem('loggedInUserRefreshToken');
 
-            if (userInfo.data) {
-              this.status = true;
-              this.loggedInUserName = `${userInfo.data.first_name} ${userInfo.data.last_name}`;
-            } else {
-              this.status = false;
-              localStorage.removeItem('loggedInUserToken');
-              localStorage.removeItem('loggedInUserId');
-              localStorage.removeItem('loggedInUserRefreshToken');
-              window.location.href = '/login';
+    if (userId && accessToken) {
+      // Vérifier si le token est expiré
+      if (this.userService.isTokenExpired(accessToken)) {
+        // Si le token est expiré, tenter de le rafraîchir avec le refresh_token
+        if (refreshToken) {
+          this.userService.refreshToken(refreshToken).subscribe(
+            (response) => {
+              // Stocker le nouveau token et récupérer les informations utilisateur
+              localStorage.setItem('loggedInUserToken', response.data.token);
+              this.fetchUserInfo(userId, response.data.token);
+            },
+            (error) => {
+              console.error('Erreur lors du rafraîchissement du token:', error);
+              this.logoutAndRedirect();
             }
-          },
-          (error) => {
-            console.error('Error fetching user info:', error);
-            this.status = false;
-            localStorage.removeItem('loggedInUserToken');
-            localStorage.removeItem('loggedInUserId');
-            localStorage.removeItem('loggedInUserRefreshToken');
-            window.location.href = '/login';
-          }
-        );
+          );
+        } else {
+          this.logoutAndRedirect(); // Pas de refresh_token disponible
+        }
       } else {
-        this.status = false;
+        // Si le token est valide, récupérer les informations utilisateur
+        this.fetchUserInfo(userId, accessToken);
       }
     } else {
-      this.status = false;
+      this.status = false; // Pas de token ou d'ID utilisateur
     }
+  }
+  fetchUserInfo(userId: string, token: string): void {
+    this.userService.getUserInfoById(Number(userId), token).subscribe(
+      (userInfo) => {
+        if (userInfo.data) {
+          this.status = true;
+          this.loggedInUserName = `${userInfo.data.first_name} ${userInfo.data.last_name}`;
+        } else {
+          this.logoutAndRedirect(); // Si aucune donnée utilisateur trouvée
+        }
+      },
+      (error) => {
+        console.error(
+          'Erreur lors de la récupération des informations utilisateur:',
+          error
+        );
+        this.logoutAndRedirect(); // Erreur dans l'appel API
+      }
+    );
+  }
+
+  logoutAndRedirect(): void {
+    localStorage.removeItem('loggedInUserToken');
+    localStorage.removeItem('loggedInUserId');
+    localStorage.removeItem('loggedInUserRefreshToken');
+    window.location.href = '/login'; // Redirection vers la page de connexion
   }
 
   isPhones(): boolean {
@@ -109,7 +133,7 @@ export class HeaderComponent {
 
   isPhones1245(): boolean {
     const screenWidth = window!.innerWidth;
-    if (screenWidth <= 1254 && screenWidth >= 800 ) {
+    if (screenWidth <= 1254 && screenWidth >= 800) {
       return true;
     } else {
       return false;
@@ -118,17 +142,16 @@ export class HeaderComponent {
 
   isPhones12(): boolean {
     const screenWidth = window!.innerWidth;
-    if (screenWidth <= 992    ) {
+    if (screenWidth <= 992) {
       return true;
     } else {
       return false;
     }
   }
 
-
   isPhones1223(): boolean {
     const screenWidth = window!.innerWidth;
-    if (screenWidth <= 1339  ) {
+    if (screenWidth <= 1339) {
       return true;
     } else {
       return false;
@@ -137,27 +160,25 @@ export class HeaderComponent {
 
   isScreen1137(): boolean {
     const screenWidth = window!.innerWidth;
-    if (screenWidth <= 1137  ) {
+    if (screenWidth <= 1137) {
       return true;
     } else {
       return false;
     }
   }
-
 
   isPhones1145(): boolean {
     const screenWidth = window!.innerWidth;
-    if (screenWidth <= 1145  ) {
+    if (screenWidth <= 1145) {
       return true;
     } else {
       return false;
     }
   }
 
-
   isPhones1056(): boolean {
     const screenWidth = window!.innerWidth;
-    if (screenWidth <= 1056  ) {
+    if (screenWidth <= 1056) {
       return true;
     } else {
       return false;
@@ -166,7 +187,7 @@ export class HeaderComponent {
 
   isPhones1158(): boolean {
     const screenWidth = window!.innerWidth;
-    if (screenWidth <= 1158  ) {
+    if (screenWidth <= 1158) {
       return true;
     } else {
       return false;
@@ -369,7 +390,7 @@ export class HeaderComponent {
       // Display the selected option's value in the console
       //console.log('yyyyyyyyyyy', selectedOptionValue);
     } else {
-     // console.log('Select element not found');
+      // console.log('Select element not found');
     }
 
     //console.log('zzzzz', this.selectedCategoryId, this.searchQuery);

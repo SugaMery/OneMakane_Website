@@ -1051,7 +1051,30 @@ export class OptionAdsComponent implements OnInit {
     localStorage.setItem('uploadedImages', JSON.stringify(this.uploadedImages));
     //localStorage.setItem('selectedFiles', JSON.stringify(this.selectedFiles));
   }
+  ad: any = {};
+  onOptionChanges(event: any, option: any): void {
+    if (option.bool) {
+      if (!Array.isArray(this.selectedOptions)) {
+        this.selectedOptions = [];
+      }
+      // Add the option if it's not already in the selectedOptions array
+      if (!this.selectedOptions.some((opt) => opt.id === option.id)) {
+        this.selectedOptions.push(option);
+      }
 
+      this.fieldErrors['options'] = false;
+    } else {
+      // Remove the option if option.bool is false
+      this.selectedOptions = this.selectedOptions.filter(
+        (opt) => opt.id !== option.id
+      );
+      if (this.selectedPaidOptionId) {
+        //this.fieldErrors['options'] = true;
+      }
+    }
+    this.updateButtonLabel();
+    this.calculateTotalPrice(); // Recalculate price on option change
+  }
   ngOnInit(): void {
     this.getUserInfo();
     this.fetchCategories();
@@ -1066,6 +1089,8 @@ export class OptionAdsComponent implements OnInit {
       });
       Promise.all(adPromises)
         .then((adsData) => {
+          // console.log('googoogoog', adsData);
+
           this.ads = adsData
             .filter((ad: any) => ad.data.user_id === Number(userId))
             .map((ad: any) => {
@@ -1125,7 +1150,13 @@ export class OptionAdsComponent implements OnInit {
       dateFormat: 'dd/mm/yy',
       weekHeader: 'Sm',
     });
-
+    const adId = this.route.snapshot.paramMap.get('id');
+    this.annonceService.getAdById(adId!).subscribe((data) => {
+      this.ad = data.data;
+      if (data.data.category.parent_id === 140) {
+        this.loadcandidacy();
+      }
+    });
     this.loadPaidOptions();
     this.loadPromoteOptions();
   }
@@ -1651,10 +1682,10 @@ export class OptionAdsComponent implements OnInit {
     let paidOptionPrice = this.selectedPaidOption
       ? this.selectedPaidOption.price
       : 0;
-    let optionsPrice = this.selectedOptions.reduce(
-      (total, option) => total + option.price,
-      0
-    );
+    let optionsPrice = 0;
+    this.selectedOptions.forEach((option) => {
+      optionsPrice += Number(option.price);
+    });
 
     this.totalPrice = Number(paidOptionPrice) + Number(optionsPrice);
   }
@@ -1947,7 +1978,29 @@ export class OptionAdsComponent implements OnInit {
       (selected: { value: any }) => selected.value === option.value
     );
   }
+  candidacy: any[] = [];
 
+  loadcandidacy(): void {
+    const accessToken = localStorage.getItem('loggedInUserToken');
+
+    this.optionsService.getPaidOptions(accessToken!, 'candidacy').subscribe(
+      (response) => {
+        if (response.status === 'Success') {
+          console.log('gooooo', response);
+
+          this.candidacy = response.data;
+          this.candidacy.forEach((option) => {
+            option.bool = false;
+          });
+        } else {
+          console.error('Failed to load promote options:', response.message);
+        }
+      },
+      (error) => {
+        console.error('Error fetching promote options:', error);
+      }
+    );
+  }
   selectOptionGO(option: any, setting: any) {
     const index = setting.selectedOptions.findIndex(
       (selected: { value: any }) => selected.value === option.value

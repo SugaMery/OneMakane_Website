@@ -65,6 +65,11 @@ export class PageAccountComponent implements OnInit {
         case 'applied-ads':
           this.activateTab('applied-ads-tab', 'applied-ads');
           break;
+
+        case 'mes-commandes':
+          this.activateTab('commandes-tab', 'mes-commandes');
+          break;
+
         // Add more cases if needed
         default:
           this.activateTab('dashboard-tab', 'dashboard'); // Default tab
@@ -234,7 +239,11 @@ export class PageAccountComponent implements OnInit {
       );
       this.totalPage = Math.ceil(this.filteredAds.length / this.adsPerPage);
       // Log the result for debugging
-      console.log('Show Job Offers Tab:', this.showJobOffersTab);
+      console.log(
+        'Show Job Offers Tab:',
+        this.showJobOffersTab,
+        this.filteredAds
+      );
       // Check if any ad has a category_id that matches one of the child categories
     }
   }

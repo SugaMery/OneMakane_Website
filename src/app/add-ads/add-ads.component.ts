@@ -1433,7 +1433,7 @@ export class AddAdsComponent implements OnInit {
   emitNextCallbackTitre(): boolean {
     //this.getAds('pending');
     let isValid = true;
-
+    this.loadcandidacy();
     if (!this.formData.titre) {
       this.fieldErrors.titre = true;
       isValid = false;
@@ -1573,8 +1573,35 @@ export class AddAdsComponent implements OnInit {
     this.updateButtonLabel();
     this.calculateTotalPrice(); // Recalculate price on option change
   }
+
+  onOptionChanges(event: any, option: any): void {
+    if (option.bool) {
+      if (!Array.isArray(this.selectedOptions)) {
+        this.selectedOptions = [];
+      }
+      // Add the option if it's not already in the selectedOptions array
+      if (!this.selectedOptions.some((opt) => opt.id === option.id)) {
+        this.selectedOptions.push(option);
+      }
+
+      this.fieldErrors['options'] = false;
+    } else {
+      // Remove the option if option.bool is false
+      this.selectedOptions = this.selectedOptions.filter(
+        (opt) => opt.id !== option.id
+      );
+      if (this.selectedPaidOptionId) {
+        //this.fieldErrors['options'] = true;
+      }
+    }
+    this.updateButtonLabel();
+    this.calculateTotalPrice(); // Recalculate price on option change
+  }
+
   paidOptions: any[] = [];
   promoteOptions: any[] = [];
+  candidacy: any[] = [];
+
   selectedOptions: any[] = [];
   selectedPaidOptionId: any = null; // Initialize to null
   totalPrice: number = 0; // Variable to store the total price
@@ -1586,6 +1613,30 @@ export class AddAdsComponent implements OnInit {
       this.buttonLabel = 'Confirmer';
     } else {
       this.buttonLabel = 'Suivant';
+    }
+  }
+
+  loadcandidacy(): void {
+    if (this.selectedOption.id === 140) {
+      const accessToken = localStorage.getItem('loggedInUserToken');
+
+      this.optionsService.getPaidOptions(accessToken!, 'candidacy').subscribe(
+        (response) => {
+          if (response.status === 'Success') {
+            console.log('gooooo', response);
+
+            this.candidacy = response.data;
+            this.candidacy.forEach((option) => {
+              option.bool = false;
+            });
+          } else {
+            console.error('Failed to load promote options:', response.message);
+          }
+        },
+        (error) => {
+          console.error('Error fetching promote options:', error);
+        }
+      );
     }
   }
   // Method to fetch paid options
@@ -1612,6 +1663,8 @@ export class AddAdsComponent implements OnInit {
         console.error('Error fetching paid options:', error);
       }
     );
+
+    console.log('tttttttttttttttttttttteeee', this.candidacy);
   }
 
   // Method to fetch promote options
@@ -1652,10 +1705,12 @@ export class AddAdsComponent implements OnInit {
     let paidOptionPrice = this.selectedPaidOption
       ? this.selectedPaidOption.price
       : 0;
-    let optionsPrice = this.selectedOptions.reduce(
-      (total, option) => total + option.price,
-      0
-    );
+    let optionsPrice = 0;
+    console.log('ytytytytytyty44444', this.selectedOptions);
+    this.selectedOptions.forEach((option) => {
+      console.log('ytytytytytyty', option);
+      optionsPrice += Number(option.price);
+    });
 
     this.totalPrice = Number(paidOptionPrice) + Number(optionsPrice);
   }

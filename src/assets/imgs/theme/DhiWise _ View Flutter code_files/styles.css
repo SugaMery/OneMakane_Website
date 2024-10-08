@@ -1,0 +1,32 @@
+.page_loader_wrapper{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    height:100vh;
+}
+.center {
+    width:380px;
+    text-align:center;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url("/assets/fonts/Inter-Regular.ttf");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+body{
+    font-family: "Inter"
+}
+.page_loader h3{
+    font-size:16px;
+    color: rgba(255,255,255,0.87);
+    margin-top:24px;
+    margin-bottom:0;
+    width:80%;
+    margin-left:auto;
+    margin-right:auto;
+    line-height:24px;
+    font-weight:400;
+}

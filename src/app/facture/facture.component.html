@@ -33,10 +33,18 @@
                   <div class="col-sm-6">
                     <div class="invoice-numb">
                       <h6 class="text-end mb-10 mt-20">
-                        Date: {{ order.created_at | date : "dd MMM yyyy" }}
+                        Date:
+                        {{
+                          order?.created_at
+                            ? (order.created_at | date : "dd MMMM yyyy")
+                            : "Date non disponible"
+                        }}
+                      </h6>
+                      <h6 class="text-end invoice-header-1 mb-10">
+                        TRANS ID : #{{ order?.valid_payment?.transaction_id }}
                       </h6>
                       <h6 class="text-end invoice-header-1">
-                        TRANS ID : #{{ order.valid_payment.transaction_id }}
+                        NOM DE CLIENT : {{ user?.full_name }}
                       </h6>
                     </div>
                   </div>
@@ -48,13 +56,17 @@
                   <div class="col-lg-9 col-md-6">
                     <h4 class="invoice-title-1 mb-10">Date de la facture :</h4>
                     <p class="invoice-from-1">
-                      {{ order.created_at | date : "dd MMMM yyyy" }}
+                      {{
+                        order?.created_at
+                          ? (order.created_at | date : "dd MMMM yyyy")
+                          : "Date non disponible"
+                      }}
                     </p>
                   </div>
                   <div class="col-lg-3 col-md-6">
                     <h4 class="invoice-title-1 mb-10">Méthode de paiement</h4>
                     <p class="invoice-from-1">
-                      Via {{ order.payments[0].payment_type }}
+                      Via {{ order?.payments[0]?.payment_type }}
                     </p>
                   </div>
                 </div>
@@ -73,15 +85,15 @@
                       <tr *ngFor="let order of orders">
                         <td>
                           <div class="item-desc-1">
-                            <span>{{ order.paid_option.name }}</span>
-                            <small>{{ order.paid_option.description }}</small>
+                            <span>{{ order?.paid_option?.name }}</span>
+                            <small>{{ order?.paid_option?.description }}</small>
                           </div>
                         </td>
                         <td class="text-center">
-                          {{ order.paid_option.duration }}
+                          {{ order?.paid_option?.duration }}
                         </td>
                         <td class="text-right price-column">
-                          <strong>{{ order.paid_option.price }} DH</strong>
+                          <strong>{{ order?.paid_option?.price }} DH</strong>
                         </td>
                       </tr>
                       <tr>
@@ -93,7 +105,7 @@
                           Total
                         </td>
                         <td class="text-right price-column">
-                          <strong>{{ order.valid_payment.amount }} DH</strong>
+                          <strong>{{ order?.valid_payment?.amount }} DH</strong>
                         </td>
                       </tr>
                     </tbody>
@@ -136,16 +148,18 @@
               </div>
             </div>
             <div class="invoice-btn-section clearfix d-print-none">
-              <a
-                href="javascript:window.print()"
+              <!--               <a
+                href="javascript:void(0);"
+                (click)="printInvoice()"
                 class="btn btn-lg btn-custom btn-print hover-up"
               >
                 <img src="../../assets/imgs/theme/icon-print.svg" alt="" />
                 Imprimer
-              </a>
+              </a> -->
               <a
                 id="invoice_download_btn"
                 class="btn btn-lg btn-custom btn-download hover-up"
+                (click)="downloadInvoice()"
               >
                 <img src="../../assets/imgs/theme/icon-download.svg" alt="" />
                 Télécharger

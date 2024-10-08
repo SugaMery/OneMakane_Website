@@ -1,12 +1,12 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import {
+  ActivatedRouteSnapshot,
   CanActivate,
   Router,
-  ActivatedRouteSnapshot,
   RouterStateSnapshot,
 } from '@angular/router';
-import { isPlatformBrowser } from '@angular/common';
 import { UserService } from './user.service';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -32,57 +32,56 @@ export class AuthGuard implements CanActivate {
     // Vérifie si le token est expiré
     if (token && this.userService.isTokenExpired(token)) {
       if (refreshToken) {
-        this.userService.refreshToken(refreshToken).subscribe(
-          (response) => {
-            // Stocke le nouveau token
-            localStorage.setItem('loggedInUserToken', response.data.token);
-            return true; // Permet l'accès car le token a été rafraîchi
-          },
-          (error) => {
-            this.handleLogout(); // Échec du rafraîchissement, déconnexion
-            return false;
-          }
-        );
+        // Rafraîchir le token si le refresh_token est valide
+        return this.refreshAccessToken(refreshToken, state.url);
       } else {
-        localStorage.setItem('redirectUrl', state.url);
-        this.logout(); // Pas de refresh token, déconnexion
+        this.logoutWithRedirect(state.url); // Pas de refresh_token, déconnexion
         return false;
       }
     } else if (!token) {
-      localStorage.setItem('redirectUrl', state.url);
-      this.logout(); // Pas de token, déconnexion
+      this.logoutWithRedirect(state.url); // Pas de token, déconnexion
       return false;
     }
-    return true; // Token valide, permet l'accès
+    return true; // Token valide, accès autorisé
+  }
+
+  refreshAccessToken(refreshToken: string, redirectUrl: string): boolean {
+    this.userService.refreshToken(refreshToken).subscribe(
+      (response) => {
+        // Stocker le nouveau token
+        localStorage.setItem('loggedInUserToken', response.data.token);
+        // Redirection à l'URL demandée après avoir rafraîchi le token
+        this.router.navigateByUrl(redirectUrl);
+        return true;
+      },
+      (error) => {
+        console.error('Erreur lors du rafraîchissement du token', error);
+        this.logoutWithRedirect(redirectUrl); // Si le rafraîchissement échoue, déconnexion
+        return false;
+      }
+    );
+    return false; // Pendant l'appel HTTP, l'accès est bloqué jusqu'à la réponse
+  }
+
+  logoutWithRedirect(redirectUrl: string): void {
+    localStorage.setItem('redirectUrl', redirectUrl);
+    this.logout();
   }
 
   logout(): void {
     const token = localStorage.getItem('loggedInUserToken');
-
-    // Supprime les informations de connexion du stockage local
-    localStorage.removeItem('loggedInUserToken');
-    localStorage.removeItem('loggedInUserId');
-    localStorage.removeItem('loggedInUserRefreshToken');
+    localStorage.clear(); // Supprime toutes les infos de session
 
     if (token) {
       this.userService.logout(token).subscribe(
-        () => {
-          window.location.href = '/login'; // Redirection vers la page de login
-        },
+        () => (window.location.href = '/login'),
         (error) => {
           console.error('Erreur lors de la déconnexion:', error);
           window.location.href = '/login';
         }
       );
     } else {
-      window.location.href = '/login'; // Redirection si aucun token
+      window.location.href = '/login';
     }
-  }
-
-  handleLogout(): void {
-    localStorage.removeItem('loggedInUserToken');
-    localStorage.removeItem('loggedInUserRefreshToken');
-    localStorage.removeItem('loggedInUserId');
-    window.location.href = '/login';
   }
 }
