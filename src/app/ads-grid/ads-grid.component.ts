@@ -358,6 +358,7 @@ export class AdsGridComponent {
       this.getCategoriesFilters();
       this.getCategories();
       this.getAdsList();
+
       this.categories.forEach((category) => {
         if (category.id == this.category) {
           // console.log('rrrrr', category);
@@ -367,16 +368,18 @@ export class AdsGridComponent {
       // console.log('eee', this.categories);
     } else {
     }
+    this.isMobile = this.checkIfMobile();
+    this.loadAds();
+    this.mobileHeaderActive();
+
     // Fetch all query parameters as an object
     if (isPlatformBrowser(this.platformId)) {
       this.checkScreenWidth();
       // Listen to window resize event only in browser environment
       window.addEventListener('resize', () => this.checkScreenWidth());
     }
-    this.mobileHeaderActive();
+
     //this.getVals();
-    this.isMobile = this.checkIfMobile();
-    this.loadAds();
   }
 
   shouldShowEllipsesBefore(): boolean {

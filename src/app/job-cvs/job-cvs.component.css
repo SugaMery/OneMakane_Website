@@ -31943,3 +31943,35 @@ label {
     padding-left: 0rem;
     padding-bottom: 2rem;
 }
+
+
+
+
+.pagination-area nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pagination .page-link {
+    /*   padding: 8px 12px;
+   */
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    .pagination .page-link {
+        /*     padding: 6px 10px;
+   */
+        font-size: 12px;
+    }
+
+    .pagination-area {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .pagination-area ul.pagination {
+        justify-content: space-around;
+    }
+}

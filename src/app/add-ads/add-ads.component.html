@@ -677,6 +677,7 @@
                                                   "
                                                 />
                                                 <label
+                                                  style="font-size: medium"
                                                   class="form-check-label"
                                                   for="{{ setting.name }}False"
                                                   >Non</label
@@ -734,6 +735,7 @@
                                                   "
                                                 />
                                                 <label
+                                                  style="font-size: medium"
                                                   class="form-check-label"
                                                   for="{{ setting.name }}False"
                                                   >Non</label
@@ -1672,6 +1674,7 @@
 
                                           <div
                                             class="payment-method p-3 border rounded shadow-sm mt-30"
+                                            *ngIf="candidacybool"
                                           >
                                             <h4 class="mb-3">
                                               Pré-sélection des candidatures :

@@ -31962,3 +31962,64 @@ label {
   color: #1d4ed8 !important;
 
 }
+
+
+.pagination-area nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pagination .page-link {
+  /*   padding: 8px 12px;
+ */
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .pagination .page-link {
+    /*     padding: 6px 10px;
+ */
+    font-size: 12px;
+  }
+
+  .pagination-area {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .pagination-area ul.pagination {
+    justify-content: space-around;
+  }
+}
+
+
+
+
+
+
+
+.action {
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .action {
+    text-align: center;
+    white-space: normal;
+  }
+
+  .action a {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .action a:last-child {
+    margin-bottom: 0;
+  }
+
+  .btn {
+    width: 100%;
+    /* Make buttons full width on mobile */
+  }
+}

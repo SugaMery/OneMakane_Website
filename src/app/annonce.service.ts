@@ -39,7 +39,7 @@ export class AnnonceService {
   //     return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   // }
 
-  private apiUrl = 'https://api.onemakan.com/v1';
+  private apiUrl = 'https://devapi.onemakan.com/v1';
   private headers = new HttpHeaders();
 
   constructor(private http: HttpClient) {
@@ -95,7 +95,7 @@ export class AnnonceService {
     });
 
     return this.http
-      .post<any>('https://api.onemakan.com/v1/medias', formData, { headers })
+      .post<any>('https://devapi.onemakan.com/v1/medias', formData, { headers })
       .toPromise();
   }
 
@@ -108,7 +108,7 @@ export class AnnonceService {
     });
 
     return this.http
-      .post<any>('https://api.onemakan.com/v1/medias', formData, { headers })
+      .post<any>('https://devapi.onemakan.com/v1/medias', formData, { headers })
       .toPromise();
   }
 

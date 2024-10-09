@@ -181,7 +181,7 @@
                           <table class="table table-wishlist">
                             <thead>
                               <tr class="main-heading">
-                                <th class="custome-checkbox start pl-30">
+                                <!--                                 <th class="custome-checkbox start pl-30">
                                   <input
                                     class="form-check-input"
                                     type="checkbox"
@@ -193,8 +193,14 @@
                                     class="form-check-label"
                                     for="exampleCheckbox11"
                                   ></label>
+                                </th> -->
+                                <th
+                                  scope="col "
+                                  style="padding-left: 2.5rem"
+                                  colspan="2"
+                                >
+                                  Annonce
                                 </th>
-                                <th scope="col" colspan="2">Annonce</th>
                                 <th scope="col">Prix</th>
                                 <th scope="col">Status</th>
                                 <th scope="col" class="text-center">Action</th>
@@ -203,7 +209,7 @@
                             </thead>
                             <tbody>
                               <tr class="pt-30" *ngFor="let ad of paginatedAds">
-                                <td class="custome-checkbox pl-30">
+                                <!--                                 <td class="custome-checkbox pl-30">
                                   <input
                                     class="form-check-input"
                                     type="checkbox"
@@ -215,8 +221,11 @@
                                     class="form-check-label"
                                     for="exampleCheckbox1"
                                   ></label>
-                                </td>
-                                <td class="image product-thumbnail pt-40 image">
+                                </td> -->
+                                <td
+                                  class="image product-thumbnail pt-40 image"
+                                  style="padding-left: 2.5rem"
+                                >
                                   <img src="{{ ad.medias[0]?.url }}" alt="#" />
                                   <!-- Conditionally display the star image if ad.promote is true -->
                                   <img
@@ -522,7 +531,7 @@
                           <table class="table table-wishlist">
                             <thead>
                               <tr class="main-heading">
-                                <th class="custome-checkbox start pl-30">
+                                <!--                                 <th class="custome-checkbox start pl-30">
                                   <input
                                     class="form-check-input"
                                     type="checkbox"
@@ -534,10 +543,18 @@
                                     class="form-check-label"
                                     for="exampleCheckbox11"
                                   ></label>
+                                </th> -->
+                                <th
+                                  scope="col"
+                                  colspan="1"
+                                  style="padding-left: 2.5rem"
+                                >
+                                  Annonce
                                 </th>
-                                <th scope="col" colspan="1">Annonce</th>
                                 <th scope="col">Prix de commande</th>
-                                <th scope="col">Status de transaction</th>
+                                <th scope="col" class="text-center">
+                                  Status de transaction
+                                </th>
                                 <th scope="col" class="text-center">Action</th>
                                 <!--                                 <th scope="col" class="end">Supprimé</th> -->
                               </tr>
@@ -547,7 +564,7 @@
                                 class="pt-30"
                                 *ngFor="let ad of paginatedOrders"
                               >
-                                <td class="custome-checkbox pl-30">
+                                <!--                                 <td class="custome-checkbox pl-30">
                                   <input
                                     class="form-check-input"
                                     type="checkbox"
@@ -559,9 +576,12 @@
                                     class="form-check-label"
                                     for="exampleCheckbox1"
                                   ></label>
-                                </td>
+                                </td> -->
 
-                                <td class="product-des product-name">
+                                <td
+                                  class="product-des product-name"
+                                  style="padding-left: 2.5rem"
+                                >
                                   <h6>
                                     <a
                                       class="product-name mb-10"
@@ -585,23 +605,23 @@
                                   data-title="Status"
                                 >
                                   <span
-                                    class="stock-status in-stock mb-0"
+                                    class="stock-status in-stock mb-0 text-center"
                                     [ngClass]="getStatusClasss(ad.status)"
                                   >
                                     {{ getStatusInFrenchs(ad.status) }}
                                   </span>
                                 </td>
                                 <td
-                                  class="action text-left"
+                                  class="action text-center"
                                   data-title="Action"
                                 >
-                                  <a [href]="'/modifier-annonce/' + ad.ad.id">
+                                  <!--                                   <a [href]="'/modifier-annonce/' + ad.ad.id">
                                     <button class="btn btn-sm btn-primary">
                                       Modifier
                                     </button>
-                                  </a>
+                                  </a> -->
 
-                                  <a class="ml-2">
+                                  <!-- <a class="ml-2">
                                     <button
                                       class="btn btn-sm"
                                       style="background: #1943b7"
@@ -609,7 +629,7 @@
                                     >
                                       Dupliquer
                                     </button>
-                                  </a>
+                                  </a> -->
                                   <a
                                     class="ml-2"
                                     *ngIf="ad.status === 'success'"
@@ -622,7 +642,7 @@
                                       class="btn btn-sm"
                                       style="background: #fdc040"
                                     >
-                                      Facture
+                                      Détails et facture
                                     </button>
                                   </a>
                                 </td>
@@ -1525,7 +1545,7 @@
                           <table class="table table-wishlist">
                             <thead>
                               <tr class="main-heading">
-                                <th class="custome-checkbox start pl-30">
+                                <!--                                 <th class="custome-checkbox start pl-30">
                                   <input
                                     class="form-check-input"
                                     type="checkbox"
@@ -1537,8 +1557,14 @@
                                     class="form-check-label"
                                     for="exampleCheckbox11"
                                   ></label>
+                                </th> -->
+                                <th
+                                  scope="col"
+                                  style="padding-left: 2.5rem"
+                                  colspan="2"
+                                >
+                                  Annonce
                                 </th>
-                                <th scope="col" colspan="2">Annonce</th>
                                 <th scope="col">Prix</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Cvs</th>
@@ -1547,7 +1573,7 @@
                             </thead>
                             <tbody>
                               <tr class="pt-30" *ngFor="let ad of paginatedAd">
-                                <td class="custome-checkbox pl-30">
+                                <!--                                 <td class="custome-checkbox pl-30">
                                   <input
                                     class="form-check-input"
                                     type="checkbox"
@@ -1559,8 +1585,11 @@
                                     class="form-check-label"
                                     for="exampleCheckbox1"
                                   ></label>
-                                </td>
-                                <td class="image product-thumbnail pt-40 image">
+                                </td> -->
+                                <td
+                                  class="image product-thumbnail pt-40 image"
+                                  style="padding-left: 2.5rem"
+                                >
                                   <img src="{{ ad.medias[0]?.url }}" alt="#" />
                                 </td>
                                 <td class="product-des product-name">
@@ -1722,7 +1751,7 @@
                           <table class="table table-wishlist">
                             <thead>
                               <tr class="main-heading">
-                                <th class="custome-checkbox start pl-30">
+                                <!--                                 <th class="custome-checkbox start pl-30">
                                   <input
                                     class="form-check-input"
                                     type="checkbox"
@@ -1734,8 +1763,14 @@
                                     class="form-check-label"
                                     for="exampleCheckbox11"
                                   ></label>
+                                </th> -->
+                                <th
+                                  scope="col"
+                                  style="padding-left: 2.5rem"
+                                  colspan="2"
+                                >
+                                  Annonce
                                 </th>
-                                <th scope="col" colspan="2">Annonce</th>
                                 <th scope="col">Prix</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Date de Postulation</th>
@@ -1746,7 +1781,7 @@
                                 class="pt-30"
                                 *ngFor="let ad of paginatedAded"
                               >
-                                <td class="custome-checkbox pl-30">
+                                <!--                                 <td class="custome-checkbox pl-30">
                                   <input
                                     class="form-check-input"
                                     type="checkbox"
@@ -1758,8 +1793,11 @@
                                     class="form-check-label"
                                     for="exampleCheckbox1"
                                   ></label>
-                                </td>
-                                <td class="image product-thumbnail pt-40 image">
+                                </td> -->
+                                <td
+                                  class="image product-thumbnail pt-40 image"
+                                  style="padding-left: 2.5rem"
+                                >
                                   <img
                                     src="{{ ad.ad.medias[0]?.url }}"
                                     alt="#"

@@ -206,13 +206,13 @@
           <ul>
             <li>
               Besoin d'aide ? Appelez-nous :
-              <strong class="text-brand"> +212600000000</strong>
+              <strong class="text-brand"> +212665201837</strong>
             </li>
             <li>
               <a class="language-dropdown-active" href="#"
                 >Français <i class="fi-rs-angle-small-down"></i
               ></a>
-              <ul class="language-dropdown">
+              <!--               <ul class="language-dropdown">
                 <li>
                   <a href="#"
                     ><img
@@ -221,23 +221,7 @@
                     />Français</a
                   >
                 </li>
-                <!--                   <li>
-                  <a href="#"
-                    ><img
-                      src="../../assets/imgs/theme/flag-dt.png"
-                      alt=""
-                    />Deutsch</a
-                  >
-                </li>
-                <li>
-                  <a href="#"
-                    ><img
-                      src="../../assets/imgs/theme/flag-ru.png"
-                      alt=""
-                    />Pусский</a
-                  >
-                </li> -->
-              </ul>
+              </ul> -->
             </li>
           </ul>
         </div>
@@ -468,12 +452,6 @@
           >
             <nav>
               <ul>
-                <!--                 <li class="hot-deals">
-                  <img
-                    src="../../assets/imgs/theme/icons/icon-hot-white.svg"
-                    alt="offres spéciales"
-                  /><a href="/shop-grid-right">Offres</a>
-                </li> -->
                 <li
                   class="position-static"
                   *ngFor="
@@ -522,6 +500,8 @@
                               [href]="
                                 '/ads-category/' +
                                 subcategory.id +
+                                '/' +
+                                subcategory.slug +
                                 '?' +
                                 subsubcat.type +
                                 '=' +
@@ -566,88 +546,6 @@
                     </li>
                   </ul>
                 </li>
-
-                <!--                 <li class="position-static" *ngIf="!isPhones12()">
-                  <a href="javascript:void(0)">
-                    Autre <i class="fi-rs-angle-down"></i>
-                  </a>
-                  <ul class="mega-menu">
-                    <ul style="width: 80%">
-                      <li *ngFor="let category of categories.slice(6)">
-                        <a
-                          class="menu-title"
-                          href="javascript:void(0)"
-                          (click)="
-                            navigateToCategory(category.id, category.slug)
-                          "
-                        >
-                          {{ category.name }}
-                        </a>
-
-                        <ul>
-                          <li
-                            *ngFor="let subcategory of category.subcategories"
-                          >
-                            <a
-                              href="javascript:void(0)"
-                              (click)="
-                                navigateToCategory(
-                                  subcategory.id,
-                                  subcategory.slug
-                                )
-                              "
-                            >
-                              {{ subcategory.name }}
-                            </a>
-                            <ul>
-                              <li
-                                *ngFor="
-                                  let subsubcat of subcategory.subsubcategories
-                                "
-                              >
-                                <a href="/shop-product-right">{{
-                                  subsubcat.name
-                                }}</a>
-                              </li>
-                            </ul>
-                          </li>
-                        </ul>
-                      </li>
-                    </ul>
-
-                    <li
-                      class="sub-mega-menu sub-mega-menu-width-40 right-menu"
-                      style="height: 35%; width: 30% !important"
-                    >
-                      <div
-                        class="menu-banner-wrap"
-                        style="width: 100%; height: 100%"
-                      >
-                        <a href="/deposer_une_annonce">
-                          <img
-                            style="border-radius: 1rem"
-                            src="../../assets/imgs/slider/slider-1.png"
-                            alt="Nest"
-                          />
-                        </a>
-                        <div class="menu-banner-content">
-                          <h3>
-                            Ne laissez <br />
-                            pas passer <br />
-                            cette opportunité
-                          </h3>
-                          <div class="menu-banner-btn">
-                            <a href="/deposer_une_annonce">
-                              <i class="fi fi-rr-square-plus"></i>
-                              Déposer votre annonce
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </li> -->
-
                 <li class="position-static" *ngIf="!isPhones12()">
                   <a href="javascript:void(0)">
                     Autre <i class="fi-rs-angle-down"></i>
@@ -743,7 +641,7 @@
             src="../../assets/imgs/theme/icons/icon-headphone-white.svg"
             alt="hotline"
           />
-          <p>06-60000000<span>Centre de support 24/7</span></p>
+          <p>06-65201837<span>Centre de support 24/7</span></p>
         </div>
         <div class="header-action-icon-2 d-block d-lg-none">
           <div class="burger-icon burger-icon-white">
@@ -966,7 +864,7 @@
           >
         </div>
         <div class="single-mobile-header-info">
-          <a><i class="fi-rs-headphones"></i>(+212) - 600000000 </a>
+          <a><i class="fi-rs-headphones"></i>(+212) - 665201837 </a>
         </div>
       </div>
       <div class="mobile-social-icon mb-50" style="text-align: center">

@@ -454,9 +454,9 @@
             <a
               *ngIf="
                 adDetail.user_id !== userId &&
-                adDetail.category.model !== 'ad_jobs' &&
-                adDetail.category.model !== 'ad_house_staff' &&
-                adDetail.category.model !== 'ad_professional_trainings'
+                adDetail.category!.model !== 'ad_jobs' &&
+                adDetail.category!.model !== 'ad_house_staff' &&
+                adDetail.category!.model !== 'ad_professional_trainings'
               "
               class="btn"
               href="/chat/{{ adDetail.id }}"
@@ -474,9 +474,9 @@
             <a
               *ngIf="
                 (adDetail.user_id !== userId &&
-                  adDetail.category.model === 'ad_jobs') ||
-                adDetail.category.model === 'ad_house_staff' ||
-                adDetail.category.model === 'ad_professional_trainings'
+                  adDetail.category!.model === 'ad_jobs') ||
+                adDetail.category!.model === 'ad_house_staff' ||
+                adDetail.category!.model === 'ad_professional_trainings'
               "
               class="btn"
               [href]="'/postuler-annonce/' + adDetail.id"
@@ -558,13 +558,13 @@
               <ul>
                 <a
                   *ngIf="
-                    adDetail.user_id !== userId &&
-                    adDetail.category.model !== 'ad_jobs' &&
-                    adDetail.category.model !== 'ad_house_staff' &&
-                    adDetail.category.model !== 'ad_professional_trainings'
+                    adDetail?.user_id !== userId &&
+                    adDetail?.category?.model !== 'ad_jobs' &&
+                    adDetail?.category?.model !== 'ad_house_staff' &&
+                    adDetail?.category?.model !== 'ad_professional_trainings'
                   "
                   class="btn"
-                  [href]="'/chat/' + adDetail.id"
+                  [href]="'/chat/' + adDetail?.id"
                   style="
                     width: 100%;
                     border-radius: 2rem;
@@ -579,15 +579,16 @@
                   <i class="fi fi-rr-messages"></i>
                   Contacter le vendeur
                 </a>
+
                 <a
                   *ngIf="
-                    (adDetail.user_id !== userId &&
-                      adDetail.category.model === 'ad_jobs') ||
-                    adDetail.category.model === 'ad_house_staff' ||
-                    adDetail.category.model === 'ad_professional_trainings'
+                    (adDetail?.user_id !== userId &&
+                      adDetail?.category?.model === 'ad_jobs') ||
+                    adDetail?.category?.model === 'ad_house_staff' ||
+                    adDetail?.category?.model === 'ad_professional_trainings'
                   "
                   class="btn"
-                  [href]="'/postuler-annonce/' + adDetail.id"
+                  [href]="'/postuler-annonce/' + adDetail?.id"
                   style="
                     width: 100%;
                     border-radius: 2rem;
@@ -600,13 +601,13 @@
                   "
                 >
                   <i class="fi fi-rr-messages"></i>
-
                   Postuler à cette offre
                 </a>
+
                 <a
-                  *ngIf="adDetail.user_id === userId"
+                  *ngIf="adDetail?.user_id === userId"
                   class="btn"
-                  [href]="'/modifier-annonce/' + adDetail.id"
+                  [href]="'/modifier-annonce/' + adDetail?.id"
                   style="
                     width: 100%;
                     border-radius: 2rem;

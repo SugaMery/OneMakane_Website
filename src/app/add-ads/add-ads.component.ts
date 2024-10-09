@@ -188,6 +188,7 @@ export class AddAdsComponent implements OnInit {
   date!: string;
   categoriesParent: any;
   selectedOptionName: any;
+  candidacybool: boolean = false;
   constructor(
     private authService: AuthGuard,
     private annonceService: AnnonceService,
@@ -1433,7 +1434,6 @@ export class AddAdsComponent implements OnInit {
   emitNextCallbackTitre(): boolean {
     //this.getAds('pending');
     let isValid = true;
-    this.loadcandidacy();
     if (!this.formData.titre) {
       this.fieldErrors.titre = true;
       isValid = false;
@@ -1519,6 +1519,17 @@ export class AddAdsComponent implements OnInit {
     this.selectedState = null;
     this.selectedSubCategory = null;
     this.genreOptionsVisible = false;
+    console.log('rrrrtttt category', category);
+
+    if (category.id == 140) {
+      console.log('rrrrtttt', this.candidacybool);
+
+      this.candidacybool = true;
+      this.loadcandidacy();
+    } else {
+      console.log('rrrrtttt', this.candidacybool);
+      this.candidacybool = false;
+    }
   }
   marquesPopulaires: Array<{ id: number; name: string }> = [];
   autresMarques: Array<{ id: number; name: string }> = [];
@@ -1617,27 +1628,25 @@ export class AddAdsComponent implements OnInit {
   }
 
   loadcandidacy(): void {
-    if (this.selectedOption.id === 140) {
-      const accessToken = localStorage.getItem('loggedInUserToken');
+    const accessToken = localStorage.getItem('loggedInUserToken');
 
-      this.optionsService.getPaidOptions(accessToken!, 'candidacy').subscribe(
-        (response) => {
-          if (response.status === 'Success') {
-            console.log('gooooo', response);
+    this.optionsService.getPaidOptions(accessToken!, 'candidacy').subscribe(
+      (response) => {
+        if (response.status === 'Success') {
+          console.log('gooooo', response);
 
-            this.candidacy = response.data;
-            this.candidacy.forEach((option) => {
-              option.bool = false;
-            });
-          } else {
-            console.error('Failed to load promote options:', response.message);
-          }
-        },
-        (error) => {
-          console.error('Error fetching promote options:', error);
+          this.candidacy = response.data;
+          this.candidacy.forEach((option) => {
+            option.bool = false;
+          });
+        } else {
+          console.error('Failed to load promote options:', response.message);
         }
-      );
-    }
+      },
+      (error) => {
+        console.error('Error fetching promote options:', error);
+      }
+    );
   }
   // Method to fetch paid options
   loadPaidOptions(): void {

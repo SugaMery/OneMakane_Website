@@ -25,7 +25,7 @@
                     width: auto;
                     margin-bottom: 1rem;
                   "
-                  href="javascript:history.back()"
+                  href="/page-account#jobs"
                 >
                   <i class="fi-rs-sign-in ml-15"></i> Retourner
                 </a>
@@ -45,7 +45,7 @@
                         <table class="table table-wishlist">
                           <thead>
                             <tr class="main-heading">
-                              <th class="custome-checkbox start pl-30">
+                              <!--                               <th class="custome-checkbox start pl-30">
                                 <input
                                   class="form-check-input"
                                   type="checkbox"
@@ -57,8 +57,10 @@
                                   class="form-check-label"
                                   for="exampleCheckbox11"
                                 ></label>
+                              </th> -->
+                              <th scope="col" style="padding-left: 2.5rem">
+                                Nom Complet
                               </th>
-                              <th scope="col">Nom Complet</th>
                               <th scope="col">Email</th>
                               <th scope="col">Téléphone</th>
                               <th scope="col">Date de Postulation</th>
@@ -67,22 +69,10 @@
                           </thead>
                           <tbody *ngIf="paginatedAdsCvs.length > 0">
                             <tr
+                              style="padding-left: 2.5rem"
                               *ngFor="let appliance of paginatedAdsCvs"
                               class="pt-30"
                             >
-                              <td class="custome-checkbox pl-30">
-                                <input
-                                  class="form-check-input"
-                                  type="checkbox"
-                                  name="checkbox"
-                                  id="exampleCheckbox{{ appliance.id }}"
-                                  value=""
-                                />
-                                <label
-                                  class="form-check-label"
-                                  for="exampleCheckbox{{ appliance.id }}"
-                                ></label>
-                              </td>
                               <td>{{ appliance.user.full_name }}</td>
                               <td>{{ appliance.user.email }}</td>
                               <td>{{ appliance.user.telephone }}</td>
@@ -164,7 +154,7 @@
               </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4" *ngIf="paginatedAdsCvs.length !== 0">
               <div
                 class="tab-content account dashboard-content"
                 [ngClass]="{ 'pl-50': !isPhone() }"

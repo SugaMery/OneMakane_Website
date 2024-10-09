@@ -33,6 +33,9 @@ interface Category {
   styleUrl: './header.component.css',
 })
 export class HeaderComponent {
+  getVisibleCategories(): number | undefined {
+    throw new Error('Method not implemented.');
+  }
   loggedInUserName: string = 'Compte';
   categories: any[] = [];
   Souscategories: any[] = [];

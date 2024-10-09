@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class UserService {
-  private baseUrl = 'https://api.onemakan.com/v1';
+  private baseUrl = 'https://devapi.onemakan.com/v1';
 
   constructor(private http: HttpClient) {}
 
@@ -28,7 +28,7 @@ export class UserService {
     return this.http.get(`${this.baseUrl}/users/${userId}`, { headers });
   }
 
-  private apiUrl = 'https://api.onemakan.com/v1';
+  private apiUrl = 'https://devapi.onemakan.com/v1';
   login(userData: { email: string; password: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/login`, userData);
   }

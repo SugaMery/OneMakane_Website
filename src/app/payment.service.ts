@@ -27,7 +27,7 @@ export class PaymentService {
     return throwError('Une erreur est survenue; veuillez réessayer plus tard.');
   }
 
-  private apiUrls = 'https://api.onemakan.com/v1/payments';
+  private apiUrls = 'https://devapi.onemakan.com/v1/payments';
 
   // Function to get the headers with Authorization token
   private getHeaders(accessToken: string): HttpHeaders {

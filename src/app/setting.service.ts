@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class SettingService {
-  private apiUrl = 'https://api.onemakan.com/v1/settings';
+  private apiUrl = 'https://devapi.onemakan.com/v1/settings';
 
   constructor(private http: HttpClient) {}
 
@@ -21,7 +21,7 @@ export class SettingService {
     return this.http.get(this.apiUrl, options);
   }
 
-  private devApiUrl = 'https://api.onemakan.com/v1';
+  private devApiUrl = 'https://devapi.onemakan.com/v1';
 
   createMarque(route: string, accessToken: string): Observable<any> {
     const url = `${this.devApiUrl}/${route}`;
